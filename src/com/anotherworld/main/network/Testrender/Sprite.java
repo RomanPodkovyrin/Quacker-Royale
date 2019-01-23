@@ -1,4 +1,4 @@
-package com.anotherworld.network.Testrender;
+package com.anotherworld.main.network.Testrender;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
