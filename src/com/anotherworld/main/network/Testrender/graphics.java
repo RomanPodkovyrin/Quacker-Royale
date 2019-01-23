@@ -1,4 +1,4 @@
-package com.anotherworld.network.Testrender;
+package com.anotherworld.main.network.Testrender;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
