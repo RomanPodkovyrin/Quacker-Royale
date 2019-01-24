@@ -1,4 +1,4 @@
-package render;
+package com.anotherworld.main.network;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
