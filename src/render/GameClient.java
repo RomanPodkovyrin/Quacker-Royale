@@ -6,6 +6,7 @@ import java.net.*;
 public class GameClient {
     private DatagramSocket socket;
     private InetAddress address;
+    private int port = 4445;
 
     private byte[] buf;
 
@@ -14,16 +15,26 @@ public class GameClient {
         address = InetAddress.getByName("localhost");
     }
 
-    public String sendEcho(String msg) throws IOException {
+    public void sendDataToServer(String msg) {
         buf = msg.getBytes();
         DatagramPacket packet
-                = new DatagramPacket(buf, buf.length, address, 4445);
-        socket.send(packet);
-        packet = new DatagramPacket(buf, buf.length);
-        socket.receive(packet);
-        String received = new String(
-                packet.getData(), 0, packet.getLength());
-        return received;
+                = new DatagramPacket(buf, buf.length, address, port);
+        try {
+            socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getDataFromServer(){
+        byte[] data = new byte[32];
+        DatagramPacket packet = new DatagramPacket(data, data.length);
+        try {
+            socket.receive(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("From server: " + new String(packet.getData()));
     }
 
     public void close() {
@@ -32,8 +43,11 @@ public class GameClient {
 
     public static void main(String[] args) throws IOException {
         GameClient client = new GameClient();
+        int counter=0;
         while(true){
-            client.sendEcho("hello server");
+            counter++;
+            client.sendDataToServer( "hello server"+counter);
+            client.getDataFromServer();
         }
     }
 }
