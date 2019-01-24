@@ -10,7 +10,7 @@ public class Server extends Thread {
 
     private DatagramSocket socket;
     private boolean running;
-    private byte[] buf = new byte[256];
+    int counter = 0;
 
     public Server() throws SocketException {
         socket = new DatagramSocket(4445);
@@ -18,33 +18,44 @@ public class Server extends Thread {
 
     public void run() {
         running = true;
-
         while (running) {
-            DatagramPacket packet
-                    = new DatagramPacket(buf, buf.length);
+            byte[] data = new byte[32];
+            DatagramPacket packet = new DatagramPacket(data, data.length);
+            String received = getFromClient(packet);
+            System.out.println("From client to server: " + received);
+            sendToClient((received).getBytes(), packet.getAddress(), packet.getPort());
             try {
-                socket.receive(packet);
-            } catch (IOException e) {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
-            InetAddress address = packet.getAddress();
-            int port = packet.getPort();
-            packet = new DatagramPacket(buf, buf.length, address, port);
-            String received
-                    = new String(packet.getData(), 0, packet.getLength());
-            System.out.println(received);
+            counter++;
             if (received.equals("end")) {
                 running = false;
                 continue;
             }
-            try {
-                socket.send(packet);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         socket.close();
+    }
+
+    public void sendToClient(byte[] data, InetAddress ipAddress, int port){
+        DatagramPacket packet
+                = new DatagramPacket(data, data.length, ipAddress, port);
+        try {
+            this.socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getFromClient(DatagramPacket packet){
+        try {
+            socket.receive(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String messageFromClient = new String(packet.getData());
+        return messageFromClient;
     }
 
     public static void main(String[] args) throws SocketException {
