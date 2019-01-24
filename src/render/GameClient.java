@@ -1,33 +1,39 @@
 package render;
 
+import java.io.IOException;
 import java.net.*;
 
-public class GameClient extends Thread{
-
-
-    private InetAddress ipAddress;
+public class GameClient {
     private DatagramSocket socket;
-    private Server server;
+    private InetAddress address;
 
-    public GameClient(Server server, String ipAddress){
-        this.server = server;
+    private byte[] buf;
 
-        try{
-            this.socket = new DatagramSocket();
-            this.ipAddress = InetAddress.getByName(ipAddress);
-        }
-        catch (SocketException e){
-            e.printStackTrace();
-        }
-        catch (UnknownHostException e){
-            e.printStackTrace();
-        }
+    public GameClient() throws SocketException, UnknownHostException {
+        socket = new DatagramSocket();
+        address = InetAddress.getByName("localhost");
     }
 
-
-
-    public static void main(String args[]){
-        System.out.println("yoClient");
+    public String sendEcho(String msg) throws IOException {
+        buf = msg.getBytes();
+        DatagramPacket packet
+                = new DatagramPacket(buf, buf.length, address, 4445);
+        socket.send(packet);
+        packet = new DatagramPacket(buf, buf.length);
+        socket.receive(packet);
+        String received = new String(
+                packet.getData(), 0, packet.getLength());
+        return received;
     }
 
+    public void close() {
+        socket.close();
+    }
+
+    public static void main(String[] args) throws IOException {
+        GameClient client = new GameClient();
+        while(true){
+            client.sendEcho("hello server");
+        }
+    }
 }
