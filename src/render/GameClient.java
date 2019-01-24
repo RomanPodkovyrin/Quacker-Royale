@@ -46,7 +46,7 @@ public class GameClient {
         int counter=0;
         while(true){
             counter++;
-            client.sendDataToServer( "hello server"+counter);
+            client.sendDataToServer( "hello from anton"+counter);
             client.getDataFromServer();
         }
     }
