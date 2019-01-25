@@ -1,3 +1,8 @@
 *.iml
 .idea/
 out/
+production/anotherworld/render/
+.classpath
+.project
+bin/
+
