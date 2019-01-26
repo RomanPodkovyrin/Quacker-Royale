@@ -6,3 +6,6 @@ production/anotherworld/render/
 .project
 bin/
 
+/.gradle/
+/build/
+.settings/
