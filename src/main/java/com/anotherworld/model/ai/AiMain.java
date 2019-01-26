@@ -1,4 +1,4 @@
-package com.anotherworld.main.model.ai;
+package com.anotherworld.model.ai;
 
 public class AiMain {
 }
