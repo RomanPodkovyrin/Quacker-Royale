@@ -34,7 +34,7 @@ sourceSets {
 }
 
 // Declares the location of the main method
-mainClassName = 'com.anotherworld.network.Testrender.graphics'
+mainClassName = 'com.anotherworld.view.ViewPrototype'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -86,5 +86,13 @@ dependencies {
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
     testCompile 'junit:junit:4.12'
+}
+
+task cleanBuildRun { //Tasks to build and run project in right order
+    dependsOn 'clean'
+    dependsOn 'build'
+    dependsOn 'run'
+    tasks.findByName('build').mustRunAfter 'clean'
+    tasks.findByName('run').mustRunAfter 'build'
 }
 
