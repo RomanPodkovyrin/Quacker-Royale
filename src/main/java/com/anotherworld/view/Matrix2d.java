@@ -57,14 +57,15 @@ public class Matrix2d {
 		return result;
 	}
 	
-	public Matrix2d mult(Matrix2d a) { // Multiplies a * this
-		assert(this.getM() == a.getN());
-		Matrix2d result = new Matrix2d(a.getM(), this.getN());
+	public Matrix2d mult(Matrix2d b) { // Multiplies this * b
+		Matrix2d a = this;
+		assert(a.getN() == b.getM());
+		Matrix2d result = new Matrix2d(a.getM(), b.getN());
 		for (int i = 0; i < a.getM(); i++) {
-			for (int j = 0; j < this.getN(); j++) {
+			for (int j = 0; j < b.getN(); j++) {
 				float v = 0f;
-				for (int k = 0; k < this.getM(); k++) {
-					v += a.value[i][k] * a.value[k][j];
+				for (int k = 0; k < a.getN(); k++) {
+					v += a.value[i][k] * b.value[k][j];
 				}
 				result.value[i][j] = v;
 			}
@@ -89,6 +90,28 @@ public class Matrix2d {
 		for (int k = 0; k < l; k++) {
 			result.value[k][k] = 1f;
 		}
+		return result;
+	}
+	
+	public static final Matrix2d ROTATION_2D(float theta) {
+		Matrix2d result = new Matrix2d(2, 2);
+		result.value[0][0] = (float)Math.cos(theta);
+		result.value[1][0] = (float)Math.sin(theta);
+		result.value[0][1] = -(float)Math.sin(theta);
+		result.value[1][1] = (float)Math.cos(theta);
+		return result;
+	}
+	
+	public static final Matrix2d TEST_SQUARE() {
+		Matrix2d result = new Matrix2d(2, 4);
+		result.value[0][0] = -0.5f;
+		result.value[1][0] = -0.5f;
+		result.value[0][1] = -0.5f;
+		result.value[1][1] = 0.5f;
+		result.value[0][2] = 0.5f;
+		result.value[1][2] = 0.5f;
+		result.value[0][3] = 0.5f;
+		result.value[1][3] = -0.5f;
 		return result;
 	}
 	

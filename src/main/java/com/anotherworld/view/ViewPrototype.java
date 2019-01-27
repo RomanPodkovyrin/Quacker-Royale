@@ -24,7 +24,7 @@ public class ViewPrototype {
 			throw new IllegalStateException("Couldn't initialise glfw");
 		}
 		
-		window = glfwCreateWindow(640, 280, "Bullet Hell", NULL, NULL);
+		window = glfwCreateWindow(600, 600, "Bullet Hell", NULL, NULL);
 		
 		if (window == null) {
 			glfwTerminate();
@@ -39,6 +39,12 @@ public class ViewPrototype {
 			
 			glClear(GL_COLOR_BUFFER_BIT);
 			
+			Matrix2d rotation = Matrix2d.ROTATION_2D((float)glfwGetTime() % 360);
+			
+			drawMatrix(rotation.mult(Matrix2d.TEST_SQUARE()));
+			
+			glFlush();
+			
 			glfwSwapBuffers(window);
 			
 			glfwPollEvents();
@@ -46,6 +52,16 @@ public class ViewPrototype {
 		}
 		
 		glfwTerminate();
+	}
+	
+	private void drawMatrix(Matrix2d a) {
+		glBegin(GL_POLYGON);
+		for (int j = 0; j < a.getN(); j++) {
+			System.out.println(a.getValue(0, j) + ":" + a.getValue(1, j));
+			glVertex2f(a.getValue(0, j), a.getValue(1, j));
+		}
+		System.out.println();
+		glEnd();
 	}
 	
 	public static void main(String args[]) {
