@@ -1,10 +1,7 @@
 package com.anotherworld.main.network;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
+import java.net.*;
 
 public class Server extends Thread {
 
@@ -12,8 +9,10 @@ public class Server extends Thread {
     private boolean running;
     int counter = 0;
 
-    public Server() throws SocketException {
+    public Server() throws SocketException, UnknownHostException {
         socket = new DatagramSocket(4445);
+        System.out.println("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
+
     }
 
     public void run() {
@@ -23,6 +22,7 @@ public class Server extends Thread {
             DatagramPacket packet = new DatagramPacket(data, data.length);
             String received = getFromClient(packet);
             System.out.println("From client to server: " + received);
+            System.out.println(packet.getAddress());
             sendToClient((received).getBytes(), packet.getAddress(), packet.getPort());
             try {
                 Thread.sleep(30);
@@ -58,7 +58,7 @@ public class Server extends Thread {
         return messageFromClient;
     }
 
-    public static void main(String[] args) throws SocketException {
+    public static void main(String[] args) throws SocketException, UnknownHostException {
         new Server().start();
     }
 }
