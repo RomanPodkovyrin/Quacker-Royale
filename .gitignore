@@ -1,3 +1,13 @@
-/bin/
+*.iml
+.idea/
+out/
+production/anotherworld/render/
 .classpath
 .project
+bin/
+
+/.gradle/
+/build/
+.settings/
+.externalToolBuilders/
+
