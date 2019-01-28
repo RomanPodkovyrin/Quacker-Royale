@@ -1,14 +1,16 @@
 package com.anotherworld.model.movable;
 
-public class Character extends AbstractMovable {
+public class Player extends AbstractMovable {
     private String characterID;
+    private boolean aiEnabled;
     private int health;
 
-    public Character(String characterID, int health, float xCoordinate,
-                     float yCoordinate, ObjectState state) {
+    public Player(String characterID, int health, float xCoordinate,
+                  float yCoordinate, ObjectState state, boolean aiEnabled) {
         super(xCoordinate, yCoordinate, state);
         this.characterID = characterID;
         this.health = health;
+        this.aiEnabled = aiEnabled;
     }
 
     public String getCharacterID() { return characterID; }
@@ -22,4 +24,6 @@ public class Character extends AbstractMovable {
     public void setHealth(int health) {
         this.health = health;
     }
+
+    public boolean isAIEnabled() { return aiEnabled; }
 }
