@@ -1,10 +1,10 @@
 package com.anotherworld.model.movable;
 
 
-public class Movable {
+public abstract class AbstractMovable {
     private float xCoordinate;
     private float yCoordinate;
-    private ObjectStates state;
+    private ObjectState state;
     private int points;
     private float angle;
     private float xVelocity;
@@ -13,7 +13,7 @@ public class Movable {
 
     private float radious;
 
-    public Movable(float xCoordinate, float yCoordinate, ObjectStates state){
+    public AbstractMovable(float xCoordinate, float yCoordinate, ObjectState state){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.state = state;
@@ -33,11 +33,11 @@ public class Movable {
         return yCoordinate;
     }
 
-    public ObjectStates getState() {
+    public ObjectState getState() {
         return state;
     }
 
-    public void setState(ObjectStates state) {
+    public void setState(ObjectState state) {
         this.state = state;
     }
 

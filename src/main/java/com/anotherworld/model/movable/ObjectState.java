@@ -1,5 +1,5 @@
 package com.anotherworld.model.movable;
 
-public enum ObjectStates {
+public enum ObjectState {
     Moving, Collision
 }
