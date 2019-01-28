@@ -1,4 +1,4 @@
-package com.anotherworld.main.network;
+package com.anotherworld.network;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
