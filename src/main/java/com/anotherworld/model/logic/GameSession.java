@@ -12,4 +12,12 @@ public class GameSession {
     public GameSession(ArrayList<Player> players) {
         this.players = players;
     }
+
+    /**
+     * Checks all the objects and updates their state and location
+     * physics and ai are run during this time
+     */
+    public void update(){
+
+    }
 }
