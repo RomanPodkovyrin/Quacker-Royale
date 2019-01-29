@@ -15,10 +15,12 @@ public class Matrix2d {
 		this.n = n;
 	}
 	
+	@Deprecated
 	public float[] getRow(int i) {
 		return value[i];
 	}
 
+	@Deprecated
 	public float[] getColumn(int j) {
 		float[] r = new float[m];
 		for (int i = 0; i < m; i++) {
@@ -31,6 +33,7 @@ public class Matrix2d {
 		value[i][j] = v;
 	}
 	
+	@Deprecated
 	public Matrix2d add(Matrix2d b) {
 		assert(b.getM() == this.getM());
 		assert(b.getN() == this.getN());
@@ -44,6 +47,7 @@ public class Matrix2d {
 		return result;
 	}
 	
+	@Deprecated
 	public Matrix2d sub(Matrix2d b) {
 		assert(b.getM() == this.getM());
 		assert(b.getN() == this.getN());
