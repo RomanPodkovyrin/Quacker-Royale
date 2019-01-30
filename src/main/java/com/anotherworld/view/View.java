@@ -99,6 +99,7 @@ public class View {
 		
 	}
 	
+	@Deprecated
 	public static void main(String args[]) {
 		(new View()).start();
 	}

@@ -22,6 +22,7 @@ public class DisplayObject {
 		return x;
 	}
 	
+	@Deprecated
 	public void setY(float y) {
 		this.y = y;
 	}

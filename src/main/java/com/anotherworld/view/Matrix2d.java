@@ -96,14 +96,6 @@ public class Matrix2d {
 		}
 		return result;
 	}
-
-	public static final Matrix2d GEN_NEG(int l) {
-		Matrix2d result = new Matrix2d(l, l);
-		for (int k = 0; k < l; k++) {
-			result.value[k][k] = k+1==l?1f:-1f;
-		}
-		return result;
-	}
 	
 	@Deprecated
 	public static final Matrix2d ROTATION_2D(float theta) {
@@ -140,10 +132,12 @@ public class Matrix2d {
 		return result;
 	}
 	
+	@Deprecated
 	public static final Matrix2d TEST_SQUARE() {
 		return Matrix2d.TEST_SQUARE(0.5f);
 	}
 	
+	@Deprecated
 	public static final Matrix2d TEST_SQUARE(float s) {
 		Matrix2d result = new Matrix2d(3, 4);
 		result.value[0][0] = -s;
@@ -160,6 +154,7 @@ public class Matrix2d {
 		return result;
 	}
 	
+	@Deprecated
 	public void draw(String name) {
 		System.out.println(name + ":");
 		for (int i = 0; i < m; i++) {
