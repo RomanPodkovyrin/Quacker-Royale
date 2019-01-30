@@ -8,18 +8,16 @@ public class GameClient {
     private InetAddress address;
     private int port = 4445;
 
-    private byte[] buf;
-
     public GameClient() throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
-        address = InetAddress.getByName("192.168.0.12");
-        System.out.println(address);
+        address = InetAddress.getByName("172.22.84.8");
+        System.out.println(Inet4Address.getLocalHost().getHostAddress());
     }
 
     public void sendDataToServer(String msg) {
-        buf = msg.getBytes();
+        byte[] data = msg.getBytes();
         DatagramPacket packet
-                = new DatagramPacket(buf, buf.length, address, port);
+                = new DatagramPacket(data, data.length, address, port);
         try {
             socket.send(packet);
         } catch (IOException e) {
@@ -38,7 +36,7 @@ public class GameClient {
         System.out.println("From server: " + new String(packet.getData()));
     }
 
-    public void close() {
+    public void closeSocket() {
         socket.close();
     }
 

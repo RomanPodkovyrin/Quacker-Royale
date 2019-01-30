@@ -6,20 +6,21 @@ import java.net.*;
 public class Server extends Thread {
 
     private DatagramSocket socket;
-    private boolean running;
+    private boolean serverIsRunning;
     int counter = 0;
+    byte[] dataReceived;
 
     public Server() throws SocketException, UnknownHostException {
         socket = new DatagramSocket(4445);
+        dataReceived = new byte[32];
         System.out.println("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
 
     }
 
     public void run() {
-        running = true;
-        while (running) {
-            byte[] data = new byte[32];
-            DatagramPacket packet = new DatagramPacket(data, data.length);
+        serverIsRunning = true;
+        while (serverIsRunning) {
+            DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
             String received = getFromClient(packet);
             System.out.println("From client to server: " + received);
             System.out.println(packet.getAddress());
@@ -31,16 +32,16 @@ public class Server extends Thread {
             }
             counter++;
             if (received.equals("end")) {
-                running = false;
+                serverIsRunning = false;
                 continue;
             }
         }
         socket.close();
     }
 
-    public void sendToClient(byte[] data, InetAddress ipAddress, int port){
+    public void sendToClient(byte[] dataToSend, InetAddress ipAddress, int port){
         DatagramPacket packet
-                = new DatagramPacket(data, data.length, ipAddress, port);
+                = new DatagramPacket(dataToSend, dataToSend.length, ipAddress, port);
         try {
             this.socket.send(packet);
         } catch (IOException e) {
@@ -62,4 +63,3 @@ public class Server extends Thread {
         new Server().start();
     }
 }
-
