@@ -109,6 +109,7 @@ public class Matrix2d {
 	
 	public static final Matrix2d H_ROTATION_2D(float theta) {
 		Matrix2d result = new Matrix2d(3, 3);
+		theta = theta * (float)Math.PI / 180f;
 		result.value[0][0] = (float)Math.cos(theta);
 		result.value[1][0] = (float)Math.sin(theta);
 		result.value[0][1] = -(float)Math.sin(theta);

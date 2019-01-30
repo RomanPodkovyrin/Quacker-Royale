@@ -16,8 +16,8 @@ public class Ball extends DisplayObject {
 			result.setValue(0, j, BALL_R * (float)Math.cos(((float)j / 60) * Math.PI));
 			result.setValue(1, j, BALL_R * (float)Math.sin(((float)j / 60) * Math.PI));
 			result.setValue(2, j, 1);
-			result.draw("Circle");
 		}
+		result.draw("Circle");
 		return result;
 	}
 	

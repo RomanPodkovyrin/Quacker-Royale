@@ -6,7 +6,6 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
-import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -16,16 +15,50 @@ public class View {
 	
 	private Long window;
 	
+	private DisplayObject[] objects;
+	
 	public View() {
+		objects = new DisplayObject[10];
+		for(int i = 0; i < 5; i++) {
+			objects[i] = (new Ball((float)Math.random() * 160, (float)Math.random() * 90, (float)Math.random() * 360));
+			objects[i + 5] = (new Player((float)Math.random() * 160, (float)Math.random() * 90, 10f));
+		}
+		this.start();
+	}
+	
+	public void display(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) {
+		synchronized(objects) {
+			objects = new DisplayObject[players.length + balls.length + platform.length + wall.length];
+			int index = 0;
+			for (int i = 0; i < platform.length; i++) {
+				objects[i] = platform[i];
+			}
+			index += platform.length;
+			for (int i = 0; i < balls.length; i++) {
+				objects[i + index] = balls[i];
+			}
+			index += balls.length;
+			for (int i = 0; i < players.length; i++) {
+				objects[i + index] = players[i];
+			}
+			index += players.length;
+			for (int i = 0; i < wall.length; i++) {
+				objects[i + index] = wall[i];
+			}
+			index += wall.length;
+		}
+	}
+	
+	public void close() {
 		
 	}
 	
-	public void start() {
+	private void start() {
 		if (!glfwInit()) {
 			throw new IllegalStateException("Couldn't initialise glfw");
 		}
 		
-		window = glfwCreateWindow(600, 600, "Bullet Hell", NULL, NULL);
+		window = glfwCreateWindow(1120, 630, "Bullet Hell", NULL, NULL);
 		
 		if (window == null) {
 			glfwTerminate();
@@ -36,22 +69,14 @@ public class View {
 		
 		GL.createCapabilities();
 		
-		ArrayList<DisplayObject> ob = new ArrayList<>();
-		
-		for(int i = 0; i < 5; i++) {
-			ob.add(new Ball((float)Math.random() * 100, (float)Math.random() * 100, (float)Math.random() * 360));
-			ob.add(new Player((float)Math.random() * 100, (float)Math.random() * 100, (float)Math.random() * 360));
-		}
-		
 		while(!glfwWindowShouldClose(window)) {
 			
 			glClear(GL_COLOR_BUFFER_BIT);
 			
-			Matrix2d viewMatrix = calculateViewMatrix(0, 0, 100, 100, 0, 0);
+			Matrix2d viewMatrix = calculateViewMatrix(0, 0, 160, 90, 0, 0);
 			
-			for (int i = 0; i < ob.size(); i++) {
-				drawObject(ob.get(i), viewMatrix);
-				ob.get(i).setY((ob.get(i).getY() + 0.05f ) % 100);
+			for (DisplayObject obj : objects) {
+				drawObject(obj, viewMatrix);
 			}
 			
 			glFlush();
@@ -101,7 +126,7 @@ public class View {
 	
 	@Deprecated
 	public static void main(String args[]) {
-		(new View()).start();
+		new View();
 	}
 	
 }
