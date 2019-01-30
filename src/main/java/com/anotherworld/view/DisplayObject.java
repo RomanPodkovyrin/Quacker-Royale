@@ -22,6 +22,10 @@ public class DisplayObject {
 		return x;
 	}
 	
+	public void setY(float y) {
+		this.y = y;
+	}
+	
 	public float getY() {
 		return y;
 	}

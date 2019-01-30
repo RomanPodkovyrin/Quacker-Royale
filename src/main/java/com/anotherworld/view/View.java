@@ -6,16 +6,17 @@ import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
+import java.util.ArrayList;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-public class ViewPrototype {
+public class View {
 	
 	private Long window;
 	
-	public ViewPrototype() {
+	public View() {
 		
 	}
 	
@@ -35,19 +36,23 @@ public class ViewPrototype {
 		
 		GL.createCapabilities();
 		
-		DisplayObject test = new DisplayObject(Matrix2d.TEST_SQUARE(5), 90, 10, 0);
+		ArrayList<DisplayObject> ob = new ArrayList<>();
+		
+		for(int i = 0; i < 5; i++) {
+			ob.add(new Ball((float)Math.random() * 100, (float)Math.random() * 100, (float)Math.random() * 360));
+			ob.add(new Player((float)Math.random() * 100, (float)Math.random() * 100, (float)Math.random() * 360));
+		}
 		
 		while(!glfwWindowShouldClose(window)) {
 			
 			glClear(GL_COLOR_BUFFER_BIT);
 			
-			//Matrix2d rotation = Matrix2d.ROTATION_2D((float)glfwGetTime() % 360);
-			
-			//drawMatrix((Matrix2d.TEST_SQUARE()));
-			
 			Matrix2d viewMatrix = calculateViewMatrix(0, 0, 100, 100, 0, 0);
 			
-			drawObject(test, viewMatrix);
+			for (int i = 0; i < ob.size(); i++) {
+				drawObject(ob.get(i), viewMatrix);
+				ob.get(i).setY((ob.get(i).getY() + 0.05f ) % 100);
+			}
 			
 			glFlush();
 			
@@ -63,7 +68,6 @@ public class ViewPrototype {
 	private void drawMatrix(Matrix2d a) {
 		glBegin(GL_POLYGON);
 		for (int j = 0; j < a.getN(); j++) {
-			System.out.println(a.getValue(0, j) + ":" + a.getValue(1, j));
 			glVertex2f(a.getValue(0, j) / a.getValue(2, j), a.getValue(1, j) / a.getValue(2, j));
 		}
 		System.out.println();
@@ -72,24 +76,14 @@ public class ViewPrototype {
 	
 	private Matrix2d calculateViewMatrix(float camX, float camY, float camW, float camH, float xRes, float yRes) {
 		Matrix2d modifier;
-		
-		//modifier = (Matrix2d.H_TRANSLATION_2D(-1f, 0f));
-		
-		//modifier.draw("Cam center");
 
-		modifier = /*modifier.mult*/(Matrix2d.H_TRANSLATION_2D(-1f, 1f));
+		modifier = (Matrix2d.H_TRANSLATION_2D(-1f, 1f));
 		
 		modifier = modifier.mult(Matrix2d.H_SCALE_2D(1f, -1f));
 		
-		modifier.draw("Cam invert");
-		
 		modifier = modifier.mult(Matrix2d.H_SCALE_2D(2 / camW, 2 / camH));
 		
-		modifier.draw("Cam scale");
-		
 		modifier = modifier.mult(Matrix2d.H_TRANSLATION_2D(-camX, -camY));
-		
-		modifier.draw("Cam shift");
 		
 		return modifier;
 	}
@@ -99,20 +93,14 @@ public class ViewPrototype {
 		
 		modifier = modifier.mult(Matrix2d.H_TRANSLATION_2D(obj.getX(), obj.getY()));
 		
-		modifier.draw("Translation");
-		
 		modifier = modifier.mult(Matrix2d.H_ROTATION_2D(obj.getTheta()));
-
-		modifier.draw("Rotation");
 		
 		drawMatrix(modifier.mult(obj.getPoints()));
-
-		modifier.mult(obj.getPoints()).draw("Points");
 		
 	}
 	
 	public static void main(String args[]) {
-		(new ViewPrototype()).start();
+		(new View()).start();
 	}
 	
 }

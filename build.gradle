@@ -34,7 +34,7 @@ sourceSets {
 }
 
 // Declares the location of the main method
-mainClassName = 'com.anotherworld.view.ViewPrototype'
+mainClassName = 'com.anotherworld.view.View'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
