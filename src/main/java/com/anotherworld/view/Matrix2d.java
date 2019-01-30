@@ -96,7 +96,16 @@ public class Matrix2d {
 		}
 		return result;
 	}
+
+	public static final Matrix2d GEN_NEG(int l) {
+		Matrix2d result = new Matrix2d(l, l);
+		for (int k = 0; k < l; k++) {
+			result.value[k][k] = k+1==l?1f:-1f;
+		}
+		return result;
+	}
 	
+	@Deprecated
 	public static final Matrix2d ROTATION_2D(float theta) {
 		Matrix2d result = new Matrix2d(2, 2);
 		result.value[0][0] = (float)Math.cos(theta);
@@ -106,17 +115,60 @@ public class Matrix2d {
 		return result;
 	}
 	
-	public static final Matrix2d TEST_SQUARE() {
-		Matrix2d result = new Matrix2d(2, 4);
-		result.value[0][0] = -0.5f;
-		result.value[1][0] = -0.5f;
-		result.value[0][1] = -0.5f;
-		result.value[1][1] = 0.5f;
-		result.value[0][2] = 0.5f;
-		result.value[1][2] = 0.5f;
-		result.value[0][3] = 0.5f;
-		result.value[1][3] = -0.5f;
+	public static final Matrix2d H_ROTATION_2D(float theta) {
+		Matrix2d result = new Matrix2d(3, 3);
+		result.value[0][0] = (float)Math.cos(theta);
+		result.value[1][0] = (float)Math.sin(theta);
+		result.value[0][1] = -(float)Math.sin(theta);
+		result.value[1][1] = (float)Math.cos(theta);
+		result.value[2][2] = 1f;
 		return result;
+	}
+	
+	public static final Matrix2d H_TRANSLATION_2D(float x, float y) {
+		Matrix2d result = Matrix2d.GEN_IDENTITY(3);
+		result.value[0][2] = x;
+		result.value[1][2] = y;
+		return result;
+	}
+	
+	public static final Matrix2d H_SCALE_2D(float x, float y) {
+		Matrix2d result = new Matrix2d(3, 3);
+		result.value[0][0] = x;
+		result.value[1][1] = y;
+		result.value[2][2] = 1;
+		return result;
+	}
+	
+	public static final Matrix2d TEST_SQUARE() {
+		return Matrix2d.TEST_SQUARE(0.5f);
+	}
+	
+	public static final Matrix2d TEST_SQUARE(float s) {
+		Matrix2d result = new Matrix2d(3, 4);
+		result.value[0][0] = -s;
+		result.value[1][0] = -s;
+		result.value[0][1] = -s;
+		result.value[1][1] = s;
+		result.value[0][2] = s;
+		result.value[1][2] = s;
+		result.value[0][3] = s;
+		result.value[1][3] = -s;
+		for (int j = 0; j < result.getN(); j++) {
+			result.value[2][j] = 1;
+		}
+		return result;
+	}
+	
+	public void draw(String name) {
+		System.out.println(name + ":");
+		for (int i = 0; i < m; i++) {
+			for (int j = 0; j < n; j++) {
+				System.out.print(value[i][j] + (j < n - 1?",":""));
+			}
+			System.out.println();
+		}
+		System.out.println();
 	}
 	
 }
