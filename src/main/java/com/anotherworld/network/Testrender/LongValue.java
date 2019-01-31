@@ -1,4 +1,4 @@
-package com.anotherworld.main.network.Testrender;
+package com.anotherworld.network.Testrender;
 
 public class LongValue {
 
