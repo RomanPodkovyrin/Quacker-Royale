@@ -2,6 +2,7 @@ package com.anotherworld.model.physics;
 
 import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
+import com.anotherworld.model.movable.Player;
 
 public class Physics {
 	public float[] calculateXYVelocity(float speed, float angle) {
@@ -89,5 +90,7 @@ public class Physics {
 		 * 	0,1: knocked back with the force applied from the object collided.
 		 *  0: upon the knocked back, the Player
 		 */
+		float[] objectCoord = {a.getxCoordinate(), a.getyCoordinate()};
+		
 	}
 }

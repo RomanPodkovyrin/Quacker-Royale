@@ -80,4 +80,9 @@ public abstract class AbstractMovable {
     public void setRadious(float radious) {
         this.radious = radious;
     }
+    
+    private void OnCollision() {
+    	
+    }
+
 }
