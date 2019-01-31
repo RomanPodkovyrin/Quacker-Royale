@@ -1,12 +1,15 @@
 package com.anotherworld.main.network;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
-
+import java.io.*;
 
 public class Server extends Thread {
 
     private DatagramSocket socket;
+    private ServerSocket TCPsocket;
     private boolean serverIsRunning;
     int counter = 0;
     byte[] dataReceived;
@@ -15,40 +18,30 @@ public class Server extends Thread {
     boolean allPlayersJoined;
     int port = 4445;
 
-    public Server(int playersAmount) throws SocketException, UnknownHostException {
+    public Server(int playersAmount) throws IOException {
         socket = new DatagramSocket(port);
+        TCPsocket = new ServerSocket(port);
         dataReceived = new byte[32];
         this.playersAmount = playersAmount;
         playersIPAddresses = new String[this.playersAmount];
         System.out.println("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
-
     }
 
     public void run() {
-        int clientIndex = 0;
-        while (!allPlayersJoined) {
-            DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
-            String received = receiveClientIp(packet);
-            if(!received.equals("not ip")) {
-                playersIPAddresses[clientIndex] = received;
-                clientIndex++;
-                if (clientIndex == playersAmount)
-                    allPlayersJoined = true;
-                System.out.println(received);
-                System.out.println("status: " + allPlayersJoined);
-            }
+        havePlayersConnected();
+        System.out.println("We reached line 33");
+        for(int i =0; i<playersAmount; i++){
+            System.out.println(playersIPAddresses[i] + " ip address of player " + i+1);
         }
-        System.out.println("We reached line 41");
-        try {
-            Thread.sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        try {
-            informClientsGameStarted();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            informClientsGameStartedTCP();
+//            System.out.println("succesfull?");
+//        } catch (IOException e) {
+//            System.out.println("or not?");
+//            e.printStackTrace();
+//        }
+        serverIsRunning = true;
+        System.out.println("does it go on 51?");
         while (serverIsRunning) {
             DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
             String received = getFromClient(packet);
@@ -82,7 +75,19 @@ public class Server extends Thread {
         }
     }
 
-    public void informClientsGameStarted() throws UnknownHostException {
+    public void informClientsGameStartedTCP() throws IOException {
+            Socket connectionSocket = TCPsocket.accept();
+            String clientSentence;
+            String capitalizedSentence;
+            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+            DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+            clientSentence = inFromClient.readLine();
+            System.out.println("Received: " + clientSentence);
+            capitalizedSentence = clientSentence.toUpperCase() + 'n';
+            outToClient.writeBytes("1");
+    }
+
+    public void informClientsGameStartedUDP() throws UnknownHostException {
         String status = "1";
         for(int i =0; i<playersAmount; i++){
             DatagramPacket packet = new DatagramPacket(status.getBytes(), status.getBytes().length, InetAddress.getByName(playersIPAddresses[i]), port);
@@ -112,6 +117,23 @@ public class Server extends Thread {
         return new String(buffer, 0, packet.getLength());
     }
 
+    public void havePlayersConnected(){
+        int clientIndex = 0;
+        while (!allPlayersJoined) {
+            DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
+            String received = receiveClientIp(packet);
+            System.out.println("Received" + received);
+            if(!received.equals("not ip")) {
+                playersIPAddresses[clientIndex] = received;
+                clientIndex++;
+                if (clientIndex == playersAmount)
+                    allPlayersJoined = true;
+                System.out.println(received);
+                System.out.println("Have all players connected? " + allPlayersJoined);
+            }
+        }
+    }
+
     public void sendPacket(DatagramPacket packet){
         try {
             this.socket.send(packet);
@@ -120,7 +142,7 @@ public class Server extends Thread {
         }
     }
 
-    public static void main(String[] args) throws SocketException, UnknownHostException {
-        new Server(2).start();
+    public static void main(String[] args) throws IOException {
+        new Server(1).start();
     }
 }

@@ -1,7 +1,10 @@
 package com.anotherworld.main.network;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.*;
+import java.io.*;
 
 public class GameClient {
     private DatagramSocket socket;
@@ -35,6 +38,28 @@ public class GameClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void waitGameToStartTCP() throws IOException {
+        boolean gameStarted = false;
+        while(!gameStarted) {
+            String sentence;
+            String modifiedSentence;
+            //BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+            Socket clientSocket = new Socket(serverIpAddress, port);
+            DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
+            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            //sentence = inFromUser.readLine();
+            System.out.println("line 53?");
+            outToServer.writeBytes("yo");
+            modifiedSentence = inFromServer.readLine();
+            System.out.println("FROM SERVER: " + modifiedSentence);
+            if (modifiedSentence.equals("1")) {
+                gameStarted = true;
+                clientSocket.close();
+            }
+        }
+
     }
 
     public void waitGameToStart(){
@@ -75,7 +100,7 @@ public class GameClient {
 
     public static void main(String[] args) throws IOException {
         GameClient client = new GameClient();
-        client.waitGameToStart();
+        //client.waitGameToStartTCP();
         System.out.println("Game started!!!!");
         int counter=0;
         while(true){
