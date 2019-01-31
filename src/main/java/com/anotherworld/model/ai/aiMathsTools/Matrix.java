@@ -17,6 +17,10 @@ public class Matrix {
         return y;
     }
 
+    public String toString(){
+        return "x: "+ x + ", y: " + y;
+    }
+
     /**
      * [p1] <- x
      * [p2] <- y

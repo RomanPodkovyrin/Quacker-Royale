@@ -47,4 +47,20 @@ public class Line {
         this.d = (this.a * this.point.getX()) + (this.b * this.point.getY());
 
     }
+
+    //Takes P + V
+    public Line(Matrix point,Matrix vector){
+        this.point = point;
+        this.vector = vector;
+
+        this.a = - this.vector.getY();
+        this.b = this.vector.getX();
+        this.d = (this.a * this.point.getX()) + (this.b * this.point.getY());
+
+    }
+
+    public Matrix getOrthogonalVector(){
+
+        return new Matrix(this.a, this.b);
+    }
 }
