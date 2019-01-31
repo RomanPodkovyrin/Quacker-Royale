@@ -40,7 +40,7 @@ public class GameClient {
     public void waitGameToStart(){
         boolean gameStarted = false;
         while(!gameStarted) {
-            sendDataToServer("yo");
+            sendDataToServer("not ip");
             byte[] status = new byte[30];
             DatagramPacket packet = new DatagramPacket(status, status.length);
             System.out.println("Did we get a packet?");
@@ -49,8 +49,8 @@ public class GameClient {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            System.out.println("nothing?");
             String receivedStatus = new String(packet.getData());
+            System.out.println("Received status is: " + receivedStatus);
             if (receivedStatus.equals("1"))
                 gameStarted = true;
             System.out.println(receivedStatus);
@@ -75,7 +75,7 @@ public class GameClient {
 
     public static void main(String[] args) throws IOException {
         GameClient client = new GameClient();
-        //client.waitGameToStart();
+        client.waitGameToStart();
         System.out.println("Game started!!!!");
         int counter=0;
         while(true){

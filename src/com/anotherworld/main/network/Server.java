@@ -29,19 +29,26 @@ public class Server extends Thread {
         while (!allPlayersJoined) {
             DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
             String received = receiveClientIp(packet);
-            playersIPAddresses[clientIndex] = received;
-            clientIndex++;
-            if(clientIndex == playersAmount)
-                allPlayersJoined = true;
-            System.out.println(received);
-            System.out.println("status: " + allPlayersJoined);
+            if(!received.equals("not ip")) {
+                playersIPAddresses[clientIndex] = received;
+                clientIndex++;
+                if (clientIndex == playersAmount)
+                    allPlayersJoined = true;
+                System.out.println(received);
+                System.out.println("status: " + allPlayersJoined);
+            }
         }
-//        try {
-//            informClientsGameStarted();
-//        } catch (UnknownHostException e) {
-//            e.printStackTrace();
-//        }
-        serverIsRunning = true;
+        System.out.println("We reached line 41");
+        try {
+            Thread.sleep(4000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        try {
+            informClientsGameStarted();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         while (serverIsRunning) {
             DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
             String received = getFromClient(packet);
@@ -76,11 +83,12 @@ public class Server extends Thread {
     }
 
     public void informClientsGameStarted() throws UnknownHostException {
-        String status = "2";
+        String status = "1";
         for(int i =0; i<playersAmount; i++){
             DatagramPacket packet = new DatagramPacket(status.getBytes(), status.getBytes().length, InetAddress.getByName(playersIPAddresses[i]), port);
             sendPacket(packet);
         }
+        serverIsRunning = true;
     }
 
     public String getFromClient(DatagramPacket packet){
