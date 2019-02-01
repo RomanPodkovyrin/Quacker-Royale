@@ -18,7 +18,7 @@ public class MatrixMath {
         return d;
     }
 
-    public static boolean isPerpenducular(Matrix vectorLine, Matrix vectorPoint, Matrix point){
+    public static boolean isPerpendicular(Matrix vectorLine, Matrix vectorPoint, Matrix point){
         Matrix fromVectorPoint = new Matrix(point.getX() - vectorPoint.getX(), point.getY() - vectorPoint.getY());
         //System.out.println(fromVectorPoint);
         float vectorDirectionAngle = vectorAngle(vectorLine);
@@ -37,6 +37,15 @@ public class MatrixMath {
 
     public static float vectorAngle(Matrix vector){
         return 90 + (float) Math.toDegrees(Math.atan2(vector.getY() , vector.getX()));
+    }
+
+    public static Matrix nearestNeighbour(Line line, Matrix point){
+
+        Matrix normVector = line.getOrthogonalVector();
+        System.out.println("Hell "+(normVector.div(MatrixMath.magnitude(normVector))));
+
+        return point.add((normVector.div(MatrixMath.magnitude(normVector))).mult(dist(line,point)));
+
     }
 
 }

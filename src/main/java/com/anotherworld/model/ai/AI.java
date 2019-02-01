@@ -1,6 +1,7 @@
 package com.anotherworld.model.ai;
 
 import com.anotherworld.model.ai.aiMathsTools.Matrix;
+import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
@@ -15,18 +16,23 @@ public class AI {
         this.balls = balls;
     }
 
-    public void think(){
+    public void makeAMove(){
 
         Matrix aiDirectionVector = new Matrix(aiPlayer.getxVelocity(), aiPlayer.getyVelocity());
         Matrix aiPositionVector = new Matrix(aiPlayer.getxCoordinate(), aiPlayer.getyCoordinate());
 
         //Avoiding balls
         for (Ball ball: balls){
+            Matrix ballVelocity = new Matrix(ball.getxVelocity(),ball.getyVelocity());
+            Matrix ballLocation = new Matrix(ball.getxCoordinate(), ball.getxCoordinate());
+            if (MatrixMath.isPerpendicular(ballVelocity,ballLocation,aiPositionVector)){
+
+            }
 
         }
     }
 
-//    public float vecToLine(Matrix startPoint, Matrix directionVecotor){
+//    public float vecToLine(Matrix startPoint, Matrix directionVector){
 //
 //
 //

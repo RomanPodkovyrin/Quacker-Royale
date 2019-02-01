@@ -9,6 +9,23 @@ public class Matrix {
         this.y = y;
     }
 
+    public Matrix mult(float n){
+
+        return new Matrix(x * n, y * n);
+    }
+
+    public Matrix add(Matrix n){
+
+        return new Matrix(n.getX() + x, n.getY() + y);
+    }
+
+    public Matrix sub(Matrix n){
+        return new Matrix(x - n.getX(), y - n.getY());
+    }
+
+    public Matrix div(float n){
+        return new Matrix(x / n, y / n);
+    }
     public float getX(){
         return x;
     }
@@ -20,6 +37,8 @@ public class Matrix {
     public String toString(){
         return "x: "+ x + ", y: " + y;
     }
+
+
 
     /**
      * [p1] <- x

@@ -1,11 +1,8 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.aiMathsTools.Line;
 import com.anotherworld.model.ai.aiMathsTools.Matrix;
 import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
@@ -15,7 +12,7 @@ import java.util.Collection;
 import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
-public class MatrixMathTest {
+public class PerpendicularTest {
     //private final MatrixMath j;
     private final Matrix vectorLine;
     private final Matrix vextorPoint;
@@ -40,21 +37,12 @@ public class MatrixMathTest {
                 {new Matrix(-3,-5),new Matrix(3,2), new Matrix(6,6),false},
         });
     }
-    public  MatrixMathTest (Matrix vectorLine, Matrix vectorPoint, Matrix point, boolean expected){
+    public PerpendicularTest(Matrix vectorLine, Matrix vectorPoint, Matrix point, boolean expected){
         //this.j = new MatrixMath();
         this.vectorLine = vectorLine;
         this.vextorPoint = vectorPoint;
         this.point = point;
         this.expected = expected;
-    }
-
-    @Test
-    public void genericTest(){
-        Line testLine = new Line(new Matrix(-4.0f, -4.0f),new Matrix(3.0f, 2.0f));
-        float distance = MatrixMath.dist(testLine,new Matrix(5,6));
-
-        assertEquals(round (3.328f,3),round(distance,3),0.0f);
-
     }
 
 
@@ -68,9 +56,9 @@ public class MatrixMathTest {
         return (double) temp / factor;
     }
     @Test
-    public void preprendicularTest(){
+    public void perpendicularTest(){
 
-        assertTrue(expected == MatrixMath.isPerpenducular(vectorLine,vextorPoint,point));
+        assertTrue(expected == MatrixMath.isPerpendicular(vectorLine,vextorPoint,point));
 
 
 
