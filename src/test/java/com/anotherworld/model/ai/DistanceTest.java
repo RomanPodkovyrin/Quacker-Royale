@@ -17,7 +17,7 @@ public class DistanceTest {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                {},{}
+                {}
         });
     }
     public DistanceTest(){
@@ -35,6 +35,10 @@ public class DistanceTest {
 
         Line line = new Line(new Matrix(2.0f, 2.0f),new Matrix(2.0f, 0.0f));
         Matrix q = new Matrix(6,1);
+        System.out.println("NormalVector: "+ line.getOrthogonalVector() +" Distance: "+MatrixMath.dist(line,q)+" Nearest Neighbour: "+ MatrixMath.nearestNeighbour(line,q));
+
+        line = new Line(new Matrix(2.0f, 2.0f),new Matrix(0.0f, 2.0f));
+        q = new Matrix(1,1);
         System.out.println("NormalVector: "+ line.getOrthogonalVector() +" Distance: "+MatrixMath.dist(line,q)+" Nearest Neighbour: "+ MatrixMath.nearestNeighbour(line,q));
 
     }

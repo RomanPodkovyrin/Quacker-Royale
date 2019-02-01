@@ -13,7 +13,7 @@ public class MatrixMath {
 
     public static float dist(Line line, Matrix point){
 
-        float d = Math.abs((line.getA() * point.getX()) + (line.getB() * point.getY()) - line.getD())/magnitude(line.getOrthogonalVector());
+        float d = -((line.getA() * point.getX()) + (line.getB() * point.getY()) - line.getD())/magnitude(line.getOrthogonalVector());
 
         return d;
     }
