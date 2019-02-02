@@ -13,6 +13,7 @@ plugins {
     id 'java'
     id 'application'
     id 'eclipse'
+    id 'checkstyle'
 }
 
 // Sets the use of java 8
