@@ -1,5 +1,8 @@
 package com.anotherworld.view;
 
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -12,12 +15,15 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class View implements Runnable {
+    
+    private static Logger logger = LogManager.getLogger(View.class);
 
     private Long window;
 
     private DisplayObject[] objects;
 
     public View() {
+        logger.info("Creating view");
         objects = new DisplayObject[10];
         for (int i = 0; i < 5; i++) {
             objects[i] = (new Ball((float) Math.random() * 160, (float) Math.random() * 90,
@@ -85,13 +91,14 @@ public class View implements Runnable {
     }
 
     @Deprecated
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         View view = new View();
         view.run();
     }
 
     @Override
     public void run() {
+        logger.info("Running view");
         if (!glfwInit()) {
             throw new IllegalStateException("Couldn't initialise glfw");
         }
