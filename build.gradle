@@ -13,6 +13,7 @@ plugins {
     id 'java'
     id 'application'
     id 'eclipse'
+    id 'checkstyle'
 }
 
 // Sets the use of java 8
@@ -34,7 +35,7 @@ sourceSets {
 }
 
 // Declares the location of the main method
-mainClassName = 'com.anotherworld.view.ViewPrototype'
+mainClassName = 'com.anotherworld.view.View'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -45,47 +46,48 @@ repositories {
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
+    implementation 'org.apache.logging.log4j:log4j-core:2.11.1'
     // Sets the getting started version of LWJGL as a dependency and downloads the natives
-    compile 'org.lwjgl:lwjgl:3.2.1'
-    compile 'org.lwjgl:lwjgl-assimp:3.2.1'
-    compile 'org.lwjgl:lwjgl-bgfx:3.2.1'
-    compile 'org.lwjgl:lwjgl-glfw:3.2.1'
-    compile 'org.lwjgl:lwjgl-nuklear:3.2.1'
-    compile 'org.lwjgl:lwjgl-opengl:3.2.1'
-    compile 'org.lwjgl:lwjgl-par:3.2.1'
-    compile 'org.lwjgl:lwjgl-stb:3.2.1'
-    compile 'org.lwjgl:lwjgl-vulkan:3.2.1'
-    compile 'org.lwjgl:lwjgl:3.2.1:natives-windows'
-    compile 'org.lwjgl:lwjgl-assimp:3.2.1:natives-windows'
-    compile 'org.lwjgl:lwjgl-bgfx:3.2.1:natives-windows'
-    compile 'org.lwjgl:lwjgl-glfw:3.2.1:natives-windows'
-    compile 'org.lwjgl:lwjgl-nuklear:3.2.1:natives-windows'
-    compile 'org.lwjgl:lwjgl-opengl:3.2.1:natives-windows'
-    compile 'org.lwjgl:lwjgl-par:3.2.1:natives-windows'
-    compile 'org.lwjgl:lwjgl-stb:3.2.1:natives-windows'
-    compile 'org.lwjgl:lwjgl:3.2.1:natives-linux'
-    compile 'org.lwjgl:lwjgl-assimp:3.2.1:natives-linux'
-    compile 'org.lwjgl:lwjgl-bgfx:3.2.1:natives-linux'
-    compile 'org.lwjgl:lwjgl-glfw:3.2.1:natives-linux'
-    compile 'org.lwjgl:lwjgl-nuklear:3.2.1:natives-linux'
-    compile 'org.lwjgl:lwjgl-opengl:3.2.1:natives-linux'
-    compile 'org.lwjgl:lwjgl-par:3.2.1:natives-linux'
-    compile 'org.lwjgl:lwjgl-stb:3.2.1:natives-linux'
-    compile 'org.lwjgl:lwjgl:3.2.1:natives-macos'
-    compile 'org.lwjgl:lwjgl-assimp:3.2.1:natives-macos'
-    compile 'org.lwjgl:lwjgl-bgfx:3.2.1:natives-macos'
-    compile 'org.lwjgl:lwjgl-glfw:3.2.1:natives-macos'
-    compile 'org.lwjgl:lwjgl-nuklear:3.2.1:natives-macos'
-    compile 'org.lwjgl:lwjgl-opengl:3.2.1:natives-macos'
-    compile 'org.lwjgl:lwjgl-par:3.2.1:natives-macos'
-    compile 'org.lwjgl:lwjgl-stb:3.2.1:natives-macos'
+    implementation 'org.lwjgl:lwjgl:3.2.1'
+    implementation 'org.lwjgl:lwjgl-assimp:3.2.1'
+    implementation 'org.lwjgl:lwjgl-bgfx:3.2.1'
+    implementation 'org.lwjgl:lwjgl-glfw:3.2.1'
+    implementation 'org.lwjgl:lwjgl-nuklear:3.2.1'
+    implementation 'org.lwjgl:lwjgl-opengl:3.2.1'
+    implementation 'org.lwjgl:lwjgl-par:3.2.1'
+    implementation 'org.lwjgl:lwjgl-stb:3.2.1'
+    implementation 'org.lwjgl:lwjgl-vulkan:3.2.1'
+    runtime 'org.lwjgl:lwjgl:3.2.1:natives-windows'
+    runtime 'org.lwjgl:lwjgl-assimp:3.2.1:natives-windows'
+    runtime 'org.lwjgl:lwjgl-bgfx:3.2.1:natives-windows'
+    runtime 'org.lwjgl:lwjgl-glfw:3.2.1:natives-windows'
+    runtime 'org.lwjgl:lwjgl-nuklear:3.2.1:natives-windows'
+    runtime 'org.lwjgl:lwjgl-opengl:3.2.1:natives-windows'
+    runtime 'org.lwjgl:lwjgl-par:3.2.1:natives-windows'
+    runtime 'org.lwjgl:lwjgl-stb:3.2.1:natives-windows'
+    runtime 'org.lwjgl:lwjgl:3.2.1:natives-linux'
+    runtime 'org.lwjgl:lwjgl-assimp:3.2.1:natives-linux'
+    runtime 'org.lwjgl:lwjgl-bgfx:3.2.1:natives-linux'
+    runtime 'org.lwjgl:lwjgl-glfw:3.2.1:natives-linux'
+    runtime 'org.lwjgl:lwjgl-nuklear:3.2.1:natives-linux'
+    runtime 'org.lwjgl:lwjgl-opengl:3.2.1:natives-linux'
+    runtime 'org.lwjgl:lwjgl-par:3.2.1:natives-linux'
+    runtime 'org.lwjgl:lwjgl-stb:3.2.1:natives-linux'
+    runtime 'org.lwjgl:lwjgl:3.2.1:natives-macos'
+    runtime 'org.lwjgl:lwjgl-assimp:3.2.1:natives-macos'
+    runtime 'org.lwjgl:lwjgl-bgfx:3.2.1:natives-macos'
+    runtime 'org.lwjgl:lwjgl-glfw:3.2.1:natives-macos'
+    runtime 'org.lwjgl:lwjgl-nuklear:3.2.1:natives-macos'
+    runtime 'org.lwjgl:lwjgl-opengl:3.2.1:natives-macos'
+    runtime 'org.lwjgl:lwjgl-par:3.2.1:natives-macos'
+    runtime 'org.lwjgl:lwjgl-stb:3.2.1:natives-macos'
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
     // Declare the dependency for your favourite test framework you want to use in your tests.
     // TestNG is also supported by the Gradle Test task. Just change the
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
 
 task cleanBuildRun { //Tasks to build and run project in right order
