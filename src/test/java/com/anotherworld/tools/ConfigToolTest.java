@@ -1,5 +1,6 @@
 package com.anotherworld.tools;
 
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -13,7 +14,8 @@ public class ConfigToolTest {
     private String emptyTag = "empty";
     //private
 
-    private void setUp(){
+    @Before
+    public void setUp(){
         try {
             testProperty = new PropertyReader(propertyFileName);
             testProperty.setValue(nameTag, "Bob");
@@ -25,7 +27,6 @@ public class ConfigToolTest {
 
     @Test
     public void testGettingNonExisting() throws Exception{
-        setUp();
 
         //Test the non-existing tag
         assertNull(testProperty.getValue(emptyTag) );
@@ -43,7 +44,6 @@ public class ConfigToolTest {
 
     @Test
     public void testSettingValues()throws Exception{
-        setUp();
 
         //Changing existing values
         testProperty.setValue(nameTag,"Mike");
@@ -54,7 +54,6 @@ public class ConfigToolTest {
 
     @Test
     public void testSettingNewValues() throws Exception{
-        setUp();
 
         //checking key are non-existent
         assertNull(testProperty.getValue(emptyTag));
@@ -71,7 +70,6 @@ public class ConfigToolTest {
 
     @Test
     public void testRemoval() throws Exception{
-        setUp();
 
         //Check that doesn't exist
         assertNull(testProperty.getValue("NonExistent"));
