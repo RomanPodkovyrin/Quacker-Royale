@@ -5,6 +5,9 @@ import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
+/**
+ * @author Roman P
+ */
 public class AI {
     private Player aiPlayer;
     private Player[] otherPlayers;
@@ -16,6 +19,10 @@ public class AI {
         this.balls = balls;
     }
 
+    /**
+     * Is Called when AI needs to make a decision based
+     * on the current state of the game session
+     */
     public void makeAMove(){
 
         Matrix aiDirectionVector = new Matrix(aiPlayer.getxVelocity(), aiPlayer.getyVelocity());
