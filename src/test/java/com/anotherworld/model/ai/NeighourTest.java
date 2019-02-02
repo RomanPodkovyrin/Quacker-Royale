@@ -14,7 +14,7 @@ import static junit.framework.TestCase.assertEquals;
 
 
 @RunWith(Parameterized.class)
-public class NeighbourTest {
+public class NeighourTest {
 
     private final Line line;
     private final Matrix point;
@@ -45,7 +45,7 @@ public class NeighbourTest {
                 {new Line(new Matrix(2, 2),new Matrix(0, 1)), new Matrix(4,7), new Matrix(2,7)},
         });
     }
-    public NeighbourTest(Line line, Matrix point, Matrix expected){
+    public NeighourTest(Line line, Matrix point, Matrix expected){
         this.line = line;
         this.point = point;
         this.expected = expected;
