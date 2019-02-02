@@ -12,34 +12,48 @@ import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 
+
 @RunWith(Parameterized.class)
 public class DistanceTest {
+
+    private final Line line;
+    private final Matrix point;
+    private final float expected;
+
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                {}
+                {new Line(new Matrix(-4.0f, -4.0f),new Matrix(3.0f, 2.0f)), new Matrix(5,6), -3.328f},
+                {new Line(new Matrix(0, 0),new Matrix(3.0f, 3.0f)), new Matrix(1,3), -1.414f},
+                {new Line(new Matrix(0, 0),new Matrix(3.0f, 3.0f)), new Matrix(3,4), -0.707f},
+                {new Line(new Matrix(0, 0),new Matrix(3.0f, 3.0f)), new Matrix(5,5), 0},
+                {new Line(new Matrix(0, 0),new Matrix(3.0f, 3.0f)), new Matrix(4,3), 0.707f},
+                {new Line(new Matrix(0, 0),new Matrix(3.0f, 3.0f)), new Matrix(3,1), 1.414f},
+                {new Line(new Matrix(2, 2),new Matrix(1, 0)), new Matrix(3,1), 1},
+                {new Line(new Matrix(2, 2),new Matrix(1, 0)), new Matrix(4,0), 2},
+                {new Line(new Matrix(2, 2),new Matrix(1, 0)), new Matrix(5,2), 0},
+                {new Line(new Matrix(2, 2),new Matrix(1, 0)), new Matrix(6,3), -1},
+                {new Line(new Matrix(2, 2),new Matrix(1, 0)), new Matrix(7,4), -2},
+                {new Line(new Matrix(2, 2),new Matrix(0, 1)), new Matrix(1,3), -1},
+                {new Line(new Matrix(2, 2),new Matrix(0, 1)), new Matrix(0,4), -2},
+                {new Line(new Matrix(2, 2),new Matrix(0, 1)), new Matrix(2,5), 0},
+                {new Line(new Matrix(2, 2),new Matrix(0, 1)), new Matrix(3,6), 1},
+                {new Line(new Matrix(2, 2),new Matrix(0, 1)), new Matrix(4,7), 2},
         });
     }
-    public DistanceTest(){
+    public DistanceTest(Line line, Matrix point, float expected){
+        this.line = line;
+        this.point = point;
+        this.expected = expected;
+
     }
 
 
     @Test
-    public void genericTest(){
-        Line testLine = new Line(new Matrix(-4.0f, -4.0f),new Matrix(3.0f, 2.0f));
-        float distance = MatrixMath.dist(testLine,new Matrix(5,6));
+    public void distanceFromLineTest(){
 
-        System.out.println(MatrixMath.nearestNeighbour(testLine,new Matrix(5,6)));
+        assertEquals(round(expected,3),round(MatrixMath.dist(line,point),3),0.0f);
 
-        //assertEquals(round (3.328f,3),round(distance,3),0.0f);
-
-        Line line = new Line(new Matrix(2.0f, 2.0f),new Matrix(2.0f, 0.0f));
-        Matrix q = new Matrix(6,1);
-        System.out.println("NormalVector: "+ line.getOrthogonalVector() +" Distance: "+MatrixMath.dist(line,q)+" Nearest Neighbour: "+ MatrixMath.nearestNeighbour(line,q));
-
-        line = new Line(new Matrix(2.0f, 2.0f),new Matrix(0.0f, 2.0f));
-        q = new Matrix(1,1);
-        System.out.println("NormalVector: "+ line.getOrthogonalVector() +" Distance: "+MatrixMath.dist(line,q)+" Nearest Neighbour: "+ MatrixMath.nearestNeighbour(line,q));
 
     }
 
