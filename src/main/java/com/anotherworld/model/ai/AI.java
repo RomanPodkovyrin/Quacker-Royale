@@ -15,18 +15,19 @@ public class AI {
     private Player[] otherPlayers;
     private Ball[] balls;
 
-    // add ai state
+    private AIstate state;
 
     /**
      *
      * @param aiPlayer pass the reference to the ai player
-     * @param othePlayers the rest of the players on the map(user and ai controled)
+     * @param otherPlayers the rest of the players on the map(user and ai controlled)
      * @param balls all the balls on the map
      */
-    public AI(Player aiPlayer, Player[] othePlayers, Ball[] balls){
+    public AI(Player aiPlayer, Player[] otherPlayers, Ball[] balls){
         this.aiPlayer = aiPlayer;
-        this.otherPlayers = othePlayers;
+        this.otherPlayers = otherPlayers;
         this.balls = balls;
+        this.state = AIstate.IDLE;
     }
 
     /**
