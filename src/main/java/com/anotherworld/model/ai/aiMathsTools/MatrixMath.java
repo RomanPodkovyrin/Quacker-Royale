@@ -35,8 +35,10 @@ public class MatrixMath {
      * @return float
      */
     public static float dist(Line line, Matrix point){
+        float top =  -((line.getA() * point.getX()) + (line.getB() * point.getY()) - line.getD());
+        float bottom = magnitude(line.getOrthogonalVector());
 
-        float d = -((line.getA() * point.getX()) + (line.getB() * point.getY()) - line.getD())/magnitude(line.getOrthogonalVector());
+        float d = top/bottom;
 
         return d;
     }
@@ -85,5 +87,17 @@ public class MatrixMath {
 
         return point.add((normVector.div(MatrixMath.magnitude(normVector))).mult(dist(line,point)));
     }
+
+    /**
+     * Calculates the vector between two points
+     * @param startPoint
+     * @param finishPoint
+     * @return
+     */
+    public float pointsVector(Matrix startPoint, Matrix finishPoint){
+        return 0;
+
+    }
+
 
 }
