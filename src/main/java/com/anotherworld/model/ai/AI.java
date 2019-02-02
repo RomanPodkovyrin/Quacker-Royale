@@ -2,6 +2,7 @@ package com.anotherworld.model.ai;
 
 import com.anotherworld.model.ai.aiMathsTools.Matrix;
 import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
+import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
@@ -16,6 +17,7 @@ public class AI {
     private Player aiPlayer;
     private Player[] otherPlayers;
     private Ball[] balls;
+    private Platform platform;
 
     private AIstate state;
     private Matrix aiVector;
@@ -27,11 +29,17 @@ public class AI {
      * @param otherPlayers the rest of the players on the map(user and ai controlled)
      * @param balls all the balls on the map
      */
-    public AI(Player aiPlayer, Player[] otherPlayers, Ball[] balls){
+    public AI(Player aiPlayer, Player[] otherPlayers, Ball[] balls, Platform platform){
         this.aiPlayer = aiPlayer;
         this.otherPlayers = otherPlayers;
         this.balls = balls;
+        this.platform = platform;
+
         this.state = AIstate.IDLE;
+        this.aiVector = new Matrix(aiPlayer.getxVelocity(), aiPlayer.getyVelocity());
+        this.aiPosition = new Matrix(aiPlayer.getxCoordinate(), aiPlayer.getyCoordinate());
+
+
     }
 
     /**
@@ -59,17 +67,34 @@ public class AI {
         something();
     }
 
+    private boolean canAffect(Ball ball){
+        Matrix ballLocation = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
+        Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
+
+        return ball.canDamage() & MatrixMath.isPerpendicular(ballDirection,ballLocation,aiPosition);
+    }
+
     private void avoidTheBall(){
         ArrayList<Ball> dangerBalls = new ArrayList<>();
         for(Ball ball: this.balls){
-            if(ball.canDamage()){
+
+            if(canAffect(ball)){
                 dangerBalls.add(ball);
             }
         }
         sortObject(dangerBalls);
 
+        for(Ball ball: dangerBalls){
+
+        }
+
     }
 
+    /**
+     * Sorts balls based on their distance from the AI player
+     * @param objects
+     * @return returns a n ArrayList of Balls starting with the closes one
+     */
     private ArrayList<Ball> sortObject(ArrayList<Ball> objects){
 //        for(AbstractMovable object: objects){
 //        }
