@@ -2,10 +2,12 @@ package com.anotherworld.model.ai;
 
 import com.anotherworld.model.ai.aiMathsTools.Matrix;
 import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
+import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * @author Roman P
@@ -16,6 +18,8 @@ public class AI {
     private Ball[] balls;
 
     private AIstate state;
+    private Matrix aiVector;
+    private Matrix aiPosition;
 
     /**
      *
@@ -34,13 +38,54 @@ public class AI {
      * Is called when AI needs to make a decision based
      * on the current state of the game session
      */
-    public void makeAMove(){
+    public void action(){
 
-        Matrix aiDirectionVector = new Matrix(aiPlayer.getxVelocity(), aiPlayer.getyVelocity());
-        Matrix aiPositionVector = new Matrix(aiPlayer.getxCoordinate(), aiPlayer.getyCoordinate());
+        aiVector = new Matrix(aiPlayer.getxVelocity(), aiPlayer.getyVelocity());
+        aiPosition = new Matrix(aiPlayer.getxCoordinate(), aiPlayer.getyCoordinate());
 
-        ArrayList<Ball> dangerBalls = new ArrayList<Ball>();
-        ArrayList<Ball> neutralBalls = new ArrayList<Ball>();
+
+        if(this.state == AIstate.IDLE | this.state == AIstate.AVOIDING){
+            avoidTheBall();
+        } else if (this.state == AIstate.CHASING){
+
+        } else if (this.state == AIstate.AIMING){
+
+        } else if (this.state == AIstate.IDLE){
+
+        } else if (this.state == AIstate.GETTOMIDDLE){
+
+        }
+
+        something();
+    }
+
+    private void avoidTheBall(){
+        ArrayList<Ball> dangerBalls = new ArrayList<>();
+        for(Ball ball: this.balls){
+            if(ball.canDamage()){
+                dangerBalls.add(ball);
+            }
+        }
+        sortObject(dangerBalls);
+
+    }
+
+    private ArrayList<Ball> sortObject(ArrayList<Ball> objects){
+//        for(AbstractMovable object: objects){
+//        }
+//        Collections.sort(objects,
+//                (o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getxCoordinate(),o1.getyCoordinate()),aiPosition))
+//                        .compareTo(MatrixMath.distanceAB(new Matrix(o2.getxCoordinate(),o2.getyCoordinate()),aiPosition)));
+
+        objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getxCoordinate(),o1.getyCoordinate()),aiPosition))
+                .compareTo(MatrixMath.distanceAB(new Matrix(o2.getxCoordinate(),o2.getyCoordinate()),aiPosition)));
+        return objects;
+    }
+
+    private void something() {
+
+        ArrayList<Ball> dangerBalls = new ArrayList<>();
+        ArrayList<Ball> neutralBalls = new ArrayList<>();
 
         //check Balls state
         for(Ball ball: this.balls){
@@ -71,14 +116,13 @@ public class AI {
             Matrix ballLocation = new Matrix(ball.getxCoordinate(), ball.getxCoordinate());
 
             // Checks if the ball is heading towards the AI
-            if (MatrixMath.isPerpendicular(ballVelocity,ballLocation,aiPositionVector)){
+            if (MatrixMath.isPerpendicular(ballVelocity,ballLocation,aiPosition)){
 
 
             }
 
         }
     }
-
 
 
     /**
