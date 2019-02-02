@@ -5,13 +5,23 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.Properties;
 
+/**
+ * This class can be used to retrieve or edit contents of the
+ * property files
+ *
+ * @author Roman P
+ */
 public class PropertyReader {
     private String fullFilePath;
     private String filePath = "/res/config/";
     private Properties propertyFile;
 
-    public PropertyReader(String fullFilePath) throws Exception{
-        this.fullFilePath = System.getProperty("user.dir") + filePath + fullFilePath;
+    /**
+     * @param filename the name of the Property file if the format something.properties
+     * @throws Exception
+     */
+    public PropertyReader(String filename) throws Exception{
+        this.fullFilePath = System.getProperty("user.dir") + filePath + filename;
         propertyFile = new Properties();
 
         propertyFile.load(new FileInputStream(new File(this.fullFilePath)));
