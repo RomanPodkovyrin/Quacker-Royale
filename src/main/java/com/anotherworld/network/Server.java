@@ -59,7 +59,7 @@ public class Server extends Thread {
 
     public void sendToClient(byte[] dataToSend) throws IOException {
 //        InetAddress playerIp = InetAddress.getByName(playersIPs[0]);
-//                DatagramPacket packet = new DatagramPacket(dataToSend, dataToSend.length, playerIp, multicastPort);
+//                DatagramPacket packet = new DatagramPacket(dataToSend, dataToSend.length, multicastGroup, multicastPort);
 //                socket.send(packet);
         for(int i = 0; i<amountOfPlayers;i++){
             if(playersIPs[i] != null) {
@@ -82,8 +82,9 @@ public class Server extends Thread {
     }
 
     public void updateIPaddresses(String playerIP){
-        playersIPs[0] = playerIP;
-        playersIPs[1] = "192.168.43.150";
+        //playersIPs[0] = playerIP;
+        playersIPs[0] = "192.168.0.32";
+        playersIPs[1] = "192.168.0.21";
     }
 //        if(playersIPs[0]==null){
 //            playersIPs[0] = playerIP;

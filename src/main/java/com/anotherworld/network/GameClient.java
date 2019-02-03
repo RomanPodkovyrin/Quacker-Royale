@@ -18,7 +18,7 @@ public class GameClient {
         group = InetAddress.getByName(multicastIP);
         s.joinGroup(group);
         socket = new DatagramSocket();
-        address = InetAddress.getByName("192.168.43.150");
+        address = InetAddress.getByName("192.168.0.21");
         System.out.println(address);
         System.out.println(Inet4Address.getLocalHost().getHostAddress());
     }
@@ -51,7 +51,7 @@ public class GameClient {
         int counter=0;
         while(true){
             counter++;
-            client.sendDataToServer( "hello from anton" + counter);
+            client.sendDataToServer( "hello from lil anton" + counter);
             client.getDataFromServer();
         }
     }
