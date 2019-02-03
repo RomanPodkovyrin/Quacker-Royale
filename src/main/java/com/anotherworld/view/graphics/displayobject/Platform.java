@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.graphics.displayobject;
 
 public class Platform extends DisplayObject {
 

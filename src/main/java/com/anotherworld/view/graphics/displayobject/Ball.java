@@ -1,4 +1,6 @@
-package com.anotherworld.view;
+package com.anotherworld.view.graphics.displayobject;
+
+import com.anotherworld.view.graphics.Matrix2d;
 
 public class Ball extends DisplayObject {
 

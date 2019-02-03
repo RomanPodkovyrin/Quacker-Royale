@@ -5,6 +5,8 @@ import static org.hamcrest.CoreMatchers.*;
 
 import org.junit.Test;
 
+import com.anotherworld.view.graphics.Matrix2d;
+
 public class Matrix2dTest {
 
     @Test
