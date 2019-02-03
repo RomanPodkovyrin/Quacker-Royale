@@ -10,4 +10,4 @@ bin/
 /build/
 .settings/
 .externalToolBuilders/
-
+.checkstyle
