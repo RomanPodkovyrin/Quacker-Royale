@@ -1,86 +1,84 @@
 package com.anotherworld.view;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
-
-import com.anotherworld.view.graphics.Matrix2d;
+import com.anotherworld.view.graphics.GameScene;
+import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.graphics.displayobject.Ball;
 import com.anotherworld.view.graphics.displayobject.DisplayObject;
 import com.anotherworld.view.graphics.displayobject.Player;
 import com.anotherworld.view.input.KeyListener;
 
-import java.nio.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import org.lwjgl.opengl.*;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 public class View implements Runnable {
-    
+
     private static Logger logger = LogManager.getLogger(View.class);
 
     private Long window;
 
-    private DisplayObject[] objects;
-    
+    private Scene currentScene;
+
     private KeyListener keyListener;
+
+    private int height;
+
+    private int width;
 
     public View() {
         logger.info("Creating view");
-        objects = new DisplayObject[10];
+        height = 630;
+        width = 1120;
+    }
+
+    public KeyListener getKeyListener() {
+        return keyListener;
+    }
+
+    public void displayGame(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) {
+        assert(currentScene.getClass().equals(GameScene.class));
+        DisplayObject[] objects = new DisplayObject[players.length + balls.length + platform.length + wall.length];
+        int index = 0;
+        for (int i = 0; i < platform.length; i++) {
+            objects[i] = platform[i];
+        }
+        index += platform.length;
+        for (int i = 0; i < balls.length; i++) {
+            objects[i + index] = balls[i];
+        }
+        index += balls.length;
+        for (int i = 0; i < players.length; i++) {
+            objects[i + index] = players[i];
+        }
+        index += players.length;
+        for (int i = 0; i < wall.length; i++) {
+            objects[i + index] = wall[i];
+        }
+        index += wall.length;
+        ((GameScene)currentScene).updateObjects(objects);
+    }
+
+    @Deprecated
+    public static void main(String[] args) {
+        DisplayObject[] objects = new DisplayObject[10];
         for (int i = 0; i < 5; i++) {
             objects[i] = (new Ball((float) Math.random() * 160, (float) Math.random() * 90,
                     (float) Math.random() * 360));
             objects[i + 5] = (new Player((float) Math.random() * 160, (float) Math.random() * 90, 10f));
         }
-    }
-    
-    public KeyListener getKeyListener() {
-        return keyListener;
-    }
-
-    public void display(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) {
-        synchronized (objects) {
-            objects = new DisplayObject[players.length + balls.length + platform.length + wall.length];
-            int index = 0;
-            for (int i = 0; i < platform.length; i++) {
-                objects[i] = platform[i];
-            }
-            index += platform.length;
-            for (int i = 0; i < balls.length; i++) {
-                objects[i + index] = balls[i];
-            }
-            index += balls.length;
-            for (int i = 0; i < players.length; i++) {
-                objects[i + index] = players[i];
-            }
-            index += players.length;
-            for (int i = 0; i < wall.length; i++) {
-                objects[i + index] = wall[i];
-            }
-            index += wall.length;
-        }
-    }
-
-    private void drawMatrix(Matrix2d a) {
-        logger.trace("Drawing matrix " + a.toString());
-        glBegin(GL_POLYGON);
-        for (int j = 0; j < a.getN(); j++) {
-            glVertex2f(a.getValue(0, j) / a.getValue(2, j), a.getValue(1, j) / a.getValue(2, j));
-        }
-        glEnd();
-        logger.trace("Finished drawing matrix");
-    }
-
-    @Deprecated
-    public static void main(String[] args) {
         View view = new View();
-        view.run();
+        (new Thread(view)).start();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            logger.catching(e);
+        }
+        view.displayGame(objects, new DisplayObject[0], new DisplayObject[0], new DisplayObject[0]);
     }
 
     @Override
@@ -92,7 +90,7 @@ public class View implements Runnable {
         }
 
         logger.debug("Creating window");
-        window = glfwCreateWindow(1120, 630, "Bullet Hell", NULL, NULL);
+        window = glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL);
 
         if (window == null) {
             logger.fatal("Unable to create game window");
@@ -100,26 +98,25 @@ public class View implements Runnable {
             throw new RuntimeException("Couldn't create glfw window");
         }
 
-        
         glfwMakeContextCurrent(window);
-        
-        keyListener = new KeyListener(window);
 
         GL.createCapabilities();
+
+        keyListener = new KeyListener(window);
+
+        currentScene = new GameScene();
 
         while (!glfwWindowShouldClose(window)) {
 
             glClear(GL_COLOR_BUFFER_BIT);
 
-            Matrix2d viewMatrix = calculateViewMatrix(0, 0, 160, 90, 0, 0);
+            currentScene.draw(width, height);
 
-            for (DisplayObject obj : objects) {
-                drawObject(obj, viewMatrix);
-            }
-            
             glFlush();
 
             glfwSwapBuffers(window);
+
+            logger.debug("Polling for glfw events");
 
             glfwPollEvents();
 
