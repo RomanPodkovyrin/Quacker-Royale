@@ -3,6 +3,7 @@ package com.anotherworld.tools;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -18,9 +19,9 @@ public class PropertyReader {
 
     /**
      * @param filename the name of the Property file if the format something.properties
-     * @throws Exception
+     * @throws IOException
      */
-    public PropertyReader(String filename) throws Exception{
+    public PropertyReader(String filename) throws IOException {
         this.fullFilePath = System.getProperty("user.dir") + filePath + filename;
         propertyFile = new Properties();
 
@@ -33,20 +34,20 @@ public class PropertyReader {
         return fullFilePath;
     }
 
-    public String getValue(String key) throws Exception{
+    public String getValue(String key) throws IOException{
 
         propertyFile.load(new FileInputStream(new File(this.fullFilePath)));
         return this.propertyFile.getProperty(key);
     }
 
-    public void setValue(String key , String value) throws Exception{
+    public void setValue(String key , String value) throws IOException {
 
         propertyFile.load(new FileInputStream(new File(this.fullFilePath)));
         this.propertyFile.setProperty(key,value);
         this.propertyFile.store(new FileWriter(this.fullFilePath),null);
     }
 
-    public void deleteValue(String key) throws Exception{
+    public void deleteValue(String key) throws IOException {
 
         propertyFile.load(new FileInputStream(new File(this.fullFilePath)));
         this.propertyFile.remove(key);
