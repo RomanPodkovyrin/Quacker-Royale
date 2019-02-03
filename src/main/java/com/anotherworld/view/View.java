@@ -8,6 +8,12 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import com.anotherworld.view.graphics.Matrix2d;
+import com.anotherworld.view.graphics.displayobject.Ball;
+import com.anotherworld.view.graphics.displayobject.DisplayObject;
+import com.anotherworld.view.graphics.displayobject.Player;
+import com.anotherworld.view.input.KeyListener;
+
 import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -21,6 +27,8 @@ public class View implements Runnable {
     private Long window;
 
     private DisplayObject[] objects;
+    
+    private KeyListener keyListener;
 
     public View() {
         logger.info("Creating view");
@@ -31,9 +39,12 @@ public class View implements Runnable {
             objects[i + 5] = (new Player((float) Math.random() * 160, (float) Math.random() * 90, 10f));
         }
     }
+    
+    public KeyListener getKeyListener() {
+        return keyListener;
+    }
 
-    public void display(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform,
-            DisplayObject[] wall) {
+    public void display(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) {
         synchronized (objects) {
             objects = new DisplayObject[players.length + balls.length + platform.length + wall.length];
             int index = 0;
@@ -111,6 +122,8 @@ public class View implements Runnable {
         }
 
         glfwMakeContextCurrent(window);
+        
+        keyListener = new KeyListener(window);
 
         GL.createCapabilities();
 
@@ -123,7 +136,7 @@ public class View implements Runnable {
             for (DisplayObject obj : objects) {
                 drawObject(obj, viewMatrix);
             }
-
+            
             glFlush();
 
             glfwSwapBuffers(window);
