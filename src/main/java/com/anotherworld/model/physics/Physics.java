@@ -8,102 +8,144 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
 public class Physics {
-	public float[] calculateXYVelocity(float speed, float angle) {
-		float[] xyVelocity = new float[2];
-		xyVelocity[0] = (float) (speed * Math.sin(angle));
-		xyVelocity[1] = (float) (speed * Math.cos(angle));
-		return xyVelocity;
-	}
+    public float[] calculateXYVelocity(float speed, float angle) {
+        float[] xyVelocity = new float[2];
+        xyVelocity[0] = (float) (speed * Math.sin(angle));
+        xyVelocity[1] = (float) (speed * Math.cos(angle));
+        return xyVelocity;
+    }
 
-	public float[] calculateSpeedAngle(float xVelocity, float yVelocity) {
-		float[] speedAngle = new float[2];
-		speedAngle[0] = Math.abs(yVelocity * yVelocity + xVelocity * xVelocity);
-		speedAngle[1] = (float) Math.tanh(xVelocity / yVelocity);
-		return speedAngle;
-	}
+    public float[] calculateSpeedAngle(float xVelocity, float yVelocity) {
+        float[] speedAngle = new float[2];
+        speedAngle[0] = Math.abs(yVelocity * yVelocity + xVelocity * xVelocity);
+        speedAngle[1] = (float) Math.tanh(xVelocity / yVelocity);
+        return speedAngle;
+    }
 
-	public float[] move(float xVelocity, float yVelocity, float xCoordinate,
-			float yCoordinate) {
-		float[] coordinates = { xCoordinate + xVelocity,
-				yCoordinate + yVelocity };
-		return coordinates;
-	}
+    public float[] move(float xVelocity, float yVelocity, float xCoordinate,
+            float yCoordinate) {
+        float[] coordinates = { xCoordinate + xVelocity, yCoordinate + yVelocity };
+        return coordinates;
+    }
 
-	public boolean checkCollision(AbstractMovable a, AbstractMovable b) {
-		float xDistance = a.getxCoordinate() - b.getxCoordinate();
-		float yDistance = a.getyCoordinate() - b.getyCoordinate();
+    public boolean checkCollision(AbstractMovable a, AbstractMovable b) {
+        float xDistance = a.getxCoordinate() - b.getxCoordinate();
+        float yDistance = a.getyCoordinate() - b.getyCoordinate();
 
-		float sumOfRadii = a.getRadious() + b.getRadious();
-		float distanceSquared = xDistance * xDistance + yDistance * yDistance;
+        float sumOfRadii = a.getRadius() + b.getRadius();
+        float distanceSquared = xDistance * xDistance + yDistance * yDistance;
 
-		boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
-		return isOverlapping;
-	}
+        boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
+        return isOverlapping;
+    }
 
-	public boolean bouncedWall(Ball a, float[] wallCoordinate) {
-		float circleR = a.getRadious();
-		float circleX = a.getxCoordinate();
-		float circleY = a.getyCoordinate();
-		float deltaX = circleX
-				- Math.max(wallCoordinate[3],
-						Math.min(circleX, wallCoordinate[1]));
-		float deltaY = circleY
-				- Math.max(wallCoordinate[0],
-						Math.min(circleY, wallCoordinate[2]));
-		return !((deltaX * deltaX + deltaY * deltaY) < (circleR * circleR));
-	}
+    public boolean bouncedWall(Ball a, float[] wallCoordinate) {
+        float circleR = a.getRadius();
+        float circleX = a.getxCoordinate();
+        float circleY = a.getyCoordinate();
+        float deltaX = circleX
+                - Math.max(wallCoordinate[3],
+                        Math.min(circleX, wallCoordinate[1]));
+        float deltaY = circleY
+                - Math.max(wallCoordinate[0],
+                        Math.min(circleY, wallCoordinate[2]));
+        return !((deltaX * deltaX + deltaY * deltaY) < (circleR * circleR));
+    }
 
-	public void applyFriction(AbstractMovable a) {
-		float friction = 0.90f;
-		float speed = a.getSpeed() * friction;
-		if (speed < 0.5f)
-			speed = 0.0f;
-		a.setSpeed(speed);
-	}
+    public void applyFriction(AbstractMovable a) {
+        float friction = 0.90f;
+        float speed = a.getSpeed() * friction;
+        if (speed < 0.5f) {
+            speed = 0.0f;
+        }
+        a.setSpeed(speed);
+    }
 
-	public void accelerate(AbstractMovable a) {
-		float rate = 0.5f;
-		float speed = a.getSpeed() + rate;
-		if (speed > 3.0f)
-			speed = 3.0f;
-		a.setSpeed(speed);
-	}
-	
-	public void forceCancelling(AbstractMovable a, float newSpeed, float newAngle) {
-		float[] xyVelocity = calculateXYVelocity(newSpeed, newAngle);
-		float xVelocity = a.getxVelocity();
-		float yVelocity = a.getyVelocity();
-		a.setxVelocity(xVelocity+xyVelocity[0]);
-		a.setyVelocity(yVelocity+xyVelocity[1]);
-	}
+    public void accelerate(AbstractMovable a) {
+        float rate = 0.5f;
+        float speed = a.getSpeed() + rate;
+        if (speed > 3.0f) {
+            speed = 3.0f;
+        }
+        a.setSpeed(speed);
+    }
 
-	public void collided(List<AbstractMovable> twoObjects) {
-		
-	}
-	
-	public void onCollision(List<AbstractMovable> listOfObjects) {
-		/*
-		 * TODO:
-		 * For general:
-		 * Get the closest object to this AbstractMovable
-		 * 1: Player
-		 * Get the ID and size of the object
-		 * then apply function depends on the ID of the abstractMovable:
-		 * * There should be 2 IDs:
-		 * 0: Ball:
-		 * 	0: bounced off to another angle with constant speed
-		 * 	1: bounced off to another angle and toggle harmful mode.
-		 * 1: Player:
-		 * 	0,1: knocked back with the force applied from the object collided.
-		 *  0: upon the knocked back, the Player
-		 */
-		/* Approach 1: get a list of movable objects
-		 * check on each movable objects to see if they collide
-		 * Assume we have objects a-g
-		 * check a with b,c,d,e,f,g to find out which is closest to a.
-		 * if a is colliding with f, remove a and f from object list
-		 * else if a is colliding on the wall or not colliding at all, remove a.
-		 */
-		while(listOfObjects)
-	}
+    public void forceCancelling(AbstractMovable a, float newSpeed,
+            float newAngle) {
+        float[] xyVelocity = calculateXYVelocity(newSpeed, newAngle);
+        float xVelocity = a.getxVelocity();
+        float yVelocity = a.getyVelocity();
+        a.setxVelocity(xVelocity + xyVelocity[0]);
+        a.setyVelocity(yVelocity + xyVelocity[1]);
+    }
+
+    public void collided(Ball ball) {
+        float velocityX = ball.getxVelocity();
+        ball.setxVelocity(velocityX * -1);
+    }
+
+    public void collided(Player player, float[] outsideVelocity) {
+        player.setxVelocity(outsideVelocity[0]);
+        player.setyVelocity(outsideVelocity[1]);
+    }
+
+    public void collidedByBall(Player player, Ball ball) {
+        player.setxVelocity(ball.getxVelocity());
+        player.setyVelocity(ball.getyVelocity());
+        if (ball.canDamage()) {
+            int health = player.getHealth();
+            player.setHealth(health - 30);
+        }
+    }
+
+    public void onCollision(List<Ball> listOfBalls, List<Player> listOfPlayers, float[] wallDimensions) {
+        // check for ball collided, then player collided.
+        // The list of integer collided is for storing the index of player
+        // To make sure the event has already occurred on them during this
+        // method is called.
+        List<Integer> collided = new ArrayList<Integer>();
+        for (int i = 0; i < listOfBalls.size(); i++) {
+            Ball ball = listOfBalls.get(i);
+            if (bouncedWall(ball, wallDimensions)) {
+                collided(ball);
+                continue;
+            }
+            for (int j = 0; j < listOfPlayers.size(); j++) {
+                if (collided.contains(j)) {
+                    continue;
+                }
+                Player victim = listOfPlayers.get(i);
+                if (checkCollision(ball, victim)) {
+                    collidedByBall(victim, ball);
+                    collided.add(j);
+                }
+            }
+        }
+        // Check for player collided,
+        // if the player was collided with another player, the force will be
+        // applied by each other
+        // but no damage will be taken.
+        for (int i = 0; i < listOfPlayers.size(); i++) {
+            if (collided.contains(i)) {
+                continue;
+            }
+            Player player = listOfPlayers.get(i);
+            for (int j = i + 1; i < listOfPlayers.size(); j++) {
+                if (collided.contains(j)) {
+                    continue;
+                }
+                Player player2 = listOfPlayers.get(j);
+                if (checkCollision(player, player2)) {
+                    float[] veloToPlayer = { player2.getxVelocity(),
+                            player2.getyVelocity() };
+                    float[] veloToPlayer2 = { player.getxVelocity(),
+                            player.getyVelocity() };
+                    collided(player, veloToPlayer);
+                    collided(player2, veloToPlayer2);
+                    collided.add(i);
+                    collided.add(j);
+                }
+            }
+        }
+    }
 }
