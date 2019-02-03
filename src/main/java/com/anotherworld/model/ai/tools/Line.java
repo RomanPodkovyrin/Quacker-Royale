@@ -1,4 +1,4 @@
-package com.anotherworld.model.ai.aiMathsTools;
+package com.anotherworld.model.ai.tools;
 
 /**
  * Represnts a line in the form of
