@@ -9,7 +9,7 @@ import com.anotherworld.model.movable.Player;
 
 import java.util.ArrayList;
 
-public class avoidBall extends Job {
+public class AvoidBall extends Job {
 
     private ArrayList<Ball> possibleDangerBalls = new ArrayList<>();
     private ArrayList<Ball> dangerBalls = new ArrayList<>();
@@ -17,7 +17,7 @@ public class avoidBall extends Job {
     private Matrix aiPosition;
     private Matrix aiDirection;
 
-    public avoidBall(Player ai, Player[] players, Ball[] balls, Platform platform ){
+    public AvoidBall(Player ai, Player[] players, Ball[] balls, Platform platform ) {
         super(ai,players,balls,platform);
 
     }
@@ -42,31 +42,35 @@ public class avoidBall extends Job {
             // sort bolls
             sortBalls();
             // first go opposite
+            moveAway();
+        } else {
+            succeed();
+            return;
         }
     }
 
-    private void moveAway(){
+    private void moveAway() {
         Matrix ballPosition = new Matrix(imminentDangerBalls.get(0).getxCoordinate(),imminentDangerBalls.get(0).getyCoordinate());
         Matrix ballDirection = new Matrix(imminentDangerBalls.get(0).getxVelocity(), imminentDangerBalls.get(0).getyVelocity());
 
-        MatrixMath.nearestNeighbour(new Line(ballPosition,ballDirection),aiPosition);
-        Matrix vector = MatrixMath.pointsVector(aiPosition,MatrixMath.nearestNeighbour(new Line(ballPosition,ballDirection),aiPosition));
-        ai.setAngle(MatrixMath.vectorAngle());
+        Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ballPosition, ballDirection),aiPosition);
+        Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
+        ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipVector(vector)));
     }
 
     /**
      * Sorts balls based on their distance from the AI player
      * @param objects
-     * @return returns a n ArrayList of Balls starting with the closes one
+     * @return returns an ArrayList of Balls starting with the closes one
      */
-    private ArrayList<Ball> sortObject(ArrayList<Ball> objects){
+    private ArrayList<Ball> sortObject(ArrayList<Ball> objects) {
 
         objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getxCoordinate(),o1.getyCoordinate()),aiPosition))
                 .compareTo(MatrixMath.distanceAB(new Matrix(o2.getxCoordinate(),o2.getyCoordinate()),aiPosition)));
         return objects;
     }
 
-    private void sortBalls(){
+    private void sortBalls() {
 
         for(Ball ball: balls){
             if(ball.canDamage()){
@@ -89,14 +93,14 @@ public class avoidBall extends Job {
         return imminentDangerBalls.isEmpty();
     }
 
-    private boolean canAffect(Ball ball){
+    private boolean canAffect(Ball ball) {
         Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
         Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
 
         return ball.canDamage() & MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition) & isClose(ball);
     }
 
-    private boolean isClose(Ball ball ){
+    private boolean isClose(Ball ball ) {
         Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
         Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
 
