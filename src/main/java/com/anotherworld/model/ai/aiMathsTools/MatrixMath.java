@@ -94,10 +94,20 @@ public class MatrixMath {
      * @param finishPoint
      * @return
      */
-    public float pointsVector(Matrix startPoint, Matrix finishPoint){
-        return 0;
+    public static Matrix pointsVector(Matrix startPoint, Matrix finishPoint){
+        return new Matrix(finishPoint.getX() - startPoint.getX(), finishPoint.getY() - startPoint.getY());
 
     }
+
+    public static float distanceToNearestPoint(Line line, Matrix point){
+        return distanceAB(nearestNeighbour(line,point),point);
+
+    }
+
+    public static float distanceAB(Matrix a, Matrix b){
+        return Math.abs(magnitude(pointsVector(a,b)));
+    }
+
 
 
 }
