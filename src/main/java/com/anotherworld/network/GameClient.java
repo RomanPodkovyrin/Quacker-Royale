@@ -6,19 +6,27 @@ import java.net.*;
 public class GameClient {
     private DatagramSocket socket;
     private InetAddress address;
-    private int port = 4445;
+    private int multicastPort = 4445;
+    private int port = 4446;
+    private String multicastIP = "228.5.6.7";
+    MulticastSocket s;
+    InetAddress group;
+    private byte[] dataToSend;
 
-    private byte[] buf;
-
-    public GameClient() throws SocketException, UnknownHostException {
+    public GameClient() throws IOException {
+        s = new MulticastSocket(multicastPort);
+        group = InetAddress.getByName(multicastIP);
+        s.joinGroup(group);
         socket = new DatagramSocket();
-        address = InetAddress.getByName("localhost");
+        address = InetAddress.getByName("192.168.0.21");
+        System.out.println(address);
+        System.out.println(Inet4Address.getLocalHost().getHostAddress());
     }
 
-    public void sendDataToServer(String msg) {
-        buf = msg.getBytes();
+    public void sendDataToServer(String msg) throws IOException {
+        dataToSend = msg.getBytes();
         DatagramPacket packet
-                = new DatagramPacket(buf, buf.length, address, port);
+                = new DatagramPacket(dataToSend, dataToSend.length, address, port);
         try {
             socket.send(packet);
         } catch (IOException e) {
@@ -26,19 +34,16 @@ public class GameClient {
         }
     }
 
-    public void getDataFromServer(){
+    public void getDataFromServer() throws IOException {
         byte[] data = new byte[32];
         DatagramPacket packet = new DatagramPacket(data, data.length);
-        try {
-            socket.receive(packet);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        s.receive(packet);
         System.out.println("From server: " + new String(packet.getData()));
     }
 
     public void close() {
         socket.close();
+        s.close();
     }
 
     public static void main(String[] args) throws IOException {
@@ -46,7 +51,7 @@ public class GameClient {
         int counter=0;
         while(true){
             counter++;
-            client.sendDataToServer( "hello from anton"+counter);
+            client.sendDataToServer( "hello from lil anton" + counter);
             client.getDataFromServer();
         }
     }
