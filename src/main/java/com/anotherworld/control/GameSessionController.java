@@ -2,6 +2,7 @@ package com.anotherworld.control;
 
 public class GameSessionController {
 
+
     private static boolean isRunning;
 
     public GameSessionController(){
@@ -13,8 +14,19 @@ public class GameSessionController {
     }
 
     private static void mainLoop() {
-        while(isRunning)
+
+        while(isRunning) {
+
             update();
+            //render();
+            try{
+                Thread.sleep(1);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
     }
 
     private static void update() {
