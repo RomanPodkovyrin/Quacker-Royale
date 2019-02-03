@@ -13,6 +13,8 @@ public class avoidBall extends Job {
 
     private ArrayList<Ball> dangerBalls = new ArrayList<>();
     private ArrayList<Ball> imminentDengerBalls = new ArrayList<>();
+    private Matrix aiPosition;
+    private Matrix aiDirection;
 
     public avoidBall(Player ai, Player[] players, Ball[] balls, Platform platform ){
         super(ai,players,balls,platform);
@@ -26,6 +28,8 @@ public class avoidBall extends Job {
 
     @Override
     public void act() {
+        //aiDirection = new Matrix(ai.getyVelocity())
+
         if(isRunning() & ai.getHealth() ==0){
             fail();
             return;
@@ -38,7 +42,10 @@ public class avoidBall extends Job {
 
     private void sortBalls(){
         for(Ball ball: balls){
-
+            if(ball.canDamage()){
+                dangerBalls.add(ball);
+                //if()
+            }
         }
     }
 
@@ -47,17 +54,17 @@ public class avoidBall extends Job {
         return false;
     }
 
-//    private boolean canAffect(Ball ball){
-//        Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
-//        Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
-//
-//        return ball.canDamage() & MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition) & isClose(ball);
-//    }
-//
-//    private boolean isClose(Ball ball ){
-//        Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
-//        Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
-//
-//        return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),aiPosition) <= ai.getRadius() + ball.getRadius();
-//    }
+    private boolean canAffect(Ball ball){
+        Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
+        Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
+
+        return ball.canDamage() & MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition) & isClose(ball);
+    }
+
+    private boolean isClose(Ball ball ){
+        Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
+        Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
+
+        return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),aiPosition) <= ai.getRadius() + ball.getRadius();
+    }
 }

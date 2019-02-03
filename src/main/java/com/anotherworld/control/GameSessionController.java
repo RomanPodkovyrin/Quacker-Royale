@@ -18,10 +18,11 @@ public class GameSessionController {
         while(isRunning) {
 
             update();
-            //render();
+            render();
+
             try{
                 Thread.sleep(1);
-            }catch (Exception e){
+            }catch (InterruptedException e){
                 e.printStackTrace();
             }
 
@@ -32,6 +33,9 @@ public class GameSessionController {
     private static void update() {
 
         //GameSession.update
+    }
 
+    private static void render(){
+        //
     }
 }

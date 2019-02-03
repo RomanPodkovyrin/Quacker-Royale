@@ -31,7 +31,7 @@ public class AI {
      * @param balls all the balls on the map
      * @param platform the current platform
      */
-    public AI(Player aiPlayer, Player[] otherPlayers, Ball[] balls, Platform platform){
+    public AI(Player aiPlayer, Player[] otherPlayers, Ball[] balls, Platform platform) {
         this.aiPlayer = aiPlayer;
         this.otherPlayers = otherPlayers;
         this.balls = balls;
