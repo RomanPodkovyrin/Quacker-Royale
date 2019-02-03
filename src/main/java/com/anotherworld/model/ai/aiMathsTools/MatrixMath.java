@@ -99,6 +99,11 @@ public class MatrixMath {
 
     }
 
+    public static float distanceToNearestPoint(Line line, Matrix point){
+        return distanceAB(nearestNeighbour(line,point),point);
+
+    }
+
     public static float distanceAB(Matrix a, Matrix b){
         return Math.abs(magnitude(pointsVector(a,b)));
     }

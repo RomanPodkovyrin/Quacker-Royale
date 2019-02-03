@@ -1,5 +1,6 @@
 package com.anotherworld.model.ai;
 
+import com.anotherworld.model.ai.aiMathsTools.Line;
 import com.anotherworld.model.ai.aiMathsTools.Matrix;
 import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
@@ -28,6 +29,7 @@ public class AI {
      * @param aiPlayer pass the reference to the ai player
      * @param otherPlayers the rest of the players on the map(user and ai controlled)
      * @param balls all the balls on the map
+     * @param platform the current platform
      */
     public AI(Player aiPlayer, Player[] otherPlayers, Ball[] balls, Platform platform){
         this.aiPlayer = aiPlayer;
@@ -69,12 +71,18 @@ public class AI {
     }
 
     private boolean canAffect(Ball ball){
-        Matrix ballLocation = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
+        Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
         Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
 
-        return ball.canDamage() & MatrixMath.isPerpendicular(ballDirection,ballLocation,aiPosition);
+        return ball.canDamage() & MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition) & isClose(ball);
     }
 
+    private boolean isClose(Ball ball ){
+        Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
+        Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
+
+        return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),aiPosition) <= aiPlayer.getRadius() + ball.getRadius();
+    }
 
     private void avoidTheBall(){
         ArrayList<Ball> dangerBalls = new ArrayList<>();
