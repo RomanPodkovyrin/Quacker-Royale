@@ -1,5 +1,5 @@
 package com.anotherworld.view.graphics;
 
-public class Scene {
+public class GameScene extends Scene {
     
 }

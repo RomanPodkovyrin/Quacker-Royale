@@ -1,7 +1,7 @@
 package com.anotherworld.view;
 
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -61,37 +61,13 @@ public class View implements Runnable {
     }
 
     private void drawMatrix(Matrix2d a) {
+        logger.trace("Drawing matrix " + a.toString());
         glBegin(GL_POLYGON);
         for (int j = 0; j < a.getN(); j++) {
             glVertex2f(a.getValue(0, j) / a.getValue(2, j), a.getValue(1, j) / a.getValue(2, j));
         }
-        System.out.println();
         glEnd();
-    }
-
-    private Matrix2d calculateViewMatrix(float camX, float camY, float camW, float camH, float xRes, float yRes) {
-        Matrix2d modifier;
-
-        modifier = (Matrix2d.H_TRANSLATION_2D(-1f, 1f));
-
-        modifier = modifier.mult(Matrix2d.H_SCALE_2D(1f, -1f));
-
-        modifier = modifier.mult(Matrix2d.H_SCALE_2D(2 / camW, 2 / camH));
-
-        modifier = modifier.mult(Matrix2d.H_TRANSLATION_2D(-camX, -camY));
-
-        return modifier;
-    }
-
-    private void drawObject(DisplayObject obj, Matrix2d viewMatrix) {
-        Matrix2d modifier = viewMatrix;
-
-        modifier = modifier.mult(Matrix2d.H_TRANSLATION_2D(obj.getX(), obj.getY()));
-
-        modifier = modifier.mult(Matrix2d.H_ROTATION_2D(obj.getTheta()));
-
-        drawMatrix(modifier.mult(obj.getPoints()));
-
+        logger.trace("Finished drawing matrix");
     }
 
     @Deprecated
@@ -104,16 +80,20 @@ public class View implements Runnable {
     public void run() {
         logger.info("Running view");
         if (!glfwInit()) {
+            logger.fatal("Unable to initialise glfw");
             throw new IllegalStateException("Couldn't initialise glfw");
         }
 
+        logger.debug("Creating window");
         window = glfwCreateWindow(1120, 630, "Bullet Hell", NULL, NULL);
 
         if (window == null) {
+            logger.fatal("Unable to create game window");
             glfwTerminate();
             throw new RuntimeException("Couldn't create glfw window");
         }
 
+        
         glfwMakeContextCurrent(window);
 
         GL.createCapabilities();
@@ -135,7 +115,7 @@ public class View implements Runnable {
             glfwPollEvents();
 
         }
-
+        logger.info("Closing window");
         glfwTerminate();
     }
 
