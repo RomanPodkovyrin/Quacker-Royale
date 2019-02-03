@@ -1,5 +1,8 @@
 package com.anotherworld.model.physics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
@@ -74,7 +77,11 @@ public class Physics {
 		a.setyVelocity(yVelocity+xyVelocity[1]);
 	}
 
-	public void onCollision(AbstractMovable a) {
+	public void collided(List<AbstractMovable> twoObjects) {
+		
+	}
+	
+	public void onCollision(List<AbstractMovable> listOfObjects) {
 		/*
 		 * TODO:
 		 * For general:
@@ -90,7 +97,22 @@ public class Physics {
 		 * 	0,1: knocked back with the force applied from the object collided.
 		 *  0: upon the knocked back, the Player
 		 */
-		float[] objectCoord = {a.getxCoordinate(), a.getyCoordinate()};
-		
+		/* Approach 1: get a list of movable objects
+		 * check on each movable objects to see if they collide
+		 * Assume we have objects a-g
+		 * check a with b,c,d,e,f,g to find out which is closest to a.
+		 * if a is colliding with f, remove a and f from object list
+		 * else if a is colliding on the wall or not colliding at all, remove a.
+		 */
+		List<Integer> ignoreList = new ArrayList<Integer>();
+		for(int i=0; i<listOfObjects.size(); i++) {
+			AbstractMovable object = listOfObjects.get(i);
+			for(int j=i+1; j<listOfObjects.size(); j++) {
+				AbstractMovable objectTwo = listOfObjects.get(j);
+				if(checkCollision(object, objectTwo)){
+					List<>
+				}
+			}
+		}
 	}
 }
