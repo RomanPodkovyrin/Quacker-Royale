@@ -55,6 +55,7 @@ public class AI {
         if(this.state == AIstate.IDLE | this.state == AIstate.AVOIDING){
             avoidTheBall();
         } else if (this.state == AIstate.CHASING){
+            //check if the vector of choice is crossing the danger balls path
 
         } else if (this.state == AIstate.AIMING){
 
@@ -73,6 +74,7 @@ public class AI {
 
         return ball.canDamage() & MatrixMath.isPerpendicular(ballDirection,ballLocation,aiPosition);
     }
+
 
     private void avoidTheBall(){
         ArrayList<Ball> dangerBalls = new ArrayList<>();
