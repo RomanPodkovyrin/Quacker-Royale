@@ -104,15 +104,6 @@ public class Physics {
 		 * if a is colliding with f, remove a and f from object list
 		 * else if a is colliding on the wall or not colliding at all, remove a.
 		 */
-		List<Integer> ignoreList = new ArrayList<Integer>();
-		for(int i=0; i<listOfObjects.size(); i++) {
-			AbstractMovable object = listOfObjects.get(i);
-			for(int j=i+1; j<listOfObjects.size(); j++) {
-				AbstractMovable objectTwo = listOfObjects.get(j);
-				if(checkCollision(object, objectTwo)){
-					List<>
-				}
-			}
-		}
+		while(listOfObjects)
 	}
 }
