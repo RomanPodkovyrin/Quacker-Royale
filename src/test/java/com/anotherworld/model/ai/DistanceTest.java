@@ -1,8 +1,8 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.aiMathsTools.Line;
-import com.anotherworld.model.ai.aiMathsTools.Matrix;
-import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
+import com.anotherworld.model.ai.tools.Line;
+import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

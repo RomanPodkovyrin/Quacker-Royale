@@ -1,8 +1,8 @@
 package com.anotherworld.model.ai.behaviour;
 
-import com.anotherworld.model.ai.aiMathsTools.Line;
-import com.anotherworld.model.ai.aiMathsTools.Matrix;
-import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
+import com.anotherworld.model.ai.tools.Line;
+import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
@@ -46,9 +46,12 @@ public class avoidBall extends Job {
     }
 
     private void moveAway(){
-//        MatrixMath.nearestNeighbour()
-//        Matrix vector = MatrixMath.pointsVector(aiPosition,imminentDangerBalls.get(0));
-//        ai.setAngle(MatrixMath.vectorAngle());
+        Matrix ballPosition = new Matrix(imminentDangerBalls.get(0).getxCoordinate(),imminentDangerBalls.get(0).getyCoordinate());
+        Matrix ballDirection = new Matrix(imminentDangerBalls.get(0).getxVelocity(), imminentDangerBalls.get(0).getyVelocity());
+
+        MatrixMath.nearestNeighbour(new Line(ballPosition,ballDirection),aiPosition);
+        Matrix vector = MatrixMath.pointsVector(aiPosition,MatrixMath.nearestNeighbour(new Line(ballPosition,ballDirection),aiPosition));
+        ai.setAngle(MatrixMath.vectorAngle());
     }
 
     /**

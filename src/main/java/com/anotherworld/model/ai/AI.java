@@ -1,15 +1,13 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.aiMathsTools.Line;
-import com.anotherworld.model.ai.aiMathsTools.Matrix;
-import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
+import com.anotherworld.model.ai.tools.Line;
+import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * @author Roman P
