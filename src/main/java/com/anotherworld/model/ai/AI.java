@@ -106,11 +106,6 @@ public class AI {
      * @return returns a n ArrayList of Balls starting with the closes one
      */
     private ArrayList<Ball> sortObject(ArrayList<Ball> objects){
-//        for(AbstractMovable object: objects){
-//        }
-//        Collections.sort(objects,
-//                (o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getxCoordinate(),o1.getyCoordinate()),aiPosition))
-//                        .compareTo(MatrixMath.distanceAB(new Matrix(o2.getxCoordinate(),o2.getyCoordinate()),aiPosition)));
 
         objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getxCoordinate(),o1.getyCoordinate()),aiPosition))
                 .compareTo(MatrixMath.distanceAB(new Matrix(o2.getxCoordinate(),o2.getyCoordinate()),aiPosition)));

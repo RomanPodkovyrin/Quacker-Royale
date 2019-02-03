@@ -11,8 +11,9 @@ import java.util.ArrayList;
 
 public class avoidBall extends Job {
 
+    private ArrayList<Ball> possibleDangerBalls = new ArrayList<>();
     private ArrayList<Ball> dangerBalls = new ArrayList<>();
-    private ArrayList<Ball> imminentDengerBalls = new ArrayList<>();
+    private ArrayList<Ball> imminentDangerBalls = new ArrayList<>();
     private Matrix aiPosition;
     private Matrix aiDirection;
 
@@ -28,30 +29,61 @@ public class avoidBall extends Job {
 
     @Override
     public void act() {
-        //aiDirection = new Matrix(ai.getyVelocity())
+        aiDirection = new Matrix(ai.getxVelocity(),ai.getyCoordinate());
+        aiPosition = new Matrix(ai.getxCoordinate(),ai.getxCoordinate());
 
         if(isRunning() & ai.getHealth() ==0){
             fail();
             return;
         }
 
-        if(isAISafe(ai)){
-
+        if(!isAISafe()){
+            //avoid the ball
+            // sort bolls
+            sortBalls();
+            // first go opposite
         }
     }
 
+    private void moveAway(){
+//        MatrixMath.nearestNeighbour()
+//        Matrix vector = MatrixMath.pointsVector(aiPosition,imminentDangerBalls.get(0));
+//        ai.setAngle(MatrixMath.vectorAngle());
+    }
+
+    /**
+     * Sorts balls based on their distance from the AI player
+     * @param objects
+     * @return returns a n ArrayList of Balls starting with the closes one
+     */
+    private ArrayList<Ball> sortObject(ArrayList<Ball> objects){
+
+        objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getxCoordinate(),o1.getyCoordinate()),aiPosition))
+                .compareTo(MatrixMath.distanceAB(new Matrix(o2.getxCoordinate(),o2.getyCoordinate()),aiPosition)));
+        return objects;
+    }
+
     private void sortBalls(){
+
         for(Ball ball: balls){
             if(ball.canDamage()){
-                dangerBalls.add(ball);
-                //if()
+                possibleDangerBalls.add(ball);
+                if(canAffect(ball)){
+                    dangerBalls.add(ball);
+
+                    Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
+                    Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
+
+                    if(MatrixMath.distanceAB(ballPosition,aiPosition) <= ball.getRadius() + ai.getRadius()){
+                        imminentDangerBalls.add(ball);
+                    }
+                }
             }
         }
     }
 
-    private boolean isAISafe(Player ai) {
-
-        return false;
+    private boolean isAISafe() {
+        return imminentDangerBalls.isEmpty();
     }
 
     private boolean canAffect(Ball ball){
