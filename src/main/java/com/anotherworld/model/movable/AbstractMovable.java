@@ -11,7 +11,7 @@ public abstract class AbstractMovable {
     private float yVelocity;
     private float speed;
 
-    private float radious;
+    private float radius;
 
     public AbstractMovable(float xCoordinate, float yCoordinate, ObjectState state){
         this.xCoordinate = xCoordinate;
@@ -73,12 +73,12 @@ public abstract class AbstractMovable {
         this.speed = speed;
     }
 
-    public float getRadious() {
-        return radious;
+    public float getRadius() {
+        return radius;
     }
 
-    public void setRadious(float radious) {
-        this.radious = radious;
+    public void setRadius(float radius) {
+        this.radius = radius;
     }
     
     private void OnCollision() {
