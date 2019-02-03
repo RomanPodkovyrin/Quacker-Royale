@@ -12,6 +12,7 @@ import com.anotherworld.view.graphics.Matrix2d;
 import com.anotherworld.view.graphics.displayobject.Ball;
 import com.anotherworld.view.graphics.displayobject.DisplayObject;
 import com.anotherworld.view.graphics.displayobject.Player;
+import com.anotherworld.view.input.KeyListener;
 
 import java.nio.*;
 
@@ -26,6 +27,8 @@ public class View implements Runnable {
     private Long window;
 
     private DisplayObject[] objects;
+    
+    private KeyListener keyListener;
 
     public View() {
         logger.info("Creating view");
@@ -35,6 +38,10 @@ public class View implements Runnable {
                     (float) Math.random() * 360));
             objects[i + 5] = (new Player((float) Math.random() * 160, (float) Math.random() * 90, 10f));
         }
+    }
+    
+    public KeyListener getKeyListener() {
+        return keyListener;
     }
 
     public void display(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) {
@@ -95,6 +102,8 @@ public class View implements Runnable {
 
         
         glfwMakeContextCurrent(window);
+        
+        keyListener = new KeyListener(window);
 
         GL.createCapabilities();
 
@@ -107,7 +116,7 @@ public class View implements Runnable {
             for (DisplayObject obj : objects) {
                 drawObject(obj, viewMatrix);
             }
-
+            
             glFlush();
 
             glfwSwapBuffers(window);

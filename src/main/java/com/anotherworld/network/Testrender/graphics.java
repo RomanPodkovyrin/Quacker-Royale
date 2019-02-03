@@ -32,7 +32,7 @@ public class graphics extends Application {
         Sprite player = new Sprite(null,100,100, 0, 0);
         String workingDir = System.getProperty("user.dir");
         System.out.println(workingDir);
-        player.setImage("./res/alien.png");
+        player.setImage("./res/images/alien.png");
 
         ArrayList<String> keyStream = new ArrayList<String>();
 
