@@ -8,6 +8,11 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import com.anotherworld.view.graphics.Matrix2d;
+import com.anotherworld.view.graphics.displayobject.Ball;
+import com.anotherworld.view.graphics.displayobject.DisplayObject;
+import com.anotherworld.view.graphics.displayobject.Player;
+
 import java.nio.*;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -32,8 +37,7 @@ public class View implements Runnable {
         }
     }
 
-    public void display(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform,
-            DisplayObject[] wall) {
+    public void display(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) {
         synchronized (objects) {
             objects = new DisplayObject[players.length + balls.length + platform.length + wall.length];
             int index = 0;
