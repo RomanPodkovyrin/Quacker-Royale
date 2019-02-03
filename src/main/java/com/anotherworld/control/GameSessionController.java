@@ -2,11 +2,11 @@ package com.anotherworld.control;
 
 public class GameSessionController {
 
-
     private static boolean isRunning;
 
-    public GameSessionController(){
+    public GameSessionController() {
 
+        isRunning = true;
         mainLoop();
 
         //Clean up ie close connection if there are any and close the graphics window
