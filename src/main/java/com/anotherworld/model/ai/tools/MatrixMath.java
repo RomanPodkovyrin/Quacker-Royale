@@ -71,7 +71,7 @@ public class MatrixMath {
      */
     public static float vectorAngle(Matrix vector) {
 
-        return 90 + (float) Math.toDegrees(Math.atan2(vector.getY(), vector.getX()));
+        return (float) Math.toDegrees(Math.atan2(vector.getY(), vector.getX()));
     }
 
     /**
