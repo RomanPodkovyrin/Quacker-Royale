@@ -16,11 +16,11 @@ public abstract class Job {
     protected Platform platform;
 
 
-    public Job(Player ai, Player[] players, Ball[] balls, Platform platform) {
-        this.ai = ai;
-        this.players = players;
-        this.balls = balls;
-        this.platform = platform;
+    public Job() {
+//        this.ai = ai;
+//        this.players = players;
+//        this.balls = balls;
+//        this.platform = platform;
     }
 
     public void start() {
@@ -29,7 +29,7 @@ public abstract class Job {
 
     public abstract void reset();
 
-    public abstract void act();
+    public abstract void act(Player ai, Player[] players, Ball[] balls, Platform platform );
 
     protected void succeed() {
         this.state = JobState.SUCCESS;

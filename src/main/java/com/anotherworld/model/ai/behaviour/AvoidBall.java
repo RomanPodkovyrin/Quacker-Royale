@@ -18,8 +18,8 @@ public class AvoidBall extends Job {
     private Matrix aiPosition;
     private Matrix aiDirection;
 
-    public AvoidBall(Player ai, Player[] players, Ball[] balls, Platform platform ) {
-        super(ai,players,balls,platform);
+    public AvoidBall() {
+//        super(ai,players,balls,platform);
 
     }
 
@@ -29,7 +29,8 @@ public class AvoidBall extends Job {
     }
 
     @Override
-    public void act() {
+    public void act(Player ai, Player[] players, Ball[] balls, Platform platform ) {
+
         aiDirection = new Matrix(ai.getxVelocity(),ai.getyVelocity());
         aiPosition = new Matrix(ai.getxCoordinate(),ai.getxCoordinate());
 

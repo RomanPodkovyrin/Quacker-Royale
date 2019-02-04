@@ -31,11 +31,11 @@ public class TestMain {
         ball.setRadius(1);
         ball.setDamage(true);
         System.out.println(ball.canDamage() +""+ ball.getxVelocity());
-        AvoidBall job = new AvoidBall(ai,null,new Ball[] {ball},null);
+        AvoidBall job = new AvoidBall();
 
         job.start();
         for (int i = 0; i < 5; i ++) {
-            job.act();
+            job.act(ai,null,new Ball[] {ball},null);
         }
     }
 }
