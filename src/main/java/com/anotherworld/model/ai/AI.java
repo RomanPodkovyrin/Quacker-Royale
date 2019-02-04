@@ -36,8 +36,8 @@ public class AI {
         this.platform = platform;
 
         this.state = AIstate.IDLE;
-        this.aiVector = new Matrix(aiPlayer.getxVelocity(), aiPlayer.getyVelocity());
-        this.aiPosition = new Matrix(aiPlayer.getxCoordinate(), aiPlayer.getyCoordinate());
+        this.aiVector = new Matrix(aiPlayer.getXVelocity(), aiPlayer.getYVelocity());
+        this.aiPosition = new Matrix(aiPlayer.getYCoordinate(), aiPlayer.getYCoordinate());
 
 
     }
@@ -48,8 +48,8 @@ public class AI {
      */
     public void action(){
 
-        aiVector = new Matrix(aiPlayer.getxVelocity(), aiPlayer.getyVelocity());
-        aiPosition = new Matrix(aiPlayer.getxCoordinate(), aiPlayer.getyCoordinate());
+        aiVector = new Matrix(aiPlayer.getXVelocity(), aiPlayer.getYVelocity());
+        aiPosition = new Matrix(aiPlayer.getXCoordinate(), aiPlayer.getYCoordinate());
 
 
         if(this.state == AIstate.IDLE | this.state == AIstate.AVOIDING){
@@ -69,15 +69,15 @@ public class AI {
     }
 
     private boolean canAffect(Ball ball){
-        Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
-        Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
+        Matrix ballPosition = new Matrix(ball.getXCoordinate(),ball.getYCoordinate());
+        Matrix ballDirection = new Matrix(ball.getXVelocity(), ball.getYVelocity());
 
         return ball.canDamage() & MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition) & isClose(ball);
     }
 
     private boolean isClose(Ball ball ){
-        Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
-        Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
+        Matrix ballPosition = new Matrix(ball.getXCoordinate(),ball.getYCoordinate());
+        Matrix ballDirection = new Matrix(ball.getXVelocity(), ball.getYVelocity());
 
         return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),aiPosition) <= aiPlayer.getRadius() + ball.getRadius();
     }
@@ -105,8 +105,8 @@ public class AI {
      */
     private ArrayList<Ball> sortObject(ArrayList<Ball> objects){
 
-        objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getxCoordinate(),o1.getyCoordinate()),aiPosition))
-                .compareTo(MatrixMath.distanceAB(new Matrix(o2.getxCoordinate(),o2.getyCoordinate()),aiPosition)));
+        objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getXCoordinate(),o1.getYCoordinate()),aiPosition))
+                .compareTo(MatrixMath.distanceAB(new Matrix(o2.getXCoordinate(),o2.getYCoordinate()),aiPosition)));
         return objects;
     }
 
@@ -140,8 +140,8 @@ public class AI {
 
         //Avoiding balls
         for (Ball ball: balls){
-            Matrix ballVelocity = new Matrix(ball.getxVelocity(),ball.getyVelocity());
-            Matrix ballLocation = new Matrix(ball.getxCoordinate(), ball.getxCoordinate());
+            Matrix ballVelocity = new Matrix(ball.getXVelocity(),ball.getYVelocity());
+            Matrix ballLocation = new Matrix(ball.getXCoordinate(), ball.getXCoordinate());
 
             // Checks if the ball is heading towards the AI
             if (MatrixMath.isPerpendicular(ballVelocity,ballLocation,aiPosition)){
