@@ -17,7 +17,6 @@ public class TestMain {
 
         System.out.println( Math.toDegrees(Math.atan2(0,-1)));
         System.out.println(MatrixMath.vectorAngle(new Matrix(-3,-5)));
-        logger.error("Fuck");
         Player ai = new Player("Bob",5,0,0, ObjectState.IDLE,true);
         ai.setRadius(1);
         ai.setAngle(90);
@@ -33,9 +32,15 @@ public class TestMain {
         System.out.println(ball.canDamage() +""+ ball.getxVelocity());
         AvoidBall job = new AvoidBall();
 
-        job.start();
+        Job repeatJob = new Repeat((new AvoidBall()));
+
+
+//        job.start();
+        repeatJob.start();
         for (int i = 0; i < 5; i ++) {
-            job.act(ai,null,new Ball[] {ball},null);
+            repeatJob.act(ai,null,new Ball[] {ball},null);
+
+
         }
     }
 }

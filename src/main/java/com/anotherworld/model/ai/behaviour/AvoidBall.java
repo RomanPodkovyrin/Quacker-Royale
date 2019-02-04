@@ -30,6 +30,10 @@ public class AvoidBall extends Job {
 
     @Override
     public void act(Player ai, Player[] players, Ball[] balls, Platform platform ) {
+        this.ai = ai;
+        this.players = players;
+        this.balls = balls;
+        this.platform = platform;
 
         aiDirection = new Matrix(ai.getxVelocity(),ai.getyVelocity());
         aiPosition = new Matrix(ai.getxCoordinate(),ai.getxCoordinate());
@@ -44,7 +48,7 @@ public class AvoidBall extends Job {
             //avoid the ball
             // sort bolls
             //sortBalls();
-            System.out.println("Fuck run");
+            System.out.println(" run");
             // first go opposite
             moveAway();
         } else {

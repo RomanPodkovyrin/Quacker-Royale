@@ -20,6 +20,9 @@ public class Repeat extends Job {
 
     public Repeat(Job job, int times ){
         super();
+        if (times < 1) {
+            throw new RuntimeException("Times needs to be positive.");
+        }
         this.job = job;
         this.times = times;
         this.originalTimes = times;
