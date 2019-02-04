@@ -30,10 +30,10 @@ public class AvoidBall extends Job {
 
     @Override
     public void act() {
-        aiDirection = new Matrix(ai.getxVelocity(),ai.getyCoordinate());
+        aiDirection = new Matrix(ai.getxVelocity(),ai.getyVelocity());
         aiPosition = new Matrix(ai.getxCoordinate(),ai.getxCoordinate());
 
-        System.out.println("direction " + aiDirection + " positon" +aiPosition);
+        System.out.println("direction " + aiDirection + " positon" +aiPosition + "Angle: " + ai.getAngle());
         if(isRunning() & ai.getHealth() ==0){
             fail();
             return;
@@ -54,12 +54,17 @@ public class AvoidBall extends Job {
     }
 
     private void moveAway() {
-        Matrix ballPosition = new Matrix(imminentDangerBalls.get(0).getxCoordinate(),imminentDangerBalls.get(0).getyCoordinate());
-        Matrix ballDirection = new Matrix(imminentDangerBalls.get(0).getxVelocity(), imminentDangerBalls.get(0).getyVelocity());
+        Matrix ballPosition = new Matrix(dangerBalls.get(0).getxCoordinate(),dangerBalls.get(0).getyCoordinate());
+        Matrix ballDirection = new Matrix(dangerBalls.get(0).getxVelocity(), dangerBalls.get(0).getyVelocity());
 
         Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ballPosition, ballDirection),aiPosition);
         Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
+        System.out.println(vector);
         ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipVector(vector)));
+        //temp
+        ai.setxVelocity(-vector.getX());
+        ai.setyVelocity(-vector.getY());
+        System.out.println(vector.getY());
     }
 
     /**
@@ -75,6 +80,9 @@ public class AvoidBall extends Job {
     }
 
     private void sortBalls() {
+        dangerBalls.clear();
+        possibleDangerBalls.clear();
+        imminentDangerBalls.clear();
 
         for(Ball ball: balls){
             Matrix p = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
@@ -101,13 +109,13 @@ public class AvoidBall extends Job {
 
     private boolean isAISafe() {
         sortBalls();
-        return imminentDangerBalls.isEmpty();
+        return dangerBalls.isEmpty();
     }
 
     private boolean canAffect(Ball ball) {
         Matrix ballPosition = new Matrix(ball.getxCoordinate(),ball.getyCoordinate());
         Matrix ballDirection = new Matrix(ball.getxVelocity(), ball.getyVelocity());
-        System.out.println(MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition));
+        System.out.println("Perpendicular "+MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition));
         return MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition) ;//& isClose(ball);
     }
 
