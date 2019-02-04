@@ -39,17 +39,27 @@ public class Physics {
         return isOverlapping;
     }
 
-    public boolean bouncedWall(Ball a, float[] wallCoordinate) {
+    public void bouncedWall(Ball a, float[] wallCoordinate) {
         float circleR = a.getRadius();
         float circleX = a.getxCoordinate();
         float circleY = a.getyCoordinate();
-        float deltaX = circleX
-                - Math.max(wallCoordinate[3],
-                        Math.min(circleX, wallCoordinate[1]));
-        float deltaY = circleY
-                - Math.max(wallCoordinate[0],
-                        Math.min(circleY, wallCoordinate[2]));
-        return !((deltaX * deltaX + deltaY * deltaY) < (circleR * circleR));
+        float[] direction = {circleY-circleR, circleX+circleR, circleY+circleR, circleX-circleR};
+        if(direction[0] < wallCoordinate[0]) {
+            a.setCoordinates(a.getxCoordinate(), wallCoordinate[0]+circleR);
+            a.setyVelocity(-a.getyVelocity());
+        }
+        else if(direction[2] > wallCoordinate[2]) {
+            a.setCoordinates(a.getxCoordinate(), wallCoordinate[2]-circleR);
+            a.setyVelocity(-a.getyVelocity());
+        }
+        if(direction[1]>wallCoordinate[1]){
+            a.setCoordinates(wallCoordinate[1]-circleR, a.getyCoordinate());
+            a.setxVelocity(-a.getxVelocity());
+        }
+        else if(direction[3]<wallCoordinate[3]){
+            a.setCoordinates(wallCoordinate[3]+circleR, a.getyCoordinate());
+            a.setxVelocity(-a.getxVelocity());
+        }
     }
 
     public void applyFriction(AbstractMovable a) {
@@ -106,10 +116,7 @@ public class Physics {
         List<Integer> collided = new ArrayList<Integer>();
         for (int i = 0; i < listOfBalls.size(); i++) {
             Ball ball = listOfBalls.get(i);
-            if (bouncedWall(ball, wallDimensions)) {
-                collided(ball);
-                continue;
-            }
+            bouncedWall(ball, wallDimensions);
             for (int j = 0; j < listOfPlayers.size(); j++) {
                 if (collided.contains(j)) {
                     continue;
