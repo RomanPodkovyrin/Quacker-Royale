@@ -2,11 +2,10 @@ package com.anotherworld.tools.datapool;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 
 /**
  * Represents the raw data of a player shared throughout the system.
- * @author Alfi S.
+ * @author Alfi S
  */
 public class PlayerData {
 
@@ -27,13 +26,13 @@ public class PlayerData {
     }
 
     /**
-     * Sets the coordinates of the player
-     * @param newCoordinates Matrix object of the new coordinates.
+     * Sets the new coordinates of the player
+     * @param x the new x-coordinate to set
+     * @param y the new y-cooridnate to set
      */
-    public void setCoordinates(Matrix newCoordinates) {
-        this.xCoordinate = newCoordinates.getX();
-        this.yCoordinate = newCoordinates.getY();
-
+    public void setCoordinates(float x, float y) {
+        this.xCoordinate = x;
+        this.yCoordinate = y;
     }
 
     /**
@@ -66,6 +65,29 @@ public class PlayerData {
      */
     public void setYCoordinate(float newYCoordinate) {
         this.yCoordinate = newYCoordinate;
+    }
+
+    /**
+     * Sets the new velocity of the player and calculates a new angle
+     * based on the velocity
+     * @param x the new x-velocity to set
+     * @param y the new y-velocity to set
+     */
+    public void setVelocity(float x, float y) {
+        this.xVelocity = x;
+        this.yVelocity = y;
+    }
+
+    public Matrix getVelocity() {
+        return new Matrix(xVelocity, yVelocity);
+    }
+
+    public float getXVelocity() {
+        return xVelocity;
+    }
+
+    public float getyVelocity() {
+        return yVelocity;
     }
 
 }

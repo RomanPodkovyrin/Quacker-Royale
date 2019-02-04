@@ -29,8 +29,8 @@ public class Physics {
     }
 
     public boolean checkCollision(AbstractMovable a, AbstractMovable b) {
-        float xDistance = a.getxCoordinate() - b.getxCoordinate();
-        float yDistance = a.getyCoordinate() - b.getyCoordinate();
+        float xDistance = a.getXCoordinate() - b.getXCoordinate();
+        float yDistance = a.getYCoordinate() - b.getYCoordinate();
 
         float sumOfRadii = a.getRadius() + b.getRadius();
         float distanceSquared = xDistance * xDistance + yDistance * yDistance;
@@ -41,8 +41,8 @@ public class Physics {
 
     public boolean bouncedWall(Ball a, float[] wallCoordinate) {
         float circleR = a.getRadius();
-        float circleX = a.getxCoordinate();
-        float circleY = a.getyCoordinate();
+        float circleX = a.getXCoordinate();
+        float circleY = a.getYCoordinate();
         float deltaX = circleX
                 - Math.max(wallCoordinate[3],
                         Math.min(circleX, wallCoordinate[1]));
@@ -73,25 +73,25 @@ public class Physics {
     public void forceCancelling(AbstractMovable a, float newSpeed,
             float newAngle) {
         float[] xyVelocity = calculateXYVelocity(newSpeed, newAngle);
-        float xVelocity = a.getxVelocity();
-        float yVelocity = a.getyVelocity();
-        a.setxVelocity(xVelocity + xyVelocity[0]);
-        a.setyVelocity(yVelocity + xyVelocity[1]);
+        float xVelocity = a.getXVelocity();
+        float yVelocity = a.getYVelocity();
+        a.setXVelocity(xVelocity + xyVelocity[0]);
+        a.setYVelocity(yVelocity + xyVelocity[1]);
     }
 
     public void collided(Ball ball) {
-        float velocityX = ball.getxVelocity();
-        ball.setxVelocity(velocityX * -1);
+        float velocityX = ball.getXVelocity();
+        ball.setYVelocity(velocityX * -1);
     }
 
     public void collided(Player player, float[] outsideVelocity) {
-        player.setxVelocity(outsideVelocity[0]);
-        player.setyVelocity(outsideVelocity[1]);
+        player.setXVelocity(outsideVelocity[0]);
+        player.setYVelocity(outsideVelocity[1]);
     }
 
     public void collidedByBall(Player player, Ball ball) {
-        player.setxVelocity(ball.getxVelocity());
-        player.setyVelocity(ball.getyVelocity());
+        player.setXVelocity(ball.getXVelocity());
+        player.setYVelocity(ball.getYVelocity());
         if (ball.canDamage()) {
             int health = player.getHealth();
             player.setHealth(health - 30);
@@ -136,10 +136,10 @@ public class Physics {
                 }
                 Player player2 = listOfPlayers.get(j);
                 if (checkCollision(player, player2)) {
-                    float[] veloToPlayer = { player2.getxVelocity(),
-                            player2.getyVelocity() };
-                    float[] veloToPlayer2 = { player.getxVelocity(),
-                            player.getyVelocity() };
+                    float[] veloToPlayer = { player2.getXVelocity(),
+                            player2.getYVelocity() };
+                    float[] veloToPlayer2 = { player.getXVelocity(),
+                            player.getYVelocity() };
                     collided(player, veloToPlayer);
                     collided(player2, veloToPlayer2);
                     collided.add(i);

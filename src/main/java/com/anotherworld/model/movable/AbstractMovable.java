@@ -1,41 +1,72 @@
 package com.anotherworld.model.movable;
 
-
+import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.tools.datapool.PlayerData;
 
+/**
+ * Class that models a moving object in the game.
+ * @author Alfi S
+ */
 public abstract class AbstractMovable {
-    private float xCoordinate;
-    private float yCoordinate;
+    private Matrix coordinates;
+    private Matrix velocity;
     private ObjectState state;
     private int points;
     private float angle;
-    private float xVelocity;
-    private float yVelocity;
     private float speed;
     private PlayerData data;
-
     private float radius;
 
     public AbstractMovable(float xCoordinate, float yCoordinate, ObjectState state){
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
+        this.coordinates = new Matrix(xCoordinate, yCoordinate);
         this.state = state;
 
     }
-
-    public float getxCoordinate() {
-        return xCoordinate;
+    // COORDINATES //
+    public Matrix getCoordinates() {
+        return coordinates;
     }
 
     public void setCoordinates(float xCoordinate, float yCoordinate) {
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
+        coordinates = new Matrix(xCoordinate, yCoordinate);
     }
 
-    public float getyCoordinate() {
-        return yCoordinate;
+    public float getXCoordinate() {
+        return coordinates.getX();
     }
 
+    public float getYCoordinate() {
+        return coordinates.getY();
+    }
+
+    // VELOCITY //
+    public Matrix getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(float xVelocity, float yVelocity) {
+        velocity = new Matrix(xVelocity, yVelocity);
+        this.angle = MatrixMath.vectorAngle(velocity);
+    }
+
+    public float getXVelocity() {
+        return velocity.getX();
+    }
+
+    public void setXVelocity(float xVelocity) {
+        velocity = new Matrix(xVelocity, velocity.getY());
+    }
+
+    public float getYVelocity() {
+        return velocity.getY();
+    }
+
+    public void setYVelocity(float yVelocity) {
+        velocity = new Matrix(velocity.getX(), yVelocity);
+    }
+
+    // OBJECT STATE //
     public ObjectState getState() {
         return state;
     }
@@ -52,22 +83,6 @@ public abstract class AbstractMovable {
         this.angle = angle;
     }
 
-    public float getxVelocity() {
-        return xVelocity;
-    }
-
-    public void setxVelocity(float xVelocity) {
-        this.xVelocity = xVelocity;
-    }
-
-    public float getyVelocity() {
-        return yVelocity;
-    }
-
-    public void setyVelocity(float yVelocity) {
-        this.yVelocity = yVelocity;
-    }
-
     public float getSpeed() {
         return speed;
     }
@@ -82,10 +97,6 @@ public abstract class AbstractMovable {
 
     public void setRadius(float radius) {
         this.radius = radius;
-    }
-    
-    private void OnCollision() {
-    	
     }
 
 }
