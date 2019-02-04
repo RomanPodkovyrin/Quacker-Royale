@@ -33,5 +33,11 @@ public class GameSession {
      */
     public void update(){
 
+        // Check whether or not the players are within the arena.
+
+        // Check whether or not the players are colliding with a ball
+
+        // Check whether or not the balls are colliding with a wall
+
     }
 }
