@@ -40,10 +40,11 @@ public class GameSessionController {
 
         while(viewThread.isAlive()) {
             update();
-            //render();
+            render();
+
             try{
                 Thread.sleep(1);
-            }catch (Exception e){
+            }catch (InterruptedException e){
                 e.printStackTrace();
             }
 
@@ -55,5 +56,9 @@ public class GameSessionController {
 
         //GameSession.update
         if (this.keyListener.isUpPressed()) System.out.println("UP");
+    }
+
+    private static void render() {
+
     }
 }
