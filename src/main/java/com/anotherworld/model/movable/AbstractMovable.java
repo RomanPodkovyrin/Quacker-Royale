@@ -1,6 +1,8 @@
 package com.anotherworld.model.movable;
 
 
+import com.anotherworld.tools.datapool.PlayerData;
+
 public abstract class AbstractMovable {
     private float xCoordinate;
     private float yCoordinate;
@@ -10,6 +12,7 @@ public abstract class AbstractMovable {
     private float xVelocity;
     private float yVelocity;
     private float speed;
+    private PlayerData data;
 
     private float radius;
 
