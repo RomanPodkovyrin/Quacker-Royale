@@ -3,18 +3,13 @@ package com.anotherworld.view;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
 
 import com.anotherworld.view.graphics.Matrix2d;
 import com.anotherworld.view.graphics.displayobject.Ball;
 import com.anotherworld.view.graphics.displayobject.DisplayObject;
 import com.anotherworld.view.graphics.displayobject.Player;
-import com.anotherworld.view.input.KeyListener;
-
-import java.nio.*;
+import com.anotherworld.tools.input.KeyListener;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;

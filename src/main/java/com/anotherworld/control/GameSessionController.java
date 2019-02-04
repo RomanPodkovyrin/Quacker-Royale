@@ -2,8 +2,9 @@ package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.input.Input;
 import com.anotherworld.view.View;
-import com.anotherworld.view.input.KeyListener;
+import com.anotherworld.tools.input.KeyListener;
 
 import java.util.ArrayList;
 
@@ -53,7 +54,11 @@ public class GameSessionController {
     private void update() {
 
         //GameSession.update
-        if (this.keyListener.isUpPressed()) System.out.println("UP");
+        ArrayList<Input> keyPresses = keyListener.getKeyPresses();
+        if (keyPresses.contains(Input.UP)) System.out.println("Up is pressed!");
+        if (keyPresses.contains(Input.DOWN)) System.out.println("Down is pressed!");
+        if (keyPresses.contains(Input.LEFT)) System.out.println("Left is pressed!");
+        if (keyPresses.contains(Input.RIGHT)) System.out.println("Right is pressed!");
     }
 
     private static void render() {
