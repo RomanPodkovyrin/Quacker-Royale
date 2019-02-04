@@ -9,41 +9,52 @@ import java.util.Queue;
 
 public class Selector extends Job {
 
-    private final Queue<Job> jobs;
+    private  Queue<Job> jobs;
+    private Queue<Job> originalJobs;
     private Job currentJob;
 
     public Selector(Queue<Job> jobs) {
         this.jobs = jobs;
-        if (jobs.isEmpty()){
+        this.originalJobs = jobs;
+        if (jobs.isEmpty()) {
             isSuccess();
             return;
         }
+        this.currentJob = jobs.poll();
     }
 
 
     @Override
     public void reset() {
-
-        // get next job from the queue?
+        this.jobs = originalJobs;
+        this.currentJob = jobs.poll();
 
     }
 
     @Override
-    public void act(Player ai, Player[] players, Ball[] balls, Platform platform ) {
+    public void act(Player ai, Player[] players, Ball[] balls, Platform platform) {
 
-        if (jobs.isEmpty()) {
-            fail();
-            //return ?
-        } else {
-            currentJob = jobs.poll();
-        }
 
-        if( currentJob.isSuccess()){
+        if (currentJob.isSuccess()) {
             succeed();
             return;
-        } else if ( currentJob.isFailure());
+        } else if (jobs.isEmpty()) {
+            fail();
+            return;
+        } else if (currentJob.isFailure()) {
+            currentJob = jobs.poll();
+            currentJob.start();
+        }
 
+        if (currentJob.isRunning()) {
+            currentJob.act(ai,players,balls,platform);
+        }
 
+    }
 
+    @Override
+    public void start() {
+        super.start();
+        this.currentJob.start();
     }
 }
