@@ -80,4 +80,9 @@ public abstract class AbstractMovable {
     public void setRadius(float radius) {
         this.radius = radius;
     }
+    
+    private void OnCollision() {
+    	
+    }
+
 }

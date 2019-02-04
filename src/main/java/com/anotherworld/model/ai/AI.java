@@ -1,15 +1,13 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.aiMathsTools.Line;
-import com.anotherworld.model.ai.aiMathsTools.Matrix;
-import com.anotherworld.model.ai.aiMathsTools.MatrixMath;
+import com.anotherworld.model.ai.tools.Line;
+import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * @author Roman P
@@ -31,7 +29,7 @@ public class AI {
      * @param balls all the balls on the map
      * @param platform the current platform
      */
-    public AI(Player aiPlayer, Player[] otherPlayers, Ball[] balls, Platform platform){
+    public AI(Player aiPlayer, Player[] otherPlayers, Ball[] balls, Platform platform) {
         this.aiPlayer = aiPlayer;
         this.otherPlayers = otherPlayers;
         this.balls = balls;
@@ -106,11 +104,6 @@ public class AI {
      * @return returns a n ArrayList of Balls starting with the closes one
      */
     private ArrayList<Ball> sortObject(ArrayList<Ball> objects){
-//        for(AbstractMovable object: objects){
-//        }
-//        Collections.sort(objects,
-//                (o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getxCoordinate(),o1.getyCoordinate()),aiPosition))
-//                        .compareTo(MatrixMath.distanceAB(new Matrix(o2.getxCoordinate(),o2.getyCoordinate()),aiPosition)));
 
         objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getxCoordinate(),o1.getyCoordinate()),aiPosition))
                 .compareTo(MatrixMath.distanceAB(new Matrix(o2.getxCoordinate(),o2.getyCoordinate()),aiPosition)));
