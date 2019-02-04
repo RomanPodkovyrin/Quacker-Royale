@@ -70,8 +70,12 @@ public class MatrixMath {
      * @return angle is returned in degrees
      */
     public static float vectorAngle(Matrix vector) {
-
-        return 90 + (float) Math.toDegrees(Math.atan2(vector.getY(), vector.getX()));
+        float angle = (float) Math.toDegrees(Math.atan2(vector.getX(), - vector.getY()));
+        //System.out.println(angle);
+        if (angle<0){
+            angle += 360;
+        }
+        return angle;
     }
 
     /**
