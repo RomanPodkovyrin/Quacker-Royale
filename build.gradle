@@ -26,6 +26,9 @@ sourceSets {
         java {
             srcDir 'src/main/java' // Adds the main programme code
         }
+        resources {
+            srcDir 'res/config'
+        }
     }
     test {
         java {
