@@ -1,8 +1,0 @@
-stages:
-  - build
-  - test
-  - deploy
-
-job:
-  script:
-    - echo 'test'
