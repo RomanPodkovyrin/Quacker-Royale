@@ -72,7 +72,6 @@ public class View implements Runnable {
         for (int j = 0; j < a.getN(); j++) {
             glVertex2f(a.getValue(0, j) / a.getValue(2, j), a.getValue(1, j) / a.getValue(2, j));
         }
-        System.out.println();
         glEnd();
     }
 
