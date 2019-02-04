@@ -1,8 +1,8 @@
 package com.anotherworld.view.graphics;
 
-import java.util.ArrayList;
-
 import com.anotherworld.view.graphics.displayobject.DisplayObject;
+
+import java.util.ArrayList;
 
 public class GameDisplay extends GraphicsDisplay {
 

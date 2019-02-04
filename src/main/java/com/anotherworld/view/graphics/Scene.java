@@ -1,11 +1,11 @@
 package com.anotherworld.view.graphics;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class Scene {
 
