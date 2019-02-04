@@ -36,9 +36,9 @@ public class GraphicsDisplay {
     }
     
     private Matrix2d drawObject(DisplayObject obj) {
-        Matrix2d modifier = Matrix2d.H_TRANSLATION_2D(obj.getX(), obj.getY());
+        Matrix2d modifier = Matrix2d.homTranslation2d(obj.getX(), obj.getY());
 
-        modifier = modifier.mult(Matrix2d.H_ROTATION_2D(obj.getTheta()));
+        modifier = modifier.mult(Matrix2d.homRotation2d(obj.getTheta()));
 
         return modifier.mult(obj.getPoints());
 

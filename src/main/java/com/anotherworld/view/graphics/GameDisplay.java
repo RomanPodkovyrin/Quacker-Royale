@@ -24,13 +24,13 @@ public class GameDisplay extends GraphicsDisplay {
     private Matrix2d calculateViewMatrix(float camX, float camY, float camW, float camH) {
         Matrix2d modifier;
 
-        modifier = (Matrix2d.H_TRANSLATION_2D(-1f, 1f));
+        modifier = (Matrix2d.homTranslation2d(-1f, 1f));
 
-        modifier = modifier.mult(Matrix2d.H_SCALE_2D(1f, -1f));
+        modifier = modifier.mult(Matrix2d.homScale2d(1f, -1f));
 
-        modifier = modifier.mult(Matrix2d.H_SCALE_2D(2 / camW, 2 / camH));
+        modifier = modifier.mult(Matrix2d.homScale2d(2 / camW, 2 / camH));
 
-        modifier = modifier.mult(Matrix2d.H_TRANSLATION_2D(-camX, -camY));
+        modifier = modifier.mult(Matrix2d.homTranslation2d(-camX, -camY));
 
         return modifier;
     }

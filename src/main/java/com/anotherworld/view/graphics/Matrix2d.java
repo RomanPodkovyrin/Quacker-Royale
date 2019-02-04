@@ -15,20 +15,6 @@ public class Matrix2d {
         this.n = n;
     }
 
-    @Deprecated
-    public float[] getRow(int i) {
-        return value[i];
-    }
-
-    @Deprecated
-    public float[] getColumn(int j) {
-        float[] r = new float[m];
-        for (int i = 0; i < m; i++) {
-            r[i] = value[i][j];
-        }
-        return r;
-    }
-
     public void setValue(int i, int j, float v) {
         value[i][j] = v;
     }
@@ -89,7 +75,7 @@ public class Matrix2d {
         return value[i][j];
     }
 
-    public static final Matrix2d GEN_IDENTITY(int l) {
+    public static final Matrix2d genIdentity(int l) {
         Matrix2d result = new Matrix2d(l, l);
         for (int k = 0; k < l; k++) {
             result.value[k][k] = 1f;
@@ -97,17 +83,7 @@ public class Matrix2d {
         return result;
     }
 
-    @Deprecated
-    public static final Matrix2d ROTATION_2D(float theta) {
-        Matrix2d result = new Matrix2d(2, 2);
-        result.value[0][0] = (float) Math.cos(theta);
-        result.value[1][0] = (float) Math.sin(theta);
-        result.value[0][1] = -(float) Math.sin(theta);
-        result.value[1][1] = (float) Math.cos(theta);
-        return result;
-    }
-
-    public static final Matrix2d H_ROTATION_2D(float theta) {
+    public static final Matrix2d homRotation2d(float theta) {
         Matrix2d result = new Matrix2d(3, 3);
         theta = theta * (float) Math.PI / 180f;
         result.value[0][0] = (float) Math.cos(theta);
@@ -118,14 +94,14 @@ public class Matrix2d {
         return result;
     }
 
-    public static final Matrix2d H_TRANSLATION_2D(float x, float y) {
-        Matrix2d result = Matrix2d.GEN_IDENTITY(3);
+    public static final Matrix2d homTranslation2d(float x, float y) {
+        Matrix2d result = Matrix2d.genIdentity(3);
         result.value[0][2] = x;
         result.value[1][2] = y;
         return result;
     }
 
-    public static final Matrix2d H_SCALE_2D(float x, float y) {
+    public static final Matrix2d homScale2d(float x, float y) {
         Matrix2d result = new Matrix2d(3, 3);
         result.value[0][0] = x;
         result.value[1][1] = y;
@@ -134,12 +110,12 @@ public class Matrix2d {
     }
 
     @Deprecated
-    public static final Matrix2d TEST_SQUARE() {
-        return Matrix2d.TEST_SQUARE(0.5f);
+    public static final Matrix2d testSquare() {
+        return Matrix2d.testSquare(0.5f);
     }
 
     @Deprecated
-    public static final Matrix2d TEST_SQUARE(float s) {
+    public static final Matrix2d testSquare(float s) {
         Matrix2d result = new Matrix2d(3, 4);
         result.value[0][0] = -s;
         result.value[1][0] = -s;

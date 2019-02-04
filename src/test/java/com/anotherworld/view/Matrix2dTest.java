@@ -21,7 +21,7 @@ public class Matrix2dTest {
 
     @Test
     public void value_IndentityValue_IsCorrect() {
-        Matrix2d v = Matrix2d.GEN_IDENTITY(10);
+        Matrix2d v = Matrix2d.genIdentity(10);
         for (int i = 0; i < v.getM(); i++) {
             for (int j = 0; j < v.getN(); j++) {
                 assertThat(v.getValue(i, j), is(equalTo((i == j) ? 1f : 0f)));
@@ -102,7 +102,7 @@ public class Matrix2dTest {
 
     @Test
     public void mult_IdById_IsId() {
-        Matrix2d id = Matrix2d.GEN_IDENTITY(7);
+        Matrix2d id = Matrix2d.genIdentity(7);
         Matrix2d result = id.mult(id);
         assertThat(result.getN(), is(equalTo(7)));
         assertThat(result.getM(), is(equalTo(7)));
