@@ -36,11 +36,6 @@ public class GameSessionController {
         this.viewThread = new Thread(view);
         viewThread.start();
         System.out.println("Thread started");
-        try {
-            Thread.sleep(1000);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         this.keyListener = view.getKeyListener();
         mainLoop();
 

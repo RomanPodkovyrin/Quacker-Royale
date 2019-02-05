@@ -148,6 +148,8 @@ public class View implements Runnable {
         GL.createCapabilities();
 
         keyListener = new KeyListener(window);
+        
+        keyListenerLatch.countDown();
 
         currentScene = new GameScene();
 
