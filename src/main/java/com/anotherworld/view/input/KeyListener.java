@@ -1,14 +1,18 @@
 package com.anotherworld.view.input;
 
-import org.lwjgl.glfw.*;
-
 import static org.lwjgl.glfw.GLFW.*;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class KeyListener {
 
-    private Long window;
+    private static Logger logger = LogManager.getLogger(KeyListener.class);
+    
+    private final Long window;
     
     public KeyListener(Long window) {
+        logger.info("Creating keylistener for window " + window);
         this.window = window;
     }
     
