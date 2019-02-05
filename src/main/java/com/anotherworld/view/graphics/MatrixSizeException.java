@@ -5,11 +5,11 @@ package com.anotherworld.view.graphics;
  * @author Jake Stewart
  *
  */
-public class MatrixSizeError extends Error {
+public class MatrixSizeException extends Error {
     
     private static final long serialVersionUID = -2042753013304539649L;
 
-    public MatrixSizeError(String string) {
+    public MatrixSizeException(String string) {
         super(string);
     }
     

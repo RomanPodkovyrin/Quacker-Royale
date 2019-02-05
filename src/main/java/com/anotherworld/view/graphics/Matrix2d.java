@@ -15,11 +15,11 @@ public class Matrix2d {
      * Creates a 2d matrix with a height of m and a width of n.
      * @param m The height of the matrix must not be negative
      * @param n The width of the matrix must not be negative
-     * @throws MatrixSizeError When m or n are less than 0
+     * @throws MatrixSizeException When m or n are less than 0
      */
     public Matrix2d(int m, int n) {
         if (m < 0 || n < 0) {
-            throw new MatrixSizeError("Size must be non negative");
+            throw new MatrixSizeException("Size must be non negative");
         }
         value = new float[m][n];
         this.m = m;
@@ -31,11 +31,11 @@ public class Matrix2d {
      * @param i The "y" of the cell from 0 to m - 1
      * @param j The "x" of the cell from 0 to n - 1
      * @param v The new value for the cell location
-     * @throws MatrixSizeError If i or j do not fall in the matrix
+     * @throws MatrixSizeException If i or j do not fall in the matrix
      */
     public void setValue(int i, int j, float v) {
         if (i < 0 || j < 0 || i >= this.getM() || j >= this.getN()) {
-            throw new MatrixSizeError("Cell not in matrix");
+            throw new MatrixSizeException("Cell not in matrix");
         }
         value[i][j] = v;
     }
@@ -44,12 +44,12 @@ public class Matrix2d {
      * Adds matrix b to matrix.
      * @param b The matrix to add to this one
      * @return This matrix (a) + b
-     * @throws MatrixSizeError If the two matrices are of different size
+     * @throws MatrixSizeException If the two matrices are of different size
      */
     @Deprecated
     public Matrix2d add(Matrix2d b) {
         if (b.getM() != this.getM() || b.getN() != this.getN()) {
-            throw new MatrixSizeError("Matrix a and b are of different size");
+            throw new MatrixSizeException("Matrix a and b are of different size");
         }
         Matrix2d result = new Matrix2d(m, n);
 
@@ -65,12 +65,12 @@ public class Matrix2d {
      * Subtracts matrix b from matrix.
      * @param b The matrix to subtract to this one
      * @return This matrix (a) - b
-     * @throws MatrixSizeError If the two matrices are of different size
+     * @throws MatrixSizeException If the two matrices are of different size
      */
     @Deprecated
     public Matrix2d sub(Matrix2d b) {
         if (b.getM() != this.getM() || b.getN() != this.getN()) {
-            throw new MatrixSizeError("Matrix a and b are of different size");
+            throw new MatrixSizeException("Matrix a and b are of different size");
         }
         Matrix2d result = new Matrix2d(m, n);
 
@@ -86,12 +86,12 @@ public class Matrix2d {
      * Multiplies matrix b with matrix in form this * b.
      * @param b The matrix to multiply with this one
      * @return This matrix (a) * b
-     * @throws MatrixSizeError When it is impossible to multiply the two matrices together
+     * @throws MatrixSizeException When it is impossible to multiply the two matrices together
      */
     public Matrix2d mult(Matrix2d b) { // Multiplies this * b
         Matrix2d a = this;
         if (a.getN() != b.getM()) {
-            throw new MatrixSizeError("Matrix a and b are of incompatible sizes");
+            throw new MatrixSizeException("Matrix a and b are of incompatible sizes");
         }
         Matrix2d result = new Matrix2d(a.getM(), b.getN());
         for (int i = 0; i < a.getM(); i++) {
@@ -127,11 +127,11 @@ public class Matrix2d {
      * @param i the "y" of the cell
      * @param j the "x" of the cell
      * @return the value of i, j
-     * @throws MatrixSizeError if cell is not in matrix
+     * @throws MatrixSizeException if cell is not in matrix
      */
     public float getValue(int i, int j) {
         if (i < 0 || j < 0 || i >= this.getM() || j >= this.getN()) {
-            throw new MatrixSizeError("Cell not in matrix");
+            throw new MatrixSizeException("Cell not in matrix");
         }
         return value[i][j];
     }

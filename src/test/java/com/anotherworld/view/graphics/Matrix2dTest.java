@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.graphics;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -48,18 +48,18 @@ public class Matrix2dTest {
         }
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = MatrixSizeException.class)
     public void value_NegativeM_Exception() {
         new Matrix2d(-1, 2);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = MatrixSizeException.class)
     public void value_NegativeJ_Exception() {
         Matrix2d a = new Matrix2d(4, 5);
         a.getValue(0, -1);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = MatrixSizeException.class)
     public void value_TooLargeI_Exception() {
         Matrix2d a = new Matrix2d(7, 2);
         a.getValue(6, 8);
