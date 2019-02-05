@@ -3,9 +3,9 @@ package com.anotherworld.view.graphics;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-import org.junit.Test;
-
 import com.anotherworld.view.graphics.Matrix2d;
+
+import org.junit.Test;
 
 public class Matrix2dTest {
 

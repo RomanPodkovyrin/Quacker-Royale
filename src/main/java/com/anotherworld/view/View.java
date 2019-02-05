@@ -161,7 +161,7 @@ public class View implements Runnable {
     
     private void completeEvent(ViewEvent event) {
         if (event.getClass().equals(AddDisplayObjects.class) && currentScene.getClass().equals(GameScene.class)) {
-            ((GameScene)currentScene).updateObjects(((AddDisplayObjects)event).getObjects());
+            ((GameScene)currentScene).updateGameObjects(((AddDisplayObjects)event).getObjects());
         }
     }
 
