@@ -7,12 +7,21 @@ import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 import java.util.Queue;
 
+/**
+ * Executes the given jobs in order until one of them succeeds.
+ *
+ */
 public class Selector extends Job {
 
     private  Queue<Job> jobs;
     private Queue<Job> originalJobs;
     private Job currentJob;
 
+    /**
+     * Initialise the Selector Job.
+     *
+     * @param jobs The Queue of Jobs to be executed in the given order
+     */
     public Selector(Queue<Job> jobs) {
         this.jobs = jobs;
         this.originalJobs = jobs;

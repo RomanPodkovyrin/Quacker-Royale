@@ -6,12 +6,20 @@ import com.anotherworld.model.movable.Player;
 
 import java.util.Queue;
 
+/**
+ * Executes the given jobs in order until one of then fails.
+ */
 public class Sequence extends Job {
 
     private Queue<Job> jobs;
     private Queue<Job> originalJobs;
     private Job currentJob;
 
+    /**
+     * Initialise the Sequence Job.
+     *
+     * @param jobs The Queue of jobs to be executed
+     */
     public Sequence(Queue<Job> jobs) {
         this.jobs = jobs;
         this.originalJobs = jobs;

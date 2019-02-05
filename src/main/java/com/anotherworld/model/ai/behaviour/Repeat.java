@@ -4,21 +4,34 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
+/**
+ * Repeats the Job infinite amount of times or the number that is specified.
+ */
 public class Repeat extends Job {
     private final Job job;
     private int times;
     private int originalTimes;
 
 
-
-    public Repeat(Job job){
+    /**
+     * Initialise the Repeat Class.
+     *
+     * @param job The job to be repeated infinite amount of times
+     */
+    public Repeat(Job job) {
         super();
         this.job = job;
         this.times = -1; // infinite
         this.originalTimes = times;
     }
 
-    public Repeat(Job job, int times ){
+    /**
+     * Initialise the Repeat Class.
+     *
+     * @param job The job to be repeated
+     * @param times The number of time to repeat the job
+     */
+    public Repeat(Job job, int times) {
         super();
         if (times < 1) {
             throw new RuntimeException("Times needs to be positive.");
@@ -27,6 +40,7 @@ public class Repeat extends Job {
         this.times = times;
         this.originalTimes = times;
     }
+
     @Override
     public void reset() {
         this.times = originalTimes;
@@ -34,10 +48,10 @@ public class Repeat extends Job {
     }
 
     @Override
-    public void act(Player ai, Player[] players, Ball[] balls, Platform platform ) {
-        if(job.isFailure()){
+    public void act(Player ai, Player[] players, Ball[] balls, Platform platform) {
+        if (job.isFailure()) {
             fail();
-        }else if(job.isSuccess()) {
+        } else if (job.isSuccess()) {
             if (times == 0) {
                 succeed();
                 return;
@@ -48,13 +62,13 @@ public class Repeat extends Job {
             }
         }
         if (job.isRunning()) {
-            job.act(ai, players, balls, platform );
+            job.act(ai, players, balls, platform);
         }
 
     }
 
     @Override
-    public void start(){
+    public void start() {
         super.start();
         this.job.start();
     }

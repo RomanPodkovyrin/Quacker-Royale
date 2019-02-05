@@ -5,9 +5,11 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
 public abstract class Job {
+
     public enum JobState {
         SUCCESS,FAILURE, RUNNING
     }
+
     protected JobState state;
 
     protected Player ai;
@@ -15,26 +17,45 @@ public abstract class Job {
     protected Ball[] balls;
     protected Platform platform;
 
-
+    /**
+     * Call when need to initialise a new Job.
+     */
     public Job() {
-//        this.ai = ai;
-//        this.players = players;
-//        this.balls = balls;
-//        this.platform = platform;
+
     }
 
+    /**
+     * Starts the Job and sets the Job state to RUNNING.
+     */
     public void start() {
         this.state = JobState.RUNNING;
     }
 
+    /**
+     * Resets the job.
+     */
     public abstract void reset();
 
-    public abstract void act(Player ai, Player[] players, Ball[] balls, Platform platform );
+    /**
+     * Tells the job to act based on the current situation.
+     *
+     * @param ai The AI player who is doing the job
+     * @param players The other players on the board
+     * @param balls All the balls on the boards
+     * @param platform The platform
+     */
+    public abstract void act(Player ai, Player[] players, Ball[] balls, Platform platform);
 
+    /**
+     * Sets the Job state to SUCCESS.
+     */
     protected void succeed() {
         this.state = JobState.SUCCESS;
     }
 
+    /**
+     * Sets the Job state to FAILURE.
+     */
     protected void fail() {
         this.state = JobState.FAILURE;
     }
