@@ -32,7 +32,9 @@ public class Scene {
      * @param height The height of the window in pixels
      */
     public void draw(int width, int height) {
+        logger.debug("Drawing Scene");
         for (int i = 0; i < displays.size(); i++) {
+            logger.trace("Drawing scene: " + i);
             GraphicsDisplay display = displays.get(i);
             int x = convertCoord(display.getX(), width);
             int y = convertCoord(display.getY(), height);
@@ -40,6 +42,7 @@ public class Scene {
             int h = convertScale(display.getHeight(), height, y);
             glViewport(x, y, w, h);
             ArrayList<Matrix2d> toDraw = display.draw();
+            logger.trace("Drawing " + toDraw.size() + " objects");
             for (int j = 0; j < toDraw.size(); j++) {
                 drawMatrix(toDraw.get(j));
             }
@@ -52,13 +55,11 @@ public class Scene {
      * @param a The matrix to draw
      */
     private void drawMatrix(Matrix2d a) {
-        logger.trace("Drawing matrix " + a.toString());
         glBegin(GL_POLYGON);
         for (int j = 0; j < a.getN(); j++) {
             glVertex2f(a.getValue(0, j) / a.getValue(2, j), a.getValue(1, j) / a.getValue(2, j));
         }
         glEnd();
-        logger.trace("Finished drawing matrix");
     }
     
     /**
@@ -68,6 +69,7 @@ public class Scene {
      * @return The location in pixels
      */
     private int convertCoord(float value, int scale) {
+        logger.trace("Converting coord " + value);
         return Math.min(scale, Math.max(0, (int)Math.round(value * ((float)scale))));
     }
     
@@ -79,6 +81,7 @@ public class Scene {
      * @return The size of a display in pixels
      */
     private int convertScale(float floatScale, int intScale, int intValue) {
+        logger.trace("Converting scale " + floatScale);
         return Math.min(intScale - intValue, Math.max(0, (int)Math.round((floatScale / 2f) * ((float)intScale))));
     }
     

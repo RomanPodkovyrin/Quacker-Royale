@@ -4,6 +4,11 @@ import com.anotherworld.view.graphics.displayobject.DisplayObject;
 
 import java.util.ArrayList;
 
+/**
+ * The graphics display responsible for displaying the game state.
+ * @author Jake Stewart
+ *
+ */
 public class GameDisplay extends GraphicsDisplay {
 
     public GameDisplay(float x, float y, float height, float width) {
@@ -35,6 +40,10 @@ public class GameDisplay extends GraphicsDisplay {
         return modifier;
     }
 
+    /**
+     * Updates the game display's objects to match the current games.
+     * @param obj The new objects
+     */
     public void updateObjects(DisplayObject[] obj) {
         this.objects.clear();
         for (int i = 0; i < obj.length; i++) {
