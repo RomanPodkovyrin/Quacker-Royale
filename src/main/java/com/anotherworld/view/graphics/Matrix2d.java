@@ -1,11 +1,22 @@
 package com.anotherworld.view.graphics;
 
+/**
+ * Creates and manipulates a 2d matrix
+ * @author Jake Stewart
+ *
+ */
 public class Matrix2d {
 
     private float[][] value;
     private int m;
     private int n;
 
+    /**
+     * Creates a 2d matrix with a height of m and a width of n.
+     * @param m The height of the matrix must not be negative
+     * @param n The width of the matrix must not be negative
+     * @throws IndexOutOfBoundsException When m or n are less than 0
+     */
     public Matrix2d(int m, int n) {
         if (m < 0 || n < 0) {
             throw new IndexOutOfBoundsException();
@@ -15,10 +26,22 @@ public class Matrix2d {
         this.n = n;
     }
 
+    /**
+     * Sets the value of a matrix cell.
+     * @param i The "y" of the cell from 0 to m - 1
+     * @param j The "x" of the cell from 0 to n - 1
+     * @param v The new value for the cell location
+     * @throws IndexOutOfBoundsException if i or j do not fall in the matrix
+     */
     public void setValue(int i, int j, float v) {
         value[i][j] = v;
     }
 
+    /**
+     * Adds matrix b to matrix.
+     * @param b The matrix to add to this one
+     * @return This matrix (a) + b
+     */
     @Deprecated
     public Matrix2d add(Matrix2d b) {
         assert (b.getM() == this.getM());
@@ -33,6 +56,11 @@ public class Matrix2d {
         return result;
     }
 
+    /**
+     * Subtracts matrix b from matrix.
+     * @param b The matrix to subtract to this one
+     * @return This matrix (a) - b
+     */
     @Deprecated
     public Matrix2d sub(Matrix2d b) {
         assert (b.getM() == this.getM());
@@ -47,6 +75,11 @@ public class Matrix2d {
         return result;
     }
 
+    /**
+     * Multiplies matrix b with matrix in form this * b.
+     * @param b The matrix to multiply with this one
+     * @return This matrix (a) * b
+     */
     public Matrix2d mult(Matrix2d b) { // Multiplies this * b
         Matrix2d a = this;
         assert (a.getN() == b.getM());
@@ -63,14 +96,29 @@ public class Matrix2d {
         return result;
     }
 
+    /**
+     * Returns the "height" of the matrix.
+     * @return the "height" m
+     */
     public int getM() {
         return m;
     }
 
+    /**
+     * Returns the "width" of the matrix.
+     * @return the "width" n
+     */
     public int getN() {
         return n;
     }
 
+    /**
+     * Returns the value stored in a cell.
+     * @param i the "y" of the cell
+     * @param j the "x" of the cell
+     * @return the value of i, j
+     * @throws IndexOutOfBoundsException if cell is not in matrix
+     */
     public float getValue(int i, int j) {
         return value[i][j];
     }
