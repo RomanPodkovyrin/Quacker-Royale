@@ -60,8 +60,10 @@ public class View implements Runnable {
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
 
-    private void displayGame(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) {
-        assert(currentScene.getClass().equals(GameScene.class));
+    private void displayGame(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) throws WrongSceneException {
+        if (!currentScene.getClass().equals(GameScene.class)) {
+            throw new WrongSceneException("Not currently in game state");
+        }
         DisplayObject[] objects = new DisplayObject[players.length + balls.length + platform.length + wall.length];
         int index = 0;
         for (int i = 0; i < platform.length; i++) {
@@ -80,7 +82,9 @@ public class View implements Runnable {
             objects[i + index] = wall[i];
         }
         index += wall.length;
-        ((GameScene)currentScene).updateObjects(objects);
+        synchronized (eventQueue) {
+            eventQueue.add(new AddDisplayObjects(objects));
+        }
     }
 
     @Deprecated
@@ -98,7 +102,11 @@ public class View implements Runnable {
         } catch (InterruptedException e) {
             logger.catching(e);
         }
-        view.displayGame(objects, new DisplayObject[0], new DisplayObject[0], new DisplayObject[0]);
+        try {
+            view.displayGame(objects, new DisplayObject[0], new DisplayObject[0], new DisplayObject[0]);
+        } catch (WrongSceneException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -129,6 +137,12 @@ public class View implements Runnable {
         while (!glfwWindowShouldClose(window)) {
 
             glClear(GL_COLOR_BUFFER_BIT);
+            
+            synchronized (eventQueue) {
+                while (!eventQueue.isEmpty()) {
+                    completeEvent(eventQueue.poll());
+                }
+            }
 
             currentScene.draw(width, height);
 
@@ -143,6 +157,12 @@ public class View implements Runnable {
         }
         logger.info("Closing window");
         glfwTerminate();
+    }
+    
+    private void completeEvent(ViewEvent event) {
+        if (event.getClass().equals(AddDisplayObjects.class) && currentScene.getClass().equals(GameScene.class)) {
+            ((GameScene)currentScene).updateObjects(((AddDisplayObjects)event).getObjects());
+        }
     }
 
 }
