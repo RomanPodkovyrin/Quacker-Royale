@@ -10,6 +10,9 @@ import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Makes sure that the AI player stays away from the Dangerous balls.
  * #################################################################
@@ -17,6 +20,8 @@ import java.util.Arrays;
  * #################################################################
  */
 public class AvoidBall extends Job {
+
+    private static Logger logger = LogManager.getLogger(AvoidBall.class);
 
     private ArrayList<Ball> possibleDangerBalls = new ArrayList<>();
     private ArrayList<Ball> dangerBalls = new ArrayList<>();
@@ -56,11 +61,9 @@ public class AvoidBall extends Job {
             //avoid the ball
             // sort bolls
             //sortBalls();
-            System.out.println(" run");
             // first go opposite
             moveAway();
         } else {
-            System.out.println("Safe");
             succeed();
             return;
         }
@@ -134,7 +137,9 @@ public class AvoidBall extends Job {
 
     private boolean isAIsafe() {
         sortBalls();
-        return dangerBalls.isEmpty();
+        boolean save = dangerBalls.isEmpty();
+        logger.trace("AI is " + (save ? "Save" : "in Danger"));
+        return save;
     }
 
     private boolean canAffect(Ball ball) {
