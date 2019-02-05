@@ -10,6 +10,12 @@ import com.anotherworld.view.graphics.displayobject.Ball;
 import com.anotherworld.view.graphics.displayobject.DisplayObject;
 import com.anotherworld.view.graphics.displayobject.Player;
 import com.anotherworld.view.input.KeyListener;
+import com.anotherworld.view.input.KeyListenerNotFoundException;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,23 +30,37 @@ public class View implements Runnable {
 
     private Scene currentScene;
 
-    private KeyListener keyListener;
+    private CountDownLatch keyListenerLatch;
+    
+    private volatile KeyListener keyListener;
 
     private int height;
 
     private int width;
+    
+    private Queue<ViewEvent> eventQueue;
 
     public View() {
         logger.info("Creating view");
         height = 630;
         width = 1120;
+        eventQueue = new LinkedList<>();
+        keyListenerLatch = new CountDownLatch(1);
     }
 
-    public KeyListener getKeyListener() {
-        return keyListener;
+    public KeyListener getKeyListener() throws KeyListenerNotFoundException {
+        logger.info("Request for key listener objected");
+        try {
+            if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
+                return keyListener;
+            }
+        } catch (InterruptedException e) {
+            logger.catching(e);
+        }
+        throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
 
-    public void displayGame(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) {
+    private void displayGame(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) {
         assert(currentScene.getClass().equals(GameScene.class));
         DisplayObject[] objects = new DisplayObject[players.length + balls.length + platform.length + wall.length];
         int index = 0;
