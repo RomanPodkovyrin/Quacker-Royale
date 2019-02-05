@@ -22,6 +22,11 @@ import org.apache.logging.log4j.Logger;
 
 import org.lwjgl.opengl.*;
 
+/**
+ * Creates a window and manages the game's display.
+ * @author Jake Stewart
+ *
+ */
 public class View implements Runnable {
 
     private static Logger logger = LogManager.getLogger(View.class);
@@ -40,6 +45,9 @@ public class View implements Runnable {
     
     private Queue<ViewEvent> eventQueue;
 
+    /**
+     * Creates the View object initialising it's values.
+     */
     public View() {
         logger.info("Creating view");
         height = 630;
@@ -48,6 +56,11 @@ public class View implements Runnable {
         keyListenerLatch = new CountDownLatch(1);
     }
 
+    /**
+     * Returns the key listener for the view's window.
+     * @return The keyListener
+     * @throws KeyListenerNotFoundException If the keyListener couldn't be retrieved in 10 seconds
+     */
     public KeyListener getKeyListener() throws KeyListenerNotFoundException {
         logger.info("Request for key listener objected");
         try {
@@ -59,7 +72,7 @@ public class View implements Runnable {
         }
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
-
+    
     private void displayGame(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) throws WrongSceneException {
         if (!currentScene.getClass().equals(GameScene.class)) {
             throw new WrongSceneException("Not currently in game state");
@@ -83,10 +96,14 @@ public class View implements Runnable {
         }
         index += wall.length;
         synchronized (eventQueue) {
-            eventQueue.add(new AddDisplayObjects(objects));
+            eventQueue.add(new UpdateDisplayObjects(objects));
         }
     }
 
+    /**
+     * A test method for starting the view.
+     * @param args Accepts no args
+     */
     @Deprecated
     public static void main(String[] args) {
         DisplayObject[] objects = new DisplayObject[10];
@@ -160,8 +177,8 @@ public class View implements Runnable {
     }
     
     private void completeEvent(ViewEvent event) {
-        if (event.getClass().equals(AddDisplayObjects.class) && currentScene.getClass().equals(GameScene.class)) {
-            ((GameScene)currentScene).updateGameObjects(((AddDisplayObjects)event).getObjects());
+        if (event.getClass().equals(UpdateDisplayObjects.class) && currentScene.getClass().equals(GameScene.class)) {
+            ((GameScene)currentScene).updateGameObjects(((UpdateDisplayObjects)event).getObjects());
         }
     }
 
