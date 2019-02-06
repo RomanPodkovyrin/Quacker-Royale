@@ -14,8 +14,9 @@ public class Physics {
     static float friction;
     static float rate;
     static float minimumSpeed = 0.4f;
+    static float maximumSpeed;
 
-    public Physics(float rate, float friction) {
+    public Physics(float rate, float friction, float maximumSpeed) {
         Physics.friction = friction;
         Physics.rate = rate;
     }
@@ -106,7 +107,7 @@ public class Physics {
     }
 
     /**
-     * To apply force to the object
+     * To apply force to the object (reduce out strength or increase force)
      * 
      * @param AbstractMovable
      *            object
@@ -127,7 +128,7 @@ public class Physics {
     }
 
     /**
-     * When two objects collided with eachother
+     * When two objects collided with each other
      * 
      * @param Player
      * @param Martix
