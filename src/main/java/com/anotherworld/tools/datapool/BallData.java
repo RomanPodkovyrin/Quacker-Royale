@@ -1,4 +1,4 @@
 package com.anotherworld.tools.datapool;
 
-public class BallData {
+public class BallData extends MovableData {
 }
