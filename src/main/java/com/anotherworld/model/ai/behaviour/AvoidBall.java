@@ -139,7 +139,7 @@ public class AvoidBall extends Job {
     private boolean isAIsafe() {
         sortBalls();
         boolean save = dangerBalls.isEmpty();
-        logger.trace("AI is " + (save ? "Save" : "in Danger"));
+        logger.debug("AI is " + (save ? "Save" : "in Danger"));
         return save;
     }
 

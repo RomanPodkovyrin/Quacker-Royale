@@ -12,9 +12,9 @@ import java.util.Random;
  *Makes sure that the AI doesn't come too close to the edge
  * @author Roman
  */
-public class avoidEdge extends Job {
+public class AvoidEdge extends Job {
 
-    public avoidEdge() {
+    public AvoidEdge() {
         super();
     }
 

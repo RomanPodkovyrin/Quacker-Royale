@@ -22,12 +22,11 @@ public class TestMain {
         PlayerData pd = new PlayerData();
         pd.setCharacterID("Bob");
         pd.setCoordinates(5,0);
-        pd.setAngle(0);
         pd.setState(ObjectState.IDLE);
         Player ai = new Player(pd,true);
         ai.setRadius(1);
         ai.setAngle(90);
-        ai.setYVelocity(1);
+        ai.setVelocity(0,1);
         BallData bd = new BallData();
         bd.setCoordinates(4,4);
         bd.setState(ObjectState.MOVING);
