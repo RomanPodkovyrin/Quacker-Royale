@@ -31,6 +31,14 @@ public class Platform {
         this.ySize = ySide;
     }
 
+    public float getDistanceX() {
+        return xSize;
+    }
+
+    public float getDistanceY() {
+        return ySize;
+    }
+
     /**
      * Called when the platform needs to shrink.
      */
