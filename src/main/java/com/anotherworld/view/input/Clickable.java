@@ -1,4 +1,4 @@
-package com.anotherworld.view.graphics;
+package com.anotherworld.view.input;
 
 public interface Clickable {
 

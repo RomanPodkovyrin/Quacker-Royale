@@ -1,4 +1,4 @@
-package com.anotherworld.view.graphics.displayobject;
+package com.anotherworld.view.input;
 
 public interface ButtonListener {
 

@@ -1,7 +1,7 @@
-package com.anotherworld.view.graphics.displayobject;
+package com.anotherworld.view.input;
 
-import com.anotherworld.view.graphics.Clickable;
 import com.anotherworld.view.graphics.Matrix2d;
+import com.anotherworld.view.graphics.displayobject.DisplayObject;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -6,9 +6,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
-import com.anotherworld.view.graphics.displayobject.Ball;
 import com.anotherworld.view.graphics.displayobject.DisplayObject;
-import com.anotherworld.view.graphics.displayobject.Player;
 import com.anotherworld.view.input.KeyListener;
 import com.anotherworld.view.input.KeyListenerNotFoundException;
 
