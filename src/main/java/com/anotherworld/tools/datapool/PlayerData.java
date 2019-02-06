@@ -68,7 +68,7 @@ public class PlayerData {
     }
 
     /**
-     * Sets the new velocity of the player and calculates a new angle
+     * Sets the new velocity of the player
      * based on the velocity
      * @param x the new x-velocity to set
      * @param y the new y-velocity to set
@@ -78,14 +78,26 @@ public class PlayerData {
         this.yVelocity = y;
     }
 
+    /**
+     * Gets the velocity of the player
+     * @return Matrix object of player velocity
+     */
     public Matrix getVelocity() {
         return new Matrix(xVelocity, yVelocity);
     }
 
+    /**
+     * Gets the x-velocity of the player.
+     * @return player's x-velocity as a float.
+     */
     public float getXVelocity() {
         return xVelocity;
     }
 
+    /**
+     * Gets the y-velocity of the player.
+     * @return player's y-velocity as a float.
+     */
     public float getyVelocity() {
         return yVelocity;
     }
