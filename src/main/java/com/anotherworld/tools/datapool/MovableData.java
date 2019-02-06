@@ -3,7 +3,7 @@ package com.anotherworld.tools.datapool;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 
-public class MovableData {
+public abstract class MovableData {
 
     private Matrix coordinates;
     private Matrix velocity;

@@ -15,33 +15,33 @@ public class TestMain {
     public static void main(String[] args){
 
 
-        System.out.println( Math.toDegrees(Math.atan2(0,-1)));
-        System.out.println(MatrixMath.vectorAngle(new Matrix(-3,-5)));
-        Player ai = new Player("Bob",5,0,0, ObjectState.IDLE,true);
-        ai.setRadius(1);
-        ai.setAngle(90);
-        ai.setYVelocity(1);
-
-        Ball ball = new Ball(4,4,ObjectState.MOVING);
-        ball.setSpeed(1);
-        ball.setAngle(315);
-        ball.setXVelocity(-1);
-        ball.setYVelocity(0);
-        ball.setRadius(1);
-        ball.setDamage(true);
-        System.out.println(ball.canDamage() +""+ ball.getXVelocity());
-        AvoidBall job = new AvoidBall();
-
-
-        Job repeatJob = new Repeat((new AvoidBall()));
-
-
-//        job.start();
-        repeatJob.start();
-        for (int i = 0; i < 5; i ++) {
-            repeatJob.act(ai,null,new Ball[] {ball},null);
-
-
-        }
+//        System.out.println( Math.toDegrees(Math.atan2(0,-1)));
+//        System.out.println(MatrixMath.vectorAngle(new Matrix(-3,-5)));
+//        Player ai = new Player("Bob",5,0,0, ObjectState.IDLE,true);
+//        ai.setRadius(1);
+//        ai.setAngle(90);
+//        ai.setYVelocity(1);
+//
+//        Ball ball = new Ball(4,4,ObjectState.MOVING);
+//        ball.setSpeed(1);
+//        ball.setAngle(315);
+//        ball.setXVelocity(-1);
+//        ball.setYVelocity(0);
+//        ball.setRadius(1);
+//        ball.setDangerous(true);
+//        System.out.println(ball.isDangerous() +""+ ball.getXVelocity());
+//        AvoidBall job = new AvoidBall();
+//
+//
+//        Job repeatJob = new Repeat((new AvoidBall()));
+//
+//
+////        job.start();
+//        repeatJob.start();
+//        for (int i = 0; i < 5; i ++) {
+//            repeatJob.act(ai,null,new Ball[] {ball},null);
+//
+//
+//        }
     }
 }
