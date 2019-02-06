@@ -16,8 +16,8 @@ public class Physics {
     static float minimumSpeed = 0.4f;
 
     public Physics(float rate, float friction) {
-        this.friction = friction;
-        this.rate = rate;
+        Physics.friction = friction;
+        Physics.rate = rate;
     }
 
     /**
@@ -127,20 +127,22 @@ public class Physics {
     }
 
     /**
-     * What happened if the player is colliding with eachother
+     * When two objects collided with eachother
      * 
      * @param Player
-     *            player
      * @param Martix
-     *            outsideVelocity
      */
-    public static void collided(Player player, Matrix outsideVelocity) {
-        player.setXVelocity(outsideVelocity.getX());
-        player.setYVelocity(outsideVelocity.getY());
+    public static void collided(AbstractMovable player, AbstractMovable player2) {
+        player.setXVelocity(player2.getXVelocity());
+        player.setYVelocity(player2.getYVelocity());
+        player2.setXVelocity(player.getXVelocity());
+        player2.setYVelocity(player.getYVelocity());
     }
 
     /**
-     * What happened if the player is collided by a ball.
+     * Apply collision on both ball and player Check if the ball can damage
+     * people then decreases player health by 30 else then toggle the ball to
+     * harmful state.
      * 
      * @param player
      * @param ball
@@ -154,13 +156,24 @@ public class Physics {
         } else {
             ball.setDamage(true);
         }
+        float xDifference = ball.getXCoordinate() - player.getXCoordinate();
+        float yDifference = ball.getYCoordinate() - player.getYCoordinate();
+        if (xDifference > (ball.getRadius() + player.getRadius())) {
+            ball.setXVelocity(-ball.getXVelocity());
+        }
+        if (yDifference > (ball.getRadius() + player.getRadius())) {
+            ball.setYVelocity(-ball.getYVelocity());
+        }
     }
 
     /**
-     * It is to check collision for all the objects within the game session. It
-     * checks if each ball collided on either wall or player Then add the player
-     * into collided list And check for the remaining player who is not collided
-     * with any other thing
+     * Check every items in the game if they have collision First: Ball: check
+     * with the very first ball and: Check if it collided with a wall check if
+     * it collided with one of the player check if it collided with anotherball
+     * (if they collided, assign id of the ball into the value From second ball
+     * onward, check if it matches the index of the ball. Then Player: Check if
+     * the player is collided Check if the player is collided with another
+     * player check if the player is collided with pitfall
      * 
      * @param listOfBalls
      * @param listOfPlayers
@@ -169,7 +182,12 @@ public class Physics {
     public static void onCollision(List<Ball> listOfBalls,
             List<Player> listOfPlayers, float[] wallDimensions) {
         List<Integer> collided = new ArrayList<Integer>();
+
+        int collidedBall = -1;
         for (int i = 0; i < listOfBalls.size(); i++) {
+            if (collidedBall == i) {
+                continue;
+            }
             Ball ball = listOfBalls.get(i);
             bouncedWall(ball, wallDimensions);
             for (int j = 0; j < listOfPlayers.size(); j++) {
@@ -182,7 +200,14 @@ public class Physics {
                     collided.add(j);
                 }
             }
+            for (int k = i + 1; k < listOfBalls.size(); k++) {
+                if (checkCollision(ball, listOfBalls.get(k))) {
+                    collided(ball, listOfBalls.get(k));
+                    collidedBall = k;
+                }
+            }
         }
+
         for (int i = 0; i < listOfPlayers.size(); i++) {
             if (collided.contains(i)) {
                 continue;
@@ -194,14 +219,7 @@ public class Physics {
                 }
                 Player player2 = listOfPlayers.get(j);
                 if (checkCollision(player, player2)) {
-                    Matrix veloToPlayer = new Matrix(player2.getXVelocity(),
-                            player2.getYVelocity());
-                    Matrix veloToPlayer2 = new Matrix(player.getXVelocity(),
-                            player.getYVelocity());
-                    collided(player, veloToPlayer);
-                    collided(player2, veloToPlayer2);
-                    collided.add(i);
-                    collided.add(j);
+                    collided(player, player2);
                 }
             }
         }
