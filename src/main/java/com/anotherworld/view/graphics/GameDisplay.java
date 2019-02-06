@@ -1,6 +1,7 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.graphics.displayobject.DisplayObject;
+import com.anotherworld.view.data.DisplayData;
+import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
 
@@ -11,31 +12,32 @@ import java.util.ArrayList;
  */
 public class GameDisplay extends GraphicsDisplay {
 
-    public GameDisplay(float x, float y, float height, float width) {
+    private Camera camera; //0f, 0f, 160f, 90f
+    
+    public GameDisplay(float x, float y, float height, float width, Camera camera) {
         super(x, y, height, width);
     }
 
     @Override
-    public ArrayList<Matrix2d> draw() {
-        ArrayList<Matrix2d> toDraw = super.draw();
-        ArrayList<Matrix2d> result = new ArrayList<>();
-        Matrix2d viewMatrix = calculateViewMatrix(0f, 0f, 160f, 90f);
+    public ArrayList<DisplayObject> draw() {
+        ArrayList<DisplayObject> toDraw = super.draw();
+        Matrix2d viewMatrix = calculateViewMatrix(camera);
         for (int i = 0; i < toDraw.size(); i++) {
-            result.add(viewMatrix.mult(toDraw.get(i)));
+            toDraw.get(i).transform(viewMatrix);
         }
-        return result;
+        return toDraw;
     }
 
-    private Matrix2d calculateViewMatrix(float camX, float camY, float camW, float camH) {
+    private Matrix2d calculateViewMatrix(Camera camera) {
         Matrix2d modifier;
 
         modifier = (Matrix2d.homTranslation2d(-1f, 1f));
 
         modifier = modifier.mult(Matrix2d.homScale2d(1f, -1f));
 
-        modifier = modifier.mult(Matrix2d.homScale2d(2 / camW, 2 / camH));
+        modifier = modifier.mult(Matrix2d.homScale2d(2 / camera.getWidth(), 2 / camera.getHeight()));
 
-        modifier = modifier.mult(Matrix2d.homTranslation2d(-camX, -camY));
+        modifier = modifier.mult(Matrix2d.homTranslation2d(-camera.getX(), -camera.getY()));
 
         return modifier;
     }
@@ -44,10 +46,10 @@ public class GameDisplay extends GraphicsDisplay {
      * Updates the game display's objects to match the current games.
      * @param obj The new objects
      */
-    public void updateObjects(DisplayObject[] obj) {
+    public void updateObjects(DisplayData[] obj) {
         this.objects.clear();
         for (int i = 0; i < obj.length; i++) {
-            this.objects.add(obj[i]);
+            this.objects.add(new DisplayObject(obj[i]));
         }
     }
     

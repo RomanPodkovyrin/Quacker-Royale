@@ -1,6 +1,6 @@
 package com.anotherworld.view;
 
-import com.anotherworld.view.graphics.displayobject.DisplayObject;
+import com.anotherworld.view.data.DisplayData;
 
 /**
  * Creates a ViewEvent that updates the view's display objects.
@@ -9,13 +9,13 @@ import com.anotherworld.view.graphics.displayobject.DisplayObject;
  */
 class UpdateDisplayObjects implements ViewEvent {
     
-    private final DisplayObject[] objects;
+    private final DisplayData[] objects;
 
-    public UpdateDisplayObjects(DisplayObject[] objects) {
+    public UpdateDisplayObjects(DisplayData[] objects) {
         this.objects = objects;
     }
     
-    public DisplayObject[] getObjects() {
+    public DisplayData[] getObjects() {
         return objects;
     }
 
