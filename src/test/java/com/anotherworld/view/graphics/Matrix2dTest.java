@@ -1,11 +1,11 @@
-package com.anotherworld.view;
+package com.anotherworld.view.graphics;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-import org.junit.Test;
-
 import com.anotherworld.view.graphics.Matrix2d;
+
+import org.junit.Test;
 
 public class Matrix2dTest {
 
@@ -21,7 +21,7 @@ public class Matrix2dTest {
 
     @Test
     public void value_IndentityValue_IsCorrect() {
-        Matrix2d v = Matrix2d.GEN_IDENTITY(10);
+        Matrix2d v = Matrix2d.genIdentity(10);
         for (int i = 0; i < v.getM(); i++) {
             for (int j = 0; j < v.getN(); j++) {
                 assertThat(v.getValue(i, j), is(equalTo((i == j) ? 1f : 0f)));
@@ -48,18 +48,18 @@ public class Matrix2dTest {
         }
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = MatrixSizeException.class)
     public void value_NegativeM_Exception() {
         new Matrix2d(-1, 2);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = MatrixSizeException.class)
     public void value_NegativeJ_Exception() {
         Matrix2d a = new Matrix2d(4, 5);
         a.getValue(0, -1);
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = MatrixSizeException.class)
     public void value_TooLargeI_Exception() {
         Matrix2d a = new Matrix2d(7, 2);
         a.getValue(6, 8);
@@ -102,7 +102,7 @@ public class Matrix2dTest {
 
     @Test
     public void mult_IdById_IsId() {
-        Matrix2d id = Matrix2d.GEN_IDENTITY(7);
+        Matrix2d id = Matrix2d.genIdentity(7);
         Matrix2d result = id.mult(id);
         assertThat(result.getN(), is(equalTo(7)));
         assertThat(result.getM(), is(equalTo(7)));

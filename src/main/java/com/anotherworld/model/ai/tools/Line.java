@@ -1,8 +1,9 @@
 package com.anotherworld.model.ai.tools;
 
 /**
- * Represnts a line in the form of
- * // a*x1 + b*x2 = d
+ * Represents a line in the form of
+ * a*x1 + b*x2 = d.
+ *
  * @author Roman P
  */
 public class Line {
@@ -43,12 +44,13 @@ public class Line {
 
     /**
      * Takes P + s V where p is a point
-     * s is a scalar and V is a vector
-     * @param point
-     * @param s
-     * @param vector
+     * s is a scalar and V is a vector.
+     *
+     * @param point point of origin
+     * @param s scale of the line
+     * @param vector vector coming from the point
      */
-    public Line(Matrix point, float s, Matrix vector){
+    public Line(Matrix point, float s, Matrix vector) {
         this.point = point;
         this.s = s;
         this.vector = vector;
@@ -60,11 +62,12 @@ public class Line {
     }
 
     /**
-     * Takes P + V where p is a point and V is a vector
-     * @param point
-     * @param vector
+     * Takes P + V where p is a point and V is a vector.
+     *
+     * @param point point of origin
+     * @param vector vector coming from the point
      */
-    public Line(Matrix point,Matrix vector){
+    public Line(Matrix point,Matrix vector) {
         this.point = point;
         this.vector = vector;
 
@@ -75,11 +78,16 @@ public class Line {
     }
 
     /**
-     * Returns the normal vector to the line
-     * @return
+     * Returns the normal vector to the line.
+     *
+     * @return normal vector
      */
-    public Matrix getOrthogonalVector(){
+    public Matrix getOrthogonalVector() {
 
         return new Matrix(this.a, this.b);
+    }
+
+    public String toString() {
+        return  a + "*x1 + " + b + "*x2 = " + d;
     }
 }

@@ -31,10 +31,11 @@ public class PerpendicularTest {
                 {new Matrix(3,5),new Matrix(3,2), new Matrix(6,6),true},
                 {new Matrix(-3,-5),new Matrix(3,2), new Matrix(5,5),false},
                 {new Matrix(-3,-5),new Matrix(3,2), new Matrix(0,0),true},
-                {new Matrix(-3,-5),new Matrix(3,2), new Matrix(5,0),true},
+                {new Matrix(-3,-5),new Matrix(3,2), new Matrix(5,0),false},
                 {new Matrix(-3,-5),new Matrix(3,2), new Matrix(5,2),false},
                 {new Matrix(-3,-5),new Matrix(3,2), new Matrix(2,4),false},
                 {new Matrix(-3,-5),new Matrix(3,2), new Matrix(6,6),false},
+                {new Matrix(-1,0),new Matrix(4,4), new Matrix(0,0),true}
         });
     }
     public PerpendicularTest(Matrix vectorLine, Matrix vectorPoint, Matrix point, boolean expected){

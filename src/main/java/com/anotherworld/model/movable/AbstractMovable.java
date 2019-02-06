@@ -1,88 +1,95 @@
 package com.anotherworld.model.movable;
 
+import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.tools.datapool.MovableData;
 
+/**
+ * Class that models a moving object in the game.
+ * @author Alfi S
+ */
 public abstract class AbstractMovable {
-    private float xCoordinate;
-    private float yCoordinate;
-    private ObjectState state;
-    private int points;
-    private float angle;
-    private float xVelocity;
-    private float yVelocity;
-    private float speed;
+    private MovableData movableData;
 
-    private float radius;
-
-    public AbstractMovable(float xCoordinate, float yCoordinate, ObjectState state){
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
-        this.state = state;
+    public AbstractMovable(MovableData data){
+        this.movableData = data;
 
     }
 
-    public float getxCoordinate() {
-        return xCoordinate;
+    // COORDINATES //
+    public Matrix getCoordinates() {
+        return movableData.getCoordinates();
     }
 
     public void setCoordinates(float xCoordinate, float yCoordinate) {
-        this.xCoordinate = xCoordinate;
-        this.yCoordinate = yCoordinate;
+        movableData.setCoordinates(xCoordinate, yCoordinate);
     }
 
-    public float getyCoordinate() {
-        return yCoordinate;
+    public float getXCoordinate() {
+        return movableData.getCoordinates().getX();
     }
 
+    public float getYCoordinate() {
+        return movableData.getCoordinates().getY();
+    }
+
+    // VELOCITY //
+    public Matrix getVelocity() {
+        return movableData.getVelocity();
+    }
+
+    public void setVelocity(float xVelocity, float yVelocity) {
+        movableData.setVelocity(xVelocity, yVelocity);
+        movableData.setAngle(MatrixMath.vectorAngle(movableData.getVelocity()));
+    }
+
+    public float getXVelocity() {
+        return movableData.getXVelocity();
+    }
+
+    public void setXVelocity(float xVelocity) {
+        movableData.setXVelocity(xVelocity);
+    }
+
+    public float getYVelocity() {
+        return movableData.getYVelocity();
+    }
+
+    public void setYVelocity(float yVelocity) {
+        movableData.setYVelocity(yVelocity);
+    }
+
+    // OBJECT STATE //
     public ObjectState getState() {
-        return state;
+        return movableData.getState();
     }
 
     public void setState(ObjectState state) {
-        this.state = state;
+        movableData.setState(state);
     }
 
     public float getAngle() {
-        return angle;
+        return movableData.getAngle();
     }
 
     public void setAngle(float angle) {
-        this.angle = angle;
-    }
-
-    public float getxVelocity() {
-        return xVelocity;
-    }
-
-    public void setxVelocity(float xVelocity) {
-        this.xVelocity = xVelocity;
-    }
-
-    public float getyVelocity() {
-        return yVelocity;
-    }
-
-    public void setyVelocity(float yVelocity) {
-        this.yVelocity = yVelocity;
+        movableData.setAngle(angle);
     }
 
     public float getSpeed() {
-        return speed;
+        return movableData.getSpeed();
     }
 
     public void setSpeed(float speed) {
-        this.speed = speed;
+        movableData.setSpeed(speed);
     }
 
     public float getRadius() {
-        return radius;
+        return movableData.getRadius();
     }
 
     public void setRadius(float radius) {
-        this.radius = radius;
-    }
-    
-    private void OnCollision() {
-    	
+        movableData.setRadius(radius);
     }
 
 }
