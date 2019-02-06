@@ -1,6 +1,8 @@
 package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.view.View;
 
 import com.anotherworld.tools.input.KeyListener;
@@ -16,7 +18,9 @@ public class GameSessionController {
 
     public static void main(String[] args) {
         try {
-            new GameSessionController();
+            View view = new View();
+            GameSession session = new GameSession(null,null,null);
+            new GameSessionController(view, session);
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);
         } catch (RuntimeException ex) {
