@@ -18,42 +18,36 @@ public class DisplayObject {
     private float rColour;
     private float gColour;
     private float bColour;
-    
+
     public DisplayObject(DisplayData displayData) {
-        this.displayData = displayData;
-        points = genCircle(20f);
-        displayType = GL_TRIANGLE_FAN;
-        setColours();
-    }
-    
-    public DisplayObject(BallDisplayData displayData) {
-        this.displayData = displayData;
-        points = genCircle(displayData.getRadius());
-        displayType = GL_TRIANGLE_FAN;
-        setColours();
+        if (displayData instanceof BallDisplayData) {
+            this.displayData = displayData;
+            points = genCircle(((BallDisplayData)displayData).getRadius());
+            displayType = GL_TRIANGLE_FAN;
+            setColours();
+        } else if (displayData instanceof RectangleDisplayData) {
+            this.displayData = displayData;
+            points = genRectangle(((RectangleDisplayData)displayData).getWidth(), ((RectangleDisplayData)displayData).getHeight());
+            displayType = GL_TRIANGLE_FAN;
+            setColours();
+        } else if (displayData instanceof PlayerDisplayData) {
+            this.displayData = displayData;
+            points = genCircle(((PlayerDisplayData)displayData).getRadius());
+            displayType = GL_TRIANGLE_FAN;
+            setColours();
+        } else if (displayData instanceof WallData) {
+            this.displayData = displayData;
+            this.points = genWall(((WallData)displayData).getWidth(), ((WallData)displayData).getHeight(), 5);
+            this.displayType = GL_TRIANGLE_STRIP;
+            setColours();
+        } else {
+            this.displayData = displayData;
+            points = genCircle(20);
+            displayType = GL_TRIANGLE_FAN;
+            setColours();
+        }
     }
 
-    public DisplayObject(RectangleDisplayData displayData) {
-        this.displayData = displayData;
-        points = genRectangle(displayData.getWidth(), displayData.getHeight());
-        displayType = GL_TRIANGLE_FAN;
-        setColours();
-    }
-
-    public DisplayObject(PlayerDisplayData displayData) {
-        this.displayData = displayData;
-        points = genCircle(displayData.getRadius());
-        displayType = GL_TRIANGLE_FAN;
-        setColours();
-    }
-    
-    public DisplayObject(WallData displayData) {
-        this.displayData = displayData;
-        this.points = genWall(displayData.getWidth(), displayData.getHeight(), 5);
-        this.displayType = GL_TRIANGLE_STRIP;
-        setColours();
-    }
-    
     private final void setColours() {
         rColour = 1f;
         gColour = 1f;
@@ -107,13 +101,13 @@ public class DisplayObject {
     }
     
     private static final Matrix2d genCircle(float r) {
-        Matrix2d points = new Matrix2d(3, 102);
+        Matrix2d points = new Matrix2d(3, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
         points.setValue(2, 0, 1f);
-        for (int i = 0; i <= 360; i += 10) {
-            points.setValue(0, i + 1, (float)(Math.sin(((double)i / 180) * Math.PI)));
-            points.setValue(1, i + 1, (float)(Math.cos(((double)i / 180) * Math.PI)));
+        for (int i = 0; i < 37; i += 1) {
+            points.setValue(0, i + 1, r * (float)(Math.sin(((double)i / 18) * Math.PI)));
+            points.setValue(1, i + 1, r * -(float)(Math.cos(((double)i / 18) * Math.PI)));
             points.setValue(2, i + 1, 1f);
         }
         return points;
@@ -132,15 +126,15 @@ public class DisplayObject {
     }
     
     public float getTheta() {
-        return displayData.getAngle();
+        return 0;//displayData.getAngle();
     }
     
     public float getX() {
-        return displayData.getXCoordinate();
+        return 20;//displayData.getXCoordinate();
     }
     
     public float getY() {
-        return displayData.getYCoordinate();
+        return 20;//displayData.getYCoordinate();
     }
     
     public float getColourR() {

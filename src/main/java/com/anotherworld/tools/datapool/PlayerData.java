@@ -1,13 +1,13 @@
 package com.anotherworld.tools.datapool;
 
-import com.anotherworld.view.data.CircleDisplayData;
+import com.anotherworld.view.data.PlayerDisplayData;
 
 /**
  * Represents the raw data of a player shared throughout the system.
  * @author Alfi S
  */
 
-public class PlayerData extends MovableData implements CircleDisplayData {
+public class PlayerData extends MovableData implements PlayerDisplayData {
 
     private String characterID;
     private int health;

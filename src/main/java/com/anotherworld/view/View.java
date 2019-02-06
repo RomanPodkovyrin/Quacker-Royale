@@ -10,6 +10,7 @@ import com.anotherworld.view.data.DisplayData;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
@@ -71,7 +72,7 @@ public class View implements Runnable {
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
     
-    public void updateGameObjects(DisplayData[] objects) {
+    public void updateGameObjects(ArrayList<DisplayData> objects) {
         synchronized (eventQueue) {
             eventQueue.add(new UpdateDisplayObjects(objects));
         }

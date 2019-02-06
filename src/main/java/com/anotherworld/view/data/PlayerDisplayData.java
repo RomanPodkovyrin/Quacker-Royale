@@ -1,6 +1,6 @@
 package com.anotherworld.view.data;
 
-public interface PlayerDisplayData extends BallDisplayData {
+public interface PlayerDisplayData extends CircleDisplayData {
 
     public String getCharacterID();
     
