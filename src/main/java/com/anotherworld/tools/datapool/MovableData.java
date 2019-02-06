@@ -3,23 +3,20 @@ package com.anotherworld.tools.datapool;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 
-public class AbstractMovableData {
+public class MovableData {
 
-    private float xCoordinate;
-    private float yCoordinate;
+    private Matrix coordinates;
+    private Matrix velocity;
     private ObjectState state;
     private float angle;
-    private float xVelocity;
-    private float yVelocity;
     private float speed;
+    private float radius;
 
     /**
      * Gets the coordinates of the player
      * @return Matrix object with player coordinates
      */
-    public Matrix getCoordinates() {
-        return new Matrix(xCoordinate, yCoordinate);
-    }
+    public Matrix getCoordinates() { return coordinates; }
 
     /**
      * Sets the new coordinates of the player
@@ -27,8 +24,7 @@ public class AbstractMovableData {
      * @param y the new y-cooridnate to set
      */
     public void setCoordinates(float x, float y) {
-        this.xCoordinate = x;
-        this.yCoordinate = y;
+        coordinates = new Matrix(x, y);
     }
 
     /**
@@ -36,7 +32,7 @@ public class AbstractMovableData {
      * @return player's x-coordinate as a float
      */
     public float getXCoordinate() {
-        return xCoordinate;
+        return coordinates.getX();
     }
 
     /**
@@ -44,7 +40,7 @@ public class AbstractMovableData {
      * @param newXCoordinate the new x-coordinate to set.
      */
     public void setXCoordinate(float newXCoordinate) {
-        this.xCoordinate = newXCoordinate;
+        coordinates = new Matrix(newXCoordinate, coordinates.getY());
     }
 
     /**
@@ -52,7 +48,7 @@ public class AbstractMovableData {
      * @return player's y-coordinate as a float
      */
     public float getYCoordinate() {
-        return yCoordinate;
+        return coordinates.getY();
     }
 
     /**
@@ -60,7 +56,7 @@ public class AbstractMovableData {
      * @param newYCoordinate the new y-coordinate to set.
      */
     public void setYCoordinate(float newYCoordinate) {
-        this.yCoordinate = newYCoordinate;
+        coordinates = new Matrix(coordinates.getX(), newYCoordinate);
     }
 
     /**
@@ -70,21 +66,43 @@ public class AbstractMovableData {
      * @param y the new y-velocity to set
      */
     public void setVelocity(float x, float y) {
-        this.xVelocity = x;
-        this.yVelocity = y;
+        velocity = new Matrix(x, y);
     }
 
     public Matrix getVelocity() {
-        return new Matrix(xVelocity, yVelocity);
+        return velocity;
     }
 
     public float getXVelocity() {
-        return xVelocity;
+        return velocity.getX();
     }
 
-    public float getyVelocity() {
-        return yVelocity;
+    public void setXVelocity(float newXVelocity) {
+        velocity = new Matrix(newXVelocity, velocity.getY());
     }
 
+    public float getYVelocity() {
+        return velocity.getY();
+    }
+
+    public void setYVelocity(float newYVelocity) {
+        velocity = new Matrix(velocity.getX(), newYVelocity);
+    }
+
+    public float getAngle() { return angle; }
+
+    public void setAngle(float angle) { this.angle = angle; }
+
+    public float getSpeed() { return speed; }
+
+    public void setSpeed(float speed) { this.speed = speed; }
+
+    public ObjectState getState() { return state; }
+
+    public void setState(ObjectState state) { this.state = state; }
+
+    public float getRadius() { return radius; }
+
+    public void setRadius(float radius) { this.radius = radius; }
 
 }
