@@ -118,7 +118,7 @@ public class AvoidBall extends Job {
             Matrix d = new Matrix(ball.getXVelocity(), ball.getYVelocity());
 
             System.out.println("Ball: direction " + d + " positon" + p);
-            if (ball.canDamage()) {
+            if (ball.isDangerous()) {
                 possibleDangerBalls.add(ball);
                 System.out.println("Possible " + Arrays.toString(possibleDangerBalls.toArray()));
                 if (canAffect(ball)) {

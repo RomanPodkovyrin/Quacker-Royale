@@ -15,8 +15,6 @@ public class TestMain {
     private static Logger logger = LogManager.getLogger(TestMain.class);
 
     public static void main(String[] args){
-
-
         System.out.println( Math.toDegrees(Math.atan2(0,-1)));
         System.out.println(MatrixMath.vectorAngle(new Matrix(-3,-5)));
         PlayerData pd = new PlayerData();
@@ -37,8 +35,8 @@ public class TestMain {
         ball.setXVelocity(-1);
         ball.setYVelocity(0);
         ball.setRadius(1);
-        ball.setDamage(true);
-        System.out.println(ball.canDamage() +""+ ball.getXVelocity());
+        ball.setDangerous(true);
+        System.out.println(ball.isDangerous() +""+ ball.getXVelocity());
         AvoidBall job = new AvoidBall();
 
 
