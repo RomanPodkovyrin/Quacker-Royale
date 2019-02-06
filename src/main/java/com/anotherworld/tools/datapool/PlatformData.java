@@ -1,6 +1,9 @@
 package com.anotherworld.tools.datapool;
 
-public class PlatformData {
+import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.view.data.RectangleDisplayData;
+
+public class PlatformData implements RectangleDisplayData {
 
     private int stage = 1;
     private static final int MAXSTAGE = 4;
@@ -67,19 +70,29 @@ public class PlatformData {
         this.height = height;
     }
 
-    public float getxCoordinate() {
+    public float getXCoordinate() {
         return xCoordinate;
     }
 
-    public void setxCoordinate(float xCoordinate) {
+    public void setXCoordinate(float xCoordinate) {
         this.xCoordinate = xCoordinate;
     }
 
-    public float getyCoordinate() {
+    public float getYCoordinate() {
         return yCoordinate;
     }
 
-    public void setyCoordinate(float yCoordinate) {
+    public void setYCoordinate(float yCoordinate) {
         this.yCoordinate = yCoordinate;
+    }
+
+    @Override
+    public float getAngle() {
+        return 0;
+    }
+
+    @Override
+    public ObjectState getState() {
+        return null;
     }
 }

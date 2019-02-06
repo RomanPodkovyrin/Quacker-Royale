@@ -28,7 +28,7 @@ public class DisplayObject {
     
     public DisplayObject(BallDisplayData displayData) {
         this.displayData = displayData;
-        points = genCircle(displayData.getR());
+        points = genCircle(displayData.getRadius());
         displayType = GL_TRIANGLE_FAN;
         setColours();
     }
@@ -42,18 +42,16 @@ public class DisplayObject {
 
     public DisplayObject(PlayerDisplayData displayData) {
         this.displayData = displayData;
-        points = genCircle(displayData.getR());
+        points = genCircle(displayData.getRadius());
         displayType = GL_TRIANGLE_FAN;
         setColours();
     }
     
     public DisplayObject(WallData displayData) {
-        //this.displayData = displayData;
-        //this.points = genWall(displayData.getWidth(), displayData.getHeight(), 5);
+        this.displayData = displayData;
+        this.points = genWall(displayData.getWidth(), displayData.getHeight(), 5);
         this.displayType = GL_TRIANGLE_STRIP;
         setColours();
-        throw new RuntimeException("Wall not rendered");
-        //TODO implement this in the future
     }
     
     private final void setColours() {

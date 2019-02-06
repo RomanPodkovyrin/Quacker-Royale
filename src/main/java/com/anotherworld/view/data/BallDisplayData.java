@@ -1,7 +1,7 @@
 package com.anotherworld.view.data;
 
-public interface BallDisplayData extends DisplayData {
+public interface BallDisplayData extends CircleDisplayData {
 
-    public float getR();
+    public boolean isDangerous();
     
 }
