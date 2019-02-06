@@ -6,6 +6,8 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
+import java.util.Random;
+
 /**
  *Makes sure that the AI doesn't come too close to the edge
  * @author Roman
@@ -29,23 +31,33 @@ public class avoidEdge extends Job {
         this.platform = platform;
 
 
-    }
-
-    private boolean checkIfNearEdge() {
         // get x y Matrix of the Platform
         //##############################################
         Matrix platformCoordinates = new Matrix(0,0); // Change it
         // #############################################
+        Random random = new Random();
 
         Matrix place = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
         if (Math.abs(place.getX()) >= platform.getDistanceX() + 10) {
             // too close to x
-
+            // go Left Or Right
+//            random.nextBoolean()?;
+            ai.setYVelocity(0);
+            ai.setXVelocity(random.nextBoolean()? 10: -10);
+            succeed();
+            return;
         }
 
         if (Math.abs(place.getY()) >= platform.getDistanceY() + 10 ) {
             // too close to y
+            // go Up or Down
+            ai.setXVelocity(0);
+            ai.setYVelocity(random.nextBoolean()? 10: -10);
+            succeed();
+            return;
         }
-        return true;
+        fail();
+
     }
+
 }
