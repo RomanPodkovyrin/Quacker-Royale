@@ -4,23 +4,22 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.graphics.displayobject.Ball;
 import com.anotherworld.view.graphics.displayobject.DisplayObject;
 import com.anotherworld.view.graphics.displayobject.Player;
-import com.anotherworld.view.input.KeyListener;
-import com.anotherworld.view.input.KeyListenerNotFoundException;
+import com.anotherworld.tools.input.KeyListenerNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL;
 
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import org.lwjgl.opengl.*;
 
 /**
  * Creates a window and manages the game's display.
