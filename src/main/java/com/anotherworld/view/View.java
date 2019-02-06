@@ -71,10 +71,7 @@ public class View implements Runnable {
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
     
-    private void displayGame(DisplayData[] objects) throws WrongSceneException {
-        if (!currentScene.getClass().equals(GameScene.class)) {
-            throw new WrongSceneException("Not currently in game state");
-        }
+    public void updateGameObjects(DisplayData[] objects) {
         synchronized (eventQueue) {
             eventQueue.add(new UpdateDisplayObjects(objects));
         }

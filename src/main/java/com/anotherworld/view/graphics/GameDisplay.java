@@ -12,10 +12,11 @@ import java.util.ArrayList;
  */
 public class GameDisplay extends GraphicsDisplay {
 
-    private Camera camera; //0f, 0f, 160f, 90f
+    private Camera camera;
     
     public GameDisplay(float x, float y, float height, float width, Camera camera) {
         super(x, y, height, width);
+        this.camera = camera;
     }
 
     @Override

@@ -9,10 +9,11 @@ import com.anotherworld.view.data.DisplayData;
  */
 public class GameScene extends Scene {
     
-    private Camera camera; //TODO implement this
+    private Camera camera;
     
     public GameScene() {
         super();
+        this.camera = new Static2dCamera(0f, 0f, 160f, 90f);
         this.displays.add(new GameDisplay(-1f, -1f, 2f, 2f, camera));
     }
     
