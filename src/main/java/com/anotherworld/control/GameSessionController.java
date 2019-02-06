@@ -3,11 +3,23 @@ package com.anotherworld.control;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.view.View;
 import com.anotherworld.view.input.KeyListener;
+import com.anotherworld.view.input.KeyListenerNotFoundException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class GameSessionController {
+    
+    private static Logger logger = LogManager.getLogger(GameSessionController.class);
 
     public static void main(String[] args) {
-        new GameSessionController();
+        try {
+            new GameSessionController();
+        } catch (KeyListenerNotFoundException ex) {
+            logger.fatal(ex);
+        } catch (RuntimeException ex) {
+            logger.fatal(ex);
+        }
     }
 
     private static boolean isRunning;
@@ -16,7 +28,7 @@ public class GameSessionController {
     private Thread viewThread;
     private KeyListener keyListener;
 
-    public GameSessionController() {
+    public GameSessionController() throws KeyListenerNotFoundException {
 
         isRunning = true;
         //this.session = new GameSession(null, null);
@@ -24,11 +36,6 @@ public class GameSessionController {
         this.viewThread = new Thread(view);
         viewThread.start();
         System.out.println("Thread started");
-        try{
-            Thread.sleep(1000);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
         this.keyListener = view.getKeyListener();
         mainLoop();
 

@@ -1,5 +1,7 @@
 package com.anotherworld.model.ai.behaviour;
 
+import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
@@ -12,16 +14,33 @@ public class TestMain {
 
     public static void main(String[] args){
 
-        logger.error("Fuck");
+
+        System.out.println( Math.toDegrees(Math.atan2(0,-1)));
+        System.out.println(MatrixMath.vectorAngle(new Matrix(-3,-5)));
         Player ai = new Player("Bob",5,0,0, ObjectState.IDLE,true);
+        ai.setRadius(1);
+        ai.setAngle(90);
+        ai.setyVelocity(1);
 
         Ball ball = new Ball(4,4,ObjectState.MOVING);
         ball.setSpeed(1);
         ball.setAngle(315);
-        AvoidBall job = new AvoidBall(ai,null,new Ball[] {ball},null);
+        ball.setxVelocity(-1);
+        ball.setyVelocity(0);
+        ball.setRadius(1);
+        ball.setDamage(true);
+        System.out.println(ball.canDamage() +""+ ball.getxVelocity());
+        AvoidBall job = new AvoidBall();
 
+        Job repeatJob = new Repeat((new AvoidBall()));
+
+
+//        job.start();
+        repeatJob.start();
         for (int i = 0; i < 5; i ++) {
-            job.act();
+            repeatJob.act(ai,null,new Ball[] {ball},null);
+
+
         }
     }
 }
