@@ -26,9 +26,9 @@ public class Wall {
      */
     public void nextStage(){
         if (stage < MAXSTAGE ){
-            stage ++;
-            this.xSize =-xShrink;
-            this.ySize =-yShrink;
+            stage++;
+            this.xSize -= xShrink;
+            this.ySize -= yShrink;
 
         }
     }
