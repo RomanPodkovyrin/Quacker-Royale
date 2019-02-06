@@ -1,21 +1,35 @@
 package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
-import com.anotherworld.model.movable.Player;
-import com.anotherworld.tools.input.Input;
 import com.anotherworld.view.View;
-import com.anotherworld.tools.input.KeyListener;
 
-import java.util.ArrayList;
+import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.KeyListenerNotFoundException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class GameSessionController {
+    
+    private static Logger logger = LogManager.getLogger(GameSessionController.class);
+
+    public static void main(String[] args) {
+        try {
+            new GameSessionController();
+        } catch (KeyListenerNotFoundException ex) {
+            logger.fatal(ex);
+        } catch (RuntimeException ex) {
+            logger.fatal(ex);
+        }
+    }
 
     private GameSession session;
     private View view;
     private Thread viewThread;
     private KeyListener keyListener;
 
-    public GameSessionController(View view, GameSession session) {
+    public GameSessionController(View view, GameSession session) throws KeyListenerNotFoundException {
 
         this.session = session;
         this.view = view;
@@ -59,19 +73,5 @@ public class GameSessionController {
 
     private static void render() {
         //View.update
-    }
-
-    public static void main(String[] args) {
-        //Create the players
-        Player ourPlayer = new Player("Us", 3,10,10,null, false);
-        ArrayList<Player> players = new ArrayList<>();
-        players.add(ourPlayer);
-        ArrayList<Player> ais = new ArrayList<>();
-
-        //Create the game view and models
-        View gameView = new View();
-        GameSession gameSession = new GameSession(ourPlayer, null, null);
-
-        new GameSessionController(gameView, gameSession);
     }
 }

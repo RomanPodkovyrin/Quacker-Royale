@@ -22,6 +22,11 @@ public class AI {
     private Matrix aiVector;
     private Matrix aiPosition;
 
+    public enum AIstate {
+        AVOIDING, CHASING, AIMING, IDLE, GETTOMIDDLE
+    }
+
+
     /**
      *
      * @param aiPlayer pass the reference to the ai player
