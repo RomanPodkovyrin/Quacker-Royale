@@ -1,28 +1,27 @@
 package com.anotherworld.model.movable;
 
-public class Player extends AbstractMovable {
-    private String characterID;
-    private boolean aiEnabled;
-    private int health;
+import com.anotherworld.tools.datapool.PlayerData;
 
-    public Player(String characterID, int health, float xCoordinate,
-                  float yCoordinate, ObjectState state, boolean aiEnabled) {
-        super(xCoordinate, yCoordinate, state);
-        this.characterID = characterID;
-        this.health = health;
-        this.aiEnabled = aiEnabled;
+public class Player extends AbstractMovable {
+    private boolean aiEnabled;
+
+    PlayerData playerData;
+
+    public Player(PlayerData playerData, boolean aiEnabled) {
+        super(playerData);
+        this.playerData = playerData;
     }
 
-    public String getCharacterID() { return characterID; }
+    public String getCharacterID() { return playerData.getCharacterID(); }
 
     public void setCharacterID(String characterID) {
-        this.characterID = characterID;
+        playerData.setCharacterID(characterID);
     }
 
-    public int getHealth() { return health; }
+    public int getHealth() { return playerData.getHealth(); }
 
     public void setHealth(int health) {
-        this.health = health;
+        playerData.setHealth(health);
     }
 
     public boolean isAIEnabled() { return aiEnabled; }

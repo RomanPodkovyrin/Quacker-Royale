@@ -4,6 +4,10 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
+/**
+ * Represents the job which has 3 states file success or running.
+ * @author Roman
+ */
 public abstract class Job {
 
     public enum JobState {

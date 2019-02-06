@@ -6,6 +6,7 @@ import com.anotherworld.model.movable.Player;
 
 /**
  * Repeats the Job infinite amount of times or the number that is specified.
+ * @author Roman
  */
 public class Repeat extends Job {
     private final Job job;

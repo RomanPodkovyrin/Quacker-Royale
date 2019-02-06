@@ -9,6 +9,7 @@ import java.util.Queue;
 
 /**
  * Executes the given jobs in order until one of them succeeds.
+ * @author  Roman
  *
  */
 public class Selector extends Job {
