@@ -9,8 +9,8 @@ import com.anotherworld.view.graphics.displayobject.DisplayObject;
  */
 public class GameScene extends Scene {
     
-    public GameScene() {
-        super();
+    public GameScene(boolean lockMouse) {
+        super(lockMouse);
         this.displays.add(new GameDisplay(-1f, -1f, 2f, 2f));
     }
     

@@ -7,7 +7,7 @@ import com.anotherworld.view.graphics.displayobject.DisplayObject;
  * @author Jake Stewart
  *
  */
-class UpdateDisplayObjects implements ViewEvent {
+public class UpdateDisplayObjects implements ViewEvent {
     
     private final DisplayObject[] objects;
 

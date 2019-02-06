@@ -1,15 +1,19 @@
 package com.anotherworld.view.graphics;
 
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+
 import static org.lwjgl.opengl.GL11.GL_POLYGON;
 import static org.lwjgl.opengl.GL11.glBegin;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import java.nio.DoubleBuffer;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.BufferUtils;
 
 /**
  * Creates and manages a view state like view game or main menu.
@@ -22,7 +26,10 @@ public class Scene {
     
     protected ArrayList<GraphicsDisplay> displays;
     
-    public Scene() {
+    private boolean lockMouse;
+    
+    public Scene(boolean lockMouse) {
+        this.lockMouse = lockMouse;
         displays = new ArrayList<>();
     }
     
@@ -31,8 +38,14 @@ public class Scene {
      * @param width The width of the window in pixels
      * @param height The height of the window in pixels
      */
-    public void draw(int width, int height) {
+    public void draw(int width, int height, long window) {
         logger.debug("Drawing Scene");
+        
+        DoubleBuffer cursorX = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer cursorY = BufferUtils.createDoubleBuffer(1);
+        
+        glfwGetCursorPos(window, cursorX, cursorY);
+        
         for (int i = 0; i < displays.size(); i++) {
             logger.trace("Drawing scene: " + i);
             GraphicsDisplay display = displays.get(i);

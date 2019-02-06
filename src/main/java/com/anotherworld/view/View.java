@@ -73,56 +73,12 @@ public class View implements Runnable {
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
     
-    private void displayGame(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) throws WrongSceneException {
+    private void displayGame(DisplayObject[] objects) throws WrongSceneException {
         if (!currentScene.getClass().equals(GameScene.class)) {
             throw new WrongSceneException("Not currently in game state");
         }
-        DisplayObject[] objects = new DisplayObject[players.length + balls.length + platform.length + wall.length];
-        int index = 0;
-        for (int i = 0; i < platform.length; i++) {
-            objects[i] = platform[i];
-        }
-        index += platform.length;
-        for (int i = 0; i < balls.length; i++) {
-            objects[i + index] = balls[i];
-        }
-        index += balls.length;
-        for (int i = 0; i < players.length; i++) {
-            objects[i + index] = players[i];
-        }
-        index += players.length;
-        for (int i = 0; i < wall.length; i++) {
-            objects[i + index] = wall[i];
-        }
-        index += wall.length;
         synchronized (eventQueue) {
             eventQueue.add(new UpdateDisplayObjects(objects));
-        }
-    }
-
-    /**
-     * A test method for starting the view.
-     * @param args Accepts no args
-     */
-    @Deprecated
-    public static void main(String[] args) {
-        DisplayObject[] objects = new DisplayObject[10];
-        for (int i = 0; i < 5; i++) {
-            objects[i] = (new Ball((float) Math.random() * 160, (float) Math.random() * 90,
-                    (float) Math.random() * 360));
-            objects[i + 5] = (new Player((float) Math.random() * 160, (float) Math.random() * 90, 10f));
-        }
-        View view = new View();
-        (new Thread(view)).start();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            logger.catching(e);
-        }
-        try {
-            view.displayGame(objects, new DisplayObject[0], new DisplayObject[0], new DisplayObject[0]);
-        } catch (WrongSceneException e) {
-            e.printStackTrace();
         }
     }
 
@@ -151,7 +107,7 @@ public class View implements Runnable {
         
         keyListenerLatch.countDown();
 
-        currentScene = new GameScene();
+        currentScene = new GameScene(true);
 
         while (!glfwWindowShouldClose(window)) {
 
@@ -163,7 +119,7 @@ public class View implements Runnable {
                 }
             }
 
-            currentScene.draw(width, height);
+            currentScene.draw(width, height, window);
 
             glFlush();
 
