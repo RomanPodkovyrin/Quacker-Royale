@@ -8,6 +8,7 @@ import java.util.Queue;
 
 /**
  * Executes the given jobs in order until one of then fails.
+ * @author Roman
  */
 public class Sequence extends Job {
 

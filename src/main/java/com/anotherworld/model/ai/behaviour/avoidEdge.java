@@ -4,6 +4,10 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
+/**
+ *Makes sure that the AI doesn't come too close to the edge
+ * @author Roman
+ */
 public class avoidEdge extends Job {
 
     public avoidEdge() {

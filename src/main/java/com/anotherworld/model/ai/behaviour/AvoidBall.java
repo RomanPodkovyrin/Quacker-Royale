@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
  * #################################################################
  * STILL WORKING ON THIS CLASS
  * #################################################################
+ * @author Roman
  */
 public class AvoidBall extends Job {
 

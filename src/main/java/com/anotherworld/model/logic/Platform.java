@@ -1,7 +1,13 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.AbstractMovable;
 
+/**
+ *Represents Platform Object.
+ *
+ * @ Roman
+ */
 public class Platform {
     private int stage = 1;
     private static int MAXSTAGE = 4;
@@ -26,7 +32,7 @@ public class Platform {
     }
 
     /**
-     * Called when the platform needs to shrink
+     * Called when the platform needs to shrink.
      */
     public void nextStage(){
         if (stage < MAXSTAGE ){
@@ -38,10 +44,12 @@ public class Platform {
     }
 
     /**
-     * checks whether the the given coordinates are on the platform
+     * checks whether the the given coordinates are on the platform.
+     * @param x the x coordinate
+     * @param y  the y coordinate
      * @return true if coordinates are on the platform, false if not
      */
-    public boolean isOnPlatform(float x, float y){
+    public boolean isOnPlatform(float x, float y) {
         float leftX = xCoordinate - xSize/2;
         float upperY = yCoordinate - ySize/2;
 
@@ -52,11 +60,20 @@ public class Platform {
     }
 
     /**
-     * tells whether the object is on the platform
+     *checks whether the the given coordinates are on the platform.
+     * @param matrix the x and y matrix of a point
+     * @return true if coordinates are on the platform, false if not
+     */
+    public boolean isOnPlatform(Matrix matrix) {
+        return isOnPlatform(matrix.getX(), matrix.getY());
+    }
+
+    /**
+     * tells whether the object is on the platform.
      * @param object
      * @return true if coordinates are on the platform, false if not
      */
-    public boolean isOnPlatform(AbstractMovable object){
+    public boolean isOnPlatform(AbstractMovable object) {
         return isOnPlatform(object.getXCoordinate(),object.getYCoordinate());
     }
 
