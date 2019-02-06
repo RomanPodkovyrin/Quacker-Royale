@@ -2,6 +2,7 @@ package com.anotherworld.model.movable;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.tools.datapool.AbstractMovableData;
 import com.anotherworld.tools.datapool.PlayerData;
 
 /**
@@ -15,7 +16,7 @@ public abstract class AbstractMovable {
     private int points;
     private float angle;
     private float speed;
-    private PlayerData data;
+    private AbstractMovableData data;
     private float radius;
 
     public AbstractMovable(float xCoordinate, float yCoordinate, ObjectState state){
@@ -23,6 +24,8 @@ public abstract class AbstractMovable {
         this.state = state;
 
     }
+
+
     // COORDINATES //
     public Matrix getCoordinates() {
         return coordinates;
