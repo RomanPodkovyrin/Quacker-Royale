@@ -3,19 +3,40 @@ package com.anotherworld.model.physics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
 public class Physics {
 
-    public void move(AbstractMovable object) {
+    static float friction;
+    static float rate;
+    static float minimumSpeed = 0.4f;
+    public Physics(float rate, float friction){
+        this.friction = friction;
+        this.rate = rate;
+    }
+    /**
+     * To make the object move
+     *
+     * @param AbstractMovable
+     *            object
+     */
+    public static void move(AbstractMovable object) {
         float newXCoordinate = object.getxCoordinate() + object.getxVelocity();
         float newYCoordinate = object.getyCoordinate() + object.getyVelocity();
         object.setCoordinates(newXCoordinate, newYCoordinate);
     }
 
-    public boolean checkCollision(AbstractMovable a, AbstractMovable b) {
+    /**
+     * To check collision of the objects.
+     *
+     * @param AbstractMovable
+     *            a, b
+     */
+    public static boolean checkCollision(AbstractMovable a, AbstractMovable b) {
         float xDistance = a.getxCoordinate() - b.getxCoordinate();
         float yDistance = a.getyCoordinate() - b.getyCoordinate();
 
@@ -26,7 +47,13 @@ public class Physics {
         return isOverlapping;
     }
 
-    public void bouncedWall(Ball a, float[] wallCoordinate) {
+    /**
+     * To make the ball bounce within the wall
+     *
+     * @param Ball
+     *            a, float[] wallCoordinate
+     */
+    public static void bouncedWall(Ball a, float[] wallCoordinate) {
         float circleR = a.getRadius();
         float circleX = a.getxCoordinate();
         float circleY = a.getyCoordinate();
@@ -48,51 +75,86 @@ public class Physics {
         }
     }
 
-    public void applyFriction(AbstractMovable a) {
-        float friction = 0.90f;
+    /**
+     * To make the object move
+     *
+     * @param AbstractMovable
+     *            object
+     */
+    public static void applyFriction(AbstractMovable a) {
         float speed = a.getSpeed() * friction;
         if (speed < 0.5f) {
             speed = 0.0f;
         }
         a.setSpeed(speed);
     }
-
-    public void accelerate(AbstractMovable a) {
-        float rate = 0.5f;
+    /**
+     * To make the object accelerate
+     *
+     * @param AbstractMovable
+     *            object
+     */
+    public static void accelerate(AbstractMovable a) {
         float speed = a.getSpeed() + rate;
         if (speed > 3.0f) {
             speed = 3.0f;
         }
         a.setSpeed(speed);
     }
-
-    public void forceCancelling(AbstractMovable a, float[] xyVelocity) {
-        float xVelocity = a.getxVelocity();
-        float yVelocity = a.getyVelocity();
-        a.setxVelocity(xVelocity + xyVelocity[0]);
-        a.setyVelocity(yVelocity + xyVelocity[1]);
+    /**
+     * To apply force to the object
+     * @param AbstractMovable
+     *            object
+     */
+    public static void forceApplying(AbstractMovable a, Matrix velocity) {
+        float xVelocity = a.getxVelocity()+velocity.getY();
+        float yVelocity = a.getyVelocity()+velocity.getX();
+        float angle = (float) Math.toDegrees(Math.atan2(xVelocity, yVelocity));
+        if(angle<0) {
+            angle+=360;
+        }
+        float speed = (float) Math.sqrt(xVelocity*xVelocity+yVelocity*yVelocity);
+        a.setAngle(angle);
+        a.setSpeed(speed);
+        a.setxVelocity(xVelocity);
+        a.setyVelocity(yVelocity);
     }
-
-    public void collided(Player player, float[] outsideVelocity) {
-        player.setxVelocity(outsideVelocity[0]);
-        player.setyVelocity(outsideVelocity[1]);
+    /**
+     * What happened if the player is colliding with eachother
+     * @param Player player
+     * @param Martix outsideVelocity
+     */
+    public static void collided(Player player, Matrix outsideVelocity) {
+        player.setxVelocity(outsideVelocity.getX());
+        player.setyVelocity(outsideVelocity.getY());
     }
-
-    public void collidedByBall(Player player, Ball ball) {
+    /**
+     * What happened if the player is collided by a ball.
+     * @param player
+     * @param ball
+     */
+    public static void collidedByBall(Player player, Ball ball) {
         player.setxVelocity(ball.getxVelocity());
         player.setyVelocity(ball.getyVelocity());
         if (ball.canDamage()) {
             int health = player.getHealth();
             player.setHealth(health - 30);
+        } else {
+            ball.setDamage(true);
         }
     }
-
-    public void onCollision(List<Ball> listOfBalls, List<Player> listOfPlayers,
+    /**
+     * It is to check collision for all the objects within the game session.
+     * It checks if each ball collided on either wall or player
+     * Then add the player into collided list
+     * And check for the remaining player who is not collided with any
+     * other thing 
+     * @param listOfBalls
+     * @param listOfPlayers
+     * @param wallDimensions
+     */
+    public static void onCollision(List<Ball> listOfBalls, List<Player> listOfPlayers,
             float[] wallDimensions) {
-        // check for ball collided, then player collided.
-        // The list of integer collided is for storing the index of player
-        // To make sure the event has already occurred on them during this
-        // method is called.
         List<Integer> collided = new ArrayList<Integer>();
         for (int i = 0; i < listOfBalls.size(); i++) {
             Ball ball = listOfBalls.get(i);
@@ -108,10 +170,6 @@ public class Physics {
                 }
             }
         }
-        // Check for player collided,
-        // if the player was collided with another player, the force will be
-        // applied by each other
-        // but no damage will be taken.
         for (int i = 0; i < listOfPlayers.size(); i++) {
             if (collided.contains(i)) {
                 continue;
@@ -123,10 +181,10 @@ public class Physics {
                 }
                 Player player2 = listOfPlayers.get(j);
                 if (checkCollision(player, player2)) {
-                    float[] veloToPlayer = { player2.getxVelocity(),
-                            player2.getyVelocity() };
-                    float[] veloToPlayer2 = { player.getxVelocity(),
-                            player.getyVelocity() };
+                    Matrix veloToPlayer = new Matrix(player2.getxVelocity(),
+                            player2.getyVelocity());
+                    Matrix veloToPlayer2 = new Matrix(player.getxVelocity(),
+                            player.getyVelocity());
                     collided(player, veloToPlayer);
                     collided(player2, veloToPlayer2);
                     collided.add(i);
