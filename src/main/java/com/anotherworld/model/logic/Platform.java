@@ -57,7 +57,7 @@ public class Platform {
      * @return true if coordinates are on the platform, false if not
      */
     public boolean isOnPlatform(AbstractMovable object){
-        return isOnPlatform(object.getxCoordinate(),object.getyCoordinate());
+        return isOnPlatform(object.getXCoordinate(),object.getYCoordinate());
     }
 
 

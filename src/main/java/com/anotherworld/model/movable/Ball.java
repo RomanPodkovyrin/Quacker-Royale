@@ -14,6 +14,6 @@ public class Ball extends AbstractMovable {
     public void setDamage(boolean canDamage) { this.canDamage = canDamage; }
 
     public String toString() {
-        return "Location: x "+ getxCoordinate() + " y " + getyCoordinate();
+        return "Location: x "+ getXCoordinate() + " y " + getYCoordinate();
     }
 }

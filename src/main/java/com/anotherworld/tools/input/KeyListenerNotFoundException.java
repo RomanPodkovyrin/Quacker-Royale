@@ -1,4 +1,4 @@
-package com.anotherworld.view.input;
+package com.anotherworld.tools.input;
 
 public class KeyListenerNotFoundException extends Exception {
     
