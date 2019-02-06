@@ -23,6 +23,7 @@ public class GameSessionController {
         // Starting the View thread
         this.viewThread = new Thread(view);
         viewThread.start();
+
         // Sleeping the main thread for 1 second to register the key inputs.
         try { Thread.sleep(1000); }
         catch (Exception e){ e.printStackTrace(); }
@@ -36,7 +37,6 @@ public class GameSessionController {
     }
 
     private void mainLoop() {
-
         while(viewThread.isAlive()) {
             update();
             render();
@@ -48,17 +48,13 @@ public class GameSessionController {
             }
 
         }
-
     }
 
     private void update() {
 
-        //GameSession.update
-        ArrayList<Input> keyPresses = keyListener.getKeyPresses();
-        if (keyPresses.contains(Input.UP)) System.out.println("Up is pressed!");
-        if (keyPresses.contains(Input.DOWN)) System.out.println("Down is pressed!");
-        if (keyPresses.contains(Input.LEFT)) System.out.println("Left is pressed!");
-        if (keyPresses.contains(Input.RIGHT)) System.out.println("Right is pressed!");
+        // Send the input key presses to the model.
+        session.updatePlayer(keyListener.getKeyPresses());
+
     }
 
     private static void render() {

@@ -2,6 +2,7 @@ package com.anotherworld.model.logic;
 
 import com.anotherworld.model.movable.*;
 import com.anotherworld.tools.PropertyReader;
+import com.anotherworld.tools.input.Input;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,5 +54,12 @@ public class GameSession {
 
         // Check whether or not the balls are colliding with a wall
 
+    }
+
+    public void updatePlayer(ArrayList<Input> keyPresses) {
+        if (keyPresses.contains(Input.UP)) System.out.println("Up is pressed!");
+        if (keyPresses.contains(Input.DOWN)) System.out.println("Down is pressed!");
+        if (keyPresses.contains(Input.LEFT)) System.out.println("Left is pressed!");
+        if (keyPresses.contains(Input.RIGHT)) System.out.println("Right is pressed!");
     }
 }
