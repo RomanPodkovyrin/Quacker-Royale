@@ -1,5 +1,7 @@
 package com.anotherworld.model.movable;
 
+import com.anotherworld.tools.datapool.PlayerData;
+
 public class Player extends AbstractMovable {
     private String characterID;
     private boolean aiEnabled;
