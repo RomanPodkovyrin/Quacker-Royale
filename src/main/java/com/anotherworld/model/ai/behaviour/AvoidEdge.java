@@ -29,6 +29,7 @@ public class AvoidEdge extends Job {
         this.players = players;
         this.balls = balls;
         this.platform = platform;
+        float distanceFromEdge = ai.getRadius();
 
 
         // get x y Matrix of the Platform
@@ -38,26 +39,44 @@ public class AvoidEdge extends Job {
         Random random = new Random();
 
         Matrix place = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
-        if (Math.abs(place.getX()) >= platform.getDistanceX() + 10) {
+
+        if (Math.abs(place.getX()) >= platform.getDistanceX() - distanceFromEdge) {
             // too close to x
             // go Left Or Right
 //            random.nextBoolean()?;
-            ai.setYVelocity(0);
-            ai.setXVelocity(random.nextBoolean()? 10: -10);
-            succeed();
-            return;
+            if ((place.getX() < 0 & isPointing(ai.getCoordinates(),0)) | (place.getX() > 0 & isPointing(ai.getCoordinates(),180))) {
+                ai.setYVelocity(0);
+                ai.setXVelocity(random.nextBoolean()? 1: -1);
+                succeed();
+                return;
+            }
+
+
+
         }
 
-        if (Math.abs(place.getY()) >= platform.getDistanceY() + 10 ) {
+        if (Math.abs(place.getY()) >= platform.getDistanceY() - distanceFromEdge) {
             // too close to y
             // go Up or Down
-            ai.setXVelocity(0);
-            ai.setYVelocity(random.nextBoolean()? 10: -10);
-            succeed();
-            return;
+            if ((place.getY() < 0 & isPointing(ai.getCoordinates(),270)) | (place.getY() > 0 & isPointing(ai.getCoordinates(),90))) {
+                ai.setXVelocity(0);
+                ai.setYVelocity(random.nextBoolean() ? 1 : -1);
+                succeed();
+                return;
+            }
         }
+
         fail();
 
+    }
+
+    private boolean isPointing(Matrix directions, int angle) {
+        float aiAngle = MatrixMath.vectorAngle(directions);
+
+        if (((angle - 90) % 360) > aiAngle | ((angle + 90) % 360) < aiAngle ) {
+            return true;
+        }
+        return false;
     }
 
 }
