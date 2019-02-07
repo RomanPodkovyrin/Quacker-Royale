@@ -5,16 +5,15 @@ import com.anotherworld.tools.datapool.BallData;
 public class Ball extends AbstractMovable {
 
     private BallData ballData;
-    private boolean canDamage;
 
     public Ball(BallData ballData){
         super(ballData);
         this.ballData = ballData;
-        canDamage = false;
+        ballData.setDangerous(false);
     }
 
-    public boolean canDamage() { return canDamage; }
-    public void setDamage(boolean canDamage) { this.canDamage = canDamage; }
+    public boolean isDangerous() { return ballData.isDangerous(); }
+    public void setDangerous(boolean dangerous) { ballData.setDangerous(dangerous); }
 
     public String toString() {
         return "Location: x "+ getXCoordinate() + " y " + getYCoordinate();

@@ -2,6 +2,7 @@ package com.anotherworld.model.logic;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.AbstractMovable;
+import com.anotherworld.tools.datapool.PlatformData;
 
 /**
  *Represents Platform Object.
@@ -9,6 +10,9 @@ import com.anotherworld.model.movable.AbstractMovable;
  * @ Roman
  */
 public class Platform {
+
+    private PlatformData platformData;
+
     private int stage = 1;
     private static int MAXSTAGE = 4;
     private float xShrink = 10;
@@ -31,15 +35,22 @@ public class Platform {
         this.ySize = ySide;
     }
 
+    public float getDistanceX() {
+        return xSize;
+    }
+
+    public float getDistanceY() {
+        return ySize;
+    }
+
     /**
      * Called when the platform needs to shrink.
      */
     public void nextStage(){
         if (stage < MAXSTAGE ){
             stage ++;
-            this.xSize =-xShrink;
-            this.ySize =-yShrink;
-
+            this.xSize -= xShrink;
+            this.ySize -= yShrink;
         }
     }
 
