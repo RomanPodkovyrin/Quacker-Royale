@@ -4,6 +4,8 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
+import java.util.ArrayList;
+
 /**
  * Repeats the Job infinite amount of times or the number that is specified.
  * @author Roman
@@ -49,7 +51,7 @@ public class Repeat extends Job {
     }
 
     @Override
-    public void act(Player ai, Player[] players, Ball[] balls, Platform platform) {
+    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
         if (job.isFailure()) {
             fail();
         } else if (job.isSuccess()) {

@@ -6,6 +6,7 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -24,7 +25,7 @@ public class AvoidEdge extends Job {
     }
 
     @Override
-    public void act(Player ai, Player[] players, Ball[] balls, Platform platform) {
+    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
         this.ai = ai;
         this.players = players;
         this.balls = balls;
@@ -34,7 +35,7 @@ public class AvoidEdge extends Job {
 
         // get x y Matrix of the Platform
         //##############################################
-        Matrix platformCoordinates = new Matrix(0,0); // Change it
+        Matrix platformCoordinates = new Matrix(platform.getDistanceX(),platform.getDistanceY()); // Change it
         // #############################################
         Random random = new Random();
 

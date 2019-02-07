@@ -43,26 +43,22 @@ public class AvoidBall extends Job {
     }
 
     @Override
-    public void act(Player ai, Player[] players, Ball[] balls, Platform platform) {
+    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
         this.ai = ai;
         this.players = players;
         this.balls = balls;
         this.platform = platform;
 
-        aiDirection = new Matrix(ai.getXVelocity(),ai.getYVelocity());
-        aiPosition = new Matrix(ai.getXCoordinate(),ai.getXCoordinate());
+        aiDirection = ai.getVelocity();
+        aiPosition = ai.getCoordinates();
 
-        System.out.println("direction " + aiDirection + " positon" + aiPosition + "Angle: " + ai.getAngle());
+        //System.out.println("direction " + aiDirection + " position" + aiPosition + "Angle: " + ai.getAngle());
         if (isRunning() & ai.getHealth() == 0) {
             fail();
             return;
         }
 
         if (!isAIsafe()) {
-            //avoid the ball
-            // sort bolls
-            //sortBalls();
-            // first go opposite
             moveAway();
         } else {
             succeed();
@@ -74,8 +70,9 @@ public class AvoidBall extends Job {
      * Points the AI players in the opposite direction of the dangerous ball.
      */
     private void moveAway() {
-        Matrix ballPosition = new Matrix(dangerBalls.get(0).getXCoordinate(),dangerBalls.get(0).getYCoordinate());
-        Matrix ballDirection = new Matrix(dangerBalls.get(0).getXVelocity(), dangerBalls.get(0).getYVelocity());
+        //######################################################
+        Matrix ballPosition = dangerBalls.get(0).getCoordinates();
+        Matrix ballDirection = dangerBalls.get(0).getVelocity();
 
         Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ballPosition, ballDirection),aiPosition);
         Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
@@ -113,46 +110,49 @@ public class AvoidBall extends Job {
         possibleDangerBalls.clear();
         imminentDangerBalls.clear();
 
-        for(Ball ball: balls){
-            Matrix p = new Matrix(ball.getXCoordinate(),ball.getYCoordinate());
-            Matrix d = new Matrix(ball.getXVelocity(), ball.getYVelocity());
+        for (Ball ball: balls) {
+            Matrix p = ball.getCoordinates();
+            Matrix d = ball.getVelocity();
+            logger.debug("There are:");
 
-            System.out.println("Ball: direction " + d + " positon" + p);
             if (ball.isDangerous()) {
                 possibleDangerBalls.add(ball);
-                System.out.println("Possible " + Arrays.toString(possibleDangerBalls.toArray()));
+                logger.debug ("Possibly Dangerous Balls: " + possibleDangerBalls.size());
+
                 if (canAffect(ball)) {
                     dangerBalls.add(ball);
-                    System.out.println("danger " + Arrays.toString(dangerBalls.toArray()));
-                    Matrix ballPosition = new Matrix(ball.getXCoordinate(),ball.getYCoordinate());
-                    Matrix ballDirection = new Matrix(ball.getXVelocity(), ball.getYVelocity());
+                    logger.debug("Dangerour Balls: " + dangerBalls.size());
 
-                    if (MatrixMath.distanceAB(ballPosition,aiPosition) <= ball.getRadius() + ai.getRadius()) {
+                    if (isClose(ball)) {
                         imminentDangerBalls.add(ball);
-                        System.out.println("imminent " + Arrays.toString(imminentDangerBalls.toArray()));
+                        logger.debug("Imminently Dangerous Balls: " + imminentDangerBalls.size());
                     }
                 }
             }
         }
     }
 
+    /**
+     * Checks if the AI in danger of the balls.
+     *
+     * @return true if the ball is headed AI's way or falls if ball is headed in the direction of the AI
+     */
     private boolean isAIsafe() {
         sortBalls();
-        boolean save = dangerBalls.isEmpty();
+        boolean save = dangerBalls.isEmpty() | imminentDangerBalls.isEmpty();
         logger.debug("AI is " + (save ? "Save" : "in Danger"));
         return save;
     }
 
     private boolean canAffect(Ball ball) {
-        Matrix ballPosition = new Matrix(ball.getXCoordinate(),ball.getYCoordinate());
-        Matrix ballDirection = new Matrix(ball.getXVelocity(), ball.getYVelocity());
-        System.out.println("Perpendicular "+MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition));
-        return MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition) ;//& isClose(ball);
+        Matrix ballPosition = ball.getCoordinates();
+        Matrix ballDirection = ball.getVelocity();
+        return MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition);
     }
 
-    private boolean isClose(Ball ball ) {
-        Matrix ballPosition = new Matrix(ball.getXCoordinate(),ball.getYCoordinate());
-        Matrix ballDirection = new Matrix(ball.getXVelocity(), ball.getYVelocity());
+    private boolean isClose(Ball ball) {
+        Matrix ballPosition =  ball.getCoordinates();
+        Matrix ballDirection = ball.getVelocity();
 
         return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),aiPosition) <= ai.getRadius() + ball.getRadius();
     }

@@ -42,7 +42,7 @@ public class Selector extends Job {
     }
 
     @Override
-    public void act(Player ai, Player[] players, Ball[] balls, Platform platform) {
+    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
 
 
         if (currentJob.isSuccess()) {

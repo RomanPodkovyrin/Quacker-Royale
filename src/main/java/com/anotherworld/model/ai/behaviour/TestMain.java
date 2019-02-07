@@ -10,6 +10,9 @@ import com.anotherworld.tools.datapool.PlayerData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class TestMain {
 
     private static Logger logger = LogManager.getLogger(TestMain.class);
@@ -46,7 +49,7 @@ public class TestMain {
 //        job.start();
         repeatJob.start();
         for (int i = 0; i < 5; i ++) {
-            repeatJob.act(ai,null,new Ball[] {ball},null);
+            repeatJob.act(ai,null,(ArrayList<Ball>) Arrays.asList(ball),null);
 
 
         }
