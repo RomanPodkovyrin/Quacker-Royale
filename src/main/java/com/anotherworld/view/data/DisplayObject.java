@@ -44,7 +44,6 @@ public class DisplayObject {
         this.displayData = displayData;
         this.points = genWall(displayData.getWidth(), displayData.getHeight(), 5);
         this.displayType = GL_TRIANGLE_STRIP;
-        System.out.println(displayData.getWidth());
         setColours();
     }
     
