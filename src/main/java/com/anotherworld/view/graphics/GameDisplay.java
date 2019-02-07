@@ -1,6 +1,5 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.data.DisplayData;
 import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
@@ -47,10 +46,10 @@ public class GameDisplay extends GraphicsDisplay {
      * Updates the game display's objects to match the current games.
      * @param obj The new objects
      */
-    public void updateObjects(ArrayList<DisplayData> obj) {
+    public void updateObjects(ArrayList<DisplayObject> obj) {
         this.objects.clear();
         for (int i = 0; i < obj.size(); i++) {
-            this.objects.add(new DisplayObject(obj.get(i)));
+            this.objects.add(obj.get(i));
         }
     }
     

@@ -4,9 +4,14 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
+import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.DisplayData;
+import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.PlayerDisplayData;
+import com.anotherworld.view.data.RectangleDisplayData;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
 
@@ -72,9 +77,23 @@ public class View implements Runnable {
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
     
-    public void updateGameObjects(ArrayList<DisplayData> objects) {
+    public void updateGameObjects(ArrayList<PlayerDisplayData> playerObjects, ArrayList<BallDisplayData> ballObjects,
+            ArrayList<RectangleDisplayData> rectangleObjects, ArrayList<WallData> wallObjects) {
+        ArrayList<DisplayObject> disObj = new ArrayList<>();
+        for (int i = 0; i < playerObjects.size(); i++) {
+            disObj.add(new DisplayObject(playerObjects.get(i)));
+        }
+        for (int i = 0; i < ballObjects.size(); i++) {
+            disObj.add(new DisplayObject(ballObjects.get(i)));
+        }
+        for (int i = 0; i < rectangleObjects.size(); i++) {
+            disObj.add(new DisplayObject(rectangleObjects.get(i)));
+        }
+        for (int i = 0; i < wallObjects.size(); i++) {
+            disObj.add(new DisplayObject(wallObjects.get(i)));
+        }
         synchronized (eventQueue) {
-            eventQueue.add(new UpdateDisplayObjects(objects));
+            eventQueue.add(new UpdateDisplayObjects(disObj));
         }
     }
 

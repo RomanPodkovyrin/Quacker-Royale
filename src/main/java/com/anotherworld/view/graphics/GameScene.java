@@ -1,12 +1,12 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.data.DisplayData;
+import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
 
 /**
  * Creates and manages the display of the game.
- * @author jake
+ * @author Jake Stewart
  *
  */
 public class GameScene extends Scene {
@@ -23,7 +23,7 @@ public class GameScene extends Scene {
      * Updates all currently initialised GameDisplays with new game objects.
      * @param objects The new game objects
      */
-    public void updateGameObjects(ArrayList<DisplayData> objects) {
+    public void updateGameObjects(ArrayList<DisplayObject> objects) {
         for (int i = 0; i < displays.size(); i++) {
             if (displays.get(i).getClass().equals(GameDisplay.class)) {
                 ((GameDisplay)displays.get(i)).updateObjects(objects);

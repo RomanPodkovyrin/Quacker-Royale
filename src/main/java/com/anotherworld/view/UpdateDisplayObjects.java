@@ -2,7 +2,7 @@ package com.anotherworld.view;
 
 import java.util.ArrayList;
 
-import com.anotherworld.view.data.DisplayData;
+import com.anotherworld.view.data.DisplayObject;
 
 /**
  * Creates a ViewEvent that updates the view's display objects.
@@ -11,13 +11,13 @@ import com.anotherworld.view.data.DisplayData;
  */
 class UpdateDisplayObjects implements ViewEvent {
     
-    private final ArrayList<DisplayData> objects;
+    private final ArrayList<DisplayObject> objects;
 
-    public UpdateDisplayObjects(ArrayList<DisplayData> objects) {
+    public UpdateDisplayObjects(ArrayList<DisplayObject> objects) {
         this.objects = objects;
     }
     
-    public ArrayList<DisplayData> getObjects() {
+    public ArrayList<DisplayObject> getObjects() {
         return objects;
     }
 
