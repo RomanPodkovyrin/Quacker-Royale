@@ -151,7 +151,7 @@ public class Physics {
     public static void collidedByBall(Player player, Ball ball) {
         player.setXVelocity(ball.getXVelocity());
         player.setYVelocity(ball.getYVelocity());
-        if (ball.canDamage()) {
+        if (ball.isDangerous()) {
             int health = player.getHealth();
             player.setHealth(health - 30);
         } else {

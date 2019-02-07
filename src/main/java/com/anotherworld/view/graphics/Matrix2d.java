@@ -191,38 +191,6 @@ public class Matrix2d {
         result.value[2][2] = 1;
         return result;
     }
-
-    /**
-     * Creates a 3 (m) by 4 (n) matrix containing the points of a square centred on the origin size 1.
-     * @return The 3 by 4 matrix
-     */
-    @Deprecated
-    public static final Matrix2d testSquare() {
-        return Matrix2d.testSquare(0.5f);
-    }
-
-
-    /**
-     * Creates a 3 (m) by 4 (n) matrix containing the points of a square centred on the origin size 2s.
-     * @param s The length of half one of the sides
-     * @return The 3 by 4 matrix
-     */
-    @Deprecated
-    public static final Matrix2d testSquare(float s) {
-        Matrix2d result = new Matrix2d(3, 4);
-        result.value[0][0] = -s;
-        result.value[1][0] = -s;
-        result.value[0][1] = -s;
-        result.value[1][1] = s;
-        result.value[0][2] = s;
-        result.value[1][2] = s;
-        result.value[0][3] = s;
-        result.value[1][3] = -s;
-        for (int j = 0; j < result.getN(); j++) {
-            result.value[2][j] = 1;
-        }
-        return result;
-    }
     
     @Override
     public String toString() {

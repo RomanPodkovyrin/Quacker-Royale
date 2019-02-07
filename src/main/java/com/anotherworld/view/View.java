@@ -4,21 +4,26 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.KeyListenerNotFoundException;
+import com.anotherworld.view.data.BallDisplayData;
+import com.anotherworld.view.data.DisplayData;
+import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.PlayerDisplayData;
+import com.anotherworld.view.data.RectangleDisplayData;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
-import com.anotherworld.view.graphics.displayobject.Ball;
-import com.anotherworld.view.graphics.displayobject.DisplayObject;
-import com.anotherworld.view.graphics.displayobject.Player;
-import com.anotherworld.tools.input.KeyListenerNotFoundException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.GL;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL;
 
 
 /**
@@ -72,56 +77,23 @@ public class View implements Runnable {
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
     
-    private void displayGame(DisplayObject[] players, DisplayObject[] balls, DisplayObject[] platform, DisplayObject[] wall) throws WrongSceneException {
-        if (!currentScene.getClass().equals(GameScene.class)) {
-            throw new WrongSceneException("Not currently in game state");
+    public void updateGameObjects(ArrayList<PlayerDisplayData> playerObjects, ArrayList<BallDisplayData> ballObjects,
+            ArrayList<RectangleDisplayData> rectangleObjects, ArrayList<WallData> wallObjects) {
+        ArrayList<DisplayObject> disObj = new ArrayList<>();
+        for (int i = 0; i < playerObjects.size(); i++) {
+            disObj.add(new DisplayObject(playerObjects.get(i)));
         }
-        DisplayObject[] objects = new DisplayObject[players.length + balls.length + platform.length + wall.length];
-        int index = 0;
-        for (int i = 0; i < platform.length; i++) {
-            objects[i] = platform[i];
+        for (int i = 0; i < ballObjects.size(); i++) {
+            disObj.add(new DisplayObject(ballObjects.get(i)));
         }
-        index += platform.length;
-        for (int i = 0; i < balls.length; i++) {
-            objects[i + index] = balls[i];
+        for (int i = 0; i < rectangleObjects.size(); i++) {
+            disObj.add(new DisplayObject(rectangleObjects.get(i)));
         }
-        index += balls.length;
-        for (int i = 0; i < players.length; i++) {
-            objects[i + index] = players[i];
+        for (int i = 0; i < wallObjects.size(); i++) {
+            disObj.add(new DisplayObject(wallObjects.get(i)));
         }
-        index += players.length;
-        for (int i = 0; i < wall.length; i++) {
-            objects[i + index] = wall[i];
-        }
-        index += wall.length;
         synchronized (eventQueue) {
-            eventQueue.add(new UpdateDisplayObjects(objects));
-        }
-    }
-
-    /**
-     * A test method for starting the view.
-     * @param args Accepts no args
-     */
-    @Deprecated
-    public static void main(String[] args) {
-        DisplayObject[] objects = new DisplayObject[10];
-        for (int i = 0; i < 5; i++) {
-            objects[i] = (new Ball((float) Math.random() * 160, (float) Math.random() * 90,
-                    (float) Math.random() * 360));
-            objects[i + 5] = (new Player((float) Math.random() * 160, (float) Math.random() * 90, 10f));
-        }
-        View view = new View();
-        (new Thread(view)).start();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            logger.catching(e);
-        }
-        try {
-            view.displayGame(objects, new DisplayObject[0], new DisplayObject[0], new DisplayObject[0]);
-        } catch (WrongSceneException e) {
-            e.printStackTrace();
+            eventQueue.add(new UpdateDisplayObjects(disObj));
         }
     }
 
