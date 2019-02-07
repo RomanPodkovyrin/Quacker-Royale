@@ -155,7 +155,7 @@ public class Physics {
             int health = player.getHealth();
             player.setHealth(health - 30);
         } else {
-            ball.setDamage(true);
+            ball.setDangerous(true);
         }
         float xDifference = ball.getXCoordinate() - player.getXCoordinate();
         float yDifference = ball.getYCoordinate() - player.getYCoordinate();
