@@ -1,5 +1,6 @@
 package com.anotherworld.tools.datapool;
 
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.PlayerDisplayData;
 
 /**
@@ -11,6 +12,14 @@ public class PlayerData extends MovableData implements PlayerDisplayData {
 
     private String characterID;
     private int health;
+
+    public PlayerData(String characterID, int health,
+                      float xCoordinate, float yCoordinate,
+                      ObjectState state, float speed, float radius) {
+        super(xCoordinate, yCoordinate, state, speed, radius);
+        this.characterID = characterID;
+        this.health = health;
+    }
 
     public String getCharacterID() { return characterID; }
     public void setCharacterID(String characterID) { this.characterID = characterID; }
