@@ -1,6 +1,6 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.graphics.displayobject.DisplayObject;
+import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
 
@@ -51,20 +51,20 @@ public class GraphicsDisplay {
      * Returns an array list of matrices containing the objects to be drawn.
      * @return The list of matrices
      */
-    public ArrayList<Matrix2d> draw() {
-        ArrayList<Matrix2d> toDraw = new ArrayList<>();
+    public ArrayList<DisplayObject> draw() {
         for (int i = 0; i < objects.size(); i++) {
-            toDraw.add(drawObject(objects.get(i)));
+            objects.get(i).clearTransformations();
+            transformObject(objects.get(i));
         }
-        return toDraw;
+        return objects;
     }
     
-    private Matrix2d drawObject(DisplayObject obj) {
+    private void transformObject(DisplayObject obj) {
         Matrix2d modifier = Matrix2d.homTranslation2d(obj.getX(), obj.getY());
 
         modifier = modifier.mult(Matrix2d.homRotation2d(obj.getTheta()));
 
-        return modifier.mult(obj.getPoints());
+        obj.transform(modifier);
 
     }
     

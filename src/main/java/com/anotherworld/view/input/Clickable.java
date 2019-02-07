@@ -14,8 +14,8 @@ public interface Clickable {
     
     public float getY();
     
-    public float getH();
+    public float getHeight();
     
-    public float getW();
+    public float getWidth();
     
 }

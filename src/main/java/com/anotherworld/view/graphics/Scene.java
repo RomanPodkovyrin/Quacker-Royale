@@ -2,8 +2,8 @@ package com.anotherworld.view.graphics;
 
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 
-import static org.lwjgl.opengl.GL11.GL_POLYGON;
 import static org.lwjgl.opengl.GL11.glBegin;
+import static org.lwjgl.opengl.GL11.glColor3f;
 import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glViewport;
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
+
+import com.anotherworld.view.data.DisplayObject;
 
 /**
  * Creates and manages a view state like view game or main menu.
@@ -54,23 +56,25 @@ public class Scene {
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
             glViewport(x, y, w, h);
-            ArrayList<Matrix2d> toDraw = display.draw();
+            ArrayList<DisplayObject> toDraw = display.draw();
             logger.trace("Drawing " + toDraw.size() + " objects");
             for (int j = 0; j < toDraw.size(); j++) {
-                drawMatrix(toDraw.get(j));
+                drawObject(toDraw.get(j));
             }
             
         }
     }
 
     /**
-     * Draws a matrix object to the screen.
-     * @param a The matrix to draw
+     * Draws an object to the screen.
+     * @param a The object to draw
      */
-    private void drawMatrix(Matrix2d a) {
-        glBegin(GL_POLYGON);
-        for (int j = 0; j < a.getN(); j++) {
-            glVertex2f(a.getValue(0, j) / a.getValue(2, j), a.getValue(1, j) / a.getValue(2, j));
+    private void drawObject(DisplayObject obj) {
+        glBegin(obj.getDisplayType());
+        glColor3f(obj.getColourR(), obj.getColourG(), obj.getColourB());
+        for (int j = 0; j < obj.getPoints().getN(); j++) {
+            glVertex2f(obj.getPoints().getValue(0, j) / obj.getPoints().getValue(2, j),
+                    obj.getPoints().getValue(1, j) / obj.getPoints().getValue(2, j));
         }
         glEnd();
     }

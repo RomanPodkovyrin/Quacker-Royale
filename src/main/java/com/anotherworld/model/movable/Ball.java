@@ -1,19 +1,21 @@
 package com.anotherworld.model.movable;
 
+import com.anotherworld.tools.datapool.BallData;
+
 public class Ball extends AbstractMovable {
 
-    private int timesUp;
-    private boolean canDamage;
+    private BallData ballData;
 
-    public Ball(float xCoordinate, float yCoordinate, ObjectState state){
-        super(xCoordinate,yCoordinate, state);
-        canDamage = false;
+    public Ball(BallData ballData){
+        super(ballData);
+        this.ballData = ballData;
+        ballData.setDangerous(false);
     }
 
-    public boolean canDamage() { return canDamage; }
-    public void setDamage(boolean canDamage) { this.canDamage = canDamage; }
+    public boolean isDangerous() { return ballData.isDangerous(); }
+    public void setDangerous(boolean dangerous) { ballData.setDangerous(dangerous); }
 
     public String toString() {
-        return "Location: x "+ getxCoordinate() + " y " + getyCoordinate();
+        return "Location: x "+ getXCoordinate() + " y " + getYCoordinate();
     }
 }

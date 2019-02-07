@@ -1,12 +1,16 @@
 package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.view.View;
-import com.anotherworld.view.input.KeyListener;
-import com.anotherworld.view.input.KeyListenerNotFoundException;
+
+import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.KeyListenerNotFoundException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 
 public class GameSessionController {
     
@@ -14,7 +18,9 @@ public class GameSessionController {
 
     public static void main(String[] args) {
         try {
-            new GameSessionController();
+            View view = new View();
+            GameSession session = new GameSession(null,null,null);
+            new GameSessionController(view, session);
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);
         } catch (RuntimeException ex) {
@@ -22,20 +28,25 @@ public class GameSessionController {
         }
     }
 
-    private static boolean isRunning;
     private GameSession session;
     private View view;
     private Thread viewThread;
     private KeyListener keyListener;
 
-    public GameSessionController() throws KeyListenerNotFoundException {
+    public GameSessionController(View view, GameSession session) throws KeyListenerNotFoundException {
 
-        isRunning = true;
-        //this.session = new GameSession(null, null);
-        this.view = new View();
+        this.session = session;
+        this.view = view;
+
+        // Starting the View thread
         this.viewThread = new Thread(view);
         viewThread.start();
-        System.out.println("Thread started");
+
+        // Sleeping the main thread for 1 second to register the key inputs.
+        try { Thread.sleep(1000); }
+        catch (Exception e){ e.printStackTrace(); }
+
+        // Obtain the key listener.
         this.keyListener = view.getKeyListener();
         mainLoop();
 
@@ -44,7 +55,6 @@ public class GameSessionController {
     }
 
     private void mainLoop() {
-
         while(viewThread.isAlive()) {
             update();
             render();
@@ -56,16 +66,16 @@ public class GameSessionController {
             }
 
         }
-
     }
 
     private void update() {
 
-        //GameSession.update
-        if (this.keyListener.isUpPressed()) System.out.println("UP");
+        // Send the input key presses to the model.
+        session.updatePlayer(keyListener.getKeyPresses());
+
     }
 
     private static void render() {
-
+        //View.update
     }
 }
