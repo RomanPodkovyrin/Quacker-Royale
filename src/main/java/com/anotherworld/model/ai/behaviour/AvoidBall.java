@@ -51,6 +51,8 @@ public class AvoidBall extends Job {
 
         aiDirection = ai.getVelocity();
         aiPosition = ai.getCoordinates();
+        //sorting the balls based on distance
+        sortObject(this.balls);
 
         //System.out.println("direction " + aiDirection + " position" + aiPosition + "Angle: " + ai.getAngle());
         if (isRunning() & ai.getHealth() == 0) {
@@ -71,8 +73,21 @@ public class AvoidBall extends Job {
      */
     private void moveAway() {
         //######################################################
-        Matrix ballPosition = dangerBalls.get(0).getCoordinates();
-        Matrix ballDirection = dangerBalls.get(0).getVelocity();
+        // loads the first value which is the close balls
+        Matrix ballPosition;
+        Matrix ballDirection ;
+
+        if (!imminentDangerBalls.isEmpty()) {
+            ballPosition = imminentDangerBalls.get(0).getCoordinates();
+            ballDirection = imminentDangerBalls.get(0).getVelocity();
+        } else if (!dangerBalls.isEmpty()) {
+            ballPosition  = dangerBalls.get(0).getCoordinates();
+            ballDirection = dangerBalls.get(0).getVelocity();
+        } else {
+            //save
+            succeed();
+            return;
+        }
 
         Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ballPosition, ballDirection),aiPosition);
         Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
