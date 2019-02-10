@@ -42,7 +42,7 @@ public class DisplayObject {
     
     public DisplayObject(WallData displayData) {
         this.displayData = displayData;
-        this.points = genWall(displayData.getWidth(), displayData.getHeight(), 5);
+        this.points = genWall(displayData.getWidth(), displayData.getHeight(), 1);
         this.displayType = GL_TRIANGLE_STRIP;
         setColours();
     }
