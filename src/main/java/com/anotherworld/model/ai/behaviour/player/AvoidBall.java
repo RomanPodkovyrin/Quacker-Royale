@@ -49,6 +49,7 @@ public class AvoidBall extends Job {
         this.balls = balls;
         this.platform = platform;
 
+        logger.info("Starting the AvoidBall Job");
         aiDirection = ai.getVelocity();
         aiPosition = ai.getCoordinates();
         //sorting the balls based on distance
@@ -57,12 +58,15 @@ public class AvoidBall extends Job {
         //System.out.println("direction " + aiDirection + " position" + aiPosition + "Angle: " + ai.getAngle());
         if (isRunning() & ai.getHealth() == 0) {
             fail();
+            logger.info("Finishing AvoidBall Job with fail");
             return;
         }
 
         if (!isAIsafe()) {
+            logger.info("Moving away from the Ball");
             moveAway();
         } else {
+            logger.info("Finishing AvoidBall Job with success");
             succeed();
             return;
         }

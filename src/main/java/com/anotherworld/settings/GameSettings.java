@@ -23,6 +23,7 @@ public class GameSettings {
     private boolean effectsSound;
 
     private ArrayList<PlayerData> players;
+    private ArrayList<PlayerData> ai;
     private ArrayList<BallData> balls;
     private PlatformData platform;
     private WallData wall;
@@ -55,8 +56,12 @@ public class GameSettings {
                                         platform.getYCoordinate() + platform.getySize() - distanceFromBoarder);
 
             PlayerData newPlayer = new PlayerData(names.get(i),10,xRandom,yRandom, ObjectState.IDLE, 0,5);
-            newPlayer.setAngle(0);
-            players.add(newPlayer);
+            if (numberofAIPlayers > 0) {
+                ai.add(newPlayer);
+                numberofAIPlayers--;
+            } else {
+                players.add(newPlayer);
+            }
         }
 
     }
@@ -66,9 +71,8 @@ public class GameSettings {
         return min + r.nextFloat() * (max - min);
     }
 
-    private void createBalls() {
+    private void createBalls(int tempBallsNumber) {
         //need number of balls somewhere
-        int tempBallsNumber = 3;
 
         for (int i = 0; i < tempBallsNumber; i++) {
 
