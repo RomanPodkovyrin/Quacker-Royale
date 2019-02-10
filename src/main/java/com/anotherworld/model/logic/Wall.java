@@ -21,6 +21,14 @@ public class Wall {
         this.yCoordinate = y;
     }
 
+    public float getXSize() {
+        return xSize;
+    }
+
+    public float getYSize() {
+        return ySize;
+    }
+
     /**
      * Called when the wall needs to shrink.
      */
