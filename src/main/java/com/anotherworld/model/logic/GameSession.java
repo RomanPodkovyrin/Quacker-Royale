@@ -59,15 +59,11 @@ public class GameSession {
 
     public void updatePlayer(ArrayList<Input> keyPresses) {
         if (keyPresses.contains(Input.UP)) currentPlayer.setYVelocity(-currentPlayer.getSpeed());
-        else currentPlayer.setYVelocity(0);
-
-        if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());
+        else if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());
         else currentPlayer.setYVelocity(0);
 
         if (keyPresses.contains(Input.LEFT)) currentPlayer.setXVelocity(-currentPlayer.getSpeed());
-        else currentPlayer.setXVelocity(0);
-
-        if (keyPresses.contains(Input.RIGHT)) currentPlayer.setXVelocity( currentPlayer.getSpeed());
+        else if (keyPresses.contains(Input.RIGHT)) currentPlayer.setXVelocity( currentPlayer.getSpeed());
         else currentPlayer.setXVelocity(0);
     }
 }
