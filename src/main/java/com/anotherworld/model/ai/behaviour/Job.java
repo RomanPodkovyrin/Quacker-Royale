@@ -4,6 +4,8 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
+import java.util.ArrayList;
+
 /**
  * Represents the job which has 3 states file success or running.
  * @author Roman
@@ -17,8 +19,8 @@ public abstract class Job {
     protected JobState state;
 
     protected Player ai;
-    protected Player[] players;
-    protected Ball[] balls;
+    protected ArrayList<Player> players;
+    protected ArrayList<Ball> balls;
     protected Platform platform;
 
     /**
@@ -48,7 +50,7 @@ public abstract class Job {
      * @param balls All the balls on the boards
      * @param platform The platform
      */
-    public abstract void act(Player ai, Player[] players, Ball[] balls, Platform platform);
+    public abstract void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform);
 
     /**
      * Sets the Job state to SUCCESS.

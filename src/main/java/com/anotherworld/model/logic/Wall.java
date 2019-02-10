@@ -5,7 +5,7 @@ import com.anotherworld.tools.datapool.WallData;
 /**
  * Represents the wall object.
  *
- * @ Roman
+ * @author  Roman
  */
 public class Wall {
 

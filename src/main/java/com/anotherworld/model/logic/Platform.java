@@ -7,7 +7,7 @@ import com.anotherworld.tools.datapool.PlatformData;
 /**
  *Represents Platform Object.
  *
- * @ Roman
+ * @author  Roman,Alfi
  */
 public class Platform {
 

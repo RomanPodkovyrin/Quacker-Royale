@@ -10,13 +10,13 @@ public class WallData implements RectangleDisplayData {
     private static final float xShrink = 10;
     private static final float yShrink = 20;
 
-    private float xSize = 140;
-    private float ySize = 70;
+    private float xSize = 70;
+    private float ySize = 35;
     private float width = xSize * 2;
     private float height = ySize * 2;
 
-    private float xCoordinate;
-    private float yCoordinate;
+    private float xCoordinate = 80;
+    private float yCoordinate = 45;
 
     public WallData(float x, float y) {
         this.xCoordinate = x;
