@@ -42,15 +42,15 @@ public class DisplayObject {
     
     public DisplayObject(WallData displayData) {
         this.displayData = displayData;
-        this.points = genWall(displayData.getWidth(), displayData.getHeight(), 5);
+        this.points = genWall(displayData.getWidth(), displayData.getHeight(), 1);
         this.displayType = GL_TRIANGLE_STRIP;
         setColours();
     }
     
     private final void setColours() {
-        rColour = 1f;
-        gColour = 1f;
-        bColour = 1f;
+        rColour = (float)Math.random();
+        gColour = (float)Math.random();
+        bColour = (float)Math.random();
     }
     
     private static final Matrix2d genWall(float w, float h, float t) {
@@ -125,15 +125,15 @@ public class DisplayObject {
     }
     
     public float getTheta() {
-        return 0;//displayData.getAngle();
+        return displayData.getAngle();
     }
     
     public float getX() {
-        return 20;//displayData.getXCoordinate();
+        return displayData.getXCoordinate();
     }
     
     public float getY() {
-        return 20;//displayData.getYCoordinate();
+        return displayData.getYCoordinate();
     }
     
     public float getColourR() {
