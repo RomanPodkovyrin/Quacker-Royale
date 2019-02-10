@@ -2,6 +2,7 @@ package com.anotherworld.model.logic;
 
 import com.anotherworld.model.movable.*;
 import com.anotherworld.tools.PropertyReader;
+import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.input.Input;
 
 import java.io.IOException;
@@ -15,13 +16,14 @@ public class GameSession {
     private static PropertyReader properties;
     private static int numberOfBalls;
     private Player currentPlayer;
-    private ArrayList<Player> players;
-    private ArrayList<Player> ais;
+    private ArrayList<PlayerData> players;
+    private ArrayList<PlayerData> ais;
     private ArrayList<Ball> balls;
 
-    public GameSession(Player currentPlayer,
-                       ArrayList<Player> players, ArrayList<Player> ais) {
+    public GameSession(PlayerData currentPlayer,
+                       ArrayList<PlayerData> players, ArrayList<PlayerData> ais) {
 
+        this.currentPlayer = new Player(currentPlayer, false);
         // Receive the data from the properties file.
         try {
             this.properties = new PropertyReader("logic.properties");
@@ -30,7 +32,6 @@ public class GameSession {
             System.err.println("Error when loading properties class: " + e.getMessage());
         }
 
-        this.currentPlayer = currentPlayer;
         this.players = players; //Create the list of players
         this.ais = ais;
 
@@ -57,9 +58,9 @@ public class GameSession {
     }
 
     public void updatePlayer(ArrayList<Input> keyPresses) {
-        if (keyPresses.contains(Input.UP)) System.out.println("Up is pressed!");
-        if (keyPresses.contains(Input.DOWN)) System.out.println("Down is pressed!");
-        if (keyPresses.contains(Input.LEFT)) System.out.println("Left is pressed!");
-        if (keyPresses.contains(Input.RIGHT)) System.out.println("Right is pressed!");
+        if (keyPresses.contains(Input.UP))    currentPlayer.setYVelocity(-currentPlayer.getSpeed());
+        if (keyPresses.contains(Input.DOWN))  currentPlayer.setYVelocity( currentPlayer.getSpeed());
+        if (keyPresses.contains(Input.LEFT))  currentPlayer.setXVelocity(-currentPlayer.getSpeed());
+        if (keyPresses.contains(Input.RIGHT)) currentPlayer.setXVelocity( currentPlayer.getSpeed());
     }
 }
