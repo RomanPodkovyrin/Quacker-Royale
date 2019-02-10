@@ -11,14 +11,14 @@ import java.util.ArrayList;
  */
 public class GameScene extends Scene {
     
-    private Camera camera;
+    private PlayerFollow2dCamera camera;
     
     /**
      * Creates a scene to display the game with a static camera and the game taking up the whole window.
      */
     public GameScene() {
         super();
-        this.camera = new Static2dCamera(0f, 0f, 160f, 90f);
+        this.camera = new PlayerFollow2dCamera(160f, 90f);
         this.displays.add(new GameDisplay(-1f, -1f, 2f, 2f, camera));
     }
     
@@ -32,6 +32,7 @@ public class GameScene extends Scene {
                 ((GameDisplay)displays.get(i)).updateObjects(objects);
             }
         }
+        camera.updateObjects(objects);
     }
     
 }
