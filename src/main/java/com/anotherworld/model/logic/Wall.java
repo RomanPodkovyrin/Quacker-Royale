@@ -1,11 +1,15 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.tools.datapool.WallData;
+
 /**
  * Represents the wall object.
  *
  * @author  Roman
  */
 public class Wall {
+
+    private WallData wallData;
     private int stage = 1;
     private static int MAXSTAGE = 4;
     private float xShrink = 10;
@@ -16,11 +20,15 @@ public class Wall {
     private float xCoordinate;
     private float yCoordinate;
 
-    public Wall(float x, float y){
+    public Wall(WallData wallData, float x, float y) {
+
+        this.wallData = wallData;
+
         this.xCoordinate = x;
         this.yCoordinate = y;
     }
-
+    public float getXCoordinate() { return xCoordinate; }
+    public float getYCoordinate() { return yCoordinate; }
     public float getXSize() {
         return xSize;
     }
