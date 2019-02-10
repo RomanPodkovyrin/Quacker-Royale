@@ -1,6 +1,8 @@
 package com.anotherworld.network;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -36,11 +38,23 @@ public class Server extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            byte[] data = new byte[32];
-            DatagramPacket packet = new DatagramPacket(data, data.length);
-            String received = getFromClient(packet);
+            //byte[] data = new byte[32];
+            //DatagramPacket packet = new DatagramPacket(data, data.length);
+//            String received = getFromClient(packet);
+//            System.out.println("From client to server: " + received);
+            //start
+            String received = null;
+            try {
+                received = getObjectFromClient();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             System.out.println("From client to server: " + received);
-            String playerIP = packet.getAddress().toString().substring(1);
+            //end
+            //String playerIP = packet.getAddress().toString().substring(1);
+            String playerIP = "lalala";
             System.out.println("Ip address of a player: " + playerIP);
             updateIPaddresses(playerIP);
             try {
@@ -81,9 +95,31 @@ public class Server extends Thread {
         return messageFromClient;
     }
 
+    public String getObjectFromClient() throws IOException, ClassNotFoundException {
+        byte[] data = new byte[4];
+        DatagramPacket packet = new DatagramPacket(data, data.length );
+        socket.receive(packet);
+
+        int len = 0;
+        // byte[] -> int
+        for (int i = 0; i < 4; ++i) {
+            len |= (data[3-i] & 0xff) << (i << 3);
+        }
+
+        // now we know the length of the payload
+        byte[] buffer = new byte[len];
+        //packet = new DatagramPacket(buffer, buffer.length );
+        socket.receive(packet);
+
+        ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
+        ObjectInputStream oos = new ObjectInputStream(baos);
+        TestingObject c1 = (TestingObject)oos.readObject();
+        return c1.print();
+    }
+
     public void updateIPaddresses(String playerIP){
         //playersIPs[0] = playerIP;
-        playersIPs[0] = "192.168.0.32";
+        playersIPs[0] = "172.22.84.8";
         playersIPs[1] = "192.168.0.21";
     }
 //        if(playersIPs[0]==null){

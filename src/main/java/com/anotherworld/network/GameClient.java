@@ -1,6 +1,8 @@
 package com.anotherworld.network;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.*;
 
 public class GameClient {
@@ -18,9 +20,8 @@ public class GameClient {
         group = InetAddress.getByName(multicastIP);
         s.joinGroup(group);
         socket = new DatagramSocket();
-        address = InetAddress.getByName("192.168.0.21");
-        System.out.println(address);
-        System.out.println(Inet4Address.getLocalHost().getHostAddress());
+        address = InetAddress.getByName("172.22.84.8");
+        System.out.println("Client address : " + Inet4Address.getLocalHost().getHostAddress());
     }
 
     public void sendDataToServer(String msg) throws IOException {
@@ -29,6 +30,32 @@ public class GameClient {
                 = new DatagramPacket(dataToSend, dataToSend.length, address, port);
         try {
             socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendObjectToServer(){
+        TestingObject object = new TestingObject();
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(object);
+            oos.flush();
+            byte[] Buf= baos.toByteArray();
+
+            int number = Buf.length;;
+            byte[] data = new byte[4];
+
+            // int -> byte[]
+            for (int i = 0; i < 4; ++i) {
+                int shift = i << 3; // i * 8
+                data[3-i] = (byte)((number & (0xff << shift)) >>> shift);
+            }
+            DatagramPacket packet
+                    = new DatagramPacket(data, data.length, address, port);
+            socket.send(packet);
+            System.out.println("DONE SENDING");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,7 +78,8 @@ public class GameClient {
         int counter=0;
         while(true){
             counter++;
-            client.sendDataToServer( "hello from lil anton" + counter);
+            //client.sendDataToServer( "hello from lil anton" + counter);
+            client.sendObjectToServer();
             client.getDataFromServer();
         }
     }

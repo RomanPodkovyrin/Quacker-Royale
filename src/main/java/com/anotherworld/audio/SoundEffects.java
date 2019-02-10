@@ -9,18 +9,18 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 public class SoundEffects {
+    //https://freesound.org/people/qubodup/sounds/332060/
     private String ballCollidedWithWallSound =  "./res/audio/ball_collided_with_the_wall.au";
+    //https://freesound.org/people/jeckkech/sounds/391658/
     private String playerCollidedWithBallSound = "./res/audio/player_collided_with_ball.au";
 
     public void ballCollidedWithWall() throws IOException {
-        //https://freesound.org/people/qubodup/sounds/332060/
         InputStream in = new FileInputStream(ballCollidedWithWallSound);
         AudioStream audioStream = new AudioStream(in);
         AudioPlayer.player.start(audioStream);
     }
 
     public void playerCollidedWithBall() throws IOException {
-        //https://freesound.org/people/jeckkech/sounds/391658/
         InputStream in = new FileInputStream(playerCollidedWithBallSound);
         AudioStream audioStream = new AudioStream(in);
         AudioPlayer.player.start(audioStream);
