@@ -1,8 +1,5 @@
 package com.anotherworld.model.physics;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
@@ -10,6 +7,9 @@ import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Physics {
 
@@ -68,8 +68,8 @@ public class Physics {
         float circleX = a.getXCoordinate();
         float circleY = a.getYCoordinate();
         Matrix wallCoord = wall.getCoordinate();
-        float xSize = wall.getXSize();
-        float ySize = wall.getYSize();
+        float xSize = wall.getXSize() / 2;
+        float ySize = wall.getYSize() / 2;
         // North and East of the ball.
         Matrix northEast = new Matrix(circleY - circleR, circleX + circleR);
         // South and West of the ball.
