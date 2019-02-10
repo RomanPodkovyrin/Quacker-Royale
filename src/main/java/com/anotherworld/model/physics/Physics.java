@@ -25,7 +25,7 @@ public class Physics {
 
     /**
      * To make the object move
-     *
+     * 
      * @param AbstractMovable
      *            object
      */
@@ -53,12 +53,13 @@ public class Physics {
     }
 
     /**
-     * Check if the ball is colliding on the wall:
-     * If Y of the ball is colliding Y of the wall
-     * (check if the value of north of the ball is lesser than value of north of the wall,
-     * else check if the value of south of the ball is greater than value of south of the wall)
-     *   
+     * Check if the ball is colliding on the wall: If Y of the ball is colliding
+     * Y of the wall (check if the value of north of the ball is lesser than
+     * value of north of the wall, else check if the value of south of the ball
+     * is greater than value of south of the wall)
+     * 
      * If X of the ball is colliding X of the wall.
+     * 
      * @param a
      * @param wall
      */
@@ -69,11 +70,17 @@ public class Physics {
         Matrix wallCoord = wall.getCoordinate();
         float xSize = wall.getXSize();
         float ySize = wall.getYSize();
+        // North and East of the ball.
         Matrix northEast = new Matrix(circleY - circleR, circleX + circleR);
+        // South and West of the ball.
         Matrix southWest = new Matrix(circleY + circleR, circleX - circleR);
-        Matrix northEastWall = new Matrix((wallCoord.getX()+xSize),(wallCoord.getY()-ySize));
-        Matrix southWestWall = new Matrix((wallCoord.getX()-xSize),(wallCoord.getY()+ySize));
-        
+        // North and East of the Wall.
+        Matrix northEastWall = new Matrix((wallCoord.getX() + xSize),
+                (wallCoord.getY() - ySize));
+        // South and West of the Wall.
+        Matrix southWestWall = new Matrix((wallCoord.getX() - xSize),
+                (wallCoord.getY() + ySize));
+
         if (northEast.getY() < (northEastWall.getY())) {
             a.setCoordinates(circleX, northEastWall.getY() + circleR);
             a.setYVelocity(-a.getYVelocity());
@@ -81,7 +88,6 @@ public class Physics {
             a.setCoordinates(circleX, southWestWall.getY() - circleR);
             a.setYVelocity(-a.getYVelocity());
         }
-        //X direction 1: east
         if (northEast.getX() > northEastWall.getX()) {
             a.setCoordinates(northEast.getX() - circleR, circleY);
             a.setXVelocity(-a.getXVelocity());
@@ -90,8 +96,8 @@ public class Physics {
             a.setXVelocity(-a.getXVelocity());
         }
     }
+
     //
-   
 
     /**
      * To make the object move
@@ -193,11 +199,10 @@ public class Physics {
      * 
      * @param listOfBalls
      * @param listOfPlayers
-     * @param wallDimensions
+     * @param wall
      */
     public static void onCollision(List<Ball> listOfBalls,
-            List<Player> listOfPlayers, Wall wall,
-            Platform platform) {
+            List<Player> listOfPlayers, Wall wall, Platform platform) {
         List<Integer> collided = new ArrayList<Integer>();
 
         int collidedBall = -1;
@@ -230,9 +235,9 @@ public class Physics {
                 continue;
             }
             Player player = listOfPlayers.get(i);
-            
+
             if (!platform.isOnPlatform(player)) {
-                
+
             }
             for (int j = i + 1; i < listOfPlayers.size(); j++) {
                 if (collided.contains(j)) {
