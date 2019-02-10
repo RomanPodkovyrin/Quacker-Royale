@@ -13,6 +13,9 @@ public class GameScene extends Scene {
     
     private Camera camera;
     
+    /**
+     * Creates a scene to display the game with a static camera and the game taking up the whole window.
+     */
     public GameScene() {
         super();
         this.camera = new Static2dCamera(0f, 0f, 160f, 90f);
