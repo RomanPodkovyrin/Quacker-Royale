@@ -13,44 +13,35 @@ public class Platform {
 
     private PlatformData platformData;
 
-    private int stage = 1;
-    private static int MAXSTAGE = 4;
-    private float xShrink = 10;
-    private float yShrink = 20;
-    private float xSize = 140;
-    private float ySize = 70;
-
-    private float xCoordinate;
-    private float yCoordinate;
-
-    public Platform(float x, float y){
-        this.xCoordinate = x;
-        this.yCoordinate = y;
+    public Platform(PlatformData platformData){
+        this.platformData = platformData;
     }
 
-    public Platform(float x, float y, float xSide, float ySide){
-        this.xCoordinate = x;
-        this.yCoordinate = y;
-        this.xSize = xSide;
-        this.ySize = ySide;
-    }
+    public float getXCoordinate() { return platformData.getXCoordinate(); }
+    public float getYCoordinate() { return platformData.getYCoordinate(); }
 
-    public float getDistanceX() {
-        return xSize;
-    }
+    public float getXSize() { return platformData.getxSize(); }
+    public void setXSize(float xSize) { platformData.setxSize(xSize); }
 
-    public float getDistanceY() {
-        return ySize;
-    }
+    public float getYSize() { return platformData.getySize(); }
+    public void setYSize(float ySize) { platformData.setySize(ySize); }
+
+    public float getXShrink() { return platformData.getxShrink(); }
+
+    public float getYShrink() { return platformData.getyShrink(); }
+
+    public int getStage() { return platformData.getStage(); }
 
     /**
      * Called when the platform needs to shrink.
      */
     public void nextStage(){
-        if (stage < MAXSTAGE ){
-            stage ++;
-            this.xSize -= xShrink;
-            this.ySize -= yShrink;
+        int stage = getStage();
+        int maxStage = platformData.getMaxStage();
+        if (stage < maxStage) {
+            platformData.setStage(stage + 1);
+            this.setXSize(getXSize() - getXShrink());
+            this.setYSize(getYSize() - getYShrink());
         }
     }
 
@@ -61,11 +52,11 @@ public class Platform {
      * @return true if coordinates are on the platform, false if not
      */
     public boolean isOnPlatform(float x, float y) {
-        float leftX = xCoordinate - xSize/2;
-        float upperY = yCoordinate - ySize/2;
+        float leftX  = getXCoordinate() - getXSize()/2;
+        float upperY = getYCoordinate() - getYSize()/2;
 
-        float rightX = xCoordinate + xSize/2;
-        float bottomY = yCoordinate + ySize/2;
+        float rightX  = getXCoordinate() + getXSize()/2;
+        float bottomY = getYCoordinate() + getYSize()/2;
 
         return (x <= rightX & x >= leftX) & (y <= bottomY & y >= upperY);
     }

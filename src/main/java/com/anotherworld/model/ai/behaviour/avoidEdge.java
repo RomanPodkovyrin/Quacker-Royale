@@ -38,7 +38,7 @@ public class avoidEdge extends Job {
         Random random = new Random();
 
         Matrix place = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
-        if (Math.abs(place.getX()) >= platform.getDistanceX() + 10) {
+        if (Math.abs(place.getX()) >= platform.getXSize() + 10) {
             // too close to x
             // go Left Or Right
 //            random.nextBoolean()?;
@@ -48,7 +48,7 @@ public class avoidEdge extends Job {
             return;
         }
 
-        if (Math.abs(place.getY()) >= platform.getDistanceY() + 10 ) {
+        if (Math.abs(place.getY()) >= platform.getYSize() + 10 ) {
             // too close to y
             // go Up or Down
             ai.setXVelocity(0);
