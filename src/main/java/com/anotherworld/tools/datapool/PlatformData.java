@@ -10,13 +10,13 @@ public class PlatformData implements RectangleDisplayData {
     private static final float xShrink = 10;
     private static final float yShrink = 20;
 
-    private float xSize = 140;
-    private float ySize = 70;
+    private float xSize = 60;
+    private float ySize = 30;
     private float width = xSize * 2;
     private float height = ySize * 2;
 
-    private float xCoordinate;
-    private float yCoordinate;
+    private float xCoordinate = 80;
+    private float yCoordinate = 45;
 
     public int getStage() {
         return stage;
