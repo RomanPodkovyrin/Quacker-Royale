@@ -77,20 +77,20 @@ public class View implements Runnable {
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
     
-    public void updateGameObjects(ArrayList<PlayerDisplayData> playerObjects, ArrayList<BallDisplayData> ballObjects,
-            ArrayList<RectangleDisplayData> rectangleObjects, ArrayList<WallData> wallObjects) {
+    public void updateGameObjects(ArrayList<? extends PlayerDisplayData> playerObjects, ArrayList<? extends BallDisplayData> ballObjects,
+            ArrayList<? extends RectangleDisplayData> rectangleObjects, ArrayList<? extends WallData> wallObjects) {
         ArrayList<DisplayObject> disObj = new ArrayList<>();
-        for (int i = 0; i < playerObjects.size(); i++) {
-            disObj.add(new DisplayObject(playerObjects.get(i)));
-        }
-        for (int i = 0; i < ballObjects.size(); i++) {
-            disObj.add(new DisplayObject(ballObjects.get(i)));
-        }
         for (int i = 0; i < rectangleObjects.size(); i++) {
             disObj.add(new DisplayObject(rectangleObjects.get(i)));
         }
         for (int i = 0; i < wallObjects.size(); i++) {
             disObj.add(new DisplayObject(wallObjects.get(i)));
+        }
+        for (int i = 0; i < playerObjects.size(); i++) {
+            disObj.add(new DisplayObject(playerObjects.get(i)));
+        }
+        for (int i = 0; i < ballObjects.size(); i++) {
+            disObj.add(new DisplayObject(ballObjects.get(i)));
         }
         synchronized (eventQueue) {
             eventQueue.add(new UpdateDisplayObjects(disObj));
