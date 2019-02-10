@@ -67,7 +67,6 @@ public class Physics {
         float circleR = a.getRadius();
         float circleX = a.getXCoordinate();
         float circleY = a.getYCoordinate();
-        Matrix wallCoord = wall.getCoordinate();
         float xSize = wall.getXSize() / 2;
         float ySize = wall.getYSize() / 2;
         // North and East of the ball.
@@ -75,11 +74,11 @@ public class Physics {
         // South and West of the ball.
         Matrix southWest = new Matrix(circleY + circleR, circleX - circleR);
         // North and East of the Wall.
-        Matrix northEastWall = new Matrix((wallCoord.getX() + xSize),
-                (wallCoord.getY() - ySize));
+        Matrix northEastWall = new Matrix((wall.getXCoordinate() + xSize),
+                (wall.getYCoordinate() - ySize));
         // South and West of the Wall.
-        Matrix southWestWall = new Matrix((wallCoord.getX() - xSize),
-                (wallCoord.getY() + ySize));
+        Matrix southWestWall = new Matrix((wall.getXCoordinate() - xSize),
+                (wall.getYCoordinate() + ySize));
 
         if (northEast.getY() < (northEastWall.getY())) {
             a.setCoordinates(circleX, northEastWall.getY() + circleR);
