@@ -1,8 +1,12 @@
 package com.anotherworld.model.ai.behaviour;
 
+import com.anotherworld.model.ai.behaviour.player.AvoidBall;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 import java.util.Queue;
@@ -13,6 +17,9 @@ import java.util.Queue;
  *
  */
 public class Selector extends Job {
+
+    private static Logger logger = LogManager.getLogger(Selector.class);
+
 
     private  Queue<Job> jobs;
     private Queue<Job> originalJobs;
@@ -44,12 +51,14 @@ public class Selector extends Job {
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
 
-
+        logger.info("Starting Selector Job");
         if (currentJob.isSuccess()) {
             succeed();
+            logger.info("Finishing Selector Job with success");
             return;
         } else if (jobs.isEmpty()) {
             fail();
+            logger.info("Finishing Selector Job with fail");
             return;
         } else if (currentJob.isFailure()) {
             currentJob = jobs.poll();

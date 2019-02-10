@@ -1,8 +1,11 @@
 package com.anotherworld.model.ai.behaviour;
 
+import com.anotherworld.model.ai.behaviour.player.AvoidBall;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
@@ -11,6 +14,9 @@ import java.util.ArrayList;
  * @author Roman
  */
 public class Repeat extends Job {
+
+    private static Logger logger = LogManager.getLogger(Repeat.class);
+
     private final Job job;
     private int times;
     private int originalTimes;
@@ -52,11 +58,16 @@ public class Repeat extends Job {
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+
+        logger.info("Starting Repeat Job");
+
         if (job.isFailure()) {
             fail();
+            logger.info("Finishing Repeat Job with fail");
         } else if (job.isSuccess()) {
             if (times == 0) {
                 succeed();
+                logger.info("FinishingRepeat Job with success");
                 return;
             } else {
                 times--;

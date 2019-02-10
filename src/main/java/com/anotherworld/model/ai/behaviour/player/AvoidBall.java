@@ -1,5 +1,6 @@
-package com.anotherworld.model.ai.behaviour;
+package com.anotherworld.model.ai.behaviour.player;
 
+import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
@@ -8,7 +9,6 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -91,12 +91,10 @@ public class AvoidBall extends Job {
 
         Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ballPosition, ballDirection),aiPosition);
         Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
-        System.out.println(vector);
         ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipMatrix(vector)));
         //temp
         ai.setXVelocity(-vector.getX());
         ai.setYVelocity(-vector.getY());
-        System.out.println(vector.getY());
     }
 
     /**

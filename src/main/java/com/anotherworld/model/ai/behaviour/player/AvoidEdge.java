@@ -1,10 +1,13 @@
-package com.anotherworld.model.ai.behaviour;
+package com.anotherworld.model.ai.behaviour.player;
 
+import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,6 +17,8 @@ import java.util.Random;
  * @author Roman
  */
 public class AvoidEdge extends Job {
+    private static Logger logger = LogManager.getLogger(AvoidEdge.class);
+
 
     public AvoidEdge() {
         super();

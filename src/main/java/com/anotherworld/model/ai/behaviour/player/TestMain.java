@@ -1,17 +1,7 @@
-package com.anotherworld.model.ai.behaviour;
+package com.anotherworld.model.ai.behaviour.player;
 
-import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
-import com.anotherworld.model.movable.Ball;
-import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
-import com.anotherworld.tools.datapool.BallData;
-import com.anotherworld.tools.datapool.PlayerData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TestMain {
 
