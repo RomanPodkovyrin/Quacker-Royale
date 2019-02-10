@@ -1,9 +1,13 @@
 package com.anotherworld.model.ai.behaviour;
 
+import com.anotherworld.model.ai.behaviour.player.AvoidBall;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Queue;
 
 /**
@@ -11,6 +15,9 @@ import java.util.Queue;
  * @author Roman
  */
 public class Sequence extends Job {
+
+    private static Logger logger = LogManager.getLogger(Sequence.class);
+
 
     private Queue<Job> jobs;
     private Queue<Job> originalJobs;
@@ -39,15 +46,19 @@ public class Sequence extends Job {
     }
 
     @Override
-    public void act(Player ai, Player[] players, Ball[] balls, Platform platform) {
+    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+
+        logger.info("Starting Sequence Job");
 
         if (jobs.isEmpty()) {
             succeed();
+            logger.info("Finishing Sequence Job with success");
             return;
         } else if (currentJob.isSuccess()) {
             currentJob = jobs.poll();
         } else if (currentJob.isFailure()) {
             fail();
+            logger.info("Finishing Sequence Job with fail");
             return;
         }
 
