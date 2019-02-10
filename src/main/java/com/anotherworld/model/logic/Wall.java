@@ -3,7 +3,7 @@ package com.anotherworld.model.logic;
 /**
  * Represents the wall object.
  *
- * @ Roman
+ * @author  Roman
  */
 public class Wall {
     private int stage = 1;
