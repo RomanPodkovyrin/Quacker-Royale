@@ -4,18 +4,30 @@ import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Creates a camera that follows objects that return true from shouldCameraFollow.
  * @author Jake Stewart
  *
  */
 public class PlayerFollow2dCamera implements Camera {
+    
+    private static Logger logger = LogManager.getLogger();
+    
     private final float height;
     private final float width;
+    
+    private float currentX;
+    private float currentY;
+    
     private ArrayList<DisplayObject> objects;
 
     public PlayerFollow2dCamera(float width, float height) {
         this(new ArrayList<>(), width, height);
+        this.currentX = 0;
+        this.currentY = 0;
     }
     
     /**
@@ -48,8 +60,15 @@ public class PlayerFollow2dCamera implements Camera {
                 i++;
             }
         }
-        x /= i;
-        return x - (width / 2);
+        x /= Math.max(i, 1);
+        x -= (width / 2);
+        if (x > currentX) {
+            currentX += Math.min(Math.abs(x - currentX), 0.1f);
+        } else {
+            currentX -= Math.min(Math.abs(x - currentX), 0.1f);
+        }
+        logger.debug("Camera x is " + currentX);
+        return currentX;
     }
 
     @Override
@@ -62,8 +81,15 @@ public class PlayerFollow2dCamera implements Camera {
                 i++;
             }
         }
-        y /= i;
-        return y - (height / 2);
+        y /= Math.max(i, 1);
+        y -= (height / 2);
+        if (y > currentY) {
+            currentY += Math.min(Math.abs(y - currentY), 0.1f);
+        } else {
+            currentY -= Math.min(Math.abs(y - currentY), 0.1f);
+        }
+        logger.debug("Camera y is " + currentY);
+        return currentY;
     }
 
     @Override

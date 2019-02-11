@@ -23,7 +23,7 @@ public class GameSessionController {
 
     public static void main(String[] args) {
         try {
-            View view = new View();
+            View view = new View(800, 450);
             new GameSessionController(view);
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);

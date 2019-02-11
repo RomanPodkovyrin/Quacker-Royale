@@ -50,11 +50,13 @@ public class View implements Runnable {
 
     /**
      * Creates the View object initialising it's values.
+     * @param width The screen width
+     * @param height The screen height
      */
-    public View() {
+    public View(int width, int height) {
         logger.info("Creating view");
-        height = 630;
-        width = 1120;
+        this.height = height;
+        this.width = width;
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
     }
