@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.anotherworld.tools.maths.Maths.getRandom;
+
 public class WalkAbout extends Job {
 
 
@@ -91,10 +93,5 @@ public class WalkAbout extends Job {
         boolean y = ai.getYCoordinate() <= (ai.getRadius() + destination.getY()) & ai.getYCoordinate() >= (destination.getY() - ai.getRadius());
 
         return y & x;
-    }
-
-    private float getRandom(float min, float max) {
-        Random r = new Random();
-        return min + r.nextFloat() * (max - min);
     }
 }
