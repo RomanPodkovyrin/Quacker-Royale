@@ -29,6 +29,7 @@ public class GameSessionController {
             logger.fatal(ex);
         } catch (RuntimeException ex) {
             logger.fatal(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -49,7 +50,7 @@ public class GameSessionController {
 
         initDataPool();
         
-        this.session = new GameSession(currentPlayer,networkPlayers,ais);
+        this.session = new GameSession(currentPlayer,networkPlayers,ais, balls, platforms.get(0), walls.get(0));
         this.view = view;
 
         // Starting the View thread
@@ -70,9 +71,11 @@ public class GameSessionController {
     
     private void initDataPool() {
         networkPlayers = new ArrayList<>();
-        currentPlayer = new PlayerData("1", 0, 80, 45, null, 0.1f, 4);
+        currentPlayer = new PlayerData("1", 0, 40, 45, null, 0.1f, 4);
         ais = new ArrayList<>();
+        ais.add(new PlayerData("1", 0, 120, 45, null, 0.1f, 4));
         balls = new ArrayList<>();
+        balls.add(new BallData(false, 80, 45, null, 1f, 6));
         platforms = new ArrayList<>();
         
         platforms.add(new PlatformData(80, 45));

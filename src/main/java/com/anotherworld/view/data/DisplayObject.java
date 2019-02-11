@@ -24,6 +24,8 @@ public class DisplayObject {
     private float gColour;
     private float bColour;
     
+    private boolean cameraShouldFollow;
+    
     /**
      * Creates a display object to display a ball.
      * @param displayData The ball data to display
@@ -32,6 +34,7 @@ public class DisplayObject {
         this.displayData = displayData;
         points = genCircle(displayData.getRadius());
         displayType = GL_TRIANGLE_FAN;
+        cameraShouldFollow = false;
         setColours();
     }
 
@@ -43,6 +46,7 @@ public class DisplayObject {
         this.displayData = displayData;
         points = genRectangle(displayData.getWidth(), displayData.getHeight());
         displayType = GL_TRIANGLE_FAN;
+        cameraShouldFollow = false;
         setColours();
     }
 
@@ -54,6 +58,7 @@ public class DisplayObject {
         this.displayData = displayData;
         points = genCircle(displayData.getRadius());
         displayType = GL_TRIANGLE_FAN;
+        cameraShouldFollow = true;
         setColours();
     }
     
@@ -65,6 +70,7 @@ public class DisplayObject {
         this.displayData = displayData;
         this.points = genWall(displayData.getWidth(), displayData.getHeight(), 1);
         this.displayType = GL_TRIANGLE_STRIP;
+        cameraShouldFollow = false;
         setColours();
     }
     
@@ -231,6 +237,14 @@ public class DisplayObject {
      */
     public Matrix2d getPoints() {
         return tempPoints;
+    }
+    
+    /**
+     * Returns true if the camera should track the object.
+     * @return if the camera should track the object
+     */
+    public boolean shouldCameraFollow() {
+        return cameraShouldFollow;
     }
     
 }

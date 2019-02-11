@@ -82,12 +82,12 @@ public class Physics {
         float circleR = a.getRadius();
         float circleX = a.getXCoordinate();
         float circleY = a.getYCoordinate();
-        float xSize = wall.getXSize() / 2;
-        float ySize = wall.getYSize() / 2;
+        float xSize = wall.getXSize();
+        float ySize = wall.getYSize();
         // North and East of the ball.
-        Matrix northEast = new Matrix(circleY - circleR, circleX + circleR);
+        Matrix northEast = new Matrix(circleX + circleR, circleY - circleR);
         // South and West of the ball.
-        Matrix southWest = new Matrix(circleY + circleR, circleX - circleR);
+        Matrix southWest = new Matrix(circleX - circleR, circleY + circleR);
         // North and East of the Wall.
         Matrix northEastWall = new Matrix((wall.getXCoordinate() + xSize),
                 (wall.getYCoordinate() - ySize));
@@ -272,7 +272,7 @@ public class Physics {
             }
             Player player = listOfPlayers.get(i);
 
-            for (int j = i + 1; i < listOfPlayers.size(); j++) {
+            for (int j = i + 1; j < listOfPlayers.size(); j++) {
                 if (collided.contains(j)) {
                     continue;
                 }
