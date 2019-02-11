@@ -1,12 +1,7 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.ai.behaviour.Repeat;
-import com.anotherworld.model.ai.behaviour.Sequence;
-import com.anotherworld.model.ai.behaviour.player.AvoidBall;
-import com.anotherworld.model.ai.behaviour.player.AvoidEdge;
-import com.anotherworld.model.ai.behaviour.player.ChaseBall;
-import com.anotherworld.model.ai.behaviour.player.WalkAbout;
+import com.anotherworld.model.ai.behaviour.*;
+import com.anotherworld.model.ai.behaviour.player.*;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
@@ -39,7 +34,7 @@ public class AI {
 
     // is this supposed to be shared between ais or should they get one of their own?
     //###############################################################################
-    private Job repeatJob = new Repeat((new WalkAbout()));
+    private Job repeatJob = new RepeatSuccess((new WalkAbout()));
 
 
     /**
@@ -60,24 +55,29 @@ public class AI {
 //            ballAvoid.add(new AvoidEdge());
 //            ballAvoid.add(new AvoidBall());
 //            ballAvoid.add(new ChaseBall());
-
+//
             Queue<Job> dangerOrSafeSelect = new LinkedList<>();
             Queue<Job> dangerSequence = new LinkedList<>();
             dangerSequence.add(new AvoidEdge());
             dangerSequence.add(new AvoidBall());
+//
+            Queue<Job> safeSequence = new LinkedList<>();
+            safeSequence.add(new ChaseBall());
+            safeSequence.add(new WalkAbout());
 
-            Queue<Job> safeSelect = new LinkedList<>();
-            safeSelect.add(new ChaseBall());
-            safeSelect.add(new WalkAbout());
-
-            dangerOrSafeSelect.add(new Sequence(dangerSequence));
-            dangerOrSafeSelect.add(new Sequence(safeSelect));
-
+            dangerOrSafeSelect.add(new Sequence(new LinkedList<>(dangerSequence)));
+            dangerOrSafeSelect.add(new Sequence(new LinkedList<>(safeSequence)));
 
             Job tempj = new Repeat((new WalkAbout()));
-//            Job tempj = new Repeat((new WalkAbout()));
-            jobs.add(tempj);
-            tempj.start();
+
+            tempj = new Repeat(new SequenceSuccess(new LinkedList<>(dangerOrSafeSelect)));
+            System.out.println(safeSequence.toString());
+//              tempj = new Repeat((new Selector(new LinkedList<>(safeSequence))));
+//            tempj = new Repeat((new WalkAbout()));
+                jobs.add(tempj);
+                tempj.start();
+
+
 
         }
 

@@ -1,6 +1,7 @@
 package com.anotherworld.model.ai.behaviour;
 
 import com.anotherworld.model.ai.behaviour.player.AvoidBall;
+import com.anotherworld.model.ai.behaviour.player.EmptyJobQueueException;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
@@ -34,8 +35,10 @@ public class Selector extends Job {
     public Selector(Queue<Job> jobs) {
         this.jobs = jobs;
         this.originalJobs = new LinkedList<>(jobs);
+        System.out.println(jobs.toString());
         if (jobs.isEmpty()) {
-            isSuccess();
+            //throw new EmptyJobQueueException ("Empty queue was passed into a Job");
+            succeed();
             return;
         }
         this.currentJob = jobs.poll();
@@ -57,6 +60,8 @@ public class Selector extends Job {
             succeed();
             logger.debug("Finishing Selector Job with success");
             return;
+        } else if (currentJob.isRunning()) {
+            currentJob.act(ai,players,balls,platform);
         } else if (jobs.isEmpty()) {
             fail();
             logger.debug("Finishing Selector Job with fail");
@@ -64,11 +69,11 @@ public class Selector extends Job {
         } else if (currentJob.isFailure()) {
             currentJob = jobs.poll();
             currentJob.start();
+        } else {
+            logger.error("I DONT KNOW WHAT TO DO");
         }
 
-        if (currentJob.isRunning()) {
-            currentJob.act(ai,players,balls,platform);
-        }
+
 
     }
 
