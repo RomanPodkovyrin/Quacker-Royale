@@ -19,10 +19,12 @@ public class WalkAbout extends Job {
 
 
     private Matrix destination;
+    private boolean newDestination;
 
 
     public WalkAbout() {
         super();
+        newDestination = true;
     }
 
     @Override
@@ -55,9 +57,10 @@ public class WalkAbout extends Job {
 
         logger.debug("Starting WalkAbout Job");
 
-        //if (getState() == null){
+        if (newDestination){
             setXY();
-        //}
+            newDestination = false;
+        }
 
         if (isRunning() & ai.getHealth() == 0) {
             fail();
@@ -68,6 +71,7 @@ public class WalkAbout extends Job {
         if (isNear() & isRunning()) {
             logger.debug("Finished WalkAbout with success");
             succeed();
+            newDestination = true;
             return;
         } else if (isRunning()){
             move();
