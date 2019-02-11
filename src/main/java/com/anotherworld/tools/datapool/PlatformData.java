@@ -18,6 +18,11 @@ public class PlatformData implements RectangleDisplayData {
     private float xCoordinate = 80;
     private float yCoordinate = 45;
 
+    public PlatformData(float x, float y) {
+        this.xCoordinate = x;
+        this.yCoordinate = y;
+    }
+
     public int getStage() {
         return stage;
     }
