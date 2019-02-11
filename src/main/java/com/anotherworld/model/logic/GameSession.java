@@ -26,8 +26,8 @@ public class GameSession {
         this.currentPlayer = new Player(currentPlayer, false);
         // Receive the data from the properties file.
         try {
-            this.properties = new PropertyReader("logic.properties");
-            this.numberOfBalls = Integer.parseInt(properties.getValue("NUMBER_OF_BALLS"));
+            GameSession.properties = new PropertyReader("logic.properties");
+            GameSession.numberOfBalls = Integer.parseInt(properties.getValue("NUMBER_OF_BALLS"));
         } catch (IOException e) {
             System.err.println("Error when loading properties class: " + e.getMessage());
         }
@@ -46,13 +46,13 @@ public class GameSession {
      */
     public void update(){
         // Update the positions of the current player based on given input.
-
+        
         // Update the positions of the other players.
 
         // Check whether or not the players are within the arena.
 
         // Check whether or not the players are colliding with a ball
-
+        currentPlayer.setCoordinates(currentPlayer.getXCoordinate() + currentPlayer.getXVelocity(), currentPlayer.getYCoordinate() + currentPlayer.getYVelocity());
         // Check whether or not the balls are colliding with a wall
 
     }
