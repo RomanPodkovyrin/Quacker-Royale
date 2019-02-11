@@ -4,7 +4,9 @@ import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.DisplayData;
 
-public abstract class MovableData implements DisplayData {
+import java.io.Serializable;
+
+public abstract class MovableData implements DisplayData, Serializable {
 
     private Matrix coordinates;
     private Matrix velocity;

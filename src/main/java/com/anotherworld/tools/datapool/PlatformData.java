@@ -3,7 +3,9 @@ package com.anotherworld.tools.datapool;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
 
-public class PlatformData implements RectangleDisplayData {
+import java.io.Serializable;
+
+public class PlatformData implements RectangleDisplayData, Serializable {
 
     private int stage = 1;
     private static final int MAXSTAGE = 4;
