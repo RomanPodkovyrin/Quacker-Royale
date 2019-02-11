@@ -1,6 +1,7 @@
 package com.anotherworld.model.logic;
 
 import com.anotherworld.model.movable.*;
+import com.anotherworld.model.physics.Physics;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.input.Input;
@@ -13,17 +14,29 @@ import java.util.ArrayList;
  * @author Alfi S.
  */
 public class GameSession {
+
     private static PropertyReader properties;
     private static int numberOfBalls;
+
     private Player currentPlayer;
-    private ArrayList<PlayerData> players;
-    private ArrayList<PlayerData> ais;
+    private ArrayList<Player> players;
+    private ArrayList<Player> ais;
     private ArrayList<Ball> balls;
 
     public GameSession(PlayerData currentPlayer,
                        ArrayList<PlayerData> players, ArrayList<PlayerData> ais) {
 
+        // Create the model of the current player.
         this.currentPlayer = new Player(currentPlayer, false);
+
+        // Setting the list of human-playable characters.
+        this.players = new ArrayList<Player>();
+        for(PlayerData data : players) this.players.add(new Player(data, false));
+
+        // Setting the list of ai-controlled characters.
+        this.ais = new ArrayList<Player>();
+        for(PlayerData data : ais) this.ais.add(new Player(data, true));
+
         // Receive the data from the properties file.
         try {
             this.properties = new PropertyReader("logic.properties");
@@ -32,12 +45,6 @@ public class GameSession {
             System.err.println("Error when loading properties class: " + e.getMessage());
         }
 
-        this.players = players; //Create the list of players
-        this.ais = ais;
-
-        for(int i = 0; i < numberOfBalls; i++) {
-            //Instantiate a new ball at a random(?) location
-        }
     }
 
     /**
@@ -46,6 +53,7 @@ public class GameSession {
      */
     public void update(){
         // Update the positions of the current player based on given input.
+        Physics.move(currentPlayer);
 
         // Update the positions of the other players.
 
