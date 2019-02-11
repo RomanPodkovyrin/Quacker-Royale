@@ -77,11 +77,10 @@ public class GameSettings {
         return min + r.nextFloat() * (max - min);
     }
 
-    private void createBalls(int tempBallsNumber) {
+    private void createBalls(int numberOfBalls) {
         //need number of balls somewhere
 
-        for (int i = 0; i < tempBallsNumber; i++) {
-
+        for (int i = 0; i < numberOfBalls; i++) {
             // set random location with random direction
             // probably towards the middle
             BallData newBall = new BallData(false,0,0,ObjectState.IDLE,0,10);
@@ -98,6 +97,5 @@ public class GameSettings {
        // new PlatformData();
 
     }
-
 
 }
