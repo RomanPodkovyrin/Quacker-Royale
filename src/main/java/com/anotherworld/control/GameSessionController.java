@@ -2,11 +2,16 @@ package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.view.View;
 
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
+
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,12 +24,12 @@ public class GameSessionController {
     public static void main(String[] args) {
         try {
             View view = new View();
-            GameSession session = new GameSession(null,null,null);
-            new GameSessionController(view, session);
+            new GameSessionController(view);
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);
         } catch (RuntimeException ex) {
             logger.fatal(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -32,10 +37,20 @@ public class GameSessionController {
     private View view;
     private Thread viewThread;
     private KeyListener keyListener;
+    
+    private PlayerData currentPlayer;
+    private ArrayList<PlayerData> networkPlayers;
+    private ArrayList<PlayerData> ais;
+    private ArrayList<BallData> balls;
+    private ArrayList<PlatformData> platforms;
+    private ArrayList<WallData> walls;
+    
 
-    public GameSessionController(View view, GameSession session) throws KeyListenerNotFoundException {
+    public GameSessionController(View view) throws KeyListenerNotFoundException {
 
-        this.session = session;
+        initDataPool();
+        
+        this.session = new GameSession(currentPlayer,networkPlayers,ais, balls, platforms.get(0), walls.get(0));
         this.view = view;
 
         // Starting the View thread
@@ -53,11 +68,27 @@ public class GameSessionController {
         //Clean up ie close connection if there are any and close the graphics window
 
     }
+    
+    private void initDataPool() {
+        networkPlayers = new ArrayList<>();
+        currentPlayer = new PlayerData("1", 0, 40, 45, null, 0.1f, 4);
+        ais = new ArrayList<>();
+        ais.add(new PlayerData("1", 0, 120, 45, null, 0.1f, 4));
+        balls = new ArrayList<>();
+        balls.add(new BallData(false, 80, 45, null, 1f, 6));
+        platforms = new ArrayList<>();
+        
+        platforms.add(new PlatformData(80, 45));
+        
+        walls = new ArrayList<>();
+        
+        walls.add(new WallData(80, 45));
+    }
 
     private void mainLoop() {
+        render();
         while(viewThread.isAlive()) {
             update();
-            render();
 
             try{
                 Thread.sleep(1);
@@ -72,10 +103,14 @@ public class GameSessionController {
 
         // Send the input key presses to the model.
         session.updatePlayer(keyListener.getKeyPresses());
-
+        session.update();
     }
 
-    private static void render() {
-        //View.update
+    private void render() {
+        ArrayList<PlayerData> players = new ArrayList<>();
+        players.addAll(ais);
+        players.addAll(players);
+        players.add(currentPlayer);
+        view.updateGameObjects(players, balls, platforms, walls);
     }
 }
