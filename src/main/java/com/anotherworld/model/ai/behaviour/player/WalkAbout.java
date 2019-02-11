@@ -24,9 +24,10 @@ public class WalkAbout extends Job {
     public WalkAbout() {
         super();
     }
+
     @Override
     public void start() {
-        start();
+        super.start();
         setXY();
     }
     @Override
@@ -76,6 +77,7 @@ public class WalkAbout extends Job {
         //temp
         ai.setXVelocity(vector.getX());
         ai.setYVelocity(vector.getY());
+        logger.debug("Moving to " + destination);
     }
     private boolean isNear() {
         boolean x = ai.getXCoordinate() <= (ai.getRadius() + destination.getX()) & ai.getXCoordinate() >= (destination.getX() - ai.getRadius());

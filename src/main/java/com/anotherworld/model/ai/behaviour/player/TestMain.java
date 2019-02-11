@@ -33,8 +33,9 @@ public class TestMain {
 
         Queue<Job> ballAvoid = new LinkedList<Job>();
         //ballAvoid.add(new AvoidEdge());
-        ballAvoid.add(new AvoidBall());
-        ballAvoid.add(new ChaseBall());
+//        ballAvoid.add(new AvoidBall());
+//        ballAvoid.add(new ChaseBall());
+        ballAvoid.add(new WalkAbout());
         Job job  = new Repeat(new Sequence(ballAvoid));
 
         job.start();
