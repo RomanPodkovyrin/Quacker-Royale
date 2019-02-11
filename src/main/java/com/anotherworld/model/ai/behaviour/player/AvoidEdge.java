@@ -40,13 +40,13 @@ public class AvoidEdge extends Job {
 
         // get x y Matrix of the Platform
         //##############################################
-        Matrix platformCoordinates = new Matrix(platform.getDistanceX(),platform.getDistanceY()); // Change it
+        Matrix platformCoordinates = new Matrix(platform.getXSize(),platform.getYSize()); // Change it
         // #############################################
         Random random = new Random();
 
         Matrix place = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
 
-        if (Math.abs(place.getX()) >= platform.getDistanceX() - distanceFromEdge) {
+        if (Math.abs(place.getX()) >= platform.getXSize() - distanceFromEdge) {
             // too close to x
             // go Left Or Right
 //            random.nextBoolean()?;
@@ -61,7 +61,7 @@ public class AvoidEdge extends Job {
 
         }
 
-        if (Math.abs(place.getY()) >= platform.getDistanceY() - distanceFromEdge) {
+        if (Math.abs(place.getY()) >= platform.getYSize() - distanceFromEdge) {
             // too close to y
             // go Up or Down
             if ((place.getY() < 0 & isPointing(ai.getCoordinates(),270)) | (place.getY() > 0 & isPointing(ai.getCoordinates(),90))) {
