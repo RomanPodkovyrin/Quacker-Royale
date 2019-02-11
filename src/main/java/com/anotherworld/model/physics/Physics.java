@@ -30,7 +30,7 @@ public class Physics {
             property = new PropertyReader(FILE);
             Physics.friction = Float.parseFloat(property.getValue(FRICTION));
             Physics.rate = Float.parseFloat(property.getValue(RATE));
-        } catch (Exception exception) {
+        } catch (IOException exception) {
             logger.fatal("Cannot set up the properties of physics: "
                     + exception.getStackTrace());
         }
@@ -39,8 +39,7 @@ public class Physics {
     /**
      * To make the object move
      * 
-     * @param AbstractMovable
-     *            object
+     * @param object the object to move
      */
     public static void move(AbstractMovable object) {
         float newXCoordinate = object.getXCoordinate() + object.getXVelocity();
@@ -52,8 +51,8 @@ public class Physics {
     /**
      * To check collision of the objects.
      *
-     * @param AbstractMovable
-     *            a, b
+     * @param a the first object to check
+     * @param b the second object to check
      */
     public static boolean checkCollision(AbstractMovable a, AbstractMovable b) {
         float xDistance = a.getXCoordinate() - b.getXCoordinate();
@@ -75,8 +74,8 @@ public class Physics {
      * 
      * If X of the ball is colliding X of the wall.
      * 
-     * @param a
-     * @param wall
+     * @param a the ball to check for collisions
+     * @param wall the wall to check for collisions
      */
     public static void bouncedWall(Ball a, Wall wall) {
         float circleR = a.getRadius();
@@ -120,8 +119,7 @@ public class Physics {
     /**
      * To make the object move
      *
-     * @param AbstractMovable
-     *            object
+     * @param a the object to apply friction to
      */
     public static void applyFriction(AbstractMovable a) {
         float speed = a.getSpeed() * friction;
@@ -136,8 +134,7 @@ public class Physics {
     /**
      * To make the object accelerate
      *
-     * @param AbstractMovable
-     *            object
+     * @param a the object to apply acceleration to.
      */
     public static void accelerate(AbstractMovable a) {
         float speed = a.getSpeed() + rate;
@@ -152,8 +149,8 @@ public class Physics {
     /**
      * To apply force to the object (reduce out strength or increase force)
      * 
-     * @param AbstractMovable
-     *            object
+     * @param a the object to which the force is applied
+     * @param velocity the force matrix
      */
     public static void forceApplying(AbstractMovable a, Matrix velocity) {
         float xVelocity = a.getXVelocity() + velocity.getY();
@@ -180,8 +177,8 @@ public class Physics {
     /**
      * Apply collision on an abstractMovables, and check for their instance.
      * 
-     * @param player
-     * @param ball
+     * @param objectA the first object in the collision
+     * @param objectB the second object in the collision
      */
     public static void collided(AbstractMovable objectA, AbstractMovable objectB) {
 
@@ -241,14 +238,15 @@ public class Physics {
      * onward, check if it matches the index of the ball. Then Player: Check if
      * the player is collided Check if the player is collided with another
      * player check if the player is collided with pitfall
-     * 
+     *
      * @param listOfBalls
      * @param listOfPlayers
      * @param wall
      */
     public static void onCollision(List<Ball> listOfBalls,
-            List<Player> listOfPlayers, Wall wall) {
-        List<Integer> collided = new ArrayList<Integer>();
+                                   List<Player> listOfPlayers,
+                                   Wall wall) {
+        List<Integer> collided = new ArrayList<>();
 
         int collidedBall = -1;
         for (int i = 0; i < listOfBalls.size(); i++) {
@@ -291,6 +289,53 @@ public class Physics {
                     collided(player, player2);
                 }
 
+            }
+        }
+    }
+
+    /**
+     * Function that checks and applies all the collisions within the game.
+     * First checks each ball for a collisions with:
+     *      (i)   a wall.
+     *      (ii)  a player.
+     *      (iii) another ball.
+     * Then checks a player for collisions with:
+     *      (i)   another player.
+     *      (ii)  outside of the platform.
+     * @param listOfBalls
+     * @param listOfPlayers
+     * @param wall
+     */
+    public static void onCollision2ElectricBoogaloo(List<Ball> listOfBalls,
+                                                    List<Player> listOfPlayers,
+                                                    Wall wall) {
+
+        for(Ball ball : listOfBalls) {
+
+            // Check if a ball has collided with the wall.
+            bouncedWall(ball, wall);
+
+            // Check if a ball has collided with a player.
+            for (Player player : listOfPlayers) {
+                if(checkCollision(ball, player)) {
+                    collided(ball, player);
+                }
+            }
+
+            // Check if a ball has collided with another ball.
+            for (Ball ballB : listOfBalls) {
+                if (!ball.equals(ballB) && checkCollision(ball, ballB)){
+                    collided(ball, ballB);
+                }
+            }
+        }
+
+        // Check if a player has collided with another player.
+        for (Player playerA : listOfPlayers) {
+            for (Player playerB : listOfPlayers) {
+                if(!playerA.equals(playerB) && checkCollision(playerA, playerB)) {
+                    collided(playerA, playerB);
+                }
             }
         }
     }

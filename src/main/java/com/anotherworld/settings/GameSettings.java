@@ -102,10 +102,10 @@ public class GameSettings {
         return wall;
     }
 
-    private void createBalls(int tempBallsNumber) {
+    private void createBalls(int numberOfBalls) {
         //need number of balls somewhere
 
-        for (int i = 0; i < tempBallsNumber; i++) {
+        for (int i = 0; i < numberOfBalls; i++) {
 
             int side = getRandom(0,3);
             float xMin = 0;
@@ -148,6 +148,7 @@ public class GameSettings {
                     logger.error("Wrong random ball set up");
 
             }
+
             // set random location with random direction
             // probably towards the middle
             BallData newBall = new BallData(false,getRandom(xMin,xMax),getRandom(yMin,yMax),ObjectState.IDLE,0,10);
@@ -167,6 +168,5 @@ public class GameSettings {
         platform = new PlatformData(50,50);
 
     }
-
 
 }
