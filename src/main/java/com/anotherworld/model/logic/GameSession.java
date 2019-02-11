@@ -25,6 +25,8 @@ public class GameSession {
     private Player currentPlayer;
     private ArrayList<Player> players;
     private ArrayList<Player> ais;
+    private ArrayList<Player> allPlayers;
+
     private AI ai;
     private ArrayList<Ball> balls;
     private Platform platform;
@@ -45,25 +47,27 @@ public class GameSession {
         }
 
         this.players = new ArrayList<>();
-        for (int i = 0; i < players.size(); i++) {
-            this.players.add(new Player(players.get(i), false));
-        }
+        for(PlayerData data : players) this.players.add(new Player(data, false));
+
         this.ais = new ArrayList<>();
-        for (int i = 0; i < ais.size(); i++) {
-            this.ais.add(new Player(ais.get(i), true));
-        }
+        for(PlayerData data : ais) this.players.add(new Player(data, true));
+
+        allPlayers = new ArrayList<>();
+        allPlayers.addAll(this.ais);
+        allPlayers.addAll(this.players);
+        allPlayers.add(this.currentPlayer);
+
         this.balls = new ArrayList<>();
         for(int i = 0; i < balls.size(); i++) {
             this.balls.add(new Ball(balls.get(i)));
             balls.get(i).setVelocity(0, balls.get(i).getSpeed());
         }
+
         this.platform = new Platform(platform);
         this.wall = new Wall(wall);
-        ArrayList<Player> allPlayers = new ArrayList<>();
-        allPlayers.addAll(this.ais);
-        allPlayers.addAll(this.players);
-        allPlayers.add(this.currentPlayer);
+
         this.ai = new AI(this.ais, allPlayers, this.balls, this.platform);
+
         Physics.setUp();
     }
 
@@ -72,15 +76,8 @@ public class GameSession {
      * physics and ai are run during this time
      */
     public void update(){
-        // Update the positions of the current player based on given input.
-
-        //currentPlayer.setCoordinates(currentPlayer.getXCoordinate() + currentPlayer.getXVelocity(), currentPlayer.getYCoordinate() + currentPlayer.getYVelocity());
-        // Update the positions of the other players.
         ai.action();
-        ArrayList<Player> allPlayers = new ArrayList<>();
-        allPlayers.addAll(this.ais);
-        allPlayers.addAll(this.players);
-        allPlayers.add(this.currentPlayer);
+
         Physics.onCollision(this.balls, allPlayers, wall);
         
         Physics.move(currentPlayer);
@@ -93,11 +90,6 @@ public class GameSession {
         for (Ball ball: balls) {
             Physics.move(ball);
         }
-        // Check whether or not the players are within the arena.
-        
-        // Check whether or not the players are colliding with a ball
-
-        // Check whether or not the balls are colliding with a wall
 
     }
 
