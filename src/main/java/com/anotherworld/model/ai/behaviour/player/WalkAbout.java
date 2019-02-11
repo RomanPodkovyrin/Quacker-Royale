@@ -42,7 +42,7 @@ public class WalkAbout extends Job {
         float ycoordinate = getRandom(platform.getYCoordinate() - platform.getYSize() + ai.getRadius(),
                 platform.getYCoordinate() + platform.getYSize() - ai.getRadius());
         destination = new Matrix(xcoordinate, ycoordinate);
-
+        logger.debug("Set x y");
     }
 
     @Override
@@ -55,9 +55,9 @@ public class WalkAbout extends Job {
 
         logger.debug("Starting WalkAbout Job");
 
-        if (getState() == null){
+        //if (getState() == null){
             setXY();
-        }
+        //}
 
         if (isRunning() & ai.getHealth() == 0) {
             fail();
@@ -70,7 +70,7 @@ public class WalkAbout extends Job {
             succeed();
             return;
         } else if (isRunning()){
-
+            move();
         }
     }
 
@@ -78,8 +78,8 @@ public class WalkAbout extends Job {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
         //ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipMatrix(vector)));
         //temp
-        ai.setXVelocity(vector.getX());
-        ai.setYVelocity(vector.getY());
+        ai.setXVelocity(vector.getX() / Math.abs(vector.getX()));
+        ai.setYVelocity(vector.getY() / Math.abs(vector.getY()));
         logger.debug("Moving to " + destination);
     }
     private boolean isNear() {
