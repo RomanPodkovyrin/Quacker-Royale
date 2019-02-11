@@ -3,6 +3,7 @@ package com.anotherworld.model.ai;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.behaviour.Repeat;
 import com.anotherworld.model.ai.behaviour.player.AvoidBall;
+import com.anotherworld.model.ai.behaviour.player.WalkAbout;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
@@ -32,11 +33,11 @@ public class AI {
 
     // is this supposed to be shared between ais or should they get one of their own?
     //###############################################################################
-    private Job repeatJob = new Repeat((new AvoidBall()));
+    private Job repeatJob = new Repeat((new WalkAbout()));
 
 
     /**
-     *
+     * @param ais All the ai players
      * @param allPlayers the rest of the allPlayers on the map(user and ai controlled)
      * @param balls all the balls on the map
      * @param platform the current platform

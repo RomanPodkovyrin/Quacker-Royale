@@ -6,12 +6,12 @@ import static org.lwjgl.opengl.GL11.glEnd;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 import static org.lwjgl.opengl.GL11.glViewport;
 
+import com.anotherworld.view.data.DisplayObject;
+
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.anotherworld.view.data.DisplayObject;
 
 /**
  * Creates and manages a view state like view game or main menu.

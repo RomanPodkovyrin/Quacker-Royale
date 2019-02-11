@@ -1,9 +1,13 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
 import com.anotherworld.model.physics.Physics;
 import com.anotherworld.tools.PropertyReader;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
 
 import java.io.IOException;
@@ -21,30 +25,46 @@ public class GameSession {
     private Player currentPlayer;
     private ArrayList<Player> players;
     private ArrayList<Player> ais;
+    private AI ai;
     private ArrayList<Ball> balls;
+    private Platform platform;
+    private Wall wall;
 
-    public GameSession(PlayerData currentPlayer,
-                       ArrayList<PlayerData> players, ArrayList<PlayerData> ais) {
+    public GameSession(PlayerData currentPlayer, ArrayList<PlayerData> players, ArrayList<PlayerData> ais,
+            ArrayList<BallData> balls, PlatformData platform, WallData wall) {
 
         // Create the model of the current player.
         this.currentPlayer = new Player(currentPlayer, false);
 
-        // Setting the list of human-playable characters.
-        this.players = new ArrayList<Player>();
-        for(PlayerData data : players) this.players.add(new Player(data, false));
-
-        // Setting the list of ai-controlled characters.
-        this.ais = new ArrayList<Player>();
-        for(PlayerData data : ais) this.ais.add(new Player(data, true));
-
         // Receive the data from the properties file.
         try {
-            this.properties = new PropertyReader("logic.properties");
-            this.numberOfBalls = Integer.parseInt(properties.getValue("NUMBER_OF_BALLS"));
+            GameSession.properties = new PropertyReader("logic.properties");
+            GameSession.numberOfBalls = Integer.parseInt(properties.getValue("NUMBER_OF_BALLS"));
         } catch (IOException e) {
             System.err.println("Error when loading properties class: " + e.getMessage());
         }
 
+        this.players = new ArrayList<>();
+        for (int i = 0; i < players.size(); i++) {
+            this.players.add(new Player(players.get(i), false));
+        }
+        this.ais = new ArrayList<>();
+        for (int i = 0; i < ais.size(); i++) {
+            this.ais.add(new Player(ais.get(i), true));
+        }
+        this.balls = new ArrayList<>();
+        for(int i = 0; i < balls.size(); i++) {
+            this.balls.add(new Ball(balls.get(i)));
+            balls.get(i).setVelocity(0, balls.get(i).getSpeed());
+        }
+        this.platform = new Platform(platform);
+        this.wall = new Wall(wall);
+        ArrayList<Player> allPlayers = new ArrayList<>();
+        allPlayers.addAll(this.ais);
+        allPlayers.addAll(this.players);
+        allPlayers.add(this.currentPlayer);
+        this.ai = new AI(this.ais, allPlayers, this.balls, this.platform);
+        Physics.setUp();
     }
 
     /**
@@ -53,12 +73,28 @@ public class GameSession {
      */
     public void update(){
         // Update the positions of the current player based on given input.
-        Physics.move(currentPlayer);
 
+        //currentPlayer.setCoordinates(currentPlayer.getXCoordinate() + currentPlayer.getXVelocity(), currentPlayer.getYCoordinate() + currentPlayer.getYVelocity());
         // Update the positions of the other players.
-
+        ai.action();
+        ArrayList<Player> allPlayers = new ArrayList<>();
+        allPlayers.addAll(this.ais);
+        allPlayers.addAll(this.players);
+        allPlayers.add(this.currentPlayer);
+        Physics.onCollision(this.balls, allPlayers, wall);
+        
+        Physics.move(currentPlayer);
+        for (Player ai: ais) {
+            Physics.move(ai);
+        }
+        for (Player player: players) {
+            Physics.move(player);
+        }
+        for (Ball ball: balls) {
+            Physics.move(ball);
+        }
         // Check whether or not the players are within the arena.
-
+        
         // Check whether or not the players are colliding with a ball
 
         // Check whether or not the balls are colliding with a wall

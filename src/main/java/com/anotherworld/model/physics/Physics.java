@@ -1,26 +1,39 @@
 package com.anotherworld.model.physics;
 
 import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.PropertyReader;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Physics {
-
+    private static Logger logger = LogManager.getLogger(Physics.class);
+    private static final String FRICTION = "FRICTION";
+    private static final String RATE = "ACCELERATE";
+    private static final String FILE = "physics.properties";
     static float friction;
     static float rate;
-    static float minimumSpeed = 0.4f;
-    static float maximumSpeed;
 
-    public Physics(float rate, float friction, float maximumSpeed) {
-        Physics.friction = friction;
-        Physics.rate = rate;
+    public static void setUp() {
+        PropertyReader property;
+        try {
+            property = new PropertyReader(FILE);
+            Physics.friction = Float.parseFloat(property.getValue(FRICTION));
+            Physics.rate = Float.parseFloat(property.getValue(RATE));
+        } catch (Exception exception) {
+            logger.fatal("Cannot set up the properties of physics: "
+                    + exception.getStackTrace());
+        }
     }
 
     /**
@@ -33,6 +46,7 @@ public class Physics {
         float newXCoordinate = object.getXCoordinate() + object.getXVelocity();
         float newYCoordinate = object.getYCoordinate() + object.getYVelocity();
         object.setCoordinates(newXCoordinate, newYCoordinate);
+        logger.debug("Object's location updated successfully");
     }
 
     /**
@@ -49,6 +63,7 @@ public class Physics {
         float distanceSquared = xDistance * xDistance + yDistance * yDistance;
 
         boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
+        logger.debug("Checked if the two objects are colliding");
         return isOverlapping;
     }
 
@@ -67,12 +82,12 @@ public class Physics {
         float circleR = a.getRadius();
         float circleX = a.getXCoordinate();
         float circleY = a.getYCoordinate();
-        float xSize = wall.getXSize() / 2;
-        float ySize = wall.getYSize() / 2;
+        float xSize = wall.getXSize();
+        float ySize = wall.getYSize();
         // North and East of the ball.
-        Matrix northEast = new Matrix(circleY - circleR, circleX + circleR);
+        Matrix northEast = new Matrix(circleX + circleR, circleY - circleR);
         // South and West of the ball.
-        Matrix southWest = new Matrix(circleY + circleR, circleX - circleR);
+        Matrix southWest = new Matrix(circleX - circleR, circleY + circleR);
         // North and East of the Wall.
         Matrix northEastWall = new Matrix((wall.getXCoordinate() + xSize),
                 (wall.getYCoordinate() - ySize));
@@ -83,16 +98,20 @@ public class Physics {
         if (northEast.getY() < (northEastWall.getY())) {
             a.setCoordinates(circleX, northEastWall.getY() + circleR);
             a.setYVelocity(-a.getYVelocity());
+            logger.debug("The ball is bouncing on the North of Wall");
         } else if (southWest.getY() > southWestWall.getY()) {
             a.setCoordinates(circleX, southWestWall.getY() - circleR);
             a.setYVelocity(-a.getYVelocity());
+            logger.debug("The ball is bouncing on the South of Wall");
         }
         if (northEast.getX() > northEastWall.getX()) {
             a.setCoordinates(northEast.getX() - circleR, circleY);
             a.setXVelocity(-a.getXVelocity());
+            logger.debug("The ball is bouncing on the East of Wall");
         } else if (southWest.getX() < southWestWall.getX()) {
             a.setCoordinates(southWest.getX() + circleR, circleY);
             a.setXVelocity(-a.getXVelocity());
+            logger.debug("The ball is bouncing on the West of Wall");
         }
     }
 
@@ -108,8 +127,10 @@ public class Physics {
         float speed = a.getSpeed() * friction;
         if (speed < 0.5f) {
             speed = 0.0f;
+            logger.debug("The object reached the minimum possible speed: Stopping now");
         }
         a.setSpeed(speed);
+        logger.debug("The object has reduced its speed");
     }
 
     /**
@@ -122,8 +143,10 @@ public class Physics {
         float speed = a.getSpeed() + rate;
         if (speed > 3.0f) {
             speed = 3.0f;
+            logger.debug("The object has reached its maximum speed.");
         }
         a.setSpeed(speed);
+        logger.debug("Object's speed is modified");
     }
 
     /**
@@ -145,46 +168,60 @@ public class Physics {
         a.setSpeed(speed);
         a.setXVelocity(xVelocity);
         a.setYVelocity(yVelocity);
+        logger.debug("Applied forced to the original velocity of the object.");
     }
 
     /**
-     * When two objects collided with each other
-     * 
-     * @param Player
-     * @param Martix
-     */
-    public static void collided(AbstractMovable player, AbstractMovable player2) {
-        player.setXVelocity(player2.getXVelocity());
-        player.setYVelocity(player2.getYVelocity());
-        player2.setXVelocity(player.getXVelocity());
-        player2.setYVelocity(player.getYVelocity());
-    }
-
-    /**
-     * Apply collision on both ball and player Check if the ball can damage
-     * people then decreases player health by 30 else then toggle the ball to
-     * harmful state.
+     * Apply collision on an abstractMovables, and check for their instance.
      * 
      * @param player
      * @param ball
      */
-    public static void collidedByBall(Player player, Ball ball) {
-        player.setXVelocity(ball.getXVelocity());
-        player.setYVelocity(ball.getYVelocity());
-        if (ball.isDangerous()) {
-            int health = player.getHealth();
-            player.setHealth(health - 30);
-        } else {
-            ball.setDangerous(true);
+    public static void collided(AbstractMovable objectA, AbstractMovable objectB) {
+
+        if (objectA instanceof Ball) {
+            Ball ball = (Ball) objectA;
+            if (objectB instanceof Player) {
+                Player player = (Player) objectB;
+                if (ball.isDangerous()) {
+                    int health = player.getHealth();
+                    player.setHealth(health - 30);
+                    logger.debug("The health of a player is reduced.");
+                } else {
+                    ball.setDangerous(true);
+                    logger.debug("The ball is toggled to dangerous Mode");
+                }
+                Matrix aVelo = objectA.getVelocity();
+                forceApplying(player, aVelo);
+            }
+
+            float xDifference = ball.getXCoordinate()
+                    - objectB.getXCoordinate();
+            float yDifference = ball.getYCoordinate()
+                    - objectB.getYCoordinate();
+            if (xDifference > (ball.getRadius() + objectB.getRadius())) {
+                ball.setXVelocity(-ball.getXVelocity());
+                logger.debug("The ball is bouncing on the X direction of the player.");
+                if (objectB instanceof Ball) {
+                    objectB.setXVelocity(-objectB.getXVelocity());
+                }
+            }
+            if (yDifference > (ball.getRadius() + objectB.getRadius())) {
+                ball.setYVelocity(-ball.getYVelocity());
+                logger.debug("The ball is bouncing on the Y direction of the player.");
+                if (objectB instanceof Ball) {
+                    objectB.setYVelocity(-objectB.getYVelocity());
+                }
+            }
         }
-        float xDifference = ball.getXCoordinate() - player.getXCoordinate();
-        float yDifference = ball.getYCoordinate() - player.getYCoordinate();
-        if (xDifference > (ball.getRadius() + player.getRadius())) {
-            ball.setXVelocity(-ball.getXVelocity());
+        if (objectA instanceof Player) {
+            Matrix aVelo = objectA.getVelocity();
+            Matrix bVelo = objectB.getVelocity();
+            forceApplying(objectA, bVelo);
+            forceApplying(objectB, aVelo);
         }
-        if (yDifference > (ball.getRadius() + player.getRadius())) {
-            ball.setYVelocity(-ball.getYVelocity());
-        }
+        Matrix coordA = objectA.getCoordinates();
+        Matrix coordB = objectB.getCoordinates();
     }
 
     /**
@@ -201,7 +238,7 @@ public class Physics {
      * @param wall
      */
     public static void onCollision(List<Ball> listOfBalls,
-            List<Player> listOfPlayers, Wall wall, Platform platform) {
+            List<Player> listOfPlayers, Wall wall) {
         List<Integer> collided = new ArrayList<Integer>();
 
         int collidedBall = -1;
@@ -217,7 +254,7 @@ public class Physics {
                 }
                 Player victim = listOfPlayers.get(i);
                 if (checkCollision(ball, victim)) {
-                    collidedByBall(victim, ball);
+                    collided(ball, victim);
                     collided.add(j);
                 }
             }
@@ -235,10 +272,7 @@ public class Physics {
             }
             Player player = listOfPlayers.get(i);
 
-            if (!platform.isOnPlatform(player)) {
-
-            }
-            for (int j = i + 1; i < listOfPlayers.size(); j++) {
+            for (int j = i + 1; j < listOfPlayers.size(); j++) {
                 if (collided.contains(j)) {
                     continue;
                 }
