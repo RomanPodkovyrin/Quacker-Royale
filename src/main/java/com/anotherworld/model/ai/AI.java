@@ -2,7 +2,10 @@ package com.anotherworld.model.ai;
 
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.behaviour.Repeat;
+import com.anotherworld.model.ai.behaviour.Sequence;
 import com.anotherworld.model.ai.behaviour.player.AvoidBall;
+import com.anotherworld.model.ai.behaviour.player.AvoidEdge;
+import com.anotherworld.model.ai.behaviour.player.ChaseBall;
 import com.anotherworld.model.ai.behaviour.player.WalkAbout;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Platform;
@@ -13,6 +16,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * @author Roman P
@@ -26,6 +31,7 @@ public class AI {
     private ArrayList<Pair<Player,ArrayList<Player>>> aiPlayers = new ArrayList<>();
     private ArrayList<Player> allPlayers;
     private ArrayList<Ball> balls;
+    private ArrayList<Job> jobs = new ArrayList<>();
     private Platform platform;
 
     private Matrix aiVector;
@@ -49,6 +55,30 @@ public class AI {
 
         for (Player ai : ais) {
             aiPlayers.add(new Pair<>(ai, removePlayer(allPlayers,ai)));
+//
+//            Queue<Job> ballAvoid = new LinkedList<Job>();
+//            ballAvoid.add(new AvoidEdge());
+//            ballAvoid.add(new AvoidBall());
+//            ballAvoid.add(new ChaseBall());
+
+            Queue<Job> dangerOrSafeSelect = new LinkedList<>();
+            Queue<Job> dangerSequence = new LinkedList<>();
+            dangerSequence.add(new AvoidEdge());
+            dangerSequence.add(new AvoidBall());
+
+            Queue<Job> safeSelect = new LinkedList<>();
+            safeSelect.add(new ChaseBall());
+            safeSelect.add(new WalkAbout());
+
+            dangerOrSafeSelect.add(new Sequence(dangerSequence));
+            dangerOrSafeSelect.add(new Sequence(safeSelect));
+
+
+            Job tempj = new Repeat((new WalkAbout()));
+//            Job tempj = new Repeat((new WalkAbout()));
+            jobs.add(tempj);
+            tempj.start();
+
         }
 
         repeatJob.start();
@@ -80,10 +110,12 @@ public class AI {
      */
     public void action(){
         logger.info("AI action called.");
-        for (Pair<Player,ArrayList<Player>> pair: aiPlayers) {
+
+        for (int i = 0; i < aiPlayers.size();i++) {
+            Pair<Player,ArrayList<Player>> pair = aiPlayers.get(i);
             logger.info(pair.getKey().getCharacterID() + " Starting AI");
 
-            repeatJob.act(pair.getKey(), pair.getValue(),balls,platform);
+            jobs.get(i).act(pair.getKey(), pair.getValue(),balls,platform);
         }
 
     }
