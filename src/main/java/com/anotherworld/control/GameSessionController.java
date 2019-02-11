@@ -75,6 +75,8 @@ public class GameSessionController {
 
         ais = new ArrayList<>();
         ais.add(new PlayerData("1", 100, 120, 45, null, 0.1f, 2));
+        ais.add(new PlayerData("1", 100, 115, 30, null, 0.1f, 2));
+        ais.add(new PlayerData("1", 100, 105, 20, null, 0.1f, 2));
 
         balls = new ArrayList<>();
         balls.add(new BallData(false, 80, 45, null, 0.1f, 3));

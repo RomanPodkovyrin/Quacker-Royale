@@ -33,19 +33,46 @@ public class ChaseBall extends Job {
         // Theoretically if this job comes after avoiding balls
         // the balls array should already be sorted by the distance from the player
         // NOOOOOOOOOOO
+        this.ai = ai;
+        this.players = players;
+        this.balls = balls;
+        this.platform = platform;
+        sortObject(balls);
 
         logger.debug("Starting ChaseBall Job");
         for (Ball ball: balls){
-            if (!ball.isDangerous()) {
+            if (!ball.isDangerous() & isRunning()) {
                 logger.debug("Chasing the Balls");
                 Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
                 Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), neighbour);
-                ai.setXVelocity(vector.getX());
-                ai.setYVelocity(vector.getY());
+                if (MatrixMath.distanceAB(ai.getCoordinates(),neighbour) <= 1) {
+                    succeed();
+                    return;
+                }
+                ai.setXVelocity(vector.getX() / Math.abs(vector.getX()));
+                ai.setYVelocity(vector.getY() / Math.abs(vector.getX()));
+                return;
             } else {
                 logger.debug("Finishing ChaseBall with fail: nothing to chase");
+                ai.setXVelocity(0);
+                ai.setYVelocity(0);
+                fail();
+                return;
             }
         }
 
+    }
+
+    /**
+     * Sorts balls based on their distance from the AI player.
+     *
+     * @param objects The object to be sorted based on the distance from the AI
+     * @return returns an ArrayList of Balls starting with the closes one
+     */
+    private ArrayList<Ball> sortObject(ArrayList<Ball> objects) {
+
+        objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getXCoordinate(),o1.getYCoordinate()),ai.getCoordinates()))
+                .compareTo(MatrixMath.distanceAB(new Matrix(o2.getXCoordinate(),o2.getYCoordinate()),ai.getCoordinates())));
+        return objects;
     }
 }
