@@ -64,10 +64,10 @@ public class AI {
      */
     private ArrayList<Player> removePlayer(ArrayList<Player> players, Player player) {
         ArrayList<Player> newPlayers = new ArrayList<>();
-        for (int i = 0; i < players.size(); i++) {
-            Player currentPlayer = players.get(i);
-            if (!currentPlayer.getCharacterID().equals(player.getCharacterID())) {
-                newPlayers.add(currentPlayer);
+
+        for(Player p : players) {
+            if(!p.getCharacterID().equals(player.getCharacterID())) {
+                newPlayers.add(p);
             }
         }
 
@@ -79,8 +79,7 @@ public class AI {
      * on the current state of the game session.
      */
     public void action(){
-
-
+        logger.info("AI action called.");
         for (Pair<Player,ArrayList<Player>> pair: aiPlayers) {
             logger.info(pair.getKey().getCharacterID() + " Starting AI");
 

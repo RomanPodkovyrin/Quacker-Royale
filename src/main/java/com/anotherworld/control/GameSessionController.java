@@ -72,16 +72,17 @@ public class GameSessionController {
     private void initDataPool() {
         networkPlayers = new ArrayList<>();
         currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.1f, 4);
+
         ais = new ArrayList<>();
         ais.add(new PlayerData("1", 100, 120, 45, null, 0.1f, 4));
+
         balls = new ArrayList<>();
-        balls.add(new BallData(false, 80, 45, null, 1f, 6));
+        balls.add(new BallData(false, 80, 45, null, 0.1f, 6));
+
         platforms = new ArrayList<>();
-        
         platforms.add(new PlatformData(80, 45));
         
         walls = new ArrayList<>();
-        
         walls.add(new WallData(80, 45));
     }
 

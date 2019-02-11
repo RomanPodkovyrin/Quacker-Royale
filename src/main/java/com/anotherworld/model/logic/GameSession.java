@@ -50,23 +50,24 @@ public class GameSession {
         for(PlayerData data : players) this.players.add(new Player(data, false));
 
         this.ais = new ArrayList<>();
-        for(PlayerData data : ais) this.players.add(new Player(data, true));
+        for(PlayerData data : ais) this.ais.add(new Player(data, true));
 
-        allPlayers = new ArrayList<>();
-        allPlayers.addAll(this.ais);
-        allPlayers.addAll(this.players);
-        allPlayers.add(this.currentPlayer);
+        this.allPlayers = new ArrayList<>();
+        this.allPlayers.addAll(this.ais);
+        this.allPlayers.addAll(this.players);
+        this.allPlayers.add(this.currentPlayer);
 
         this.balls = new ArrayList<>();
-        for(int i = 0; i < balls.size(); i++) {
-            this.balls.add(new Ball(balls.get(i)));
-            balls.get(i).setVelocity(0, balls.get(i).getSpeed());
+        for(BallData data : balls) {
+            Ball newBall = new Ball(data);
+            newBall.setVelocity(0, newBall.getSpeed());
+            this.balls.add(newBall);
         }
 
         this.platform = new Platform(platform);
         this.wall = new Wall(wall);
 
-        this.ai = new AI(this.ais, allPlayers, this.balls, this.platform);
+        this.ai = new AI(this.ais, this.allPlayers, this.balls, this.platform);
 
         Physics.setUp();
     }
@@ -78,7 +79,7 @@ public class GameSession {
     public void update(){
         ai.action();
 
-        Physics.onCollision(this.balls, allPlayers, wall);
+        Physics.onCollision2ElectricBoogaloo(this.balls, this.allPlayers, this.wall);
 
         for(Player player : allPlayers){
             if(!platform.isOnPlatform(player)) player.setState(ObjectState.DEAD);
@@ -86,15 +87,9 @@ public class GameSession {
         }
 
         Physics.move(currentPlayer);
-        for (Player ai: ais) {
-            Physics.move(ai);
-        }
-        for (Player player: players) {
-            Physics.move(player);
-        }
-        for (Ball ball: balls) {
-            Physics.move(ball);
-        }
+        for (Player ai: ais) Physics.move(ai);
+        for (Player player: players) Physics.move(player);
+        for (Ball ball: balls) Physics.move(ball);
 
     }
 

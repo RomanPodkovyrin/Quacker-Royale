@@ -18,7 +18,7 @@ public class GameSessionData implements Serializable {
         return timeLeft;
     }
 
-    public long setTimeLeft(long timeLeft) {
+    public void setTimeLeft(long timeLeft) {
         this.timeLeft = timeLeft;
     }
 }

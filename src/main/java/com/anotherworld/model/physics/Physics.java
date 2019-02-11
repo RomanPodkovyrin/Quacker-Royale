@@ -30,7 +30,7 @@ public class Physics {
             property = new PropertyReader(FILE);
             Physics.friction = Float.parseFloat(property.getValue(FRICTION));
             Physics.rate = Float.parseFloat(property.getValue(RATE));
-        } catch (Exception exception) {
+        } catch (IOException exception) {
             logger.fatal("Cannot set up the properties of physics: "
                     + exception.getStackTrace());
         }
@@ -238,14 +238,15 @@ public class Physics {
      * onward, check if it matches the index of the ball. Then Player: Check if
      * the player is collided Check if the player is collided with another
      * player check if the player is collided with pitfall
-     * 
+     *
      * @param listOfBalls
      * @param listOfPlayers
      * @param wall
      */
     public static void onCollision(List<Ball> listOfBalls,
-            List<Player> listOfPlayers, Wall wall) {
-        List<Integer> collided = new ArrayList<Integer>();
+                                   List<Player> listOfPlayers,
+                                   Wall wall) {
+        List<Integer> collided = new ArrayList<>();
 
         int collidedBall = -1;
         for (int i = 0; i < listOfBalls.size(); i++) {
@@ -288,6 +289,53 @@ public class Physics {
                     collided(player, player2);
                 }
 
+            }
+        }
+    }
+
+    /**
+     * Function that checks and applies all the collisions within the game.
+     * First checks each ball for a collisions with:
+     *      (i)   a wall.
+     *      (ii)  a player.
+     *      (iii) another ball.
+     * Then checks a player for collisions with:
+     *      (i)   another player.
+     *      (ii)  outside of the platform.
+     * @param listOfBalls
+     * @param listOfPlayers
+     * @param wall
+     */
+    public static void onCollision2ElectricBoogaloo(List<Ball> listOfBalls,
+                                                    List<Player> listOfPlayers,
+                                                    Wall wall) {
+
+        for(Ball ball : listOfBalls) {
+
+            // Check if a ball has collided with the wall.
+            bouncedWall(ball, wall);
+
+            // Check if a ball has collided with a player.
+            for (Player player : listOfPlayers) {
+                if(checkCollision(ball, player)) {
+                    collided(ball, player);
+                }
+            }
+
+            // Check if a ball has collided with another ball.
+            for (Ball ballB : listOfBalls) {
+                if (!ball.equals(ballB) && checkCollision(ball, ballB)){
+                    collided(ball, ballB);
+                }
+            }
+        }
+
+        // Check if a player has collided with another player.
+        for (Player playerA : listOfPlayers) {
+            for (Player playerB : listOfPlayers) {
+                if(!playerA.equals(playerB) && checkCollision(playerA, playerB)) {
+                    collided(playerA, playerB);
+                }
             }
         }
     }
