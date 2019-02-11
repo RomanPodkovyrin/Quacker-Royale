@@ -1,5 +1,7 @@
 package com.anotherworld.settings;
 
+import com.anotherworld.audio.BackgroundMusic;
+import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.datapool.BallData;
@@ -36,6 +38,10 @@ public class GameSettings {
         this.numberofAIPlayers = numberOfAIPlayers;
         this.musicSound = musicSound;
         this.effectsSound = effectsSound;
+        BackgroundMusic music = new BackgroundMusic();
+        music.muteSound();
+
+        SoundEffects effect = new SoundEffects();
 
     }
 

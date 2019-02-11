@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -32,7 +33,7 @@ public class Selector extends Job {
      */
     public Selector(Queue<Job> jobs) {
         this.jobs = jobs;
-        this.originalJobs = jobs;
+        this.originalJobs = new LinkedList<>(jobs);
         if (jobs.isEmpty()) {
             isSuccess();
             return;
@@ -43,7 +44,7 @@ public class Selector extends Job {
 
     @Override
     public void reset() {
-        this.jobs = originalJobs;
+        this.jobs = new LinkedList<>(originalJobs);
         this.currentJob = jobs.poll();
 
     }
@@ -51,14 +52,14 @@ public class Selector extends Job {
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
 
-        logger.info("Starting Selector Job");
+        logger.debug("Starting Selector Job");
         if (currentJob.isSuccess()) {
             succeed();
-            logger.info("Finishing Selector Job with success");
+            logger.debug("Finishing Selector Job with success");
             return;
         } else if (jobs.isEmpty()) {
             fail();
-            logger.info("Finishing Selector Job with fail");
+            logger.debug("Finishing Selector Job with fail");
             return;
         } else if (currentJob.isFailure()) {
             currentJob = jobs.poll();

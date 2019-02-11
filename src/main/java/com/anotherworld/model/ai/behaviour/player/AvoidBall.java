@@ -49,7 +49,7 @@ public class AvoidBall extends Job {
         this.balls = balls;
         this.platform = platform;
 
-        logger.info("Starting the AvoidBall Job");
+        logger.debug("Starting the AvoidBall Job");
         aiDirection = ai.getVelocity();
         aiPosition = ai.getCoordinates();
         //sorting the balls based on distance
@@ -58,15 +58,15 @@ public class AvoidBall extends Job {
         //System.out.println("direction " + aiDirection + " position" + aiPosition + "Angle: " + ai.getAngle());
         if (isRunning() & ai.getHealth() == 0) {
             fail();
-            logger.info("Finishing AvoidBall Job with fail");
+            logger.debug("Finishing AvoidBall Job with fail");
             return;
         }
 
         if (!isAIsafe()) {
-            logger.info("Moving away from the Ball");
+            logger.debug("Moving away from the Ball");
             moveAway();
         } else {
-            logger.info("Finishing AvoidBall Job with success");
+            logger.debug("Finishing AvoidBall Job with success");
             succeed();
             return;
         }
@@ -95,7 +95,7 @@ public class AvoidBall extends Job {
 
         Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ballPosition, ballDirection),aiPosition);
         Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
-        ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipMatrix(vector)));
+        //ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipMatrix(vector)));
         //temp
         ai.setXVelocity(-vector.getX());
         ai.setYVelocity(-vector.getY());
@@ -130,7 +130,6 @@ public class AvoidBall extends Job {
         for (Ball ball: balls) {
             Matrix p = ball.getCoordinates();
             Matrix d = ball.getVelocity();
-            logger.debug("There are:");
 
             if (ball.isDangerous()) {
                 possibleDangerBalls.add(ball);

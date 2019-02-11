@@ -24,7 +24,7 @@ public class TestMain {
         PlayerData newPlayer = new PlayerData("Bob",10,5,5, ObjectState.IDLE, 0,5);
         Player player = new Player(newPlayer,true);
 
-        BallData newBall = new BallData(true,0,0,ObjectState.IDLE,0,10);
+        BallData newBall = new BallData(false,0,0,ObjectState.IDLE,0,10);
         Ball ball = new Ball(newBall);
         ArrayList<Ball> balls = new ArrayList<>();
         balls.add(ball);
@@ -34,8 +34,7 @@ public class TestMain {
         Queue<Job> ballAvoid = new LinkedList<Job>();
         //ballAvoid.add(new AvoidEdge());
         ballAvoid.add(new AvoidBall());
-        ballAvoid.add(new AvoidBall());
-        //ballAvoid.add(new ChaseBall());
+        ballAvoid.add(new ChaseBall());
         Job job  = new Repeat(new Sequence(ballAvoid));
 
         job.start();
