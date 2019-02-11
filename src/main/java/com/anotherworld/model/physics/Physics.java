@@ -158,6 +158,12 @@ public class Physics {
     public static void forceApplying(AbstractMovable a, Matrix velocity) {
         float xVelocity = a.getXVelocity() + velocity.getY();
         float yVelocity = a.getYVelocity() + velocity.getX();
+        if (Math.abs(xVelocity) > 2.0) {
+            xVelocity = 2.0f;
+        }
+        if (Math.abs(yVelocity) > 2.0) {
+            yVelocity = 2.0f;
+        }
         float angle = (float) Math.toDegrees(Math.atan2(xVelocity, yVelocity));
         if (angle < 0) {
             angle += 360;
@@ -179,49 +185,52 @@ public class Physics {
      */
     public static void collided(AbstractMovable objectA, AbstractMovable objectB) {
 
+        Matrix coordA = objectA.getCoordinates();
+        Matrix coordB = objectB.getCoordinates();
+
+        float xDifference = objectA.getXCoordinate() - objectB.getXCoordinate();
+        float yDifference = objectA.getYCoordinate() - objectB.getYCoordinate();
+        float distance = objectA.getRadius() + objectB.getRadius();
         if (objectA instanceof Ball) {
-            Ball ball = (Ball) objectA;
             if (objectB instanceof Player) {
-                Player player = (Player) objectB;
-                if (ball.isDangerous()) {
-                    int health = player.getHealth();
-                    player.setHealth(health - 30);
+                if (((Ball)objectA).isDangerous()) {
+                    int health = ((Player)objectB).getHealth();
+                    ((Player)objectB).setHealth(health - 30);
                     logger.debug("The health of a player is reduced.");
                 } else {
-                    ball.setDangerous(true);
+                    ((Ball)objectA).setDangerous(true);
                     logger.debug("The ball is toggled to dangerous Mode");
                 }
-                Matrix aVelo = objectA.getVelocity();
-                forceApplying(player, aVelo);
             }
-
-            float xDifference = ball.getXCoordinate()
-                    - objectB.getXCoordinate();
-            float yDifference = ball.getYCoordinate()
-                    - objectB.getYCoordinate();
-            if (xDifference > (ball.getRadius() + objectB.getRadius())) {
-                ball.setXVelocity(-ball.getXVelocity());
+            if (Math.abs(xDifference) < distance) {
+                objectA.setXVelocity(-objectA.getXVelocity());
                 logger.debug("The ball is bouncing on the X direction of the player.");
                 if (objectB instanceof Ball) {
                     objectB.setXVelocity(-objectB.getXVelocity());
                 }
             }
-            if (yDifference > (ball.getRadius() + objectB.getRadius())) {
-                ball.setYVelocity(-ball.getYVelocity());
+            if (Math.abs(yDifference) < distance) {
+                objectA.setYVelocity(-objectA.getYVelocity());
                 logger.debug("The ball is bouncing on the Y direction of the player.");
                 if (objectB instanceof Ball) {
                     objectB.setYVelocity(-objectB.getYVelocity());
                 }
             }
         }
-        if (objectA instanceof Player) {
-            Matrix aVelo = objectA.getVelocity();
-            Matrix bVelo = objectB.getVelocity();
-            forceApplying(objectA, bVelo);
-            forceApplying(objectB, aVelo);
+        if (xDifference < (distance) && xDifference < 0) {
+            objectB.setCoordinates(coordB.getX() + objectA.getRadius()/10,
+                    coordB.getY());
+        } else if (Math.abs(xDifference) < (distance)) {
+            objectB.setCoordinates(coordB.getX() - objectA.getRadius()/10,
+                    coordB.getY());
         }
-        Matrix coordA = objectA.getCoordinates();
-        Matrix coordB = objectB.getCoordinates();
+        if (yDifference < (distance) && yDifference < 0) {
+            objectB.setCoordinates(coordB.getX(),
+                    coordB.getY() + objectA.getRadius()/10);
+        }   else if (Math.abs(yDifference) < (distance)) {
+            objectB.setCoordinates(coordB.getX(),
+                    coordB.getY()-objectA.getRadius()/10);
+        }
     }
 
     /**
@@ -254,6 +263,7 @@ public class Physics {
                 }
                 Player victim = listOfPlayers.get(i);
                 if (checkCollision(ball, victim)) {
+                    logger.debug("ball collided with player");
                     collided(ball, victim);
                     collided.add(j);
                 }
