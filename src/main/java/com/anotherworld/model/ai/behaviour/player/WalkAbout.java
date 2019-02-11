@@ -28,7 +28,6 @@ public class WalkAbout extends Job {
     @Override
     public void start() {
         super.start();
-        setXY();
     }
     @Override
     public void reset() {
@@ -55,6 +54,10 @@ public class WalkAbout extends Job {
 
 
         logger.debug("Starting WalkAbout Job");
+
+        if (getState() == null){
+            setXY();
+        }
 
         if (isRunning() & ai.getHealth() == 0) {
             fail();
