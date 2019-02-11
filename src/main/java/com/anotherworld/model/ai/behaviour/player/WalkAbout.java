@@ -84,8 +84,8 @@ public class WalkAbout extends Job {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
         //ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipMatrix(vector)));
         //temp
-        ai.setXVelocity(vector.getX() / Math.abs(vector.getX()));
-        ai.setYVelocity(vector.getY() / Math.abs(vector.getY()));
+        ai.setXVelocity(vector.getX() / Math.abs(vector.getX()) * 0.1f  );
+        ai.setYVelocity(vector.getY() / Math.abs(vector.getY()) * 0.1f);
         logger.debug("Moving to " + destination);
     }
     private boolean isNear() {
