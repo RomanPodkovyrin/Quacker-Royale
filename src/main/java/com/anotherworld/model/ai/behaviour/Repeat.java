@@ -59,15 +59,15 @@ public class Repeat extends Job {
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
 
-        logger.info("Starting Repeat Job");
+        logger.debug("Starting Repeat Job");
 
         if (job.isFailure()) {
             fail();
-            logger.info("Finishing Repeat Job with fail");
+            logger.debug("Finishing Repeat Job with fail");
         } else if (job.isSuccess()) {
             if (times == 0) {
                 succeed();
-                logger.info("FinishingRepeat Job with success");
+                logger.debug("Finishing Repeat Job with success");
                 return;
             } else {
                 times--;
