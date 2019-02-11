@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Queue;
 
 /**
@@ -20,7 +21,7 @@ public class Sequence extends Job {
 
 
     private Queue<Job> jobs;
-    private Queue<Job> originalJobs;
+    private final Queue<Job> originalJobs;
     private Job currentJob;
 
     /**
@@ -30,35 +31,40 @@ public class Sequence extends Job {
      */
     public Sequence(Queue<Job> jobs) {
         this.jobs = jobs;
-        this.originalJobs = jobs;
+        this.originalJobs = new LinkedList<>(jobs);
         if (jobs.isEmpty()) {
             succeed();
             return;
         }
         this.currentJob = jobs.poll();
+        currentJob.start();
     }
 
     @Override
     public void reset() {
-        this.jobs = originalJobs;
+        this.jobs = new LinkedList<>(originalJobs);
         this.currentJob = jobs.poll();
+
+        currentJob.reset();
+        currentJob.start();
 
     }
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
-
-        logger.info("Starting Sequence Job");
+        logger.debug("Starting Sequence Job");
 
         if (jobs.isEmpty()) {
             succeed();
-            logger.info("Finishing Sequence Job with success");
+            logger.debug("Finishing Sequence Job with success");
             return;
         } else if (currentJob.isSuccess()) {
+            logger.debug("Sequence getting next job");
             currentJob = jobs.poll();
+            currentJob.start();
         } else if (currentJob.isFailure()) {
             fail();
-            logger.info("Finishing Sequence Job with fail");
+            logger.debug("Finishing Sequence Job with fail");
             return;
         }
 

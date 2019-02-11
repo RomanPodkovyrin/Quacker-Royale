@@ -1,5 +1,7 @@
 package com.anotherworld.settings;
 
+import com.anotherworld.audio.BackgroundMusic;
+import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.datapool.BallData;
@@ -23,6 +25,7 @@ public class GameSettings {
     private boolean effectsSound;
 
     private ArrayList<PlayerData> players;
+    private ArrayList<PlayerData> ai;
     private ArrayList<BallData> balls;
     private PlatformData platform;
     private WallData wall;
@@ -35,6 +38,10 @@ public class GameSettings {
         this.numberofAIPlayers = numberOfAIPlayers;
         this.musicSound = musicSound;
         this.effectsSound = effectsSound;
+        BackgroundMusic music = new BackgroundMusic();
+        music.muteSound();
+
+        SoundEffects effect = new SoundEffects();
 
     }
 
@@ -55,8 +62,12 @@ public class GameSettings {
                                         platform.getYCoordinate() + platform.getySize() - distanceFromBoarder);
 
             PlayerData newPlayer = new PlayerData(names.get(i),10,xRandom,yRandom, ObjectState.IDLE, 0,5);
-            newPlayer.setAngle(0);
-            players.add(newPlayer);
+            if (numberofAIPlayers > 0) {
+                ai.add(newPlayer);
+                numberofAIPlayers--;
+            } else {
+                players.add(newPlayer);
+            }
         }
 
     }
@@ -66,9 +77,8 @@ public class GameSettings {
         return min + r.nextFloat() * (max - min);
     }
 
-    private void createBalls() {
+    private void createBalls(int tempBallsNumber) {
         //need number of balls somewhere
-        int tempBallsNumber = 3;
 
         for (int i = 0; i < tempBallsNumber; i++) {
 
