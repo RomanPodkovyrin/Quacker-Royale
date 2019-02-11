@@ -104,7 +104,7 @@ public class GameSettings {
 
     private void createBalls(int numberOfBalls) {
         //need number of balls somewhere
-        
+
         for (int i = 0; i < numberOfBalls; i++) {
 
             int side = getRandom(0,3);
