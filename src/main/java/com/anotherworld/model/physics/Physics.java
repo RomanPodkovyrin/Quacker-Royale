@@ -1,6 +1,7 @@
 package com.anotherworld.model.physics;
 
 import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.AbstractMovable;
@@ -202,20 +203,10 @@ public class Physics {
                     logger.debug("The ball is toggled to dangerous Mode");
                 }
             }
-            if (Math.abs(xDifference) < distance) {
-                objectA.setXVelocity(-objectA.getXVelocity());
-                logger.debug("The ball is bouncing on the X direction of the player.");
-                if (objectB instanceof Ball) {
-                    objectB.setXVelocity(-objectB.getXVelocity());
-                }
-            }
-            if (Math.abs(yDifference) < distance) {
-                objectA.setYVelocity(-objectA.getYVelocity());
-                logger.debug("The ball is bouncing on the Y direction of the player.");
-                if (objectB instanceof Ball) {
-                    objectB.setYVelocity(-objectB.getYVelocity());
-                }
-            }
+            Matrix angleFinding = coordA.sub(coordB);
+            float angle = MatrixMath.vectorAngle(angleFinding);
+            objectA.setVelocity((float)(objectA.getSpeed()*Math.sin(angle)), (float)(objectA.getSpeed()*Math.cos(angle)));
+            objectA.setAngle(angle);
         }
         if (xDifference < (distance) && xDifference < 0) {
             objectB.setCoordinates(coordB.getX() + objectA.getRadius()/10,
