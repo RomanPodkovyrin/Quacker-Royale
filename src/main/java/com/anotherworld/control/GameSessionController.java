@@ -44,8 +44,8 @@ public class GameSessionController {
     private ArrayList<BallData> balls;
     private ArrayList<PlatformData> platforms;
     private ArrayList<WallData> walls;
-    
 
+    //TODO make a constructor for the real main (Main.java)
     public GameSessionController(View view) throws KeyListenerNotFoundException {
 
         initDataPool();

@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 import java.util.Random;
 
+import static com.anotherworld.tools.maths.Maths.getRandom;
+
 public class WalkAbout extends Job {
 
 
@@ -19,10 +21,12 @@ public class WalkAbout extends Job {
 
 
     private Matrix destination;
+    private boolean newDestination;
 
 
     public WalkAbout() {
         super();
+        newDestination = true;
     }
 
     @Override
@@ -55,9 +59,10 @@ public class WalkAbout extends Job {
 
         logger.debug("Starting WalkAbout Job");
 
-        //if (getState() == null){
+        if (newDestination){
             setXY();
-        //}
+            newDestination = false;
+        }
 
         if (isRunning() & ai.getHealth() == 0) {
             fail();
@@ -68,6 +73,7 @@ public class WalkAbout extends Job {
         if (isNear() & isRunning()) {
             logger.debug("Finished WalkAbout with success");
             succeed();
+            newDestination = true;
             return;
         } else if (isRunning()){
             move();
@@ -78,8 +84,8 @@ public class WalkAbout extends Job {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
         //ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipMatrix(vector)));
         //temp
-        ai.setXVelocity(vector.getX() / Math.abs(vector.getX()));
-        ai.setYVelocity(vector.getY() / Math.abs(vector.getY()));
+        ai.setXVelocity(vector.getX() / Math.abs(vector.getX()) * 0.1f  );
+        ai.setYVelocity(vector.getY() / Math.abs(vector.getY()) * 0.1f);
         logger.debug("Moving to " + destination);
     }
     private boolean isNear() {
@@ -87,10 +93,5 @@ public class WalkAbout extends Job {
         boolean y = ai.getYCoordinate() <= (ai.getRadius() + destination.getY()) & ai.getYCoordinate() >= (destination.getY() - ai.getRadius());
 
         return y & x;
-    }
-
-    private float getRandom(float min, float max) {
-        Random r = new Random();
-        return min + r.nextFloat() * (max - min);
     }
 }
