@@ -1,6 +1,7 @@
 package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlatformData;
@@ -71,15 +72,17 @@ public class GameSessionController {
     
     private void initDataPool() {
         networkPlayers = new ArrayList<>();
-        currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.1f, 2);
+        currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.2f, 2);
 
         ais = new ArrayList<>();
-        ais.add(new PlayerData("1", 100, 120, 45, null, 0.1f, 2));
-        ais.add(new PlayerData("1", 100, 115, 30, null, 0.1f, 2));
-        ais.add(new PlayerData("1", 100, 105, 20, null, 0.1f, 2));
+        ais.add(new PlayerData("Bob", 100, 120, 45, ObjectState.IDLE, 0.2f, 2));
+//        ais.add(new PlayerData("Alan", 100, 115, 30, null, 0.2f, 2));
+//        ais.add(new PlayerData("Jeff", 100, 105, 20, null, 0.2f, 2));
 
         balls = new ArrayList<>();
-        balls.add(new BallData(false, 80, 45, null, 0.1f, 3));
+        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
+        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
+        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
 
         platforms = new ArrayList<>();
         platforms.add(new PlatformData(80, 45));
@@ -94,7 +97,7 @@ public class GameSessionController {
             update();
 
             try{
-                Thread.sleep(1);
+                Thread.sleep(10);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }

@@ -58,19 +58,22 @@ public class AI {
 //
             Queue<Job> dangerOrSafeSelect = new LinkedList<>();
             Queue<Job> dangerSequence = new LinkedList<>();
-            dangerSequence.add(new AvoidEdge());
+//            dangerSequence.add(new AvoidEdge());
             dangerSequence.add(new AvoidBall());
-//
+//            dangerSequence.add(new ChasePlayer());
+            dangerSequence.add(new Inverter(new ChaseBall()));
+            dangerSequence.add(new WalkAbout());
+
             Queue<Job> safeSequence = new LinkedList<>();
-            safeSequence.add(new ChaseBall());
+//            safeSequence.add(new ChaseBall());
             safeSequence.add(new WalkAbout());
 
-            dangerOrSafeSelect.add(new Sequence(new LinkedList<>(dangerSequence)));
-            dangerOrSafeSelect.add(new Sequence(new LinkedList<>(safeSequence)));
+            dangerOrSafeSelect.add(new SequenceSuccess(new ArrayList<>(dangerSequence)));
+//            dangerOrSafeSelect.add(new SequenceSuccess(new ArrayList<>(safeSequence)));
 
             Job tempj = new Repeat((new WalkAbout()));
 
-            tempj = new Repeat(new SequenceSuccess(new LinkedList<>(dangerOrSafeSelect)));
+            tempj = new Repeat(new SequenceSuccess(new ArrayList<>(dangerOrSafeSelect)));
             System.out.println(safeSequence.toString());
 //              tempj = new Repeat((new Selector(new LinkedList<>(safeSequence))));
 //            tempj = new Repeat((new WalkAbout()));

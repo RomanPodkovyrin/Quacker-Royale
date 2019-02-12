@@ -19,52 +19,60 @@ public class Sequence extends Job {
     private static Logger logger = LogManager.getLogger(Sequence.class);
 
 
-    private Queue<Job> jobs;
-    private final Queue<Job> originalJobs;
-    private Job currentJob;
+    private ArrayList<Job> jobs;
+//    private final Queue<Job> originalJobs;
+//    private Job currentJob;
 
     /**
      * Initialise the Sequence Job.
      *
      * @param jobs The Queue of jobs to be executed
      */
-    public Sequence(Queue<Job> jobs) {
+    public Sequence(ArrayList<Job> jobs) {
         this.jobs = jobs;
-        this.originalJobs = new LinkedList<>(jobs);
-        if (jobs.isEmpty()) {
-            succeed();
-            return;
-        }
-        this.currentJob = jobs.poll();
-        currentJob.start();
+//        this.originalJobs = new LinkedList<>(jobs);
+//        if (jobs.isEmpty()) {
+//            succeed();
+//            return;
+//        }
+//        this.currentJob = jobs.poll();
+//        currentJob.start();
     }
 
     @Override
     public void reset() {
-        this.jobs = new LinkedList<>(originalJobs);
-        this.currentJob = jobs.poll();
-
-        currentJob.reset();
-        currentJob.start();
+//        this.jobs = new LinkedList<>(originalJobs);
+//        this.currentJob = jobs.poll();
+//
+//        currentJob.reset();
+//        currentJob.start();
 
     }
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
         logger.debug("Starting Sequence Job");
-
-
-        if (currentJob.isRunning()) {
-            currentJob.act(ai,players,balls,platform);
-        } else if (jobs.isEmpty()) {
-            succeed();
-            logger.debug("Finishing Sequence Job with success");
-            return;
-        } else if (currentJob.isSuccess() | currentJob.isFailure()) {
-            logger.debug("Sequence getting next job");
-            currentJob = jobs.poll();
+        for (Job currentJob: jobs) {
             currentJob.start();
+
+            if (currentJob.isRunning()) {
+                currentJob.act(ai,players,balls,platform);
+            } else if (jobs.isEmpty()) {
+                succeed();
+                logger.debug("Finishing Sequence Job with success");
+                return;
+            } else if (currentJob.isSuccess() | currentJob.isFailure()) {
+                logger.debug("Sequence getting next job");
+//                currentJob = jobs.poll();
+//                currentJob.start();
+            }
         }
+
+        succeed();
+        logger.debug("Finishing SequenceSuccess Job with success");
+        return;
+
+
 
 
 
@@ -73,6 +81,6 @@ public class Sequence extends Job {
     @Override
     public void start() {
         super.start();
-        this.currentJob.start();
+//        this.currentJob.start();
     }
 }
