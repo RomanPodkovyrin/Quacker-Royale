@@ -3,7 +3,9 @@ package com.anotherworld.tools.datapool;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.BallDisplayData;
 
-public class BallData extends MovableData implements BallDisplayData {
+import java.io.Serializable;
+
+public class BallData extends MovableData implements BallDisplayData, Serializable {
 
     boolean dangerous;
 

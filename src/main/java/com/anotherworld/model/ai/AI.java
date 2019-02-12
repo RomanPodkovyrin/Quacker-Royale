@@ -1,9 +1,7 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.ai.behaviour.Repeat;
-import com.anotherworld.model.ai.behaviour.player.AvoidBall;
-import com.anotherworld.model.ai.behaviour.player.WalkAbout;
+import com.anotherworld.model.ai.behaviour.*;
+import com.anotherworld.model.ai.behaviour.player.*;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
@@ -13,6 +11,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * @author Roman P
@@ -26,6 +26,7 @@ public class AI {
     private ArrayList<Pair<Player,ArrayList<Player>>> aiPlayers = new ArrayList<>();
     private ArrayList<Player> allPlayers;
     private ArrayList<Ball> balls;
+    private ArrayList<Job> jobs = new ArrayList<>();
     private Platform platform;
 
     private Matrix aiVector;
@@ -33,7 +34,7 @@ public class AI {
 
     // is this supposed to be shared between ais or should they get one of their own?
     //###############################################################################
-    private Job repeatJob = new Repeat((new WalkAbout()));
+    private Job repeatJob = new RepeatSuccess((new WalkAbout()));
 
 
     /**
@@ -49,6 +50,35 @@ public class AI {
 
         for (Player ai : ais) {
             aiPlayers.add(new Pair<>(ai, removePlayer(allPlayers,ai)));
+//
+//            Queue<Job> ballAvoid = new LinkedList<Job>();
+//            ballAvoid.add(new AvoidEdge());
+//            ballAvoid.add(new AvoidBall());
+//            ballAvoid.add(new ChaseBall());
+//
+            Queue<Job> dangerOrSafeSelect = new LinkedList<>();
+            Queue<Job> dangerSequence = new LinkedList<>();
+            dangerSequence.add(new AvoidEdge());
+            dangerSequence.add(new AvoidBall());
+//
+            Queue<Job> safeSequence = new LinkedList<>();
+            safeSequence.add(new ChaseBall());
+            safeSequence.add(new WalkAbout());
+
+            dangerOrSafeSelect.add(new Sequence(new LinkedList<>(dangerSequence)));
+            dangerOrSafeSelect.add(new Sequence(new LinkedList<>(safeSequence)));
+
+            Job tempj = new Repeat((new WalkAbout()));
+
+            tempj = new Repeat(new SequenceSuccess(new LinkedList<>(dangerOrSafeSelect)));
+            System.out.println(safeSequence.toString());
+//              tempj = new Repeat((new Selector(new LinkedList<>(safeSequence))));
+//            tempj = new Repeat((new WalkAbout()));
+                jobs.add(tempj);
+                tempj.start();
+
+
+
         }
 
         repeatJob.start();
@@ -64,10 +94,10 @@ public class AI {
      */
     private ArrayList<Player> removePlayer(ArrayList<Player> players, Player player) {
         ArrayList<Player> newPlayers = new ArrayList<>();
-        for (int i = 0; i < players.size(); i++) {
-            Player currentPlayer = players.get(i);
-            if (!currentPlayer.getCharacterID().equals(player.getCharacterID())) {
-                newPlayers.add(currentPlayer);
+
+        for(Player p : players) {
+            if(!p.getCharacterID().equals(player.getCharacterID())) {
+                newPlayers.add(p);
             }
         }
 
@@ -79,12 +109,13 @@ public class AI {
      * on the current state of the game session.
      */
     public void action(){
+        logger.info("AI action called.");
 
-
-        for (Pair<Player,ArrayList<Player>> pair: aiPlayers) {
+        for (int i = 0; i < aiPlayers.size();i++) {
+            Pair<Player,ArrayList<Player>> pair = aiPlayers.get(i);
             logger.info(pair.getKey().getCharacterID() + " Starting AI");
 
-            repeatJob.act(pair.getKey(), pair.getValue(),balls,platform);
+            jobs.get(i).act(pair.getKey(), pair.getValue(),balls,platform);
         }
 
     }

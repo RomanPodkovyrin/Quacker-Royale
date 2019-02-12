@@ -97,8 +97,8 @@ public class AvoidBall extends Job {
         Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
         //ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipMatrix(vector)));
         //temp
-        ai.setXVelocity(-vector.getX());
-        ai.setYVelocity(-vector.getY());
+        ai.setXVelocity(-vector.getX() / Math.abs(vector.getX()));
+        ai.setYVelocity(-vector.getY() / Math.abs(vector.getY()));
     }
 
     /**

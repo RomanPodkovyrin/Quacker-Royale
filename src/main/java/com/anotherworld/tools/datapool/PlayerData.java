@@ -3,12 +3,14 @@ package com.anotherworld.tools.datapool;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.PlayerDisplayData;
 
+import java.io.Serializable;
+
 /**
  * Represents the raw data of a player shared throughout the system.
  * @author Alfi S
  */
 
-public class PlayerData extends MovableData implements PlayerDisplayData {
+public class PlayerData extends MovableData implements PlayerDisplayData, Serializable {
 
     private String characterID;
     private int health;
