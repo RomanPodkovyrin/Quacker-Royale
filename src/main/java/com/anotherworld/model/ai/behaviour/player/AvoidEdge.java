@@ -26,7 +26,6 @@ public class AvoidEdge extends Job {
 
     @Override
     public void reset() {
-        reset();
     }
 
     @Override

@@ -11,12 +11,12 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Executes the given jobs in order until no more jobs left
+ * Executes the given jobs in order until one of then fails.
  * @author Roman
  */
-public class Sequence extends Job {
+public class SequenceSuccess extends Job {
 
-    private static Logger logger = LogManager.getLogger(Sequence.class);
+    private static Logger logger = LogManager.getLogger(SequenceSuccess.class);
 
 
     private Queue<Job> jobs;
@@ -24,11 +24,11 @@ public class Sequence extends Job {
     private Job currentJob;
 
     /**
-     * Initialise the Sequence Job.
+     * Initialise the SequenceSuccess Job.
      *
      * @param jobs The Queue of jobs to be executed
      */
-    public Sequence(Queue<Job> jobs) {
+    public SequenceSuccess(Queue<Job> jobs) {
         this.jobs = jobs;
         this.originalJobs = new LinkedList<>(jobs);
         if (jobs.isEmpty()) {
@@ -51,17 +51,21 @@ public class Sequence extends Job {
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
-        logger.debug("Starting Sequence Job");
+        logger.debug("Starting SequenceSuccess Job");
 
 
         if (currentJob.isRunning()) {
             currentJob.act(ai,players,balls,platform);
+        } else if (currentJob.isFailure()) {
+            fail();
+            logger.debug("Finishing SequenceSuccess Job with fail");
+            return;
         } else if (jobs.isEmpty()) {
             succeed();
-            logger.debug("Finishing Sequence Job with success");
+            logger.debug("Finishing SequenceSuccess Job with success");
             return;
-        } else if (currentJob.isSuccess() | currentJob.isFailure()) {
-            logger.debug("Sequence getting next job");
+        } else if (currentJob.isSuccess()) {
+            logger.debug("SequenceSuccess getting next job");
             currentJob = jobs.poll();
             currentJob.start();
         }
