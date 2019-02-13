@@ -11,6 +11,7 @@ import com.anotherworld.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Main {
@@ -23,8 +24,11 @@ public class Main {
         // Ask multi player or single player
 
         //set up single player
-        GameSettings settings = new GameSettings(4,3,6, true, true);
+        GameSettings settings = new GameSettings(4,3,4, true, true);
         settings.createGameFiles();
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        System.out.println(screenSize.getWidth() + " * " + screenSize.getHeight());
 
         ArrayList<PlayerData> ais = settings.getAi();
         ArrayList<PlayerData> players = settings.getPlayers();
@@ -35,7 +39,7 @@ public class Main {
         //GameSessionData session = settings.getGameSession();
 
         try {
-            View view = new View();
+            View view = new View((int )screenSize.getWidth(),(int) screenSize.getHeight());
 
             new GameSessionController(view,players.get(0), new ArrayList<PlayerData>(), ais,balls,platform,wall );
             //new GameSessionController(ais,players,balls,platform,wall, session);
