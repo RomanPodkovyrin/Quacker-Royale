@@ -45,7 +45,8 @@ public class Physics {
     /**
      * To make the object move
      * 
-     * @param object the object to move
+     * @param object
+     *            the object to move
      */
     public static void move(AbstractMovable object) {
         float newXCoordinate = object.getXCoordinate() + object.getXVelocity();
@@ -57,8 +58,10 @@ public class Physics {
     /**
      * To check collision of the objects.
      *
-     * @param a the first object to check
-     * @param b the second object to check
+     * @param a
+     *            the first object to check
+     * @param b
+     *            the second object to check
      */
     public static boolean checkCollision(AbstractMovable a, AbstractMovable b) {
         float xDistance = a.getXCoordinate() - b.getXCoordinate();
@@ -80,8 +83,10 @@ public class Physics {
      * 
      * If X of the ball is colliding X of the wall.
      * 
-     * @param a the ball to check for collisions
-     * @param wall the wall to check for collisions
+     * @param a
+     *            the ball to check for collisions
+     * @param wall
+     *            the wall to check for collisions
      */
     public static void bouncedWall(Ball a, Wall wall) {
         float circleR = a.getRadius();
@@ -125,7 +130,8 @@ public class Physics {
     /**
      * To make the object move
      *
-     * @param a the object to apply friction to
+     * @param a
+     *            the object to apply friction to
      */
     public static void applyFriction(AbstractMovable a) {
         float speed = a.getSpeed() * friction;
@@ -140,7 +146,8 @@ public class Physics {
     /**
      * To make the object accelerate
      *
-     * @param a the object to apply acceleration to.
+     * @param a
+     *            the object to apply acceleration to.
      */
     public static void accelerate(AbstractMovable a) {
         float speed = a.getSpeed() + rate;
@@ -155,8 +162,10 @@ public class Physics {
     /**
      * To apply force to the object (reduce out strength or increase force)
      * 
-     * @param a the object to which the force is applied
-     * @param velocity the force matrix
+     * @param a
+     *            the object to which the force is applied
+     * @param velocity
+     *            the force matrix
      */
     public static void forceApplying(AbstractMovable a, Matrix velocity) {
         float xVelocity = a.getXVelocity() + velocity.getY();
@@ -183,8 +192,10 @@ public class Physics {
     /**
      * Apply collision on an abstractMovables, and check for their instance.
      * 
-     * @param objectA the first object in the collision
-     * @param objectB the second object in the collision
+     * @param objectA
+     *            the first object in the collision
+     * @param objectB
+     *            the second object in the collision
      */
     public static void collided(AbstractMovable objectA, AbstractMovable objectB) {
 
@@ -197,26 +208,33 @@ public class Physics {
         if (objectA instanceof Ball) {
             Matrix angleFinding = coordA.sub(coordB);
             float angle = MatrixMath.vectorAngle(angleFinding);
-            objectA.setVelocity((float)(objectA.getSpeed()*Math.sin(angle)), (float)(objectA.getSpeed()*Math.cos(angle)));
+            objectA.setVelocity((float) (objectA.getSpeed() * Math.sin(angle)),
+                    (float) (objectA.getSpeed() * Math.cos(angle)));
             objectA.setAngle(angle);
         }
         if (xDifference < (distance) && xDifference < 0) {
-            objectB.setCoordinates(coordB.getX() + objectA.getRadius()/10,
+            objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 10,
                     coordB.getY());
         } else if (Math.abs(xDifference) < (distance)) {
-            objectB.setCoordinates(coordB.getX() - objectA.getRadius()/10,
+            objectB.setCoordinates(coordB.getX() - objectA.getRadius() / 10,
                     coordB.getY());
         }
         if (yDifference < (distance) && yDifference < 0) {
             objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() + objectA.getRadius()/10);
-        }   else if (Math.abs(yDifference) < (distance)) {
+                    coordB.getY() + objectA.getRadius() / 10);
+        } else if (Math.abs(yDifference) < (distance)) {
             objectB.setCoordinates(coordB.getX(),
                     coordB.getY() - objectA.getRadius() / 10);
         }
-        logger.debug((objectA instanceof Ball?"Ball":"Player")+" collided with"+(objectB instanceof Ball?"Ball":"Player"));
+        logger.debug((objectA instanceof Ball ? "Ball" : "Player")
+                + " collided with"
+                + (objectB instanceof Ball ? "Ball" : "Player"));
     }
-
+    /**
+     * This method allows player to have a slow speed to the current direction
+     * which looks like it is falling off the edge.
+     * @param player
+     */
     public static void falling(Player player) {
         float angle = player.getAngle();
         player.setVelocity((float) (fallingSpeed * Math.sin(angle)),
