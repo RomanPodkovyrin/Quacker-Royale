@@ -2,7 +2,6 @@ package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -22,18 +21,6 @@ import org.apache.logging.log4j.Logger;
 public class GameSessionController {
     
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
-
-    public static void main(String[] args) {
-//        try {
-//            View view = new View();
-//            new GameSessionController(view);
-//        } catch (KeyListenerNotFoundException ex) {
-//            logger.fatal(ex);
-//        } catch (RuntimeException ex) {
-//            logger.fatal(ex);
-//            ex.printStackTrace();
-//        }
-    }
 
     private GameSession session;
     private View view;
@@ -101,8 +88,10 @@ public class GameSessionController {
 
     private void mainLoop() {
         render();
+
         while(viewThread.isAlive()) {
-            update();
+            session.updatePlayer(keyListener.getKeyPresses());
+            session.update();
 
             try{
                 Thread.sleep(0);
@@ -111,13 +100,6 @@ public class GameSessionController {
             }
 
         }
-    }
-
-    private void update() {
-
-        // Send the input key presses to the model.
-        session.updatePlayer(keyListener.getKeyPresses());
-        session.update();
     }
 
     private void render() {
