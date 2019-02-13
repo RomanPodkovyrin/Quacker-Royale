@@ -1,88 +1,92 @@
 package com.anotherworld.model.ai.behaviour;
 
-import com.anotherworld.model.ai.behaviour.player.AvoidBall;
-import com.anotherworld.model.ai.behaviour.player.EmptyJobQueueException;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Executes the given jobs in order until one of them succeeds.
- * @author  Roman
+ * Executes the given jobs in order until one of then fails.
  *
+ * @author Roman
  */
-public class Selector extends Job {
+public class SequenceSuccess extends Job {
 
-    private static Logger logger = LogManager.getLogger(Selector.class);
+    private static Logger logger = LogManager.getLogger(SequenceSuccess.class);
 
 
-    private  ArrayList<Job> jobs;
-//    private Queue<Job> originalJobs;
+    private ArrayList<Job> jobs;
+//    private final Queue<Job> originalJobs;
 //    private Job currentJob;
 
     /**
-     * Initialise the Selector Job.
+     * Initialise the SequenceSuccess Job.
      *
-     * @param jobs The Queue of Jobs to be executed in the given order
+     * @param jobs The Queue of jobs to be executed
      */
-    public Selector(ArrayList<Job> jobs) {
+    public SequenceSuccess(ArrayList<Job> jobs) {
         this.jobs = jobs;
 //        this.originalJobs = new LinkedList<>(jobs);
-//        System.out.println(jobs.toString());
 //        if (jobs.isEmpty()) {
-//            //throw new EmptyJobQueueException ("Empty queue was passed into a Job");
 //            succeed();
 //            return;
 //        }
 //        this.currentJob = jobs.poll();
+//        currentJob.start();
     }
-
 
     @Override
     public void reset() {
 //        this.jobs = new LinkedList<>(originalJobs);
 //        this.currentJob = jobs.poll();
+//
+//        currentJob.reset();
+//        currentJob.start();
 
     }
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+        logger.debug("Starting SequenceSuccess Job");
 
-        
-
-        logger.debug("Starting Selector Job");
-        for (Job currentJob: jobs) {
+//        for (Job currentJob: jobs) {
+        Job currentJob = null;
+        for (int i = 0; i < jobs.size(); i++) {
+            logger.debug("Itteration " + i);
+             currentJob = jobs.get(i);
             currentJob.start();
 
-
             if (currentJob.isRunning()) {
+                logger.debug("Running current Job");
                 currentJob.act(ai, players, balls, platform);
             }
 
-            if (currentJob.isSuccess()) {
-                succeed();
-                logger.debug("Finishing Selector Job with success");
+            if (currentJob.isFailure()) {
+                fail();
+                logger.debug("Finishing SequenceSuccess Job with fail");
                 return;
             } else if (jobs.isEmpty()) {
-                fail();
-                logger.debug("Finishing Selector Job with fail");
+                succeed();
+                logger.debug("Finishing SequenceSuccess Job with success");
                 return;
-            } else if (currentJob.isFailure()) {
+            } else if (currentJob.isSuccess()) {
+                logger.debug("SequenceSuccess getting next job");
 //                currentJob = jobs.poll();
 //                currentJob.start();
-            } else {
-                logger.error("I DONT KNOW WHAT TO DO");
             }
         }
 
-        fail();
+        succeed();
+        logger.debug("Finishing SequenceSuccess Job with success");
+        return;
+
+
+
 
     }
 

@@ -26,7 +26,6 @@ public class AvoidEdge extends Job {
 
     @Override
     public void reset() {
-        reset();
     }
 
     @Override
@@ -36,11 +35,12 @@ public class AvoidEdge extends Job {
         this.balls = balls;
         this.platform = platform;
         float distanceFromEdge = ai.getRadius();
-
+        logger.debug("Running AvoidEdge");
 
         // get x y Matrix of the Platform
         //##############################################
-        Matrix platformCoordinates = new Matrix(platform.getXSize(),platform.getYSize()); // Change it
+        //TODO change it
+        Matrix platformCoordinates = new Matrix(platform.getXCoordinate(),platform.getYCoordinate()); // Change it
         // #############################################
         Random random = new Random();
 
@@ -50,29 +50,31 @@ public class AvoidEdge extends Job {
             // too close to x
             // go Left Or Right
 //            random.nextBoolean()?;
-            if ((place.getX() < 0 & isPointing(ai.getCoordinates(),0)) | (place.getX() > 0 & isPointing(ai.getCoordinates(),180))) {
-                ai.setYVelocity(0);
-                ai.setXVelocity(random.nextBoolean()? 1: -1);
-                succeed();
+            if ((place.getX() < platformCoordinates.getX() & isPointing(ai.getVelocity(),270)) | (place.getX() > platformCoordinates.getX() & isPointing(ai.getVelocity(),90))) {
+                ai.setXVelocity(0);
+                ai.setYVelocity(random.nextBoolean()? 1: -1);
+                fail();
+                logger.debug("Near the Edge");
                 return;
             }
 
 
 
-        }
-
-        if (Math.abs(place.getY()) >= platform.getYSize() - distanceFromEdge) {
+        } else if (Math.abs(place.getY()) >= platform.getYSize() - distanceFromEdge) {
             // too close to y
             // go Up or Down
-            if ((place.getY() < 0 & isPointing(ai.getCoordinates(),270)) | (place.getY() > 0 & isPointing(ai.getCoordinates(),90))) {
-                ai.setXVelocity(0);
-                ai.setYVelocity(random.nextBoolean() ? 1 : -1);
-                succeed();
+            if ((place.getY() < platformCoordinates.getY() & isPointing(ai.getVelocity(),0)) | (place.getY() > platformCoordinates.getY() & isPointing(ai.getVelocity(),180))) {
+                ai.setYVelocity(0);
+                ai.setXVelocity(random.nextBoolean() ? 1 : -1);
+                fail();
+                logger.debug("Near the Edge");
                 return;
             }
+        } else {
+            ai.setVelocity(0,0);
         }
-
-        fail();
+        logger.debug("Finishing AvoidEdge with success");
+        succeed();
 
     }
 

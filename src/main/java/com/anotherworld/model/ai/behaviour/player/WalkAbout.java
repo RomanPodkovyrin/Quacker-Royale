@@ -30,13 +30,10 @@ public class WalkAbout extends Job {
     }
 
     @Override
-    public void start() {
-        super.start();
-    }
-    @Override
     public void reset() {
         start();
         setXY();
+        newDestination = false;
     }
 
     private void setXY(){
@@ -77,6 +74,8 @@ public class WalkAbout extends Job {
             return;
         } else if (isRunning()){
             move();
+            fail();
+            logger.debug("Still walking");
         }
     }
 
@@ -84,8 +83,8 @@ public class WalkAbout extends Job {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
         //ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipMatrix(vector)));
         //temp
-        ai.setXVelocity(vector.getX() / Math.abs(vector.getX()) * 0.1f  );
-        ai.setYVelocity(vector.getY() / Math.abs(vector.getY()) * 0.1f);
+        ai.setXVelocity(vector.getX() / Math.abs(vector.getX()) * ai.getSpeed());
+        ai.setYVelocity(vector.getY() / Math.abs(vector.getY()) * ai.getSpeed());
         logger.debug("Moving to " + destination);
     }
     private boolean isNear() {

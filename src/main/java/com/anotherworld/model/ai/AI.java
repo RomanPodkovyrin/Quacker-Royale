@@ -1,9 +1,7 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.ai.behaviour.Repeat;
-import com.anotherworld.model.ai.behaviour.player.AvoidBall;
-import com.anotherworld.model.ai.behaviour.player.WalkAbout;
+import com.anotherworld.model.ai.behaviour.*;
+import com.anotherworld.model.ai.behaviour.player.*;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
@@ -15,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 
 /**
+ * This class sets up all the jobs for AIs and takes care of running AI when told to do so.
+ *
  * @author Roman P
  */
 public class AI {
@@ -26,6 +26,7 @@ public class AI {
     private ArrayList<Pair<Player,ArrayList<Player>>> aiPlayers = new ArrayList<>();
     private ArrayList<Player> allPlayers;
     private ArrayList<Ball> balls;
+    private ArrayList<Job> jobs = new ArrayList<>();
     private Platform platform;
 
     private Matrix aiVector;
@@ -33,10 +34,12 @@ public class AI {
 
     // is this supposed to be shared between ais or should they get one of their own?
     //###############################################################################
-    private Job repeatJob = new Repeat((new WalkAbout()));
+    private Job repeatJob = new RepeatSuccess((new WalkAbout()));
 
 
     /**
+     * Used to set up the AI handler.
+     *
      * @param ais All the ai players
      * @param allPlayers the rest of the allPlayers on the map(user and ai controlled)
      * @param balls all the balls on the map
@@ -49,6 +52,45 @@ public class AI {
 
         for (Player ai : ais) {
             aiPlayers.add(new Pair<>(ai, removePlayer(allPlayers,ai)));
+
+            // Set up of the survival instincts
+            ArrayList<Job> survival = new ArrayList<>();
+            // TODO ai gets very jittery when getting close to the edge
+//            survival.add(new AvoidEdge());
+            survival.add(new AvoidBall());
+            //survival.add(new AvoidPlayerCharge);
+
+
+            // Set up of the domination skills
+            ArrayList<Job> domination = new ArrayList<>();
+
+            ArrayList<Job> aim = new ArrayList<>();
+            domination.add(new ChaseBall());
+            // when the ball was chased need to aim it as well
+
+            // TODO chase the player gets the ai stuck
+//            aim.add(new ChasePlayer());
+//            aim.add(new Aim);
+//            aim.add(new Charge);
+
+
+            domination.add(new SequenceSuccess(aim));
+
+            // Set up of the Peaceful coexistence
+//            ArrayList<Job> peaceful = new ArrayList<>();
+//            peaceful.add(new WalkAbout());
+
+            ArrayList<Job> routines = new ArrayList<>();
+            routines.add(new SequenceSuccess(survival));
+            routines.add(new Selector(domination));
+            routines.add(new WalkAbout());
+
+            Job tempj = new Repeat(new SequenceSuccess(routines));
+            jobs.add(tempj);
+            tempj.start();
+
+
+
         }
 
         repeatJob.start();
@@ -65,8 +107,8 @@ public class AI {
     private ArrayList<Player> removePlayer(ArrayList<Player> players, Player player) {
         ArrayList<Player> newPlayers = new ArrayList<>();
 
-        for(Player p : players) {
-            if(!p.getCharacterID().equals(player.getCharacterID())) {
+        for (Player p : players) {
+            if (!p.getCharacterID().equals(player.getCharacterID())) {
                 newPlayers.add(p);
             }
         }
@@ -78,12 +120,14 @@ public class AI {
      * Is called when AI needs to make a decision based
      * on the current state of the game session.
      */
-    public void action(){
+    public void action() {
         logger.info("AI action called.");
-        for (Pair<Player,ArrayList<Player>> pair: aiPlayers) {
+
+        for (int i = 0; i < aiPlayers.size();i++) {
+            Pair<Player,ArrayList<Player>> pair = aiPlayers.get(i);
             logger.info(pair.getKey().getCharacterID() + " Starting AI");
 
-            repeatJob.act(pair.getKey(), pair.getValue(),balls,platform);
+            jobs.get(i).act(pair.getKey(), pair.getValue(),balls,platform);
         }
 
     }

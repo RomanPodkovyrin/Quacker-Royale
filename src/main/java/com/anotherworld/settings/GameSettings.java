@@ -30,25 +30,27 @@ public class GameSettings {
     private int numberofAIPlayers;
     private boolean musicSound;
     private boolean effectsSound;
+    private int numberOfBall;
 
-    private ArrayList<PlayerData> players;
-    private ArrayList<PlayerData> ai;
-    private ArrayList<BallData> balls;
+    private ArrayList<PlayerData> players = new ArrayList<>();
+    private ArrayList<PlayerData> ai = new ArrayList<>();
+    private ArrayList<BallData> balls = new ArrayList<>();
     private PlatformData platform;
     private WallData wall;
 
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser" ));
 
 
-    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, boolean musicSound, boolean effectsSound) {
+    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls, boolean musicSound, boolean effectsSound) {
         this.numberOfPlayers = numberOfPlayers;
         this.numberofAIPlayers = numberOfAIPlayers;
+        this.numberOfBall = numberOfBalls;
         this.musicSound = musicSound;
         this.effectsSound = effectsSound;
-        BackgroundMusic music = new BackgroundMusic();
-        music.muteSound();
+//        BackgroundMusic music = new BackgroundMusic();
+//        music.muteSound();
 
-        SoundEffects effect = new SoundEffects();
+//        SoundEffects effect = new SoundEffects();
 
     }
 
@@ -61,14 +63,14 @@ public class GameSettings {
 
     private void createPlayers(int numberOfPlayers, int numberofAIPlayers) {
         for (int i = 0; i < numberOfPlayers;i ++ ) {
-            float distanceFromBoarder = 10;
+            float distanceFromBoarder = 5;
             float xRandom = getRandom(platform.getXCoordinate() - platform.getxSize() + distanceFromBoarder,
                                         platform.getXCoordinate() + platform.getxSize() - distanceFromBoarder);
 
             float yRandom = getRandom(platform.getYCoordinate() - platform.getySize() + distanceFromBoarder,
                                         platform.getYCoordinate() + platform.getySize() - distanceFromBoarder);
 
-            PlayerData newPlayer = new PlayerData(names.get(i),10,xRandom,yRandom, ObjectState.IDLE, 0,5);
+            PlayerData newPlayer = new PlayerData(names.get(i),10,xRandom,yRandom, ObjectState.IDLE, 0.2f,2);
             if (numberofAIPlayers > 0) {
                 ai.add(newPlayer);
                 numberofAIPlayers--;
@@ -80,7 +82,12 @@ public class GameSettings {
     }
 
 
-
+    public void createGameFiles () {
+        createPlatform();
+        createWall();
+        createPlayers(numberOfPlayers,numberofAIPlayers);
+        createBalls(numberOfBall);
+    }
 
     public ArrayList<PlayerData> getPlayers() {
         return players;
@@ -114,7 +121,7 @@ public class GameSettings {
             float yMin = 0;
             float yMax = 0;
 
-            float ballR = 2;
+            float ballR = 3;
             switch (side) {
                 case 0: // Left side
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballR;
@@ -151,7 +158,7 @@ public class GameSettings {
 
             // set random location with random direction
             // probably towards the middle
-            BallData newBall = new BallData(false,getRandom(xMin,xMax),getRandom(yMin,yMax),ObjectState.IDLE,0,10);
+            BallData newBall = new BallData(false,getRandom(xMin,xMax),getRandom(yMin,yMax),ObjectState.IDLE,0.5f,3);
             balls.add(newBall);
         }
 
