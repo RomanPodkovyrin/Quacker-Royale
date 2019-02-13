@@ -1,7 +1,7 @@
 package com.anotherworld.view;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL45.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import com.anotherworld.tools.datapool.WallData;
@@ -42,9 +42,9 @@ public class View implements Runnable {
     
     private volatile KeyListener keyListener;
 
-    private int height = 630;
+    private int height;
 
-    private int width  = 1120;
+    private int width;
     
     private Queue<ViewEvent> eventQueue;
 
@@ -116,7 +116,7 @@ public class View implements Runnable {
         logger.debug("Creating window");
         window = glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL);
 
-        glfwSetWindowPos(window, width / 4 , height / 4);
+        glfwSetWindowPos(window, width / 4, height / 4);
         
         if (window == null) {
             logger.fatal("Unable to create game window");

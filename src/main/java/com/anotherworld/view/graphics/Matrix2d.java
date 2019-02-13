@@ -5,6 +5,7 @@ package com.anotherworld.view.graphics;
  * @author Jake Stewart
  *
  */
+@Deprecated
 public class Matrix2d {
 
     private float[] value;

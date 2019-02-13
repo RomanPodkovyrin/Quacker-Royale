@@ -79,11 +79,7 @@ public class GameSessionController {
     
     private void initDataPool() {
         networkPlayers = new ArrayList<>();
-<<<<<<< HEAD
         currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.5f, 2);
-=======
-        currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.2f, 2);
->>>>>>> master
 
         ais = new ArrayList<>();
         ais.add(new PlayerData("Bob", 100, 120, 45, ObjectState.IDLE, 0.2f, 2));

@@ -38,7 +38,7 @@ sourceSets {
 }
 
 // Declares the location of the main method
-mainClassName = 'com.anotherworld.control.GameSessionController'
+mainClassName = 'com.anotherworld.control.Main'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
