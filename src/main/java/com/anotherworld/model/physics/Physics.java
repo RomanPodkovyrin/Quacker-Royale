@@ -2,7 +2,6 @@ package com.anotherworld.model.physics;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
-import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
@@ -12,7 +11,6 @@ import com.anotherworld.tools.PropertyReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +19,7 @@ public class Physics {
     private static Logger logger = LogManager.getLogger(Physics.class);
     private static final String FRICTION = "FRICTION";
     private static final String RATE = "ACCELERATE";
+    private static final String FALLING = "FALLINGSPEED";
     private static final String FILE = "physics.properties";
     static float friction;
     static float rate;
@@ -36,6 +35,7 @@ public class Physics {
             property = new PropertyReader(FILE);
             Physics.friction = Float.parseFloat(property.getValue(FRICTION));
             Physics.rate = Float.parseFloat(property.getValue(RATE));
+            Physics.fallingSpeed = Float.parseFloat(property.getValue(FALLING));
         } catch (IOException exception) {
             logger.fatal("Cannot set up the properties of physics: "
                     + exception.getStackTrace());
@@ -80,7 +80,6 @@ public class Physics {
      * Y of the wall (check if the value of north of the ball is lesser than
      * value of north of the wall, else check if the value of south of the ball
      * is greater than value of south of the wall)
-     * 
      * If X of the ball is colliding X of the wall.
      * 
      * @param a
