@@ -21,9 +21,10 @@ public class Physics {
     private static final String FRICTION = "FRICTION";
     private static final String RATE = "ACCELERATE";
     private static final String FILE = "physics.properties";
+    private static final String FALLING = "FALLINGSPEED";
     static float friction;
     static float rate;
-
+    static float fallingSpeed;
     /**
      * This method is to setup the attributes of the Physics class such as
      * friction and rate
@@ -34,6 +35,7 @@ public class Physics {
             property = new PropertyReader(FILE);
             Physics.friction = Float.parseFloat(property.getValue(FRICTION));
             Physics.rate = Float.parseFloat(property.getValue(RATE));
+            Physics.fallingSpeed = Float.parseFloat(property.getValue(FALLING));
         } catch (IOException exception) {
             logger.fatal("Cannot set up the properties of physics: "
                     + exception.getStackTrace());
@@ -205,20 +207,12 @@ public class Physics {
         float distance = objectA.getRadius() + objectB.getRadius();
         if (objectA instanceof Ball) {
             if (objectB instanceof Player) {
-                if (((Ball) objectA).isDangerous()) {
-                    int health = ((Player) objectB).getHealth();
-                    ((Player) objectB).setHealth(health - 30);
-                    logger.debug("The health of a player is reduced.");
-                } else {
-                    ((Ball) objectA).setDangerous(true);
-                    logger.debug("The ball is toggled to dangerous Mode");
-                }
+                
             }
             Matrix angleFinding = coordA.sub(coordB);
             float angle = MatrixMath.vectorAngle(angleFinding);
             objectA.setVelocity((float) (objectA.getSpeed() * Math.sin(angle)),
                     (float) (objectA.getSpeed() * Math.cos(angle)));
-            objectA.setAngle(angle);
 
             if (objectB instanceof Ball) {
                 angleFinding = coordB.sub(coordA);
@@ -226,7 +220,6 @@ public class Physics {
                 objectB.setVelocity(
                         (float) (objectB.getSpeed() * Math.sin(angle)),
                         (float) (objectB.getSpeed() * Math.cos(angle)));
-                objectB.setAngle(angle);
             }
         }
         if (xDifference < (distance) && xDifference < 0) {
@@ -243,6 +236,13 @@ public class Physics {
             objectB.setCoordinates(coordB.getX(),
                     coordB.getY() - objectA.getRadius() / 10);
         }
+    }
+    
+    public static void falling(Player player){
+            float angle = player.getAngle();
+            player.setVelocity(
+                    (float) (fallingSpeed * Math.sin(angle)),
+                    (float) (fallingSpeed * Math.cos(angle)));
     }
 
     /**
@@ -289,6 +289,7 @@ public class Physics {
         }
 
         for (int i = 0; i < listOfPlayers.size(); i++) {
+            
             if (collided.contains(i)) {
                 continue;
             }
