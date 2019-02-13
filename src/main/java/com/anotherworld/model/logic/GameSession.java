@@ -9,14 +9,19 @@ import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
-import java.util.List;
+
 
 /**
  * A class that models a game session.
  * @author Alfi S.
  */
 public class GameSession {
+
+    private static Logger logger = LogManager.getLogger(GameSession.class);
 
     private Player currentPlayer;
     private ArrayList<Player> players;
@@ -71,7 +76,6 @@ public class GameSession {
      *      (ii)  outside of the platform.
      */
     private void collisionCheck() {
-
         for(Ball ball : this.balls) {
 
             // Check if a ball has collided with the wall.
@@ -113,6 +117,7 @@ public class GameSession {
 
         for(Player player : allPlayers){
             if(!platform.isOnPlatform(player)) player.setState(ObjectState.DEAD);
+            logger.debug(player.getCharacterID() + "'s state is set to DEAD");
             //TODO: If the player object turns out to not be needed at the end just delete it.
         }
 
