@@ -12,15 +12,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
-/**
- * Job class which makes the player chase the neutral ball.
- * @author roman
- */
-public class ChaseBall extends Job {
+public class ChasePlayer extends Job {
 
-    private static Logger logger = LogManager.getLogger(ChaseBall.class);
+    private static Logger logger = LogManager.getLogger(ChasePlayer.class);
 
-    public  ChaseBall() {
+    public  ChasePlayer() {
         super();
     }
     @Override
@@ -37,33 +33,34 @@ public class ChaseBall extends Job {
         this.players = players;
         this.balls = balls;
         this.platform = platform;
-        sortObject(balls);
+        players = sortObject(players);
 
-        logger.debug("Starting ChaseBall Job");
-        for (Ball ball: balls){
-            if (!ball.isDangerous() & isRunning()) {
-                logger.debug("Chasing the Ball");
-                Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
-                Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), neighbour);
-                if (MatrixMath.distanceAB(ai.getCoordinates(),neighbour) <= ball.getRadius() + ai.getRadius()) {
+        logger.debug("Starting ChasePlayer Job");
+        for (Player player: players){
+            if (isRunning()) {
+                logger.debug("Chasing the Player");
+                Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), player.getCoordinates());
+                if (MatrixMath.distanceAB(ai.getCoordinates(),player.getCoordinates()) <= player.getRadius() + ai.getRadius() + 15) {
                     succeed();
                     return;
                 }
                 if (vector.getX() != 0) {
-                    ai.setXVelocity((vector.getX() / Math.abs(vector.getX())) * 0.1f);
+                    ai.setXVelocity((vector.getX() / Math.abs(vector.getX())) * 0.2f);
                 }
                 if (vector.getY() != 0) {
-                    ai.setYVelocity((vector.getY() / Math.abs(vector.getY())) * 0.1f);
+                    ai.setYVelocity((vector.getY() / Math.abs(vector.getY())) * 0.2f);
                 }
+                fail();
                 return;
             } else {
-                logger.debug("Finishing ChaseBall with fail: nothing to chase");
+                logger.debug("Finishing ChasePlayer with fail: nothing to chase");
                 ai.setXVelocity(0);
                 ai.setYVelocity(0);
                 fail();
                 return;
             }
         }
+
     }
 
     /**
@@ -72,10 +69,11 @@ public class ChaseBall extends Job {
      * @param objects The object to be sorted based on the distance from the AI
      * @return returns an ArrayList of Balls starting with the closes one
      */
-    private ArrayList<Ball> sortObject(ArrayList<Ball> objects) {
+    private ArrayList<Player> sortObject(ArrayList<Player> objects) {
 
         objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getXCoordinate(),o1.getYCoordinate()),ai.getCoordinates()))
                 .compareTo(MatrixMath.distanceAB(new Matrix(o2.getXCoordinate(),o2.getYCoordinate()),ai.getCoordinates())));
         return objects;
     }
 }
+

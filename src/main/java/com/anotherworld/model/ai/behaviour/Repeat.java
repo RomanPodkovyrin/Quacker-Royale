@@ -59,6 +59,11 @@ public class Repeat extends Job{
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
 
         logger.debug("Starting Repeat Job");
+
+        if (job.isRunning()) {
+            job.act(ai, players, balls, platform);
+        }
+
         if (job.isFailure() | job.isSuccess()) {
             if (times == 0) {
                 logger.debug("Finishing Repeat Job with success");
@@ -70,10 +75,9 @@ public class Repeat extends Job{
                 job.start();
             }
         }
+        logger.debug("Repeat the job again");
 
-        if (job.isRunning()) {
-            job.act(ai, players, balls, platform);
-        }
+
 
     }
 

@@ -42,9 +42,9 @@ public class View implements Runnable {
     
     private volatile KeyListener keyListener;
 
-    private int height;
+    private int height = 630;
 
-    private int width;
+    private int width  = 1120;
     
     private Queue<ViewEvent> eventQueue;
 
