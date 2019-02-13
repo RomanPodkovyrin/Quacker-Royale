@@ -32,7 +32,7 @@ public class Main {
         //GameSessionData session = settings.getGameSession();
 
         try {
-            View view = new View();
+            View view = new View(800, 450);
 
             new GameSessionController(view);
             //new GameSessionController(ais,players,balls,platform,wall, session);

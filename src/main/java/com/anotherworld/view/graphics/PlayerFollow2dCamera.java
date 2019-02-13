@@ -63,9 +63,9 @@ public class PlayerFollow2dCamera implements Camera {
         x /= Math.max(i, 1);
         x -= (width / 2);
         if (x > currentX) {
-            currentX += Math.min(Math.abs(x - currentX), 0.1f);
+            currentX += Math.min(Math.abs(x - currentX), 0.2f);
         } else {
-            currentX -= Math.min(Math.abs(x - currentX), 0.1f);
+            currentX -= Math.min(Math.abs(x - currentX), 0.2f);
         }
         logger.debug("Camera x is " + currentX);
         return currentX;
@@ -84,9 +84,9 @@ public class PlayerFollow2dCamera implements Camera {
         y /= Math.max(i, 1);
         y -= (height / 2);
         if (y > currentY) {
-            currentY += Math.min(Math.abs(y - currentY), 0.1f);
+            currentY += Math.min(Math.abs(y - currentY), 0.2f);
         } else {
-            currentY -= Math.min(Math.abs(y - currentY), 0.1f);
+            currentY -= Math.min(Math.abs(y - currentY), 0.2f);
         }
         logger.debug("Camera y is " + currentY);
         return currentY;

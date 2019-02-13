@@ -71,7 +71,7 @@ public class GameSessionController {
     
     private void initDataPool() {
         networkPlayers = new ArrayList<>();
-        currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.1f, 2);
+        currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.5f, 2);
 
         ais = new ArrayList<>();
         ais.add(new PlayerData("1", 100, 120, 45, null, 0.1f, 2));
@@ -112,7 +112,7 @@ public class GameSessionController {
     private void render() {
         ArrayList<PlayerData> players = new ArrayList<>();
         players.addAll(ais);
-        players.addAll(players);
+        players.addAll(networkPlayers);
         players.add(currentPlayer);
         view.updateGameObjects(players, balls, platforms, walls);
     }

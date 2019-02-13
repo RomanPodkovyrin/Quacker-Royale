@@ -1,10 +1,6 @@
 package com.anotherworld.view.graphics;
 
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL11.*;
 
 import com.anotherworld.view.data.DisplayObject;
 
@@ -57,11 +53,12 @@ public class Scene {
      * @param a The object to draw
      */
     private void drawObject(DisplayObject obj) {
-        glBegin(obj.getDisplayType());
+        //glBegin(obj.getDisplayType());
+        glBegin(GL_LINE_LOOP);
         glColor3f(obj.getColourR(), obj.getColourG(), obj.getColourB());
         for (int j = 0; j < obj.getPoints().getN(); j++) {
-            glVertex2f(obj.getPoints().getValue(0, j) / obj.getPoints().getValue(2, j),
-                    obj.getPoints().getValue(1, j) / obj.getPoints().getValue(2, j));
+            glVertex4f(obj.getPoints().getValue(0, j),
+                    obj.getPoints().getValue(1, j), 0f, obj.getPoints().getValue(2, j));
         }
         glEnd();
     }
