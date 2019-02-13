@@ -25,6 +25,7 @@ public class PlatformData implements RectangleDisplayData, Serializable {
         this.yCoordinate = y;
     }
 
+
     public int getStage() {
         return stage;
     }

@@ -42,19 +42,19 @@ public class View implements Runnable {
     
     private volatile KeyListener keyListener;
 
-    private int height;
+    private int height = 630;
 
-    private int width;
+    private int width  = 1120;
     
     private Queue<ViewEvent> eventQueue;
 
     /**
      * Creates the View object initialising it's values.
      */
-    public View() {
+    public View(int width, int height) {
         logger.info("Creating view");
-        height = 630;
-        width = 1120;
+        this.height = height;
+        this.width = width;
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
     }
