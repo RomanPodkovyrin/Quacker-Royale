@@ -50,10 +50,10 @@ public class ChaseBall extends Job {
                     return;
                 }
                 if (vector.getX() != 0) {
-                    ai.setXVelocity((vector.getX() / Math.abs(vector.getX())) * 0.1f);
+                    ai.setXVelocity((vector.getX() / Math.abs(vector.getX())) * ai.getSpeed());
                 }
                 if (vector.getY() != 0) {
-                    ai.setYVelocity((vector.getY() / Math.abs(vector.getY())) * 0.1f);
+                    ai.setYVelocity((vector.getY() / Math.abs(vector.getY())) * ai.getSpeed());
                 }
                 return;
             } else {

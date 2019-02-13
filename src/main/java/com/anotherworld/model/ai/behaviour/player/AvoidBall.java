@@ -104,8 +104,8 @@ public class AvoidBall extends Job {
         //temp
         logger.debug("Going "+ vector);
         logger.debug("AI location " + aiPosition);
-        ai.setXVelocity((-vector.getX() / Math.abs(vector.getX())) * 0.1f);
-        ai.setYVelocity((-vector.getY() / Math.abs(vector.getY())) * 0.1f);
+        ai.setXVelocity((-vector.getX() / Math.abs(vector.getX())) * ai.getSpeed());
+        ai.setYVelocity((-vector.getY() / Math.abs(vector.getY())) * ai.getSpeed());
     }
 
     /**
