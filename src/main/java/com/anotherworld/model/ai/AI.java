@@ -11,10 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 /**
+ * This class sets up all the jobs for AIs and takes care of running AI when told to do so.
+ *
  * @author Roman P
  */
 public class AI {
@@ -38,6 +38,8 @@ public class AI {
 
 
     /**
+     * Used to set up the AI handler.
+     *
      * @param ais All the ai players
      * @param allPlayers the rest of the allPlayers on the map(user and ai controlled)
      * @param balls all the balls on the map
@@ -50,35 +52,42 @@ public class AI {
 
         for (Player ai : ais) {
             aiPlayers.add(new Pair<>(ai, removePlayer(allPlayers,ai)));
-//
-//            Queue<Job> ballAvoid = new LinkedList<Job>();
-//            ballAvoid.add(new AvoidEdge());
-//            ballAvoid.add(new AvoidBall());
-//            ballAvoid.add(new ChaseBall());
-//
-            Queue<Job> dangerOrSafeSelect = new LinkedList<>();
-            Queue<Job> dangerSequence = new LinkedList<>();
-//            dangerSequence.add(new AvoidEdge());
-            dangerSequence.add(new AvoidBall());
-//            dangerSequence.add(new ChasePlayer());
-            dangerSequence.add(new Inverter(new ChaseBall()));
-            dangerSequence.add(new WalkAbout());
 
-            Queue<Job> safeSequence = new LinkedList<>();
-//            safeSequence.add(new ChaseBall());
-            safeSequence.add(new WalkAbout());
+            // Set up of the survival instincts
+            ArrayList<Job> survival = new ArrayList<>();
+            // TODO ai gets very jittery when getting close to the edge
+//            survival.add(new AvoidEdge());
+            survival.add(new AvoidBall());
+            //survival.add(new AvoidPlayerCharge);
 
-            dangerOrSafeSelect.add(new SequenceSuccess(new ArrayList<>(dangerSequence)));
-//            dangerOrSafeSelect.add(new SequenceSuccess(new ArrayList<>(safeSequence)));
 
-            Job tempj = new Repeat((new WalkAbout()));
+            // Set up of the domination skills
+            ArrayList<Job> domination = new ArrayList<>();
 
-            tempj = new Repeat(new SequenceSuccess(new ArrayList<>(dangerOrSafeSelect)));
-            System.out.println(safeSequence.toString());
-//              tempj = new Repeat((new Selector(new LinkedList<>(safeSequence))));
-//            tempj = new Repeat((new WalkAbout()));
-                jobs.add(tempj);
-                tempj.start();
+            ArrayList<Job> aim = new ArrayList<>();
+            domination.add(new ChaseBall());
+            // when the ball was chased need to aim it as well
+
+            // TODO chase the player gets the ai stuck
+//            aim.add(new ChasePlayer());
+//            aim.add(new Aim);
+//            aim.add(new Charge);
+
+
+            domination.add(new SequenceSuccess(aim));
+
+            // Set up of the Peaceful coexistence
+//            ArrayList<Job> peaceful = new ArrayList<>();
+//            peaceful.add(new WalkAbout());
+
+            ArrayList<Job> routines = new ArrayList<>();
+            routines.add(new SequenceSuccess(survival));
+            routines.add(new Selector(domination));
+            routines.add(new WalkAbout());
+
+            Job tempj = new Repeat(new SequenceSuccess(routines));
+            jobs.add(tempj);
+            tempj.start();
 
 
 
@@ -98,8 +107,8 @@ public class AI {
     private ArrayList<Player> removePlayer(ArrayList<Player> players, Player player) {
         ArrayList<Player> newPlayers = new ArrayList<>();
 
-        for(Player p : players) {
-            if(!p.getCharacterID().equals(player.getCharacterID())) {
+        for (Player p : players) {
+            if (!p.getCharacterID().equals(player.getCharacterID())) {
                 newPlayers.add(p);
             }
         }
@@ -111,7 +120,7 @@ public class AI {
      * Is called when AI needs to make a decision based
      * on the current state of the game session.
      */
-    public void action(){
+    public void action() {
         logger.info("AI action called.");
 
         for (int i = 0; i < aiPlayers.size();i++) {
