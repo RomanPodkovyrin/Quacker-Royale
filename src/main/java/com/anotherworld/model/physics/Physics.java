@@ -25,6 +25,7 @@ public class Physics {
     static float friction;
     static float rate;
     static float fallingSpeed;
+
     /**
      * This method is to setup the attributes of the Physics class such as
      * friction and rate
@@ -207,7 +208,7 @@ public class Physics {
         float distance = objectA.getRadius() + objectB.getRadius();
         if (objectA instanceof Ball) {
             if (objectB instanceof Player) {
-                
+               
             }
             Matrix angleFinding = coordA.sub(coordB);
             float angle = MatrixMath.vectorAngle(angleFinding);
@@ -236,13 +237,13 @@ public class Physics {
             objectB.setCoordinates(coordB.getX(),
                     coordB.getY() - objectA.getRadius() / 10);
         }
+        logger.debug((objectA instanceof Ball?"Ball":"Player")+" collided with"+(objectB instanceof Ball?"Ball":"Player"));
     }
-    
-    public static void falling(Player player){
-            float angle = player.getAngle();
-            player.setVelocity(
-                    (float) (fallingSpeed * Math.sin(angle)),
-                    (float) (fallingSpeed * Math.cos(angle)));
+
+    public static void falling(Player player) {
+        float angle = player.getAngle();
+        player.setVelocity((float) (fallingSpeed * Math.sin(angle)),
+                (float) (fallingSpeed * Math.cos(angle)));
     }
 
     /**
@@ -289,7 +290,7 @@ public class Physics {
         }
 
         for (int i = 0; i < listOfPlayers.size(); i++) {
-            
+
             if (collided.contains(i)) {
                 continue;
             }
