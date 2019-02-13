@@ -1,7 +1,6 @@
 package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -88,8 +87,10 @@ public class GameSessionController {
 
     private void mainLoop() {
         render();
+
         while(viewThread.isAlive()) {
-            update();
+            session.updatePlayer(keyListener.getKeyPresses());
+            session.update();
 
             try{
                 Thread.sleep(1);
@@ -98,13 +99,6 @@ public class GameSessionController {
             }
 
         }
-    }
-
-    private void update() {
-
-        // Send the input key presses to the model.
-        session.updatePlayer(keyListener.getKeyPresses());
-        session.update();
     }
 
     private void render() {
