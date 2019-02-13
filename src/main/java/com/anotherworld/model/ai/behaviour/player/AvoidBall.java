@@ -29,6 +29,7 @@ public class AvoidBall extends Job {
     private ArrayList<Ball> imminentDangerBalls = new ArrayList<>();
     private Matrix aiPosition;
     private Matrix aiDirection;
+    private float distanceFromTheBall = 2;
 
     /**
      * Initialises the Job.
@@ -65,9 +66,13 @@ public class AvoidBall extends Job {
         if (!isAIsafe()) {
             logger.debug("Moving away from the Ball");
             moveAway();
+            fail();
+            return;
         } else {
             logger.debug("Finishing AvoidBall Job with success");
             succeed();
+            ai.setYVelocity(0);
+            ai.setXVelocity(0);
             return;
         }
     }
@@ -97,8 +102,10 @@ public class AvoidBall extends Job {
         Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
         //ai.setAngle(MatrixMath.vectorAngle(MatrixMath.flipMatrix(vector)));
         //temp
-        ai.setXVelocity(-vector.getX() / Math.abs(vector.getX()));
-        ai.setYVelocity(-vector.getY() / Math.abs(vector.getY()));
+        logger.debug("Going "+ vector);
+        logger.debug("AI location " + aiPosition);
+        ai.setXVelocity((-vector.getX() / Math.abs(vector.getX())) * ai.getSpeed());
+        ai.setYVelocity((-vector.getY() / Math.abs(vector.getY())) * ai.getSpeed());
     }
 
     /**
@@ -133,19 +140,22 @@ public class AvoidBall extends Job {
 
             if (ball.isDangerous()) {
                 possibleDangerBalls.add(ball);
-                logger.debug ("Possibly Dangerous Balls: " + possibleDangerBalls.size());
+
 
                 if (canAffect(ball)) {
                     dangerBalls.add(ball);
-                    logger.debug("Dangerour Balls: " + dangerBalls.size());
+
 
                     if (isClose(ball)) {
                         imminentDangerBalls.add(ball);
-                        logger.debug("Imminently Dangerous Balls: " + imminentDangerBalls.size());
+
                     }
                 }
             }
         }
+        logger.debug ("Possibly Dangerous Balls: " + possibleDangerBalls.size());
+        logger.debug("Dangerous Balls: " + dangerBalls.size());
+        logger.debug("Imminently Dangerous Balls: " + imminentDangerBalls.size());
     }
 
     /**
@@ -155,7 +165,7 @@ public class AvoidBall extends Job {
      */
     private boolean isAIsafe() {
         sortBalls();
-        boolean save = dangerBalls.isEmpty() | imminentDangerBalls.isEmpty();
+        boolean save =  imminentDangerBalls.isEmpty();//   & dangerBalls.isEmpty() ;
         logger.debug("AI is " + (save ? "Save" : "in Danger"));
         return save;
     }
@@ -163,13 +173,14 @@ public class AvoidBall extends Job {
     private boolean canAffect(Ball ball) {
         Matrix ballPosition = ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
-        return MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition);
+        Matrix nearest = MatrixMath.nearestNeighbour(new Line(ballPosition,ballDirection),aiPosition);
+        return MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition);// & platform.isOnPlatform(nearest);
     }
 
     private boolean isClose(Ball ball) {
         Matrix ballPosition =  ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
 
-        return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),aiPosition) <= ai.getRadius() + ball.getRadius();
+        return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),aiPosition) <= ai.getRadius() + ball.getRadius() + distanceFromTheBall;
     }
 }

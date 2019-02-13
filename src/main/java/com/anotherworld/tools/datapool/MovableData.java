@@ -1,6 +1,7 @@
 package com.anotherworld.tools.datapool;
 
 import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.DisplayData;
 
@@ -37,7 +38,9 @@ public abstract class MovableData implements DisplayData, Serializable {
      * @param y the new y-cooridnate to set
      */
     public void setCoordinates(float x, float y) {
+
         coordinates = new Matrix(x, y);
+        this.angle = MatrixMath.vectorAngle(coordinates);
     }
 
     /**
@@ -53,7 +56,7 @@ public abstract class MovableData implements DisplayData, Serializable {
      * @param newXCoordinate the new x-coordinate to set.
      */
     public void setXCoordinate(float newXCoordinate) {
-        coordinates = new Matrix(newXCoordinate, coordinates.getY());
+        setCoordinates(newXCoordinate,coordinates.getY());
     }
 
     /**
@@ -69,7 +72,7 @@ public abstract class MovableData implements DisplayData, Serializable {
      * @param newYCoordinate the new y-coordinate to set.
      */
     public void setYCoordinate(float newYCoordinate) {
-        coordinates = new Matrix(coordinates.getX(), newYCoordinate);
+        setCoordinates(coordinates.getX(),newYCoordinate);
     }
 
     /**

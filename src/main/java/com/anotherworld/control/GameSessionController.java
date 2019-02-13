@@ -1,7 +1,7 @@
 package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
-import com.anotherworld.model.movable.Player;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -12,6 +12,7 @@ import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,18 +21,6 @@ import org.apache.logging.log4j.Logger;
 public class GameSessionController {
     
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
-
-    public static void main(String[] args) {
-        try {
-            View view = new View();
-            new GameSessionController(view);
-        } catch (KeyListenerNotFoundException ex) {
-            logger.fatal(ex);
-        } catch (RuntimeException ex) {
-            logger.fatal(ex);
-            ex.printStackTrace();
-        }
-    }
 
     private GameSession session;
     private View view;
@@ -46,11 +35,16 @@ public class GameSessionController {
     private ArrayList<WallData> walls;
 
     //TODO make a constructor for the real main (Main.java)
-    public GameSessionController(View view) throws KeyListenerNotFoundException {
-
-        initDataPool();
+    public GameSessionController(View view, PlayerData currentPlayer, ArrayList<PlayerData> networkPlayers, ArrayList<PlayerData> ais,ArrayList<BallData> balls, PlatformData platform, WallData wall) throws KeyListenerNotFoundException {
+        this.currentPlayer = currentPlayer;
+        this.networkPlayers = networkPlayers;
+        this.ais = ais;
+        this.balls = balls;
+        this.platforms = new ArrayList<PlatformData>(Arrays.asList(platform));
+        this.walls = new ArrayList<WallData>(Arrays.asList(wall));
+//        initDataPool();
         
-        this.session = new GameSession(currentPlayer,networkPlayers,ais, balls, platforms.get(0), walls.get(0));
+        this.session = new GameSession(currentPlayer,networkPlayers,ais, balls, platform, wall);
         this.view = view;
 
         // Starting the View thread
@@ -71,15 +65,19 @@ public class GameSessionController {
     
     private void initDataPool() {
         networkPlayers = new ArrayList<>();
-        currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.1f, 2);
+        currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.2f, 2);
 
         ais = new ArrayList<>();
-        ais.add(new PlayerData("1", 100, 120, 45, null, 0.1f, 2));
-        ais.add(new PlayerData("1", 100, 115, 30, null, 0.1f, 2));
-        ais.add(new PlayerData("1", 100, 105, 20, null, 0.1f, 2));
+        ais.add(new PlayerData("Bob", 100, 120, 45, ObjectState.IDLE, 0.2f, 2));
+        ais.add(new PlayerData("Alan", 100, 115, 30, null, 0.2f, 2));
+        ais.add(new PlayerData("Jeff", 100, 105, 20, null, 0.2f, 2));
 
         balls = new ArrayList<>();
-        balls.add(new BallData(false, 80, 45, null, 0.1f, 3));
+        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
+        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
+        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
+        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
+        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
 
         platforms = new ArrayList<>();
         platforms.add(new PlatformData(80, 45));
@@ -90,23 +88,18 @@ public class GameSessionController {
 
     private void mainLoop() {
         render();
+
         while(viewThread.isAlive()) {
-            update();
+            session.updatePlayer(keyListener.getKeyPresses());
+            session.update();
 
             try{
-                Thread.sleep(1);
+                Thread.sleep(0);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
 
         }
-    }
-
-    private void update() {
-
-        // Send the input key presses to the model.
-        session.updatePlayer(keyListener.getKeyPresses());
-        session.update();
     }
 
     private void render() {

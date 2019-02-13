@@ -23,63 +23,72 @@ public class Selector extends Job {
     private static Logger logger = LogManager.getLogger(Selector.class);
 
 
-    private  Queue<Job> jobs;
-    private Queue<Job> originalJobs;
-    private Job currentJob;
+    private  ArrayList<Job> jobs;
+//    private Queue<Job> originalJobs;
+//    private Job currentJob;
 
     /**
      * Initialise the Selector Job.
      *
      * @param jobs The Queue of Jobs to be executed in the given order
      */
-    public Selector(Queue<Job> jobs) {
+    public Selector(ArrayList<Job> jobs) {
         this.jobs = jobs;
-        this.originalJobs = new LinkedList<>(jobs);
-        System.out.println(jobs.toString());
-        if (jobs.isEmpty()) {
-            //throw new EmptyJobQueueException ("Empty queue was passed into a Job");
-            succeed();
-            return;
-        }
-        this.currentJob = jobs.poll();
+//        this.originalJobs = new LinkedList<>(jobs);
+//        System.out.println(jobs.toString());
+//        if (jobs.isEmpty()) {
+//            //throw new EmptyJobQueueException ("Empty queue was passed into a Job");
+//            succeed();
+//            return;
+//        }
+//        this.currentJob = jobs.poll();
     }
 
 
     @Override
     public void reset() {
-        this.jobs = new LinkedList<>(originalJobs);
-        this.currentJob = jobs.poll();
+//        this.jobs = new LinkedList<>(originalJobs);
+//        this.currentJob = jobs.poll();
 
     }
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
 
+        
+
         logger.debug("Starting Selector Job");
-        if (currentJob.isSuccess()) {
-            succeed();
-            logger.debug("Finishing Selector Job with success");
-            return;
-        } else if (currentJob.isRunning()) {
-            currentJob.act(ai,players,balls,platform);
-        } else if (jobs.isEmpty()) {
-            fail();
-            logger.debug("Finishing Selector Job with fail");
-            return;
-        } else if (currentJob.isFailure()) {
-            currentJob = jobs.poll();
+        for (Job currentJob: jobs) {
             currentJob.start();
-        } else {
-            logger.error("I DONT KNOW WHAT TO DO");
+
+
+            if (currentJob.isRunning()) {
+                currentJob.act(ai, players, balls, platform);
+            }
+
+            if (currentJob.isSuccess()) {
+                succeed();
+                logger.debug("Finishing Selector Job with success");
+                return;
+            } else if (jobs.isEmpty()) {
+                fail();
+                logger.debug("Finishing Selector Job with fail");
+                return;
+            } else if (currentJob.isFailure()) {
+//                currentJob = jobs.poll();
+//                currentJob.start();
+            } else {
+                logger.error("I DONT KNOW WHAT TO DO");
+            }
         }
 
-
+        fail();
 
     }
 
     @Override
     public void start() {
         super.start();
-        this.currentJob.start();
+//        this.currentJob.start();
     }
 }
