@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.*;
 
 
 public class GameSessionController {
@@ -23,7 +24,9 @@ public class GameSessionController {
 
     public static void main(String[] args) {
         try {
-            View view = new View(800, 450);
+            GLFW.glfwInit();
+            GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+            View view = new View((int)(mode.width() * 0.75), (int)(mode.height() * 0.75));
             new GameSessionController(view);
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);
