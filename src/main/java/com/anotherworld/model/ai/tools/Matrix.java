@@ -56,6 +56,27 @@ public class Matrix {
     }
 
     /**
+     * Normalizes the vector returns a new instance without modifying the current one.
+     *
+     * @return returns normalized vector
+     */
+    public Matrix normalize() {
+
+        float magnitude = MatrixMath.magnitude(this);
+        return new Matrix(x / magnitude, y / magnitude);
+    }
+
+    /**
+     * Normalizes the vector by modifying the current one
+     */
+    public void normalizeThis() {
+
+        float magnitude = MatrixMath.magnitude(this);
+        x = x / magnitude;
+        y = y / magnitude;
+    }
+
+    /**
      * Divide Matrix by a scalar.
      *
      * @param n scalar value to divide the Matrix

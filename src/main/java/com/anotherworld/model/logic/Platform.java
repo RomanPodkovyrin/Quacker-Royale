@@ -52,11 +52,11 @@ public class Platform {
      * @return true if coordinates are on the platform, false if not
      */
     public boolean isOnPlatform(float x, float y) {
-        float leftX  = getXCoordinate() - getXSize()/2;
-        float upperY = getYCoordinate() - getYSize()/2;
+        float leftX  = getXCoordinate() - getXSize();
+        float upperY = getYCoordinate() - getYSize();
 
-        float rightX  = getXCoordinate() + getXSize()/2;
-        float bottomY = getYCoordinate() + getYSize()/2;
+        float rightX  = getXCoordinate() + getXSize();
+        float bottomY = getYCoordinate() + getYSize();
 
         return (x <= rightX & x >= leftX) & (y <= bottomY & y >= upperY);
     }

@@ -1,5 +1,6 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
 import com.anotherworld.model.physics.Physics;
@@ -119,6 +120,7 @@ public class GameSession {
             if(!platform.isOnPlatform(player)) player.setState(ObjectState.DEAD);
             logger.debug(player.getCharacterID() + "'s state is set to DEAD");
             //TODO: If the player object turns out to not be needed at the end just delete it.
+
         }
 
         // Move all the movable objects based on their velocity
