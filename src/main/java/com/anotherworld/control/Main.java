@@ -13,6 +13,8 @@ public class Main {
     private static Logger logger = LogManager.getLogger(Main.class);
 
     public static void main (String args[]) {
+//        BackgroundMusic bm = new BackgroundMusic();
+//        bm.start();
         //create view ??
 
         // Ask multi player or single player
