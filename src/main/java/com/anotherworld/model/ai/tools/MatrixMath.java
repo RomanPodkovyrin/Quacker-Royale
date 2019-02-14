@@ -62,7 +62,7 @@ public class MatrixMath {
         float vectorDirectionAngle = vectorAngle(vectorLine);
         float vectorToPointAngle = vectorAngle(fromVectorPoint);
 
-        if (vectorToPointAngle <= vectorDirectionAngle - 90 || vectorToPointAngle >= vectorDirectionAngle + 90) {
+        if (vectorToPointAngle <= (vectorDirectionAngle - 90) % 360 || vectorToPointAngle >= (vectorDirectionAngle + 90) % 360) {
             return false;
         } else {
             return true;
