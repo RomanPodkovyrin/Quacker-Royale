@@ -78,7 +78,7 @@ public class GameSettings {
             float yRandom = getRandom(platform.getYCoordinate() - platform.getySize() + distanceFromBoarder,
                                         platform.getYCoordinate() + platform.getySize() - distanceFromBoarder);
 
-            PlayerData newPlayer = new PlayerData(names.get(i),10,xRandom,yRandom, ObjectState.IDLE, 0.2f,2);
+            PlayerData newPlayer = new PlayerData(names.get(i),3,xRandom,yRandom, ObjectState.IDLE, 0.2f,2);
             if (numberofAIPlayers > 0) {
                 ai.add(newPlayer);
                 numberofAIPlayers--;
