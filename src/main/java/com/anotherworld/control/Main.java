@@ -24,7 +24,7 @@ public class Main {
         // Ask multi player or single player
 
         //set up single player
-        GameSettings settings = new GameSettings(4,3,4, true, true);
+        GameSettings settings = new GameSettings(2,1,1, true, true);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         System.out.println(screenSize.getWidth() + " * " + screenSize.getHeight());

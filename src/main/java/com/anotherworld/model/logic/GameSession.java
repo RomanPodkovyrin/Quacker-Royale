@@ -1,5 +1,6 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
 import com.anotherworld.model.physics.Physics;
