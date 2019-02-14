@@ -1,10 +1,16 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
+import static org.lwjgl.opengl.GL45.*;
 
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.view.graphics.Matrix2d;
+
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.BufferUtils;
 
 /**
  * Stores information about an object to display to the screen which can be made of multiple shapes.
@@ -13,18 +19,21 @@ import com.anotherworld.view.graphics.Matrix2d;
  */
 public class DisplayObject {
 
+    private static Logger logger = LogManager.getLogger(DisplayObject.class);
+    
     private final DisplayData displayData;
     
     private final Matrix2d points;
-    private Matrix2d tempPoints;
     
     private final int displayType;
-
-    private float rColour;
-    private float gColour;
-    private float bColour;
+    
+    private int vertices;
     
     private boolean cameraShouldFollow;
+
+    private int edges;
+
+    private int vaoId;
     
     /**
      * Creates a display object to display a ball.
@@ -35,7 +44,7 @@ public class DisplayObject {
         points = genCircle(displayData.getRadius());
         displayType = GL_TRIANGLE_FAN;
         cameraShouldFollow = false;
-        setColours();
+        createOpenglObjects(this);
     }
 
     /**
@@ -47,7 +56,7 @@ public class DisplayObject {
         points = genRectangle(displayData.getWidth(), displayData.getHeight());
         displayType = GL_TRIANGLE_FAN;
         cameraShouldFollow = false;
-        setColours();
+        createOpenglObjects(this);
     }
 
     /**
@@ -59,7 +68,7 @@ public class DisplayObject {
         points = genCircle(displayData.getRadius());
         displayType = GL_TRIANGLE_FAN;
         cameraShouldFollow = true;
-        setColours();
+        createOpenglObjects(this);
     }
     
     /**
@@ -71,16 +80,43 @@ public class DisplayObject {
         this.points = genWall(displayData.getWidth(), displayData.getHeight(), 1);
         this.displayType = GL_TRIANGLE_STRIP;
         cameraShouldFollow = false;
-        setColours();
+        createOpenglObjects(this);
+    }
+    
+    private static void createOpenglObjects(DisplayObject displayObject) {
+        displayObject.vaoId = glGenVertexArrays();
+        
+        //glBindVertexArray(displayObject.vaoId);
+        
+        //This bit doesn't work
+        
+        displayObject.vertices = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, displayObject.vertices);
+        FloatBuffer f = displayObject.getFloatBuffer();
+        glBufferData(GL_ARRAY_BUFFER, f, GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        
+        //glBindVertexArray(0);
+        
+        //Everything from here works
+        
+        /*displayObject.edges = glGenBuffers();
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.edges);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), GL_STATIC_DRAW);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        */
+        //glBindVertexArray(0);
+        
     }
     
     /**
-     * Initialises the object to a random colour.
+     * Cleans opengl of the object's representation.
      */
-    private final void setColours() {
-        rColour = (float)Math.random();
-        gColour = (float)Math.random();
-        bColour = (float)Math.random();
+    public void destroyObject() {
+        
     }
     
     /**
@@ -91,7 +127,9 @@ public class DisplayObject {
      * @return The wall's points
      */
     private final Matrix2d genWall(float w, float h, float t) {
-        Matrix2d points = new Matrix2d(3, 10);
+        w = 1f;
+        h = 1f;
+        Matrix2d points = new Matrix2d(4, 10);
         points.setValue(0, 0, -w / 2 - t);
         points.setValue(1, 0, h / 2 + t);
         points.setValue(0, 1, -w / 2);
@@ -113,7 +151,7 @@ public class DisplayObject {
         points.setValue(0, 9, -w / 2);
         points.setValue(1, 9, h / 2);
         for (int j = 0; j < 10; j++) {
-            points.setValue(2, j, 1f);
+            points.setValue(3, j, 1f);
         }
         return points;
     }
@@ -125,7 +163,9 @@ public class DisplayObject {
      * @return The points of the rectangle
      */
     private final Matrix2d genRectangle(float w, float h) {
-        Matrix2d points = new Matrix2d(3, 4);
+        w = 1f;
+        h = 1f;
+        Matrix2d points = new Matrix2d(4, 4);
         points.setValue(0, 0, -w / 2);
         points.setValue(1, 0, h / 2);
         points.setValue(0, 1, w / 2);
@@ -136,7 +176,7 @@ public class DisplayObject {
         points.setValue(1, 3, -h / 2);
         
         for (int j = 0; j < 4; j++) {
-            points.setValue(2, j, 1f);
+            points.setValue(3, j, 1f);
         }
         
         return points;
@@ -148,31 +188,17 @@ public class DisplayObject {
      * @return The points of the circle
      */
     private final Matrix2d genCircle(float r) {
-        Matrix2d points = new Matrix2d(3, 38);
+        r = 0.5f;
+        Matrix2d points = new Matrix2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
-        points.setValue(2, 0, 1f);
+        points.setValue(3, 0, 1f);
         for (int i = 0; i <= 36; i += 1) {
             points.setValue(0, i + 1, r * (float)(Math.sin(((double)i / 18) * Math.PI)));
             points.setValue(1, i + 1, r * (float)(Math.cos(((double)i / 18) * Math.PI)));
-            points.setValue(2, i + 1, 1f);
+            points.setValue(3, i + 1, 1f);
         }
         return points;
-    }
-    
-    /**
-     * Transforms the points of the display objected by the given matrix.
-     * @param b The transformation matrix
-     */
-    public void transform(Matrix2d b) {
-        tempPoints = b.mult(tempPoints);
-    }
-    
-    /**
-     * Resets any transformations to the object.
-     */
-    public void clearTransformations() {
-        tempPoints = points;
     }
     
     /**
@@ -207,36 +233,52 @@ public class DisplayObject {
         return displayData.getYCoordinate();
     }
     
-    /**
-     * Returns the red component of the object's colour.
-     * @return the red component
-     */
-    public float getColourR() {
-        return rColour;
+    public void draw() {
+        logger.trace("Buffer vaoID " + (glIsBuffer(vaoId) ? "exists" : "wasn't found"));
+        logger.trace("Buffer vertices " + (glIsBuffer(vertices) ? "exists" : "wasn't found"));
+        logger.trace("Buffer edges " + (glIsBuffer(edges) ? "exists" : "wasn't found"));
+        
+        //glBindVertexArray(this.vaoId);
+        //glEnableVertexAttribArray(0);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, this.vertices);
+        glVertexPointer(4, GL_FLOAT, 0, 0l);
+
+        //From here works
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this.edges);
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glDrawArrays(GL_POINTS, 0, this.points.getN());
+        //glDrawElements(GL_POINTS, this.points.getPoints().length, GL_UNSIGNED_INT, 0);
+        glDisableClientState(GL_VERTEX_ARRAY);
+        
+        //glDrawArrays(GL_POINTS, 0, 100);
+        
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        //Until here
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        //glDisableVertexAttribArray(0);
+        //glBindVertexArray(0);
+        
     }
     
-    /**
-     * Returns the green component of the object's colour.
-     * @return the green component
-     */
-    public float getColourG() {
-        return gColour;
+    private FloatBuffer getFloatBuffer() {
+        FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
+        b.put(points.getPoints());
+        b.flip();
+        return b;
     }
     
-    /**
-     * Returns the blue component of the object's colour.
-     * @return the blue component
-     */
-    public float getColourB() {
-        return bColour;
-    }
-    
-    /**
-     * Returns the points that make up the object with the transformations applied.
-     * @return the points
-     */
-    public Matrix2d getPoints() {
-        return tempPoints;
+    private IntBuffer getIndexBuffer() {
+        IntBuffer b = BufferUtils.createIntBuffer(points.getN());
+        int[] bs = new int[points.getN()];
+        for (int i = 0; i < points.getN(); i++) {
+            bs[i] = i;
+        }
+        b.put(bs);
+        b.flip();
+        return b;
     }
     
     /**

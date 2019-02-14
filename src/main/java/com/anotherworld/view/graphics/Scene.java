@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL45;
 
 /**
  * Creates and manages a view state like view game or main menu.
@@ -38,29 +39,16 @@ public class Scene {
             int y = convertCoord(display.getY(), height);
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
-            glViewport(x, y, w, h);
+            //glViewport(x, y, w, h);
             ArrayList<DisplayObject> toDraw = display.draw();
             logger.trace("Drawing " + toDraw.size() + " objects");
             for (int j = 0; j < toDraw.size(); j++) {
-                drawObject(toDraw.get(j));
+                GL45.glColor3f(1, 1, 1);
+                logger.trace("Drawing object " + j);
+                toDraw.get(j).draw();
             }
             
         }
-    }
-
-    /**
-     * Draws an object to the screen.
-     * @param a The object to draw
-     */
-    private void drawObject(DisplayObject obj) {
-        //glBegin(obj.getDisplayType());
-        glBegin(GL_LINE_LOOP);
-        glColor3f(obj.getColourR(), obj.getColourG(), obj.getColourB());
-        for (int j = 0; j < obj.getPoints().getN(); j++) {
-            glVertex4f(obj.getPoints().getValue(0, j),
-                    obj.getPoints().getValue(1, j), 0f, obj.getPoints().getValue(2, j));
-        }
-        glEnd();
     }
     
     /**

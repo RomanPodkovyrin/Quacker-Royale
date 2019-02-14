@@ -24,18 +24,6 @@ public class GameSessionController {
     
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
 
-    public static void main(String[] args) {
-//        try {
-//            View view = new View();
-//            new GameSessionController(view);
-//        } catch (KeyListenerNotFoundException ex) {
-//            logger.fatal(ex);
-//        } catch (RuntimeException ex) {
-//            logger.fatal(ex);
-//            ex.printStackTrace();
-//        }
-    }
-
     private GameSession session;
     private View view;
     private Thread viewThread;
@@ -76,34 +64,11 @@ public class GameSessionController {
         //Clean up ie close connection if there are any and close the graphics window
 
     }
-    
-    private void initDataPool() {
-        networkPlayers = new ArrayList<>();
-        currentPlayer = new PlayerData("1", 100, 40, 45, null, 0.5f, 2);
-
-        ais = new ArrayList<>();
-        ais.add(new PlayerData("Bob", 100, 120, 45, ObjectState.IDLE, 0.2f, 2));
-        ais.add(new PlayerData("Alan", 100, 115, 30, null, 0.2f, 2));
-        ais.add(new PlayerData("Jeff", 100, 105, 20, null, 0.2f, 2));
-
-        balls = new ArrayList<>();
-        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
-        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
-        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
-        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
-        balls.add(new BallData(false, 80, 45, null, 0.5f, 3));
-
-        platforms = new ArrayList<>();
-        platforms.add(new PlatformData(80, 45));
-        
-        walls = new ArrayList<>();
-        walls.add(new WallData(80, 45));
-    }
 
     private void mainLoop() {
         render();
         while(viewThread.isAlive()) {
-            update();
+            //update();
 
             try{
                 Thread.sleep(0);

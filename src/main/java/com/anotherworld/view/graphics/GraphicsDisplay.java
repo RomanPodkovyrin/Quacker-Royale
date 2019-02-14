@@ -53,7 +53,7 @@ public class GraphicsDisplay {
      */
     public ArrayList<DisplayObject> draw() {
         for (int i = 0; i < objects.size(); i++) {
-            objects.get(i).clearTransformations();
+            //objects.get(i).clearTransformations();
             transformObject(objects.get(i));
         }
         return objects;
@@ -64,7 +64,7 @@ public class GraphicsDisplay {
 
         modifier = modifier.mult(Matrix2d.homRotation2d(obj.getTheta()));
 
-        obj.transform(modifier);
+        //obj.transform(modifier);
 
     }
     

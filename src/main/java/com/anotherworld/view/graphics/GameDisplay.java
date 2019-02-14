@@ -23,7 +23,7 @@ public class GameDisplay extends GraphicsDisplay {
         ArrayList<DisplayObject> toDraw = super.draw();
         Matrix2d viewMatrix = calculateViewMatrix(camera);
         for (int i = 0; i < toDraw.size(); i++) {
-            toDraw.get(i).transform(viewMatrix);
+            //toDraw.get(i).transform(viewMatrix);
         }
         return toDraw;
     }

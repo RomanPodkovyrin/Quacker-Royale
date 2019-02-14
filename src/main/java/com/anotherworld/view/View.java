@@ -87,21 +87,8 @@ public class View implements Runnable {
      */
     public void updateGameObjects(ArrayList<? extends PlayerDisplayData> playerObjects, ArrayList<? extends BallDisplayData> ballObjects,
             ArrayList<? extends RectangleDisplayData> rectangleObjects, ArrayList<? extends WallData> wallObjects) {
-        ArrayList<DisplayObject> disObj = new ArrayList<>();
-        for (int i = 0; i < rectangleObjects.size(); i++) {
-            disObj.add(new DisplayObject(rectangleObjects.get(i)));
-        }
-        for (int i = 0; i < wallObjects.size(); i++) {
-            disObj.add(new DisplayObject(wallObjects.get(i)));
-        }
-        for (int i = 0; i < playerObjects.size(); i++) {
-            disObj.add(new DisplayObject(playerObjects.get(i)));
-        }
-        for (int i = 0; i < ballObjects.size(); i++) {
-            disObj.add(new DisplayObject(ballObjects.get(i)));
-        }
         synchronized (eventQueue) {
-            eventQueue.add(new UpdateDisplayObjects(disObj));
+            eventQueue.add(new UpdateDisplayObjects(playerObjects, ballObjects, rectangleObjects, wallObjects));
         }
     }
 
@@ -128,12 +115,14 @@ public class View implements Runnable {
 
         GL.createCapabilities();
 
+        glEnableClientState(GL_VERTEX_ARRAY);
+        
         keyListener = new KeyListener(window);
         
         keyListenerLatch.countDown();
 
         currentScene = new GameScene();
-
+        
         while (!glfwWindowShouldClose(window)) {
 
             glClear(GL_COLOR_BUFFER_BIT);
@@ -161,7 +150,21 @@ public class View implements Runnable {
     
     private void completeEvent(ViewEvent event) {
         if (event.getClass().equals(UpdateDisplayObjects.class) && currentScene.getClass().equals(GameScene.class)) {
-            ((GameScene)currentScene).updateGameObjects(((UpdateDisplayObjects)event).getObjects());
+            ArrayList<DisplayObject> disObj = new ArrayList<>();
+            UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects)event);
+            for (int i = 0; i < updateEvent.getRectangleObjects().size(); i++) {
+                disObj.add(new DisplayObject(updateEvent.getRectangleObjects().get(i)));
+            }
+            for (int i = 0; i < updateEvent.getWallObjects().size(); i++) {
+                disObj.add(new DisplayObject(updateEvent.getWallObjects().get(i)));
+            }
+            for (int i = 0; i < updateEvent.getPlayerObjects().size(); i++) {
+                disObj.add(new DisplayObject(updateEvent.getPlayerObjects().get(i)));
+            }
+            for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
+                disObj.add(new DisplayObject(updateEvent.getBallObjects().get(i)));
+            }
+            ((GameScene)currentScene).updateGameObjects(disObj);
         }
     }
 
