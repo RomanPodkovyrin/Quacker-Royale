@@ -62,7 +62,7 @@ public class GameSessionController {
             session.update();
 
             try{
-                Thread.sleep(2);
+                Thread.sleep(10);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
