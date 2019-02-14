@@ -1,4 +1,4 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour;
 
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.logic.Platform;

@@ -105,7 +105,7 @@ public class GameSessionController {
             update();
 
             try{
-                Thread.sleep(0);
+                Thread.sleep(4);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }

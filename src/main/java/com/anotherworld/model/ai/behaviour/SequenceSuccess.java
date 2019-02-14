@@ -72,7 +72,7 @@ public class SequenceSuccess extends Job {
                 return;
             } else if (jobs.isEmpty()) {
                 succeed();
-                logger.debug("Finishing SequenceSuccess Job with success");
+                logger.debug("Finishing SequenceSuccess Job with success: Empty");
                 return;
             } else if (currentJob.isSuccess()) {
                 logger.debug("SequenceSuccess getting next job");

@@ -29,6 +29,8 @@ public class AI {
     private ArrayList<Job> jobs = new ArrayList<>();
     private Platform platform;
 
+    private int tick = 0;
+
     private Matrix aiVector;
     private Matrix aiPosition;
 
@@ -65,7 +67,12 @@ public class AI {
             ArrayList<Job> domination = new ArrayList<>();
 
             ArrayList<Job> aim = new ArrayList<>();
-            domination.add(new ChaseBall());
+//            domination.add(new ChaseBall());
+            ArrayList<Job> ballAim = new ArrayList<>();
+            ballAim.add(new NeutralBallCheck());
+            ballAim.add(new AimBall());
+
+//            domination.add(new SequenceSuccess(ballAim));
             // when the ball was chased need to aim it as well
 
             // TODO chase the player gets the ai stuck
@@ -74,7 +81,7 @@ public class AI {
 //            aim.add(new Charge);
 
 
-            domination.add(new SequenceSuccess(aim));
+//            domination.add(new SequenceSuccess(aim));
 
             // Set up of the Peaceful coexistence
 //            ArrayList<Job> peaceful = new ArrayList<>();
@@ -82,7 +89,8 @@ public class AI {
 
             ArrayList<Job> routines = new ArrayList<>();
             routines.add(new SequenceSuccess(survival));
-            routines.add(new Selector(domination));
+//            routines.add(new Selector(domination));
+//            routines.add(new SequenceSuccess(ballAim));
             routines.add(new WalkAbout());
 
             Job tempj = new Repeat(new SequenceSuccess(routines));
@@ -123,13 +131,19 @@ public class AI {
     public void action() {
         logger.info("AI action called.");
 
-        for (int i = 0; i < aiPlayers.size();i++) {
-            Pair<Player,ArrayList<Player>> pair = aiPlayers.get(i);
-            logger.info(pair.getKey().getCharacterID() + " Starting AI");
+        if (tick == 0) {
+            for (int i = 0; i < aiPlayers.size(); i++) {
+                Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
+                logger.info(pair.getKey().getCharacterID() + " Starting AI");
 
-            jobs.get(i).act(pair.getKey(), pair.getValue(),balls,platform);
+                jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
+            }
+//            tick = tick + 1;
+        } else if (tick == 4) {
+            tick = 0;
+        } else {
+            tick = tick + 1;
         }
-
     }
 
 
