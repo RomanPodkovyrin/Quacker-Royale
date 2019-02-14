@@ -3,10 +3,10 @@ package com.anotherworld.model.ai.behaviour;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 
 /**
  * Repeats the Job infinite amount of times or the number that is specified. Until Fails

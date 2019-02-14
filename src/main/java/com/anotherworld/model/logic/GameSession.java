@@ -1,5 +1,6 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
 import com.anotherworld.model.physics.Physics;
@@ -85,6 +86,8 @@ public class GameSession {
             for (Player player : this.allPlayers) {
                 if(Physics.checkOverlapping(ball, player)) {
                     Physics.collided(ball, player);
+                    ball.setDangerous(true);
+                    ball.setTimer(BallData.MAX_TIMER);
                 }
             }
 
@@ -96,12 +99,18 @@ public class GameSession {
             }
         }
 
-        // Check if a player has collided with another player.
         for (Player playerA : this.allPlayers) {
+            // Check if a player has collided with another player.
             for (Player playerB : this.allPlayers) {
                 if(!playerA.equals(playerB) && Physics.checkCollision(playerA, playerB)) {
                     Physics.collided(playerA, playerB);
                 }
+            }
+
+            // Kill the player if they fall off the edge of the platform
+            if(!platform.isOnPlatform(playerA)) {
+                playerA.setState(ObjectState.DEAD);
+                logger.debug(playerA.getCharacterID() + " is DEAD");
             }
         }
     }
@@ -116,16 +125,23 @@ public class GameSession {
         collisionCheck();
 
         for(Player player : allPlayers){
+            Physics.move(player);
             if(!platform.isOnPlatform(player)) player.setState(ObjectState.DEAD);
             logger.debug(player.getCharacterID() + "'s state is set to DEAD");
             //TODO: If the player object turns out to not be needed at the end just delete it.
         }
 
-        // Move all the movable objects based on their velocity
-        Physics.move(currentPlayer);
-        for (Player ai: ais) Physics.move(ai);
-        for (Player player: players) Physics.move(player);
-        for (Ball ball: balls) Physics.move(ball);
+
+        // Move all the balls based on velocity and decrement their timers.
+        for (Ball ball: balls) {
+            Physics.move(ball);
+
+            // Handle the danger state of the balls.
+            if (ball.isDangerous()) {
+                ball.decrementTimer();
+                if (ball.getTimer() == 0) ball.setDangerous(false);
+            }
+        }
 
     }
 
