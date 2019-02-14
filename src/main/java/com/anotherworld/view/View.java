@@ -23,6 +23,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.Configuration;
+import org.lwjgl.system.Platform;
 
 
 /**
@@ -57,6 +59,7 @@ public class View implements Runnable {
         this.width = width;
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
+        logger.info("Running view");
     }
 
     /**
@@ -105,7 +108,10 @@ public class View implements Runnable {
 
     @Override
     public void run() {
-        logger.info("Running view");
+        if (Platform.get() == Platform.MACOSX) {
+            java.awt.Toolkit.getDefaultToolkit();
+            Configuration.GLFW_CHECK_THREAD0.set(false);
+        }
         if (!glfwInit()) {
             logger.fatal("Unable to initialise glfw");
             throw new IllegalStateException("Couldn't initialise glfw");
