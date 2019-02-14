@@ -83,14 +83,14 @@ public class GameSession {
 
             // Check if a ball has collided with a player.
             for (Player player : this.allPlayers) {
-                if(Physics.checkCollision(ball, player)) {
+                if(Physics.checkOverlapping(ball, player)) {
                     Physics.collided(ball, player);
                 }
             }
 
             // Check if a ball has collided with another ball.
             for (Ball ballB : this.balls) {
-                if (!ball.equals(ballB) && Physics.checkCollision(ball, ballB)){
+                if (!ball.equals(ballB) && Physics.checkOverlapping(ball, ballB)){
                     Physics.collided(ball, ballB);
                 }
             }
