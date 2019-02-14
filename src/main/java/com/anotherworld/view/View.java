@@ -8,7 +8,6 @@ import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.data.BallDisplayData;
-import com.anotherworld.view.data.DisplayData;
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.PlayerDisplayData;
 import com.anotherworld.view.data.RectangleDisplayData;
@@ -43,19 +42,19 @@ public class View implements Runnable {
     
     private volatile KeyListener keyListener;
 
-    private int height;
+    private int height = 630;
 
-    private int width;
+    private int width  = 1120;
     
     private Queue<ViewEvent> eventQueue;
 
     /**
      * Creates the View object initialising it's values.
      */
-    public View() {
+    public View(int width, int height) {
         logger.info("Creating view");
-        height = 630;
-        width = 1120;
+        this.height = height;
+        this.width = width;
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
     }
@@ -77,6 +76,13 @@ public class View implements Runnable {
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
     }
     
+    /**
+     * Stages new objects to be used for the game display.
+     * @param playerObjects The new player objects.
+     * @param ballObjects The new ball objects.
+     * @param rectangleObjects The new platform objects.
+     * @param wallObjects The new wall objects.
+     */
     public void updateGameObjects(ArrayList<? extends PlayerDisplayData> playerObjects, ArrayList<? extends BallDisplayData> ballObjects,
             ArrayList<? extends RectangleDisplayData> rectangleObjects, ArrayList<? extends WallData> wallObjects) {
         ArrayList<DisplayObject> disObj = new ArrayList<>();

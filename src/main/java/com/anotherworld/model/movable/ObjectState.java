@@ -1,5 +1,7 @@
 package com.anotherworld.model.movable;
 
 public enum ObjectState {
-    MOVING, COLLISION, IDLE
+    IDLE, MOVING,
+    CHARGING, DASHING,
+    DEAD
 }

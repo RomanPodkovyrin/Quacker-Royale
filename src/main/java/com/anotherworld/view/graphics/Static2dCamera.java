@@ -1,12 +1,24 @@
 package com.anotherworld.view.graphics;
 
+/**
+ * Creates a static camera to view the game.
+ * @author Jake Stewart
+ *
+ */
 public class Static2dCamera implements Camera {
 
-    private float x;
-    private float y;
-    private float width;
-    private float height;
+    private final float x;
+    private final float y;
+    private final float width;
+    private final float height;
     
+    /**
+     * Creates a camera with fixed location and dimensions.
+     * @param x The x position
+     * @param y The y position
+     * @param width The camera width
+     * @param height The camera height
+     */
     public Static2dCamera(float x, float y, float width, float height) {
         this.x = x;
         this.y = y;

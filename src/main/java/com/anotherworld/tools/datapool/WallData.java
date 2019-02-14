@@ -3,7 +3,10 @@ package com.anotherworld.tools.datapool;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
 
-public class WallData implements RectangleDisplayData {
+import java.io.Serializable;
+
+public class WallData implements RectangleDisplayData, Serializable {
+
     private int stage = 1;
     private static final int MAXSTAGE = 4;
     private static final float xShrink = 10;
@@ -17,6 +20,12 @@ public class WallData implements RectangleDisplayData {
     private float xCoordinate = 80;
     private float yCoordinate = 45;
 
+    public WallData(float x, float y) {
+        this.xCoordinate = x;
+        this.yCoordinate = y;
+
+    }
+
     public int getStage() {
         return stage;
     }
@@ -25,7 +34,7 @@ public class WallData implements RectangleDisplayData {
         this.stage = stage;
     }
 
-    public static int getMAXSTAGE() {
+    public static int getMaxStage() {
         return MAXSTAGE;
     }
 

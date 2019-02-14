@@ -1,42 +1,117 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.audio.SoundEffects;
+import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
-import com.anotherworld.tools.PropertyReader;
+import com.anotherworld.model.physics.Physics;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
 
-import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
+
 
 /**
  * A class that models a game session.
  * @author Alfi S.
  */
 public class GameSession {
-    private static PropertyReader properties;
-    private static int numberOfBalls;
+
+    private static Logger logger = LogManager.getLogger(GameSession.class);
+
     private Player currentPlayer;
-    private ArrayList<PlayerData> players;
-    private ArrayList<PlayerData> ais;
+    private ArrayList<Player> players;
+    private ArrayList<Player> ais;
+    private ArrayList<Player> allPlayers;
+
+    private AI ai;
     private ArrayList<Ball> balls;
+    private Platform platform;
+    private Wall wall;
 
-    public GameSession(PlayerData currentPlayer,
-                       ArrayList<PlayerData> players, ArrayList<PlayerData> ais) {
+    public GameSession(PlayerData currentPlayer, ArrayList<PlayerData> players, ArrayList<PlayerData> ais,
+            ArrayList<BallData> balls, PlatformData platform, WallData wall) {
 
+        // Create the model of the current player.
         this.currentPlayer = new Player(currentPlayer, false);
-        // Receive the data from the properties file.
-        try {
-            this.properties = new PropertyReader("logic.properties");
-            this.numberOfBalls = Integer.parseInt(properties.getValue("NUMBER_OF_BALLS"));
-        } catch (IOException e) {
-            System.err.println("Error when loading properties class: " + e.getMessage());
+
+        this.players = new ArrayList<>();
+        for(PlayerData data : players) this.players.add(new Player(data, false));
+
+        this.ais = new ArrayList<>();
+        for(PlayerData data : ais) this.ais.add(new Player(data, true));
+
+        this.allPlayers = new ArrayList<>();
+        this.allPlayers.addAll(this.ais);
+        this.allPlayers.addAll(this.players);
+        this.allPlayers.add(this.currentPlayer);
+
+        this.balls = new ArrayList<>();
+        for(BallData data : balls) {
+            Ball newBall = new Ball(data);
+            newBall.setVelocity(3, newBall.getSpeed());
+            this.balls.add(newBall);
         }
 
-        this.players = players; //Create the list of players
-        this.ais = ais;
+        this.platform = new Platform(platform);
+        this.wall = new Wall(wall);
 
-        for(int i = 0; i < numberOfBalls; i++) {
-            //Instantiate a new ball at a random(?) location
+        this.ai = new AI(this.ais, this.allPlayers, this.balls, this.platform);
+
+        Physics.setUp();
+    }
+
+    /**
+     * Function that checks and applies all the collisions within the game.
+     * First checks each ball for a collisions with:
+     *      (i)   a wall.
+     *      (ii)  a player.
+     *      (iii) another ball.
+     * Then checks a player for collisions with:
+     *      (i)   another player.
+     *      (ii)  outside of the platform.
+     */
+    private void collisionCheck() {
+        for(Ball ball : this.balls) {
+
+            // Check if a ball has collided with the wall.
+            Physics.bouncedWall(ball, this.wall);
+
+            // Check if a ball has collided with a player.
+            for (Player player : this.allPlayers) {
+                if(Physics.checkCollision(ball, player)) {
+                    Physics.collided(ball, player);
+                    ball.setDangerous(true);
+                    ball.setTimer(BallData.MAX_TIMER);
+                }
+            }
+
+            // Check if a ball has collided with another ball.
+            for (Ball ballB : this.balls) {
+                if (!ball.equals(ballB) && Physics.checkCollision(ball, ballB)){
+                    Physics.collided(ball, ballB);
+                }
+            }
+        }
+
+        for (Player playerA : this.allPlayers) {
+            // Check if a player has collided with another player.
+            for (Player playerB : this.allPlayers) {
+                if(!playerA.equals(playerB) && Physics.checkCollision(playerA, playerB)) {
+                    Physics.collided(playerA, playerB);
+                }
+            }
+
+            // Kill the player if they fall off the edge of the platform
+            if(!platform.isOnPlatform(playerA)) {
+                playerA.setState(ObjectState.DEAD);
+                logger.debug(playerA.getCharacterID() + " is DEAD");
+            }
         }
     }
 
@@ -45,29 +120,42 @@ public class GameSession {
      * physics and ai are run during this time
      */
     public void update(){
-        // Update the positions of the current player based on given input.
+        ai.action();
 
-        // Update the positions of the other players.
+        collisionCheck();
 
-        // Check whether or not the players are within the arena.
+        for(Player player : allPlayers){
+            Physics.move(player);
+            if(!platform.isOnPlatform(player)) player.setState(ObjectState.DEAD);
+            logger.debug(player.getCharacterID() + "'s state is set to DEAD");
+            //TODO: If the player object turns out to not be needed at the end just delete it.
+        }
 
-        // Check whether or not the players are colliding with a ball
 
-        // Check whether or not the balls are colliding with a wall
+        // Move all the balls based on velocity and decrement their timers.
+        for (Ball ball: balls) {
+            Physics.move(ball);
+
+            // Handle the danger state of the balls.
+            if (ball.isDangerous()) {
+                ball.decrementTimer();
+                if (ball.getTimer() == 0) ball.setDangerous(false);
+            }
+        }
 
     }
 
+    /**
+     * Updates the current player's velocity based on the given list of inputs.
+     * @param keyPresses
+     */
     public void updatePlayer(ArrayList<Input> keyPresses) {
         if (keyPresses.contains(Input.UP)) currentPlayer.setYVelocity(-currentPlayer.getSpeed());
-        else currentPlayer.setYVelocity(0);
-
-        if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());
+        else if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());
         else currentPlayer.setYVelocity(0);
 
         if (keyPresses.contains(Input.LEFT)) currentPlayer.setXVelocity(-currentPlayer.getSpeed());
-        else currentPlayer.setXVelocity(0);
-
-        if (keyPresses.contains(Input.RIGHT)) currentPlayer.setXVelocity( currentPlayer.getSpeed());
+        else if (keyPresses.contains(Input.RIGHT)) currentPlayer.setXVelocity( currentPlayer.getSpeed());
         else currentPlayer.setXVelocity(0);
     }
 }

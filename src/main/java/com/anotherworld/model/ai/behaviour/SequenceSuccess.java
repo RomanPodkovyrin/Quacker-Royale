@@ -10,22 +10,23 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * Executes the given jobs in order until no more jobs left.
+ * Executes the given jobs in order until one of then fails.
+ *
  * @author Roman
  */
-public class Sequence extends Job {
+public class SequenceSuccess extends Job {
 
-    private static Logger logger = LogManager.getLogger(Sequence.class);
+    private static Logger logger = LogManager.getLogger(SequenceSuccess.class);
 
 
     private ArrayList<Job> jobs;
 
     /**
-     * Initialise the Sequence Job.
+     * Initialise the SequenceSuccess Job.
      *
      * @param jobs The Queue of jobs to be executed
      */
-    public Sequence(ArrayList<Job> jobs) {
+    public SequenceSuccess(ArrayList<Job> jobs) {
         this.jobs = jobs;
     }
 
@@ -36,12 +37,12 @@ public class Sequence extends Job {
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+        logger.trace("Starting SequenceSuccess Job");
 
-        logger.trace("Starting Sequence Job");
 
         if (jobs.isEmpty()) {
             succeed();
-            logger.trace("Finishing Sequence Job with success: No jobs");
+            logger.trace("Finishing SequenceSuccess Job with success: Empty");
             return;
         }
 
@@ -50,18 +51,21 @@ public class Sequence extends Job {
 
             if (currentJob.isRunning()) {
                 logger.trace("Running current Job");
-                currentJob.act(ai,players,balls,platform);
+                currentJob.act(ai, players, balls, platform);
             }
 
-            if (currentJob.isSuccess() | currentJob.isFailure()) {
-                logger.trace("Getting next job");
+            if (currentJob.isFailure()) {
+                fail();
+                logger.trace("Finishing SequenceSuccess Job with fail: job failed");
+                return;
+            } else if (currentJob.isSuccess()) {
+                logger.trace("SequenceSuccess getting next job: Job succeeded");
             }
         }
 
         succeed();
-        logger.trace("Finishing SequenceSuccess Job with success: All jobs succeeded");
+        logger.trace("Finishing SequenceSuccess Job with success: all Jobs succeeded");
         return;
-
 
 
 

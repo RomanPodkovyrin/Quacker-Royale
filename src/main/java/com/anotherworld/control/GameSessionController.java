@@ -1,41 +1,43 @@
 package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
-import com.anotherworld.model.movable.Player;
+import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.settings.GameSettings;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.view.View;
 
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+/**
+ * Controller object that connects the View and the Model of the game.
+ * @author Alfi S
+ */
 public class GameSessionController {
     
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
 
-    public static void main(String[] args) {
-        try {
-            View view = new View();
-            GameSession session = new GameSession(null,null,null);
-            new GameSessionController(view, session);
-        } catch (KeyListenerNotFoundException ex) {
-            logger.fatal(ex);
-        } catch (RuntimeException ex) {
-            logger.fatal(ex);
-        }
-    }
-
     private GameSession session;
+    private GameSettings settings;
     private View view;
     private Thread viewThread;
     private KeyListener keyListener;
 
-    public GameSessionController(View view, GameSession session) throws KeyListenerNotFoundException {
 
-        this.session = session;
+    //TODO make a constructor for the real main (Main.java)
+    public GameSessionController(View view, GameSettings settings) throws KeyListenerNotFoundException {
+
+        this.settings = settings;
+
+        this.session = settings.createSession();
         this.view = view;
 
         // Starting the View thread
@@ -50,17 +52,17 @@ public class GameSessionController {
         this.keyListener = view.getKeyListener();
         mainLoop();
 
-        //Clean up ie close connection if there are any and close the graphics window
-
     }
 
     private void mainLoop() {
+        render();
+
         while(viewThread.isAlive()) {
-            update();
-            render();
+            session.updatePlayer(keyListener.getKeyPresses());
+            session.update();
 
             try{
-                Thread.sleep(1);
+                Thread.sleep(2);
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
@@ -68,14 +70,14 @@ public class GameSessionController {
         }
     }
 
-    private void update() {
-
-        // Send the input key presses to the model.
-        session.updatePlayer(keyListener.getKeyPresses());
-
-    }
-
-    private static void render() {
-        //View.update
+    private void render() {
+        ArrayList<PlayerData> players = new ArrayList<>();
+        players.addAll(settings.getAi());
+        players.add(settings.getCurrentPlayer());
+        players.addAll(settings.getPlayers());
+        view.updateGameObjects(players,
+                               settings.getBalls(),
+                               settings.getPlatform(),
+                               settings.getWall());
     }
 }
