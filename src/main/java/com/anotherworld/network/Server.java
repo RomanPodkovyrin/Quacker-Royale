@@ -1,5 +1,7 @@
 package com.anotherworld.network;
 
+import com.anotherworld.tools.datapool.BallData;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -38,14 +40,14 @@ public class Server extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //byte[] data = new byte[32];
-            //DatagramPacket packet = new DatagramPacket(data, data.length);
+            byte[] incomingData = new byte[1024];
+            DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
 //            String received = getFromClient(packet);
 //            System.out.println("From client to server: " + received);
             //start
-            String received = null;
+            boolean received = false;
             try {
-                received = getObjectFromClient();
+                received = getObjectFromClient(incomingPacket).isDangerous();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
@@ -58,15 +60,16 @@ public class Server extends Thread {
             System.out.println("Ip address of a player: " + playerIP);
             updateIPaddresses(playerIP);
             try {
-                sendToClient((received).getBytes());
+                sendToClient(("boolean was sent " + received).getBytes());
+                //sendToClient((received).getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             counter++;
-            if (received.equals("end")) {
-                running = false;
-                continue;
-            }
+//            if (received.equals("end")) {
+//                running = false;
+//                continue;
+//            }
         }
         close();
     }
@@ -95,26 +98,21 @@ public class Server extends Thread {
         return messageFromClient;
     }
 
-    public String getObjectFromClient() throws IOException, ClassNotFoundException {
-        byte[] data = new byte[4];
-        DatagramPacket packet = new DatagramPacket(data, data.length );
-        socket.receive(packet);
+    public BallData getObjectFromClient(DatagramPacket incomingPacket) throws IOException, ClassNotFoundException {
 
-        int len = 0;
-        // byte[] -> int
-        for (int i = 0; i < 4; ++i) {
-            len |= (data[3-i] & 0xff) << (i << 3);
+        socket.receive(incomingPacket);
+        byte data[] = incomingPacket.getData();
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);
+        System.out.println();
+        BallData ballData = null;
+        try {
+            ballData = (BallData) is.readObject();
+            System.out.println("Student object received = "+ballData);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-
-        // now we know the length of the payload
-        byte[] buffer = new byte[len];
-        //packet = new DatagramPacket(buffer, buffer.length );
-        socket.receive(packet);
-
-        ByteArrayInputStream baos = new ByteArrayInputStream(buffer);
-        ObjectInputStream oos = new ObjectInputStream(baos);
-        TestingObject c1 = (TestingObject)oos.readObject();
-        return c1.print();
+        return ballData;
     }
 
     public void updateIPaddresses(String playerIP){
@@ -122,18 +120,6 @@ public class Server extends Thread {
         playersIPs[0] = "172.22.84.8";
         playersIPs[1] = "192.168.0.21";
     }
-//        if(playersIPs[0]==null){
-//            playersIPs[0] = playerIP;
-//            return;
-//        }
-//        else if(playersIPs[1] ==null){
-//            playersIPs[1] = playerIP;
-//            return;
-//        }
-//
-//        if(!playersIPs[0].equals(playerIP))
-//            playersIPs[1] = playerIP;
-//    }
 
     public void close(){
         socket.close();
@@ -144,3 +130,4 @@ public class Server extends Thread {
         new Server().start();
     }
 }
+

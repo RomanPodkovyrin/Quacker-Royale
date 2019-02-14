@@ -1,5 +1,8 @@
 package com.anotherworld.network;
 
+import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.tools.datapool.BallData;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -35,36 +38,22 @@ public class GameClient {
         }
     }
 
-    public void sendObjectToServer(){
-        TestingObject object = new TestingObject();
-        try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(object);
-            oos.flush();
-            byte[] Buf= baos.toByteArray();
-
-            int number = Buf.length;;
-            byte[] data = new byte[4];
-
-            // int -> byte[]
-            for (int i = 0; i < 4; ++i) {
-                int shift = i << 3; // i * 8
-                data[3-i] = (byte)((number & (0xff << shift)) >>> shift);
-            }
-            DatagramPacket packet
-                    = new DatagramPacket(data, data.length, address, port);
-            socket.send(packet);
-            System.out.println("DONE SENDING");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void sendObjectToServer() throws IOException {
+        BallData ballData = new BallData(true, 10, 10, ObjectState.IDLE, 15, 1);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(outputStream);
+        os.writeObject(ballData);
+        byte[] data = outputStream.toByteArray();
+        DatagramPacket sendPacket = new DatagramPacket(data, data.length, address, port);
+        socket.send(sendPacket);
+        System.out.println("Message sent from client" );
     }
 
     public void getDataFromServer() throws IOException {
         byte[] data = new byte[32];
         DatagramPacket packet = new DatagramPacket(data, data.length);
         s.receive(packet);
+
         System.out.println("From server: " + new String(packet.getData()));
     }
 
@@ -84,3 +73,4 @@ public class GameClient {
         }
     }
 }
+
