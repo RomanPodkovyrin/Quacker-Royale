@@ -85,6 +85,8 @@ public class GameSession {
             for (Player player : this.allPlayers) {
                 if(Physics.checkCollision(ball, player)) {
                     Physics.collided(ball, player);
+                    ball.setDangerous(true);
+                    ball.setTimer(BallData.MAX_TIMER);
                 }
             }
 
@@ -121,11 +123,29 @@ public class GameSession {
 
         collisionCheck();
 
-        // Move all the movable objects based on their velocity
+        // Move the current player based on velocity.
         Physics.move(currentPlayer);
-        for (Player ai: ais) Physics.move(ai);
-        for (Player player: players) Physics.move(player);
-        for (Ball ball: balls) Physics.move(ball);
+
+        // Move all the ai players based on velocity.
+        for (Player ai: ais) {
+            Physics.move(ai);
+        }
+
+        // Move all the human-playable players based on velocity.
+        for (Player player: players) {
+            Physics.move(player);
+        }
+
+        // Move all the balls based on velocity and decrement their timers.
+        for (Ball ball: balls) {
+            Physics.move(ball);
+
+            // Handle the danger state of the balls.
+            if (ball.isDangerous()) {
+                ball.decrementTimer();
+                if (ball.getTimer() == 0) ball.setDangerous(false);
+            }
+        }
 
     }
 
