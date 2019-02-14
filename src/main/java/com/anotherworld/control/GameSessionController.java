@@ -57,12 +57,18 @@ public class GameSessionController {
     private void mainLoop() {
         render();
 
+        long previousTime = System.nanoTime();
+
         while(viewThread.isAlive()) {
             session.updatePlayer(keyListener.getKeyPresses());
             session.update();
 
+            long currentTime = System.nanoTime();
+            long deltaTime = (currentTime - previousTime) / 1000;
+            previousTime = currentTime;
+
             try{
-                Thread.sleep(2);
+                Thread.sleep(2);  // Thread.sleep deltaTime ?????????
             }catch (InterruptedException e){
                 e.printStackTrace();
             }
