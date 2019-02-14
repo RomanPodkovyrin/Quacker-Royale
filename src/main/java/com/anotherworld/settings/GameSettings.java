@@ -70,7 +70,7 @@ public class GameSettings {
 
     private void createPlayers(int numberOfPlayers, int numberofAIPlayers) {
         PlatformData platform = platforms.get(0);
-        for (int i = 0; i < numberOfPlayers; i++ ) {
+        for (int i = 0; i < numberOfPlayers; i++) {
             float distanceFromBoarder = 5;
             float xRandom = getRandom(platform.getXCoordinate() - platform.getxSize() + distanceFromBoarder,
                                         platform.getXCoordinate() + platform.getxSize() - distanceFromBoarder);
