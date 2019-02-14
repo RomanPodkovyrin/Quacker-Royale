@@ -1,6 +1,11 @@
 package com.anotherworld.network;
 
+import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.tools.datapool.BallData;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.*;
 
 public class GameClient {
@@ -18,9 +23,8 @@ public class GameClient {
         group = InetAddress.getByName(multicastIP);
         s.joinGroup(group);
         socket = new DatagramSocket();
-        address = InetAddress.getByName("192.168.0.21");
-        System.out.println(address);
-        System.out.println(Inet4Address.getLocalHost().getHostAddress());
+        address = InetAddress.getByName("172.22.84.8");
+        System.out.println("Client address : " + Inet4Address.getLocalHost().getHostAddress());
     }
 
     public void sendDataToServer(String msg) throws IOException {
@@ -34,10 +38,22 @@ public class GameClient {
         }
     }
 
+    public void sendObjectToServer() throws IOException {
+        BallData ballData = new BallData(true, 10, 10, ObjectState.IDLE, 15, 1);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(outputStream);
+        os.writeObject(ballData);
+        byte[] data = outputStream.toByteArray();
+        DatagramPacket sendPacket = new DatagramPacket(data, data.length, address, port);
+        socket.send(sendPacket);
+        System.out.println("Message sent from client" );
+    }
+
     public void getDataFromServer() throws IOException {
         byte[] data = new byte[32];
         DatagramPacket packet = new DatagramPacket(data, data.length);
         s.receive(packet);
+
         System.out.println("From server: " + new String(packet.getData()));
     }
 
@@ -51,8 +67,10 @@ public class GameClient {
         int counter=0;
         while(true){
             counter++;
-            client.sendDataToServer( "hello from lil anton" + counter);
+            //client.sendDataToServer( "hello from lil anton" + counter);
+            client.sendObjectToServer();
             client.getDataFromServer();
         }
     }
 }
+

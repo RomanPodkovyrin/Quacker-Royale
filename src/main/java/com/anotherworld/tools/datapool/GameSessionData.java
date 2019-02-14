@@ -21,4 +21,6 @@ public class GameSessionData implements Serializable {
     public void setTimeLeft(long timeLeft) {
         this.timeLeft = timeLeft;
     }
+
+    public void decrementTimeLeft() { this.timeLeft--; }
 }

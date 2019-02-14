@@ -1,6 +1,10 @@
 package com.anotherworld.network;
 
+import com.anotherworld.tools.datapool.BallData;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -36,23 +40,36 @@ public class Server extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            byte[] data = new byte[32];
-            DatagramPacket packet = new DatagramPacket(data, data.length);
-            String received = getFromClient(packet);
+            byte[] incomingData = new byte[1024];
+            DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
+//            String received = getFromClient(packet);
+//            System.out.println("From client to server: " + received);
+            //start
+            boolean received = false;
+            try {
+                received = getObjectFromClient(incomingPacket).isDangerous();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             System.out.println("From client to server: " + received);
-            String playerIP = packet.getAddress().toString().substring(1);
+            //end
+            //String playerIP = packet.getAddress().toString().substring(1);
+            String playerIP = "lalala";
             System.out.println("Ip address of a player: " + playerIP);
             updateIPaddresses(playerIP);
             try {
-                sendToClient((received).getBytes());
+                sendToClient(("boolean was sent " + received).getBytes());
+                //sendToClient((received).getBytes());
             } catch (IOException e) {
                 e.printStackTrace();
             }
             counter++;
-            if (received.equals("end")) {
-                running = false;
-                continue;
-            }
+//            if (received.equals("end")) {
+//                running = false;
+//                continue;
+//            }
         }
         close();
     }
@@ -81,23 +98,28 @@ public class Server extends Thread {
         return messageFromClient;
     }
 
+    public BallData getObjectFromClient(DatagramPacket incomingPacket) throws IOException, ClassNotFoundException {
+
+        socket.receive(incomingPacket);
+        byte data[] = incomingPacket.getData();
+        ByteArrayInputStream in = new ByteArrayInputStream(data);
+        ObjectInputStream is = new ObjectInputStream(in);
+        System.out.println();
+        BallData ballData = null;
+        try {
+            ballData = (BallData) is.readObject();
+            System.out.println("Student object received = "+ballData);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ballData;
+    }
+
     public void updateIPaddresses(String playerIP){
         //playersIPs[0] = playerIP;
-        playersIPs[0] = "192.168.0.32";
+        playersIPs[0] = "172.22.84.8";
         playersIPs[1] = "192.168.0.21";
     }
-//        if(playersIPs[0]==null){
-//            playersIPs[0] = playerIP;
-//            return;
-//        }
-//        else if(playersIPs[1] ==null){
-//            playersIPs[1] = playerIP;
-//            return;
-//        }
-//
-//        if(!playersIPs[0].equals(playerIP))
-//            playersIPs[1] = playerIP;
-//    }
 
     public void close(){
         socket.close();
@@ -108,3 +130,4 @@ public class Server extends Thread {
         new Server().start();
     }
 }
+

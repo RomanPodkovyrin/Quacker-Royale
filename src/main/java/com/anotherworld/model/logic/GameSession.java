@@ -37,7 +37,6 @@ public class GameSession {
     public GameSession(PlayerData currentPlayer, ArrayList<PlayerData> players, ArrayList<PlayerData> ais,
             ArrayList<BallData> balls, PlatformData platform, WallData wall) {
 
-        // Create the model of the current player.
         this.currentPlayer = new Player(currentPlayer, false);
 
         this.players = new ArrayList<>();
@@ -86,8 +85,10 @@ public class GameSession {
             for (Player player : this.allPlayers) {
                 if(Physics.checkCollision(ball, player)) {
                     Physics.collided(ball, player);
-                    ball.setDangerous(true);
-                    ball.setTimer(BallData.MAX_TIMER);
+                    if (!ball.isDangerous()){
+                        ball.setDangerous(true);
+                        ball.setTimer(BallData.MAX_TIMER);
+                    } else player.setHealth(player.getHealth() - 1);
                 }
             }
 

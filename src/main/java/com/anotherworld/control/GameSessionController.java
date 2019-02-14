@@ -1,16 +1,11 @@
 package com.anotherworld.control;
 
 import com.anotherworld.model.logic.GameSession;
-import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.tools.datapool.BallData;
-import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.datapool.WallData;
-import com.anotherworld.view.View;
-
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
+import com.anotherworld.view.View;
 
 import java.util.ArrayList;
 
@@ -22,7 +17,16 @@ import org.apache.logging.log4j.Logger;
  * @author Alfi S
  */
 public class GameSessionController {
-    
+    // Game Loop variables
+
+    // FPS here means the number of game logic computation as second
+    // desired FPS
+    private final static int    MAX_FPS = 60;
+    // maximum number of frames which are allowed to be dropped
+    private final static int MAX_FRAME_DROP = 5;
+    // the time between frames
+    private final static int    FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
+
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
 
     private GameSession session;
@@ -30,6 +34,7 @@ public class GameSessionController {
     private View view;
     private Thread viewThread;
     private KeyListener keyListener;
+
 
 
     //TODO make a constructor for the real main (Main.java)
@@ -45,8 +50,11 @@ public class GameSessionController {
         viewThread.start();
 
         // Sleeping the main thread for 1 second to register the key inputs.
-        try { Thread.sleep(1000); }
-        catch (Exception e){ e.printStackTrace(); }
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Obtain the key listener.
         this.keyListener = view.getKeyListener();
@@ -57,16 +65,59 @@ public class GameSessionController {
     private void mainLoop() {
         render();
 
-        while(viewThread.isAlive()) {
+        int framesDropped = 0;
+
+        // Time at the start of the loop
+        long startTime;
+        // Time it took for gameLogic
+        long delta;
+        // Time in ms to sleep
+        int sleepTime = 0;
+
+
+
+        while (viewThread.isAlive()) {
+
+            // Get time before computation
+            startTime = System.currentTimeMillis();
+
+            // Update Game Logic
             session.updatePlayer(keyListener.getKeyPresses());
             session.update();
 
-            try{
-                Thread.sleep(10);
-            }catch (InterruptedException e){
-                e.printStackTrace();
+            // Work out the time it took for logic
+            delta = System.currentTimeMillis() - startTime;
+
+            // Calculate the time the system can sleep for
+            sleepTime = (int)(FRAME_PERIOD - delta);
+
+            //Check if logic tool too long
+            if (sleepTime > 0) {
+                // Tell system to sleep
+                try {
+                    Thread.sleep(sleepTime);
+                } catch (InterruptedException e) {
+                    logger.error(e.getMessage());
+                }
+                logger.trace("No frames lost");
+            }
+            // Otherwise render straight away
+
+
+            // Fixes dropped frameRate
+            while ((sleepTime < 0) && (framesDropped < MAX_FRAME_DROP)) {
+                logger.trace("Frames lost");
+                // updates the Game logic
+                session.updatePlayer(keyListener.getKeyPresses());
+                session.update();
+
+                // updates the sleep time
+                sleepTime += FRAME_PERIOD;
+                framesDropped++;
             }
 
+            // Reset dropped frames
+            framesDropped = 0;
         }
     }
 
