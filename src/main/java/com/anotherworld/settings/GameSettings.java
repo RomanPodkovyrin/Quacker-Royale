@@ -3,6 +3,7 @@ package com.anotherworld.settings;
 import com.anotherworld.audio.BackgroundMusic;
 import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.control.GameSessionController;
+import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.datapool.BallData;
@@ -32,11 +33,12 @@ public class GameSettings {
     private boolean effectsSound;
     private int numberOfBall;
 
+    private PlayerData currentPlayer;
     private ArrayList<PlayerData> players = new ArrayList<>();
     private ArrayList<PlayerData> ai = new ArrayList<>();
     private ArrayList<BallData> balls = new ArrayList<>();
-    private PlatformData platform;
-    private WallData wall;
+    private ArrayList<PlatformData> platforms = new ArrayList<>();
+    private ArrayList<WallData> walls = new ArrayList<>();
 
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser" ));
 
@@ -47,22 +49,28 @@ public class GameSettings {
         this.numberOfBall = numberOfBalls;
         this.musicSound = musicSound;
         this.effectsSound = effectsSound;
-//        BackgroundMusic music = new BackgroundMusic();
-//        music.muteSound();
 
-//        SoundEffects effect = new SoundEffects();
+    }
 
+    public GameSession createSession() {
+        createGameFiles();
+        return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0));
+    }
+
+    private void createGameFiles () {
+        createPlatform();
+        createWall();
+        createPlayers(numberOfPlayers,numberofAIPlayers);
+        createBalls(numberOfBall);
     }
 
     public void changeDifficulty() {
-        // decreases players health
-        // increases number of balls
-        // increases balls speed
-
+        //TODO: Think of difficulty settings.
     }
 
     private void createPlayers(int numberOfPlayers, int numberofAIPlayers) {
-        for (int i = 0; i < numberOfPlayers;i ++ ) {
+        PlatformData platform = platforms.get(0);
+        for (int i = 0; i < numberOfPlayers; i++ ) {
             float distanceFromBoarder = 5;
             float xRandom = getRandom(platform.getXCoordinate() - platform.getxSize() + distanceFromBoarder,
                                         platform.getXCoordinate() + platform.getxSize() - distanceFromBoarder);
@@ -75,18 +83,11 @@ public class GameSettings {
                 ai.add(newPlayer);
                 numberofAIPlayers--;
             } else {
-                players.add(newPlayer);
+                if (i == numberOfPlayers-1) currentPlayer = newPlayer;
+                else players.add(newPlayer);
             }
         }
 
-    }
-
-
-    public void createGameFiles () {
-        createPlatform();
-        createWall();
-        createPlayers(numberOfPlayers,numberofAIPlayers);
-        createBalls(numberOfBall);
     }
 
     public ArrayList<PlayerData> getPlayers() {
@@ -101,16 +102,19 @@ public class GameSettings {
         return balls;
     }
 
-    public PlatformData getPlatform() {
-        return platform;
+    public ArrayList<PlatformData> getPlatform() {
+        return platforms;
     }
 
-    public WallData getWall() {
-        return wall;
+    public ArrayList<WallData> getWall() {
+        return walls;
     }
 
     private void createBalls(int numberOfBalls) {
         //need number of balls somewhere
+
+        PlatformData platform = platforms.get(0);
+        WallData wall = walls.get(0);
 
         for (int i = 0; i < numberOfBalls; i++) {
 
@@ -166,14 +170,17 @@ public class GameSettings {
 
     private void createWall() {
         //again where is the center
-        wall = new WallData(50, 50);
+        walls.add(new WallData(50, 50));
     }
 
     private void createPlatform() {
        // new PlatformData();
         //Where is a center
-        platform = new PlatformData(50,50);
+        platforms.add(new PlatformData(50,50));
 
     }
 
+    public PlayerData getCurrentPlayer() {
+        return currentPlayer;
+    }
 }
