@@ -12,6 +12,11 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 
+/**
+ * This Job aims to ball towards
+ * success - aiming
+ * fail - too far away or nothing to aim
+ */
 public class AimBall extends Job {
 
     private static Logger logger = LogManager.getLogger(AimBall.class);
@@ -131,8 +136,8 @@ public class AimBall extends Job {
         Matrix targetLocation = newLocationOnRoute.add(normalizedD);
         Matrix walk = MatrixMath.pointsVector(ai.getCoordinates(),targetLocation);
 
-        float ballRate = MatrixMath.magnitude(MatrixMath.pointsVector(targetBall.getCoordinates(),walk)) / targetBall.getSpeed();
-        float aiRate = MatrixMath.magnitude(MatrixMath.pointsVector(ai.getCoordinates(),neighbour)) / ai.getSpeed();
+        float ballRate = Math.abs(MatrixMath.magnitude(MatrixMath.pointsVector(targetBall.getCoordinates(),walk)) )/ targetBall.getSpeed();
+        float aiRate = Math.abs(MatrixMath.magnitude(MatrixMath.pointsVector(ai.getCoordinates(),neighbour)) )/ ai.getSpeed();
         if (ballRate < aiRate) {
             succeed();
             logger.info("Too far away won't get there on time");

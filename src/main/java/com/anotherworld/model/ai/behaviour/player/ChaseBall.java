@@ -55,6 +55,7 @@ public class ChaseBall extends Job {
                 if (vector.getY() != 0) {
                     ai.setYVelocity((vector.getY() / Math.abs(vector.getY())) * ai.getSpeed());
                 }
+                succeed();
                 return;
             } else {
                 logger.debug("Finishing ChaseBall with fail: nothing to chase");

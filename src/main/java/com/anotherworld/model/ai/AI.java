@@ -58,7 +58,7 @@ public class AI {
             // Set up of the survival instincts
             ArrayList<Job> survival = new ArrayList<>();
             // TODO ai gets very jittery when getting close to the edge
-//            survival.add(new AvoidEdge());
+            survival.add(new AvoidEdge());
             survival.add(new AvoidBall());
             //survival.add(new AvoidPlayerCharge);
 
@@ -67,7 +67,7 @@ public class AI {
             ArrayList<Job> domination = new ArrayList<>();
 
             ArrayList<Job> aim = new ArrayList<>();
-//            domination.add(new ChaseBall());
+            domination.add(new ChaseBall());
             ArrayList<Job> ballAim = new ArrayList<>();
             ballAim.add(new NeutralBallCheck());
             ballAim.add(new AimBall());
@@ -89,7 +89,7 @@ public class AI {
 
             ArrayList<Job> routines = new ArrayList<>();
             routines.add(new SequenceSuccess(survival));
-//            routines.add(new Selector(domination));
+            routines.add(new Inverter(new ChaseBall()));
 //            routines.add(new SequenceSuccess(ballAim));
             routines.add(new WalkAbout());
 

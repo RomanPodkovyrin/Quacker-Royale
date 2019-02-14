@@ -3,10 +3,11 @@ package com.anotherworld.model.ai.behaviour;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
+
 
 /**
  * Executes the given jobs in order until one of them succeeds.
@@ -19,8 +20,6 @@ public class Selector extends Job {
 
 
     private  ArrayList<Job> jobs;
-//    private Queue<Job> originalJobs;
-//    private Job currentJob;
 
     /**
      * Initialise the Selector Job.
@@ -29,21 +28,10 @@ public class Selector extends Job {
      */
     public Selector(ArrayList<Job> jobs) {
         this.jobs = jobs;
-//        this.originalJobs = new LinkedList<>(jobs);
-//        System.out.println(jobs.toString());
-//        if (jobs.isEmpty()) {
-//            //throw new EmptyJobQueueException ("Empty queue was passed into a Job");
-//            succeed();
-//            return;
-//        }
-//        this.currentJob = jobs.poll();
     }
-
 
     @Override
     public void reset() {
-//        this.jobs = new LinkedList<>(originalJobs);
-//        this.currentJob = jobs.poll();
 
     }
 
@@ -52,38 +40,34 @@ public class Selector extends Job {
 
         
 
-        logger.debug("Starting Selector Job");
+        logger.trace("Starting Selector Job");
+
         for (Job currentJob: jobs) {
             currentJob.start();
 
-
             if (currentJob.isRunning()) {
+                logger.trace("Running current Job");
                 currentJob.act(ai, players, balls, platform);
             }
 
             if (currentJob.isSuccess()) {
                 succeed();
-                logger.debug("Finishing Selector Job with success");
-                return;
-            } else if (jobs.isEmpty()) {
-                fail();
-                logger.debug("Finishing Selector Job with fail");
+                logger.trace("Finishing Selector Job with success");
                 return;
             } else if (currentJob.isFailure()) {
-//                currentJob = jobs.poll();
-//                currentJob.start();
+                logger.trace("Job Failed getting next one");
             } else {
-                logger.error("I DONT KNOW WHAT TO DO");
+                logger.trace("Job is still running");
             }
         }
 
         fail();
+        logger.trace("Finishing Selector Job with fail: no more jobs in the list");
 
     }
 
     @Override
     public void start() {
         super.start();
-//        this.currentJob.start();
     }
 }

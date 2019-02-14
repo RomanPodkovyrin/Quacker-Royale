@@ -84,6 +84,7 @@ public class GameSession {
         for(Player player : allPlayers){
             if(!platform.isOnPlatform(player)) player.setState(ObjectState.DEAD);
             //TODO: If the player object turns out to not be needed at the end just delete it.
+
         }
 
         Physics.move(currentPlayer);
