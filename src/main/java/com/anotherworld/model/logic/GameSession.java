@@ -96,12 +96,18 @@ public class GameSession {
             }
         }
 
-        // Check if a player has collided with another player.
         for (Player playerA : this.allPlayers) {
+            // Check if a player has collided with another player.
             for (Player playerB : this.allPlayers) {
                 if(!playerA.equals(playerB) && Physics.checkCollision(playerA, playerB)) {
                     Physics.collided(playerA, playerB);
                 }
+            }
+
+            // Kill the player if they fall off the edge of the platform
+            if(!platform.isOnPlatform(playerA)) {
+                playerA.setState(ObjectState.DEAD);
+                logger.debug(playerA.getCharacterID() + " is DEAD");
             }
         }
     }
@@ -114,12 +120,6 @@ public class GameSession {
         ai.action();
 
         collisionCheck();
-
-        for(Player player : allPlayers){
-            if(!platform.isOnPlatform(player)) player.setState(ObjectState.DEAD);
-            logger.debug(player.getCharacterID() + "'s state is set to DEAD");
-            //TODO: If the player object turns out to not be needed at the end just delete it.
-        }
 
         // Move all the movable objects based on their velocity
         Physics.move(currentPlayer);
