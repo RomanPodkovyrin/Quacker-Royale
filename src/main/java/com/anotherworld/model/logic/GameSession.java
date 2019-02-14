@@ -1,5 +1,6 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
 import com.anotherworld.model.physics.Physics;
@@ -123,18 +124,13 @@ public class GameSession {
 
         collisionCheck();
 
-        // Move the current player based on velocity.
-        Physics.move(currentPlayer);
-
-        // Move all the ai players based on velocity.
-        for (Player ai: ais) {
-            Physics.move(ai);
-        }
-
-        // Move all the human-playable players based on velocity.
-        for (Player player: players) {
+        for(Player player : allPlayers){
             Physics.move(player);
+            if(!platform.isOnPlatform(player)) player.setState(ObjectState.DEAD);
+            logger.debug(player.getCharacterID() + "'s state is set to DEAD");
+            //TODO: If the player object turns out to not be needed at the end just delete it.
         }
+
 
         // Move all the balls based on velocity and decrement their timers.
         for (Ball ball: balls) {
