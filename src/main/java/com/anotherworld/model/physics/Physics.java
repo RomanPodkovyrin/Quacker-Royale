@@ -76,11 +76,34 @@ public class Physics {
     }
 
     /**
+     * Check if object a and b overlap in the next tick
+     * 
+     * @param a
+     *            AbstractMovable
+     * @param b
+     *            AbstractMovable
+     * @return isOverlapping
+     */
+    public static boolean checkOverlapping(AbstractMovable a, AbstractMovable b) {
+        float xDistance = (a.getXCoordinate() + a.getXVelocity())
+                - (b.getXCoordinate() + b.getXVelocity());
+        float yDistance = (a.getYCoordinate() + a.getYVelocity()
+                - b.getYCoordinate() + b.getYVelocity());
+
+        float sumOfRadii = a.getRadius() + b.getRadius();
+        float distanceSquared = xDistance * xDistance + yDistance * yDistance;
+
+        boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
+        logger.debug("Checked if the two objects are colliding");
+        return isOverlapping;
+    }
+
+    /**
      * Check if the ball is colliding on the wall: If Y of the ball is colliding
      * Y of the wall (check if the value of north of the ball is lesser than
      * value of north of the wall, else check if the value of south of the ball
-     * is greater than value of south of the wall)
-     * If X of the ball is colliding X of the wall.
+     * is greater than value of south of the wall) If X of the ball is colliding
+     * X of the wall.
      * 
      * @param a
      *            the ball to check for collisions
@@ -105,20 +128,20 @@ public class Physics {
                 (wall.getYCoordinate() + ySize));
 
         if (northEast.getY() < (northEastWall.getY())) {
-            a.setCoordinates(circleX, northEastWall.getY() + circleR);
+            a.setCoordinates(circleX, northEastWall.getY() + circleR + 0.1f);
             a.setYVelocity(-a.getYVelocity());
             logger.debug("The ball is bouncing on the North of Wall");
         } else if (southWest.getY() > southWestWall.getY()) {
-            a.setCoordinates(circleX, southWestWall.getY() - circleR);
+            a.setCoordinates(circleX, southWestWall.getY() - circleR - 0.1f);
             a.setYVelocity(-a.getYVelocity());
             logger.debug("The ball is bouncing on the South of Wall");
         }
         if (northEast.getX() > northEastWall.getX()) {
-            a.setCoordinates(northEast.getX() - circleR, circleY);
+            a.setCoordinates(northEast.getX() - circleR - 0.1f, circleY);
             a.setXVelocity(-a.getXVelocity());
             logger.debug("The ball is bouncing on the East of Wall");
         } else if (southWest.getX() < southWestWall.getX()) {
-            a.setCoordinates(southWest.getX() + circleR, circleY);
+            a.setCoordinates(southWest.getX() + circleR + 0.1f, circleY);
             a.setXVelocity(-a.getXVelocity());
             logger.debug("The ball is bouncing on the West of Wall");
         }
@@ -212,26 +235,28 @@ public class Physics {
             objectA.setAngle(angle);
         }
         if (xDifference < (distance) && xDifference < 0) {
-            objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 10,
+            objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 9,
                     coordB.getY());
         } else if (Math.abs(xDifference) < (distance)) {
-            objectB.setCoordinates(coordB.getX() - objectA.getRadius() / 10,
+            objectB.setCoordinates(coordB.getX() - objectA.getRadius() / 9,
                     coordB.getY());
         }
         if (yDifference < (distance) && yDifference < 0) {
             objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() + objectA.getRadius() / 10);
+                    coordB.getY() + objectA.getRadius() / 9);
         } else if (Math.abs(yDifference) < (distance)) {
             objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() - objectA.getRadius() / 10);
+                    coordB.getY() - objectA.getRadius() / 9);
         }
         logger.debug((objectA instanceof Ball ? "Ball" : "Player")
                 + " collided with"
                 + (objectB instanceof Ball ? "Ball" : "Player"));
     }
+
     /**
      * This method allows player to have a slow speed to the current direction
      * which looks like it is falling off the edge.
+     * 
      * @param player
      */
     public static void falling(Player player) {
@@ -250,8 +275,11 @@ public class Physics {
      * player check if the player is collided with pitfall
      *
      * @param listOfBalls
+     *            Balls in the list
      * @param listOfPlayers
+     *            Players in the list
      * @param wall
+     *            Wall
      */
     public static void onCollision(List<Ball> listOfBalls,
             List<Player> listOfPlayers, Wall wall) {
