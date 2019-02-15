@@ -73,13 +73,22 @@ public class BackgroundMusic implements Runnable
     }
 
     private void muteSound(){
-        volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
-        volume.setValue(volume.getMinimum());
+        if( line.isControlSupported( FloatControl.Type.MASTER_GAIN)) {
+            volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+            volume.setValue(volume.getMinimum());
+        } else{
+            //found another way to change volume for openjdk
+        }
     }
 
     private void unMuteSound(){
-        volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
-        volume.setValue(volume.getMaximum());
+        if( line.isControlSupported( FloatControl.Type.MASTER_GAIN)) {
+            volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+            volume.setValue(volume.getMaximum());
+        } else{
+            //found another way to change volume for openjdk
+        }
+
     }
 
     public static void main(String[] args){
