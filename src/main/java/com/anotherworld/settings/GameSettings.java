@@ -129,13 +129,13 @@ public class GameSettings {
             switch (side) {
                 case 0: // Left side
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballR;
-                    xMax = platform.getXCoordinate() - platform.getxSize() - ballR;
+                    xMax = platform.getXCoordinate() - platform.getxSize() ;//- ballR;
 
                     yMin = wall.getYCoordinate() - wall.getySize() + ballR;
                     yMax = wall.getYCoordinate() + wall.getySize() - ballR;
                     break;
                 case 1: // Right side
-                    xMin= platform.getXCoordinate() + platform.getxSize() + ballR;
+                    xMin= platform.getXCoordinate() + platform.getxSize() ;//+ ballR;
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballR;
 
                     yMin = wall.getYCoordinate() - wall.getySize() + ballR;
@@ -145,14 +145,14 @@ public class GameSettings {
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballR;
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballR;
 
-                    yMax = platform.getYCoordinate() - platform.getySize() - ballR;
+                    yMax = platform.getYCoordinate() - platform.getySize() ;//- ballR;
                     yMin = wall.getYCoordinate() - wall.getySize() + ballR;
                     break;
                 case 4: // Lower side
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballR;
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballR;
 
-                    yMin = platform.getYCoordinate() + platform.getySize() + ballR;
+                    yMin = platform.getYCoordinate() + platform.getySize() ;//+ ballR;
                     yMax = wall.getYCoordinate() + wall.getySize() - ballR;
                     break;
                 default:

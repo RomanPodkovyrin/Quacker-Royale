@@ -1,5 +1,6 @@
 package com.anotherworld.control;
 
+import com.anotherworld.audio.BackgroundMusic;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
@@ -14,13 +15,13 @@ public class Main {
 
     public static void main (String args[]) {
 //        BackgroundMusic bm = new BackgroundMusic();
-//        bm.start();
+//        bm.playBackgroundMusic();
         //create view ??
 
         // Ask multi player or single player
 
         //set up single player
-        GameSettings settings = new GameSettings(2,1,1, true, true);
+        GameSettings settings = new GameSettings(4,3,6, true, true);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         System.out.println(screenSize.getWidth() + " * " + screenSize.getHeight());

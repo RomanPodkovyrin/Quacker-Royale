@@ -57,6 +57,7 @@ public class AI {
 
             // Set up of the survival instincts
             ArrayList<Job> survival = new ArrayList<>();
+            //stay on the platform
             // TODO ai gets very jittery when getting close to the edge
             survival.add(new AvoidEdge());
             survival.add(new AvoidBall());
