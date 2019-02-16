@@ -14,13 +14,19 @@ public class Main {
     private static Logger logger = LogManager.getLogger(Main.class);
 
     public static void main (String args[]) {
-//        BackgroundMusic bm = new BackgroundMusic();
-//        bm.playBackgroundMusic();
-        //create view ??
+        Main main = new Main();
+        main.startTheGame();
 
-        // Ask multi player or single player
+    }
 
-        //set up single player
+    public Main() {
+
+    }
+
+    public void startTheGame() {
+        BackgroundMusic bm = new BackgroundMusic();
+        bm.playBackgroundMusic();
+
         GameSettings settings = new GameSettings(4,3,4, true, true);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -36,5 +42,25 @@ public class Main {
         } catch (RuntimeException ex) {
             logger.fatal(ex);
             ex.printStackTrace();
-        }    }
+        }
+    }
+
+    public void startMultiplayer(boolean host) {
+        if (host) {
+            // establish the connection
+            // wait for people to connect
+            // tell when to start the game
+            // finds how many people connected
+            startTheGame();
+            // when all players have been created
+            // allocate the player id to the ip address so network knows who to send it to
+        } else {
+            // find the host and connect
+        }
+
+    }
+
+
+
+
 }
