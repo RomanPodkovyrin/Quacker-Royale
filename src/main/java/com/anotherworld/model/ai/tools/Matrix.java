@@ -1,5 +1,7 @@
 package com.anotherworld.model.ai.tools;
 
+import java.io.Serializable;
+
 /**
  * This class hold x and y values to represent a point or vector.*
  * [p1] <- x
@@ -8,7 +10,7 @@ package com.anotherworld.model.ai.tools;
  *
  * @author Roman P
  */
-public class Matrix {
+public class Matrix implements Serializable {
     private float x;
     private float y;
 
