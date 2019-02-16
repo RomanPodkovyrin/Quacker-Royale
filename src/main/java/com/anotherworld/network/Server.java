@@ -66,10 +66,6 @@ public class Server extends Thread {
                 e.printStackTrace();
             }
             counter++;
-//            if (received.equals("end")) {
-//                running = false;
-//                continue;
-//            }
         }
         close();
     }
