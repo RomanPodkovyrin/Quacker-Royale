@@ -23,7 +23,7 @@ public class GameClient {
         group = InetAddress.getByName(multicastIP);
         s.joinGroup(group);
         socket = new DatagramSocket();
-        address = InetAddress.getByName("172.22.84.8");
+        address = InetAddress.getByName("localhost");
         System.out.println("Client address : " + Inet4Address.getLocalHost().getHostAddress());
     }
 
