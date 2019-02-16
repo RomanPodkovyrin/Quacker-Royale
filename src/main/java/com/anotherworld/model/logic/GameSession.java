@@ -53,7 +53,7 @@ public class GameSession {
         this.balls = new ArrayList<>();
         for(BallData data : balls) {
             Ball newBall = new Ball(data);
-            newBall.setVelocity(3, newBall.getSpeed());
+            newBall.setVelocity(1* newBall.getSpeed(), newBall.getSpeed());
             this.balls.add(newBall);
         }
 

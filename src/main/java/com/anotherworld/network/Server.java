@@ -74,6 +74,7 @@ public class Server extends Thread {
         InetAddress playerIp = InetAddress.getByName(playersIPs[0]);
                 DatagramPacket packet = new DatagramPacket(dataToSend, dataToSend.length, multicastGroup, multicastPort);
                 socket.send(packet);
+        System.out.println("SEnding to client");
 //        for(int i = 0; i<amountOfPlayers;i++){
 //            if(playersIPs[i] != null) {
 //                InetAddress playerIp = InetAddress.getByName(playersIPs[i]);
