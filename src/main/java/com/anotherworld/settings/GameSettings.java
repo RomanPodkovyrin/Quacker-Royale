@@ -3,6 +3,8 @@ package com.anotherworld.settings;
 import com.anotherworld.audio.BackgroundMusic;
 import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.control.GameSessionController;
+import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.ObjectState;
@@ -118,51 +120,71 @@ public class GameSettings {
 
         for (int i = 0; i < numberOfBalls; i++) {
 
-            int side = getRandom(0,3);
+            int side = (int)(Math.random() * 4) + 1;
             float xMin = 0;
             float xMax = 0;
 
             float yMin = 0;
             float yMax = 0;
 
-            float ballR = 3;
+            float ballRadius = 3;
             switch (side) {
                 case 0: // Left side
-                    xMin = wall.getXCoordinate() - wall.getxSize() + ballR;
-                    xMax = platform.getXCoordinate() - platform.getxSize() ;//- ballR;
+                    logger.trace("left");
+                    xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
+                    xMax = platform.getXCoordinate() - platform.getxSize() ;//- ballRadius;
 
-                    yMin = wall.getYCoordinate() - wall.getySize() + ballR;
-                    yMax = wall.getYCoordinate() + wall.getySize() - ballR;
+                    yMin = wall.getYCoordinate() - wall.getySize() + ballRadius;
+                    yMax = wall.getYCoordinate() + wall.getySize() - ballRadius;
                     break;
                 case 1: // Right side
-                    xMin= platform.getXCoordinate() + platform.getxSize() ;//+ ballR;
-                    xMax = wall.getXCoordinate() + wall.getxSize() - ballR;
+                    logger.trace("right");
+                    xMin= platform.getXCoordinate() + platform.getxSize() ;//+ ballRadius;
+                    xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;
 
-                    yMin = wall.getYCoordinate() - wall.getySize() + ballR;
-                    yMax = wall.getYCoordinate() + wall.getySize() - ballR;
+                    yMin = wall.getYCoordinate() - wall.getySize() + ballRadius;
+                    yMax = wall.getYCoordinate() + wall.getySize() - ballRadius;
                     break;
                 case 2: // Upper side
-                    xMin = wall.getXCoordinate() - wall.getxSize() + ballR;
-                    xMax = wall.getXCoordinate() + wall.getxSize() - ballR;
+                    logger.trace("up");
+                    xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
+                    xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;
 
-                    yMax = platform.getYCoordinate() - platform.getySize() ;//- ballR;
-                    yMin = wall.getYCoordinate() - wall.getySize() + ballR;
+                    yMax = platform.getYCoordinate() - platform.getySize() ;//- ballRadius;
+                    yMin = wall.getYCoordinate() - wall.getySize() + ballRadius;
                     break;
                 case 4: // Lower side
-                    xMin = wall.getXCoordinate() - wall.getxSize() + ballR;
-                    xMax = wall.getXCoordinate() + wall.getxSize() - ballR;
+                    logger.trace("down");
+                    xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
+                    xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;
 
-                    yMin = platform.getYCoordinate() + platform.getySize() ;//+ ballR;
-                    yMax = wall.getYCoordinate() + wall.getySize() - ballR;
+                    yMin = platform.getYCoordinate() + platform.getySize() ;//+ ballRadius;
+                    yMax = wall.getYCoordinate() + wall.getySize() - ballRadius;
                     break;
                 default:
                     logger.error("Wrong random ball set up");
 
             }
 
+            float newBallXCoordinate = getRandom(xMin,xMax);
+            float newBallYCoordinate = getRandom(yMin,yMax);
+            boolean emptySpace = false;
+
+            while (!emptySpace) {
+
+                emptySpace = true;
+                newBallXCoordinate = getRandom(xMin,xMax);
+                newBallYCoordinate = getRandom(yMin,yMax);
+                for (BallData createdBall : balls) {
+                    if (MatrixMath.distanceAB(new Matrix(newBallXCoordinate, newBallYCoordinate), createdBall.getCoordinates()) <= ballRadius * 2) {
+                        emptySpace = false;
+                    }
+                }
+            }
+
             // set random location with random direction
             // probably towards the middle
-            BallData newBall = new BallData(false,getRandom(xMin,xMax),getRandom(yMin,yMax),ObjectState.IDLE,0.5f,3);
+            BallData newBall = new BallData(false,newBallXCoordinate,newBallYCoordinate,ObjectState.IDLE,0.5f,ballRadius);
             balls.add(newBall);
         }
 
