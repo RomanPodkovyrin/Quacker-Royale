@@ -24,10 +24,8 @@ public class PlayerFollow2dCamera implements Camera {
     
     private ArrayList<DisplayObject> objects;
 
-    public PlayerFollow2dCamera(float width, float height) {
-        this(new ArrayList<>(), width, height);
-        this.currentX = 0;
-        this.currentY = 0;
+    public PlayerFollow2dCamera(float x, float y, float width, float height) {
+        this(new ArrayList<>(), x, y, width, height);
     }
     
     /**
@@ -36,10 +34,12 @@ public class PlayerFollow2dCamera implements Camera {
      * @param width The width of the camera
      * @param height The height of the camera
      */
-    public PlayerFollow2dCamera(ArrayList<DisplayObject> objects, float width, float height) {
+    public PlayerFollow2dCamera(ArrayList<DisplayObject> objects, float x, float y, float width, float height) {
         this.width = width;
         this.height = height;
         this.objects = objects;
+        this.currentX = x;
+        this.currentY = y;
     }
     
     /**
@@ -61,7 +61,6 @@ public class PlayerFollow2dCamera implements Camera {
             }
         }
         x /= Math.max(i, 1);
-        x -= (width / 2);
         if (x > currentX) {
             currentX += Math.min(Math.abs(x - currentX), 0.2f);
         } else {
@@ -82,7 +81,6 @@ public class PlayerFollow2dCamera implements Camera {
             }
         }
         y /= Math.max(i, 1);
-        y -= (height / 2);
         if (y > currentY) {
             currentY += Math.min(Math.abs(y - currentY), 0.2f);
         } else {

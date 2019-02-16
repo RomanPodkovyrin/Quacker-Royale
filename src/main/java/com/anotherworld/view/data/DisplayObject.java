@@ -116,7 +116,10 @@ public class DisplayObject {
      * Cleans opengl of the object's representation.
      */
     public void destroyObject() {
-        
+        logger.trace("Destroying object containing " + displayData.toString());
+        glDeleteBuffers(vertices);
+        glDeleteBuffers(edges);
+        glDeleteBuffers(vaoId);
     }
     
     /**
@@ -127,8 +130,6 @@ public class DisplayObject {
      * @return The wall's points
      */
     private final Matrix2d genWall(float w, float h, float t) {
-        w = 1f;
-        h = 1f;
         Matrix2d points = new Matrix2d(4, 10);
         points.setValue(0, 0, -w / 2 - t);
         points.setValue(1, 0, h / 2 + t);
@@ -163,8 +164,6 @@ public class DisplayObject {
      * @return The points of the rectangle
      */
     private final Matrix2d genRectangle(float w, float h) {
-        w = 1f;
-        h = 1f;
         Matrix2d points = new Matrix2d(4, 4);
         points.setValue(0, 0, -w / 2);
         points.setValue(1, 0, h / 2);
@@ -188,7 +187,6 @@ public class DisplayObject {
      * @return The points of the circle
      */
     private final Matrix2d genCircle(float r) {
-        r = 0.5f;
         Matrix2d points = new Matrix2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
@@ -261,6 +259,11 @@ public class DisplayObject {
         //glDisableVertexAttribArray(0);
         //glBindVertexArray(0);
         
+    }
+    
+    public void transform() {
+        glTranslatef(this.getX(), this.getY(), 0);
+        glRotatef(-this.getTheta(), 0, 0, 1);
     }
     
     private FloatBuffer getFloatBuffer() {

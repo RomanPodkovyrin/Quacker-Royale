@@ -39,15 +39,8 @@ public class Scene {
             int y = convertCoord(display.getY(), height);
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
-            //glViewport(x, y, w, h);
-            ArrayList<DisplayObject> toDraw = display.draw();
-            logger.trace("Drawing " + toDraw.size() + " objects");
-            for (int j = 0; j < toDraw.size(); j++) {
-                GL45.glColor3f(1, 1, 1);
-                logger.trace("Drawing object " + j);
-                toDraw.get(j).draw();
-            }
-            
+            glViewport(x, y, w, h);
+            display.draw();
         }
     }
     
@@ -72,6 +65,12 @@ public class Scene {
     private int convertScale(float floatScale, int intScale, int intValue) {
         logger.trace("Converting scale " + floatScale);
         return Math.min(intScale - intValue, Math.max(0, (int)Math.round((floatScale / 2f) * ((float)intScale))));
+    }
+
+    public void destoryObjects() {
+        for (GraphicsDisplay d : displays) {
+            d.destroyObjects();
+        }
     }
     
 }

@@ -18,7 +18,7 @@ public class GameScene extends Scene {
      */
     public GameScene() {
         super();
-        this.camera = new PlayerFollow2dCamera(160f, 90f);
+        camera = new PlayerFollow2dCamera(80f, 45f, 160f, 90f);
         this.displays.add(new GameDisplay(-1f, -1f, 2f, 2f, camera));
     }
     

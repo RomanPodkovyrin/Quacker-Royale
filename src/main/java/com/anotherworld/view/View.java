@@ -1,7 +1,7 @@
 package com.anotherworld.view;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL45.*;
+import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
 import com.anotherworld.tools.datapool.WallData;
@@ -132,7 +132,9 @@ public class View implements Runnable {
                     completeEvent(eventQueue.poll());
                 }
             }
-
+            
+            glLoadIdentity();
+            
             currentScene.draw(width, height);
 
             glFlush();
@@ -145,6 +147,7 @@ public class View implements Runnable {
 
         }
         logger.info("Closing window");
+        currentScene.destoryObjects();
         glfwTerminate();
     }
     
