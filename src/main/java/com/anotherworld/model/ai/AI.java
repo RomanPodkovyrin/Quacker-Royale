@@ -140,7 +140,7 @@ public class AI {
                 jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
             }
             tick = tick + 1;
-        } else if (tick == 15) {
+        } else if (tick == 10) {
             tick = 0;
         } else {
             tick = tick + 1;
