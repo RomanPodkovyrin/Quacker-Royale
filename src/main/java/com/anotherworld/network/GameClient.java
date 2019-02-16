@@ -13,7 +13,7 @@ public class GameClient {
     private InetAddress address;
     private int multicastPort = 4445;
     private int port = 4446;
-    private String multicastIP = "228.5.6.6";
+    private String multicastIP = "228.5.6.7";
     MulticastSocket s;
     InetAddress group;
     private byte[] dataToSend;
@@ -67,6 +67,7 @@ public class GameClient {
         int counter=0;
         while(true){
             counter++;
+            System.out.println("hllo");
             //client.sendDataToServer( "hello from lil anton" + counter);
             client.sendObjectToServer();
             client.getDataFromServer();

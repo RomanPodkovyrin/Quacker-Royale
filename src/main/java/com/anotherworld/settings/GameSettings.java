@@ -120,6 +120,7 @@ public class GameSettings {
             float newBallYCoordinate = getRandom(yMin,yMax);
             boolean emptySpace = false;
 
+            int counter = 0;
             while (!emptySpace) {
 
                 emptySpace = true;
@@ -129,6 +130,14 @@ public class GameSettings {
                     if (MatrixMath.distanceAB(new Matrix(newBallXCoordinate, newBallYCoordinate), createdBall.getCoordinates()) <= ballRadius * 2) {
                         emptySpace = false;
                     }
+                }
+                if (counter < 10) {
+                    counter = counter + 1;
+                } else {
+                    counter =0;
+                    logger.trace("Too long to find a random location for the ball ");
+                    break;
+
                 }
             }
 
@@ -140,21 +149,29 @@ public class GameSettings {
 
     }
 
-    private void createWall() {
+    private void createWall() throws IOException{
         //again where is the center
         WallData wall = new WallData(50,50);
-//        wall.setHeight(100);
-//        wall.setxSize(50);
-//        wall.setWidth(100);
-//        wall.setySize(50);
+
+        wall.setxSize(Float.parseFloat(propertyFile.getValue("WALL_X_SIZE")));
+        wall.setWidth(wall.getxSize() * 2);
+
+        wall.setySize(Float.parseFloat(propertyFile.getValue("WALL_Y_SIZE")));
+        wall.setHeight(wall.getySize() * 2);
         walls.add(wall);
     }
 
-    private void createPlatform() {
+    private void createPlatform() throws IOException {
         // new PlatformData();
         // Where is a center
         PlatformData platform = new PlatformData(50,50);
-//        platform.setWidth();
+
+        platform.setxSize(Float.parseFloat(propertyFile.getValue("PLATFORM_X_SIZE")));
+        platform.setWidth(platform.getxSize() * 2);
+
+        platform.setySize(Float.parseFloat(propertyFile.getValue("PLATFORM_Y_SIZE")));
+        platform.setHeight(platform.getySize() * 2);
+
         platforms.add(platform);
 
     }
