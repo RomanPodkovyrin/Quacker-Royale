@@ -13,7 +13,7 @@ public class GameClient {
     private InetAddress address;
     private int multicastPort = 4445;
     private int port = 4446;
-    private String multicastIP = "228.5.6.7";
+    private String multicastIP = "228.5.6.6";
     MulticastSocket s;
     InetAddress group;
     private byte[] dataToSend;
@@ -23,7 +23,7 @@ public class GameClient {
         group = InetAddress.getByName(multicastIP);
         s.joinGroup(group);
         socket = new DatagramSocket();
-        address = InetAddress.getByName("172.22.84.8");
+        address = InetAddress.getByName("localhost");
         System.out.println("Client address : " + Inet4Address.getLocalHost().getHostAddress());
     }
 

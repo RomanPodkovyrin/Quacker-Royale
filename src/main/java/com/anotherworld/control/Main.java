@@ -57,7 +57,10 @@ public class Main {
         } else {
             // find the host and connect
         }
+    }
 
+    public void startSinglePlayer() {
+        startTheGame();
     }
 
 

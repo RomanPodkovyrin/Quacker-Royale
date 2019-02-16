@@ -85,6 +85,7 @@ public class BackgroundMusic implements Runnable
         if( line.isControlSupported( FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMaximum());
+            System.out.println("correct java version");
         } else{
             //found another way to change volume for openjdk
         }
@@ -98,9 +99,11 @@ public class BackgroundMusic implements Runnable
             Scanner sc = new Scanner(System.in);
             int input = sc.nextInt();
             if(input == 1){
+                System.out.println("1");
                 ba.muteSound();
             }
             else if(input == 2)
+                System.out.println("2");
                 ba.unMuteSound();
         }
     }

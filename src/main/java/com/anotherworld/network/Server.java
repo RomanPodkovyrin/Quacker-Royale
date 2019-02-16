@@ -20,7 +20,7 @@ public class Server extends Thread {
     int counter = 0;
     private int multicastPort = 4445;
     private int port = 4446;
-    private String multicastIP = "228.5.6.7";
+    private String multicastIP = "228.5.6.6";
     private String[] playersIPs;
     private int amountOfPlayers = 2;
 
@@ -113,8 +113,8 @@ public class Server extends Thread {
 
     public void updateIPaddresses(String playerIP){
         //playersIPs[0] = playerIP;
-        playersIPs[0] = "172.22.84.8";
-        playersIPs[1] = "192.168.0.21";
+        playersIPs[0] = "127.0.1.1";
+        playersIPs[1] = "10.42.0.133";
     }
 
     public void close(){
