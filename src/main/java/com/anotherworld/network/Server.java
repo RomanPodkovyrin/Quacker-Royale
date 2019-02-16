@@ -71,16 +71,16 @@ public class Server extends Thread {
     }
 
     public void sendToClient(byte[] dataToSend) throws IOException {
-//        InetAddress playerIp = InetAddress.getByName(playersIPs[0]);
-//                DatagramPacket packet = new DatagramPacket(dataToSend, dataToSend.length, multicastGroup, multicastPort);
-//                socket.send(packet);
-        for(int i = 0; i<amountOfPlayers;i++){
-            if(playersIPs[i] != null) {
-                InetAddress playerIp = InetAddress.getByName(playersIPs[i]);
-                DatagramPacket packet = new DatagramPacket(dataToSend, dataToSend.length, playerIp, multicastPort);
+        InetAddress playerIp = InetAddress.getByName(playersIPs[0]);
+                DatagramPacket packet = new DatagramPacket(dataToSend, dataToSend.length, multicastGroup, multicastPort);
                 socket.send(packet);
-            }
-        }
+//        for(int i = 0; i<amountOfPlayers;i++){
+//            if(playersIPs[i] != null) {
+//                InetAddress playerIp = InetAddress.getByName(playersIPs[i]);
+//                DatagramPacket packet = new DatagramPacket(dataToSend, dataToSend.length, playerIp, multicastPort);
+//                socket.send(packet);
+//            }
+//        }
 
     }
 
@@ -113,8 +113,8 @@ public class Server extends Thread {
 
     public void updateIPaddresses(String playerIP){
         //playersIPs[0] = playerIP;
-        playersIPs[0] = "172.22.84.8";
-        playersIPs[1] = "192.168.0.21";
+        playersIPs[0] = "localhost";
+        //playersIPs[1] = "192.168.0.21";
     }
 
     public void close(){
