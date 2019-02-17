@@ -11,8 +11,10 @@ public class GameClient {
 
     public GameClient() throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
-        address = InetAddress.getByName("172.22.84.8");
-        System.out.println("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
+        address = InetAddress.getByName("10.42.0.1");
+        System.out.println("Client ip: " +
+
+                Inet4Address.getLocalHost().getHostAddress());
     }
 
     public void sendDataToServer(String msg) {
