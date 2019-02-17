@@ -121,6 +121,16 @@ public class GameSessionController {
         }
     }
 
+    private void networking() {
+
+        // if client
+        //check if got any new packages
+        // implements queue from which it updates the current game state
+
+        // if server
+        // check for the key pressed and update the appropriate player object
+    }
+
     private void render() {
         ArrayList<PlayerData> players = new ArrayList<>();
         players.addAll(settings.getAi());
