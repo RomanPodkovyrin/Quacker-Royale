@@ -78,6 +78,8 @@ public class BackgroundMusic implements Runnable
             volume.setValue(volume.getMinimum());
         } else{
             //found another way to change volume for openjdk
+            volume = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
+            volume.setValue(volume.getMinimum());
         }
     }
 
