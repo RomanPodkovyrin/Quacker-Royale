@@ -27,7 +27,7 @@ public class Main {
         BackgroundMusic bm = new BackgroundMusic();
         bm.playBackgroundMusic();
 
-        GameSettings settings = new GameSettings(4,3,4, true, true);
+        GameSettings settings = new GameSettings(2,1,1, true, true);
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         System.out.println(screenSize.getWidth() + " * " + screenSize.getHeight());

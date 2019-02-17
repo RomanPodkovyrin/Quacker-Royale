@@ -9,6 +9,7 @@ import com.anotherworld.model.movable.Player;
 import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.system.CallbackI;
 
 import java.util.ArrayList;
 
@@ -21,8 +22,6 @@ public class AI {
 
     private static Logger logger = LogManager.getLogger(AI.class);
 
-
-    //private ArrayList<Job> jobs = new ArrayList<>();
     private ArrayList<Pair<Player,ArrayList<Player>>> aiPlayers = new ArrayList<>();
     private ArrayList<Player> allPlayers;
     private ArrayList<Ball> balls;
@@ -34,8 +33,6 @@ public class AI {
     private Matrix aiVector;
     private Matrix aiPosition;
 
-    // is this supposed to be shared between ais or should they get one of their own?
-    //###############################################################################
     private Job repeatJob = new RepeatSuccess((new WalkAbout()));
 
 
@@ -73,26 +70,20 @@ public class AI {
             ballAim.add(new NeutralBallCheck());
             ballAim.add(new AimBall());
 
-//            domination.add(new SequenceSuccess(ballAim));
-            // when the ball was chased need to aim it as well
-
             // TODO chase the player gets the ai stuck
-//            aim.add(new ChasePlayer());
-//            aim.add(new Aim);
-//            aim.add(new Charge);
-
-
-//            domination.add(new SequenceSuccess(aim));
-
-            // Set up of the Peaceful coexistence
-//            ArrayList<Job> peaceful = new ArrayList<>();
-//            peaceful.add(new WalkAbout());
 
             ArrayList<Job> routines = new ArrayList<>();
             routines.add(new SequenceSuccess(survival));
-            routines.add(new Inverter(new ChaseBall()));
+
+            ArrayList<Job> extra = new ArrayList<>();
+
+            ArrayList<Job> dominateAndPeace = new ArrayList<>();
+            dominateAndPeace.add(new Inverter(new ChaseBall()));
 //            routines.add(new SequenceSuccess(ballAim));
-            routines.add(new WalkAbout());
+            dominateAndPeace.add(new WalkAbout());
+            extra.add(new SequenceSuccess(dominateAndPeace));
+            extra.add(new CheckIfSaveToGo());
+            routines.add(new Sequence(extra));
 
             Job tempj = new Repeat(new SequenceSuccess(routines));
             jobs.add(tempj);
