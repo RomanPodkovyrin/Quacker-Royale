@@ -2,6 +2,7 @@ package com.anotherworld.control;
 
 import com.anotherworld.audio.BackgroundMusic;
 import com.anotherworld.settings.GameSettings;
+import com.anotherworld.settings.MenuDemo;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import org.apache.logging.log4j.LogManager;
@@ -10,13 +11,19 @@ import org.apache.logging.log4j.Logger;
 import java.awt.*;
 
 public class Main {
+    private MenuDemo view;
 
     private static Logger logger = LogManager.getLogger(Main.class);
 
-    public static void main (String args[]) {
-        Main main = new Main();
-        main.startTheGame();
+//    public static void main (String args[]) {
+////        Main main = new Main();
+////        main.startTheGame();
+//        MenuDemo viewMenu = new MenuDemo(this);
+//
+//    }
 
+    public void add(MenuDemo view) {
+        this.view = view;
     }
 
     public Main() {

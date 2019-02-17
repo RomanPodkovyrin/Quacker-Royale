@@ -9,7 +9,7 @@ public class Server extends Thread {
     private boolean serverIsRunning;
     int counter = 0;
     private byte[] dataReceived;
-    private int numberOfPlayers = 1;
+    private int numberOfPlayers = 2;
     private String playersIPs[];
 
     public Server() throws SocketException, UnknownHostException {
@@ -17,7 +17,8 @@ public class Server extends Thread {
         dataReceived = new byte[32];
         System.out.println("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
         playersIPs = new String[numberOfPlayers];
-        playersIPs[0] = "172.22.84.8";
+        playersIPs[0] = "10.42.0.133";
+        playersIPs[1] = "10.42.0.1";
     }
 
     public void run() {
@@ -50,7 +51,7 @@ public class Server extends Thread {
         for(int i = 0; i < numberOfPlayers; i++) {
             InetAddress playerIP = InetAddress.getByName(playersIPs[i]);
             DatagramPacket packet
-                    = new DatagramPacket(dataToSend, dataToSend.length, ipAddress, port);
+                    = new DatagramPacket(dataToSend, dataToSend.length, playerIP, port);
             try {
                 this.socket.send(packet);
             } catch (IOException e) {
