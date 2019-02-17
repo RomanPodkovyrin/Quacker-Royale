@@ -52,7 +52,8 @@ public class Physics {
         float newXCoordinate = object.getXCoordinate() + object.getXVelocity();
         float newYCoordinate = object.getYCoordinate() + object.getYVelocity();
         object.setCoordinates(newXCoordinate, newYCoordinate);
-        logger.debug("Object's location updated successfully");
+        logger.debug((object instanceof Player ? "Pla" : "")
+                + "location updated successfully");
     }
 
     /**
@@ -79,8 +80,8 @@ public class Physics {
      * Check if the ball is colliding on the wall: If Y of the ball is colliding
      * Y of the wall (check if the value of north of the ball is lesser than
      * value of north of the wall, else check if the value of south of the ball
-     * is greater than value of south of the wall)
-     * If X of the ball is colliding X of the wall.
+     * is greater than value of south of the wall) If X of the ball is colliding
+     * X of the wall.
      * 
      * @param a
      *            the ball to check for collisions
@@ -103,7 +104,6 @@ public class Physics {
         // South and West of the Wall.
         Matrix southWestWall = new Matrix((wall.getXCoordinate() - xSize),
                 (wall.getYCoordinate() + ySize));
-
         if (northEast.getY() < (northEastWall.getY())) {
             a.setCoordinates(circleX, northEastWall.getY() + circleR);
             a.setYVelocity(-a.getYVelocity());
@@ -229,15 +229,26 @@ public class Physics {
                 + " collided with"
                 + (objectB instanceof Ball ? "Ball" : "Player"));
     }
+
     /**
      * This method allows player to have a slow speed to the current direction
      * which looks like it is falling off the edge.
+     * 
      * @param player
      */
     public static void falling(Player player) {
         float angle = player.getAngle();
         player.setVelocity((float) (fallingSpeed * Math.sin(angle)),
                 (float) (fallingSpeed * Math.cos(angle)));
+    }
+
+    public static void charge(Player player) {
+        int charge = player.getChargeLevel();
+        float speedIncreases = 1 + (1 / 5 * charge);
+        float speed = player.getSpeed() * speedIncreases;
+        float angle = player.getAngle();
+        player.setVelocity((float)(speed*Math.sin(angle)),(float)(speed*Math.cos(angle)));
+        player.setChargeLevel(charge>0?charge-1:charge);
     }
 
     /**
