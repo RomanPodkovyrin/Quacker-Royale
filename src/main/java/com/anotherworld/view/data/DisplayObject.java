@@ -19,69 +19,23 @@ import org.lwjgl.BufferUtils;
  * @author Jake Stewart
  *
  */
-public class DisplayObject {
+public abstract class DisplayObject {
 
     private static Logger logger = LogManager.getLogger(DisplayObject.class);
-    
-    private final DisplayData displayData;
     
     private final Matrix2d points;
     
     private final int displayType;
     
     private int vertices;
-    
-    private boolean cameraShouldFollow;
 
     private int edges;
 
     private int vaoId;
     
-    /**
-     * Creates a display object to display a ball.
-     * @param displayData The ball data to display
-     */
-    public DisplayObject(BallDisplayData displayData) {
-        this.displayData = displayData;
-        points = genCircle(displayData.getRadius());
-        displayType = GL_TRIANGLE_FAN;
-        cameraShouldFollow = false;
-        createOpenglObjects(this);
-    }
-
-    /**
-     * Creates a display object to display a rectangle like the platform.
-     * @param displayData The rectangle to display.
-     */
-    public DisplayObject(RectangleDisplayData displayData) {
-        this.displayData = displayData;
-        points = genRectangle(displayData.getWidth(), displayData.getHeight());
-        displayType = GL_TRIANGLE_FAN;
-        cameraShouldFollow = false;
-        createOpenglObjects(this);
-    }
-
-    /**
-     * Creates a display object to display a player.
-     * @param displayData The player to display
-     */
-    public DisplayObject(PlayerDisplayData displayData) {
-        this.displayData = displayData;
-        points = genCircle(displayData.getRadius());
-        displayType = GL_TRIANGLE_FAN;
-        cameraShouldFollow = true;
-        createOpenglObjects(this);
-    }
-    
-    /**
-     * Creates a display object to display the wall.
-     * @param displayData The wall to display
-     */
-    public DisplayObject(WallData displayData) {
-        this.displayData = displayData;
-        this.points = genWall(displayData.getWidth(), displayData.getHeight(), 1);
-        this.displayType = GL_TRIANGLE_STRIP;
-        cameraShouldFollow = false;
+    public DisplayObject(Matrix2d points, int displayType) {
+        this.points = points;
+        this.displayType = displayType;
         createOpenglObjects(this);
     }
     
@@ -116,7 +70,7 @@ public class DisplayObject {
      * Cleans opengl of the object's representation.
      */
     public void destroyObject() {
-        logger.trace("Destroying object containing " + displayData.toString());
+        logger.trace("Destroying object containing " + vaoId);
         glDeleteBuffers(vertices);
         glDeleteBuffers(edges);
         glDeleteBuffers(vaoId);
@@ -129,7 +83,7 @@ public class DisplayObject {
      * @param t The thickness of the wall
      * @return The wall's points
      */
-    private final Matrix2d genWall(float w, float h, float t) {
+    protected static final Matrix2d genWall(float w, float h, float t) {
         Matrix2d points = new Matrix2d(4, 10);
         points.setValue(0, 0, -w / 2 - t);
         points.setValue(1, 0, h / 2 + t);
@@ -163,7 +117,7 @@ public class DisplayObject {
      * @param h The height of the rectangle
      * @return The points of the rectangle
      */
-    private final Matrix2d genRectangle(float w, float h) {
+    protected final static Matrix2d genRectangle(float w, float h) {
         Matrix2d points = new Matrix2d(4, 4);
         points.setValue(0, 0, -w / 2);
         points.setValue(1, 0, h / 2);
@@ -186,7 +140,7 @@ public class DisplayObject {
      * @param r The radius of the circle
      * @return The points of the circle
      */
-    private final Matrix2d genCircle(float r) {
+    protected final static Matrix2d genCircle(float r) {
         Matrix2d points = new Matrix2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
@@ -211,25 +165,19 @@ public class DisplayObject {
      * Returns the angle of the object in degrees.
      * @return the angle of the object
      */
-    public float getTheta() {
-        return displayData.getAngle();
-    }
+    public abstract float getTheta();
     
     /**
      * Returns the x position of the object.
      * @return the x position
      */
-    public float getX() {
-        return displayData.getXCoordinate();
-    }
+    public abstract float getX();
     
     /**
      * Returns the y position of the object.
      * @return the y position
      */
-    public float getY() {
-        return displayData.getYCoordinate();
-    }
+    public abstract float getY();
     
     public void draw() {
         logger.trace("Buffer vaoID " + (glIsBuffer(vaoId) ? "exists" : "wasn't found"));
@@ -258,11 +206,6 @@ public class DisplayObject {
     public void transform() {
         glTranslatef(this.getX(), this.getY(), 0);
         glRotatef(-this.getTheta(), 0, 0, 1);
-        animate();
-    }
-    
-    private void animate() {
-        
     }
     
     private FloatBuffer getFloatBuffer() {
@@ -287,8 +230,6 @@ public class DisplayObject {
      * Returns true if the camera should track the object.
      * @return if the camera should track the object
      */
-    public boolean shouldCameraFollow() {
-        return cameraShouldFollow;
-    }
+    public abstract boolean shouldCameraFollow();
     
 }

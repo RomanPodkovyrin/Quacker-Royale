@@ -8,9 +8,13 @@ import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.data.BallDisplayData;
+import com.anotherworld.view.data.BallDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.PlayerDisplayData;
+import com.anotherworld.view.data.PlayerDisplayObject;
 import com.anotherworld.view.data.RectangleDisplayData;
+import com.anotherworld.view.data.RectangleDisplayObject;
+import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
 
@@ -154,16 +158,16 @@ public class View implements Runnable {
             ArrayList<DisplayObject> disObj = new ArrayList<>();
             UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects)event);
             for (int i = 0; i < updateEvent.getRectangleObjects().size(); i++) {
-                disObj.add(new DisplayObject(updateEvent.getRectangleObjects().get(i)));
+                disObj.add(new RectangleDisplayObject(updateEvent.getRectangleObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getWallObjects().size(); i++) {
-                disObj.add(new DisplayObject(updateEvent.getWallObjects().get(i)));
+                disObj.add(new WallDisplayObject(updateEvent.getWallObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getPlayerObjects().size(); i++) {
-                disObj.add(new DisplayObject(updateEvent.getPlayerObjects().get(i)));
+                disObj.add(new PlayerDisplayObject(updateEvent.getPlayerObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
-                disObj.add(new DisplayObject(updateEvent.getBallObjects().get(i)));
+                disObj.add(new BallDisplayObject(updateEvent.getBallObjects().get(i)));
             }
             ((GameScene)currentScene).updateGameObjects(disObj);
         }
