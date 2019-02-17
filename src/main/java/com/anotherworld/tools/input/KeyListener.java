@@ -24,6 +24,7 @@ public class KeyListener {
         if (glfwGetKey(window, GLFW_KEY_DOWN)  == 1) keyPresses.add(Input.DOWN);
         if (glfwGetKey(window, GLFW_KEY_LEFT)  == 1) keyPresses.add(Input.LEFT);
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == 1) keyPresses.add(Input.RIGHT);
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == 1) keyPresses.add(Input.CHARGE);
 
         return keyPresses;
     }
