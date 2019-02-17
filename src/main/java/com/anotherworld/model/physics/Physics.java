@@ -52,7 +52,7 @@ public class Physics {
         float newXCoordinate = object.getXCoordinate() + object.getXVelocity();
         float newYCoordinate = object.getYCoordinate() + object.getYVelocity();
         object.setCoordinates(newXCoordinate, newYCoordinate);
-        logger.debug((object instanceof Player ? "Pla" : "")
+        logger.debug((object instanceof Player ? "Player " : "Ball ")
                 + "location updated successfully");
     }
 
@@ -227,7 +227,7 @@ public class Physics {
         }
         logger.debug((objectA instanceof Ball ? "Ball" : "Player "+((Player)objectA).getCharacterID())
                 + " collided with"
-                + (objectB instanceof Ball ? "Ball" : "Player"+((Player)objectB).getCharacterID()));
+                + (objectB instanceof Ball ? "Ball" : "Player "+((Player)objectB).getCharacterID()));
     }
 
     /**
