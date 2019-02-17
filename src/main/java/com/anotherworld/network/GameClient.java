@@ -12,7 +12,9 @@ public class GameClient {
     public GameClient() throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
         address = InetAddress.getByName("10.42.0.1");
-        System.out.println("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
+        System.out.println("Client ip: " +
+
+                Inet4Address.getLocalHost().getHostAddress());
     }
 
     public void sendDataToServer(String msg) {
@@ -46,7 +48,7 @@ public class GameClient {
         int counter=0;
         while(true){
             counter++;
-            client.sendDataToServer( "hello from roma"+counter);
+            client.sendDataToServer( "hello from anton"+counter);
             client.getDataFromServer();
         }
     }

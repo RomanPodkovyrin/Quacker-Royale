@@ -18,6 +18,8 @@ public class BackgroundMusic implements Runnable
     private byte[] abData;
     private AudioFormat audioFormat;
     private DataLine.Info information;
+    private boolean running = true;
+    private Thread music;
 
     public BackgroundMusic(){
         soundFile = new File(fileLocation);
@@ -34,13 +36,13 @@ public class BackgroundMusic implements Runnable
 
     public void playBackgroundMusic()
     {
-        Thread thread = new Thread(this);
-        thread.start();
+        music = new Thread(this);
+        music.start();
     }
 
     public void run()
     {
-        while(true) {
+        while(running) {
             try {
                 createLine();
             } catch (IOException e) {
@@ -77,7 +79,6 @@ public class BackgroundMusic implements Runnable
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMinimum());
         } else{
-            //found another way to change volume for openjdk
             volume = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
             volume.setValue(volume.getMinimum());
         }
@@ -87,13 +88,18 @@ public class BackgroundMusic implements Runnable
         if( line.isControlSupported( FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMaximum());
-            System.out.println("correct java version");
         } else{
-            //found another way to change volume for openjdk
             volume = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
             volume.setValue(volume.getMaximum());
         }
 
+    }
+
+    private void terminateMusic(){
+        line.stop();
+        line.drain();
+        line.close();
+        System.exit(0);
     }
 
     public static void main(String[] args){
@@ -103,12 +109,12 @@ public class BackgroundMusic implements Runnable
             Scanner sc = new Scanner(System.in);
             int input = sc.nextInt();
             if(input == 1){
-                System.out.println("1");
                 ba.muteSound();
             }
             else if(input == 2)
-                System.out.println("2");
                 ba.unMuteSound();
+            else if(input == 3)
+                ba.terminateMusic();
         }
     }
 }
