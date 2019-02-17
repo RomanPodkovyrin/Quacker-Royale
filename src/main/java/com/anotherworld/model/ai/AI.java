@@ -5,6 +5,7 @@ import com.anotherworld.model.ai.behaviour.player.*;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import javafx.util.Pair;
 import jdk.nashorn.internal.scripts.JO;
@@ -79,6 +80,7 @@ public class AI {
         repeatJob.start();
         logger.debug("AI initialisation is done");
     }
+
     private ArrayList<Job> getSurvival() {
         // Set up of the survival instincts
         ArrayList<Job> survival = new ArrayList<>();
@@ -138,6 +140,10 @@ public class AI {
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
                 Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
+                if (pair.getKey().getState() == ObjectState.DEAD) {
+                    logger.info(pair.getKey().getCharacterID() + " is dead");
+                    return;
+                }
                 logger.info(pair.getKey().getCharacterID() + " Starting AI");
 
                 jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
