@@ -110,8 +110,8 @@ public class GameSession {
 
             // Kill the player if they fall off the edge of the platform
             if(!platform.isOnPlatform(playerA)) {
-                playerA.setState(ObjectState.DEAD);
-                logger.debug(playerA.getCharacterID() + " is DEAD");
+                playerA.kill();
+                logger.debug(playerA.getCharacterID() + " fell off");
             }
         }
     }
@@ -121,17 +121,14 @@ public class GameSession {
      * physics and ai are run during this time
      */
     public void update(){
-        ai.action();
 
+        ai.action();
         collisionCheck();
 
-        for(Player player : allPlayers){
+        for (Player player : allPlayers) {
             Physics.move(player);
-            if(!platform.isOnPlatform(player)) player.setState(ObjectState.DEAD);
-            logger.debug(player.getCharacterID() + "'s state is set to DEAD");
-            //TODO: If the player object turns out to not be needed at the end just delete it.
+            if (player.getHealth() <= 0) player.kill();
         }
-
 
         // Move all the balls based on velocity and decrement their timers.
         for (Ball ball: balls) {
@@ -151,12 +148,16 @@ public class GameSession {
      * @param keyPresses
      */
     public void updatePlayer(ArrayList<Input> keyPresses) {
-        if (keyPresses.contains(Input.UP)) currentPlayer.setYVelocity(-currentPlayer.getSpeed());
-        else if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());
-        else currentPlayer.setYVelocity(0);
+        if (keyPresses.contains(Input.CHARGE)) {
+            //TODO: Implement charge action.
+        } else {
+            if (keyPresses.contains(Input.UP)) currentPlayer.setYVelocity(-currentPlayer.getSpeed());
+            else if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());
+            else currentPlayer.setYVelocity(0);
 
-        if (keyPresses.contains(Input.LEFT)) currentPlayer.setXVelocity(-currentPlayer.getSpeed());
-        else if (keyPresses.contains(Input.RIGHT)) currentPlayer.setXVelocity( currentPlayer.getSpeed());
-        else currentPlayer.setXVelocity(0);
+            if (keyPresses.contains(Input.LEFT)) currentPlayer.setXVelocity(-currentPlayer.getSpeed());
+            else if (keyPresses.contains(Input.RIGHT)) currentPlayer.setXVelocity(currentPlayer.getSpeed());
+            else currentPlayer.setXVelocity(0);
+        }
     }
 }
