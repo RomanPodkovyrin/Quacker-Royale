@@ -212,22 +212,22 @@ public class Physics {
             objectA.setAngle(angle);
         }
         if (xDifference < (distance) && xDifference < 0) {
-            objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 10,
+            objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 5,
                     coordB.getY());
         } else if (Math.abs(xDifference) < (distance)) {
-            objectB.setCoordinates(coordB.getX() - objectA.getRadius() / 10,
+            objectB.setCoordinates(coordB.getX() - objectA.getRadius() / 5,
                     coordB.getY());
         }
         if (yDifference < (distance) && yDifference < 0) {
             objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() + objectA.getRadius() / 10);
+                    coordB.getY() + objectA.getRadius() / 8);
         } else if (Math.abs(yDifference) < (distance)) {
             objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() - objectA.getRadius() / 10);
+                    coordB.getY() - objectA.getRadius() / 8);
         }
-        logger.debug((objectA instanceof Ball ? "Ball" : "Player")
+        logger.debug((objectA instanceof Ball ? "Ball" : "Player "+((Player)objectA).getCharacterID())
                 + " collided with"
-                + (objectB instanceof Ball ? "Ball" : "Player"));
+                + (objectB instanceof Ball ? "Ball" : "Player"+((Player)objectB).getCharacterID()));
     }
 
     /**
@@ -242,14 +242,14 @@ public class Physics {
                 (float) (fallingSpeed * Math.cos(angle)));
     }
 
-    public static void charge(Player player) {
-        int charge = player.getChargeLevel();
-        float speedIncreases = 1 + (1 / 5 * charge);
-        float speed = player.getSpeed() * speedIncreases;
-        float angle = player.getAngle();
-        player.setVelocity((float)(speed*Math.sin(angle)),(float)(speed*Math.cos(angle)));
-        player.setChargeLevel(charge>0?charge-1:charge);
-    }
+//    public static void charge(Player player) {
+//        int charge = player.getChargeLevel();
+//        float speedIncreases = 1 + (1 / 5 * charge);
+//        float speed = player.getSpeed() * speedIncreases;
+//        float angle = player.getAngle();
+//        player.setVelocity((float)(speed*Math.sin(angle)),(float)(speed*Math.cos(angle)));
+//        player.setChargeLevel(charge>0?charge-1:charge);
+//    }
 
     /**
      * Check every items in the game if they have collision First: Ball: check
