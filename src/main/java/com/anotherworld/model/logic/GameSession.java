@@ -83,6 +83,8 @@ public class GameSession {
 
             // Check if a ball has collided with a player.
             for (Player player : this.allPlayers) {
+                if (player.isDead()) continue;
+
                 if(Physics.checkCollision(ball, player)) {
                     Physics.collided(ball, player);
                     if (!ball.isDangerous()){
@@ -101,9 +103,13 @@ public class GameSession {
         }
 
         for (Player playerA : this.allPlayers) {
+
+            if (playerA.isDead()) continue;
+
             // Check if a player has collided with another player.
             for (Player playerB : this.allPlayers) {
-                if(!playerA.equals(playerB) && Physics.checkCollision(playerA, playerB)) {
+                if(!playerA.equals(playerB)
+                        && Physics.checkCollision(playerA, playerB)) {
                     Physics.collided(playerA, playerB);
                 }
             }

@@ -26,6 +26,8 @@ public class Player extends AbstractMovable {
 
     public boolean isAIEnabled() { return aiEnabled; }
 
+    public boolean isDead() { return playerData.getState() == ObjectState.DEAD; }
+
     public void kill() {
         playerData.setState(ObjectState.DEAD);
         playerData.setSpeed(0);
