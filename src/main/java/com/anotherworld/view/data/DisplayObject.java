@@ -1,5 +1,7 @@
 package com.anotherworld.view.data;
 
+import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
+import static org.lwjgl.opengl.GL11.glEnableClientState;
 import static org.lwjgl.opengl.GL45.*;
 
 import com.anotherworld.tools.datapool.WallData;
@@ -84,31 +86,29 @@ public class DisplayObject {
     }
     
     private static void createOpenglObjects(DisplayObject displayObject) {
+        
         displayObject.vaoId = glGenVertexArrays();
+        glBindVertexArray(displayObject.vaoId);
         
-        //glBindVertexArray(displayObject.vaoId);
-        
-        //This bit doesn't work
         
         displayObject.vertices = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, displayObject.vertices);
         FloatBuffer f = displayObject.getFloatBuffer();
         glBufferData(GL_ARRAY_BUFFER, f, GL_STATIC_DRAW);
+        
+        glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
+        
+        glEnableVertexAttribArray(0);
+        
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        
-        //glBindVertexArray(0);
-        
-        //Everything from here works
-        
-        /*displayObject.edges = glGenBuffers();
-        
+        displayObject.edges = glGenBuffers();
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.edges);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), GL_STATIC_DRAW);
-        
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), displayObject.edges);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        */
-        //glBindVertexArray(0);
+        
+        glBindVertexArray(0);
+        
         
     }
     
@@ -236,34 +236,33 @@ public class DisplayObject {
         logger.trace("Buffer vertices " + (glIsBuffer(vertices) ? "exists" : "wasn't found"));
         logger.trace("Buffer edges " + (glIsBuffer(edges) ? "exists" : "wasn't found"));
         
-        //glBindVertexArray(this.vaoId);
-        //glEnableVertexAttribArray(0);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, this.vertices);
+        glBindVertexArray(vaoId);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edges);
         glVertexPointer(4, GL_FLOAT, 0, 0l);
-
-        //From here works
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this.edges);
-
         glEnableClientState(GL_VERTEX_ARRAY);
+        
         glDrawArrays(GL_POINTS, 0, this.points.getN());
-        //glDrawElements(GL_POINTS, this.points.getPoints().length, GL_UNSIGNED_INT, 0);
+
         glDisableClientState(GL_VERTEX_ARRAY);
         
-        //glDrawArrays(GL_POINTS, 0, 100);
-        
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        //Until here
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        //glDisableVertexAttribArray(0);
-        //glBindVertexArray(0);
+        glDisableVertexAttribArray(0);
+        glBindVertexArray(0);
         
     }
     
     public void transform() {
         glTranslatef(this.getX(), this.getY(), 0);
         glRotatef(-this.getTheta(), 0, 0, 1);
+        animate();
+    }
+    
+    private void animate() {
+        
     }
     
     private FloatBuffer getFloatBuffer() {

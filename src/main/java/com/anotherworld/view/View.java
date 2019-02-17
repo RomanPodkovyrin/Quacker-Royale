@@ -114,8 +114,6 @@ public class View implements Runnable {
         glfwMakeContextCurrent(window);
 
         GL.createCapabilities();
-
-        glEnableClientState(GL_VERTEX_ARRAY);
         
         keyListener = new KeyListener(window);
         
