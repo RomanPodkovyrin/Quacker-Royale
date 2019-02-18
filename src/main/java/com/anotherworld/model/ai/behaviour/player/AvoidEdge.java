@@ -42,10 +42,10 @@ public class AvoidEdge extends Job {
         //TODO change it
         Matrix platformCoordinates = new Matrix(platform.getXCoordinate(),platform.getYCoordinate());
 
-        Matrix place = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
+        float distanceFromPlatfromCenter = MatrixMath.distanceAB(platformCoordinates,ai.getCoordinates());
 
         // Checks if the AI is near the horizontal edge
-        if (Math.abs(place.getX()) >= platform.getXSize() - distanceFromEdge) {
+        if (distanceFromPlatfromCenter >= platform.getXSize() - distanceFromEdge) {
             logger.trace("AI too close to the x edge");
             ai.setYVelocity(-ai.getYVelocity());
             ai.setXVelocity(-ai.getXVelocity());
@@ -54,7 +54,7 @@ public class AvoidEdge extends Job {
 
 
         // Checks if the AI is near the vertical edge
-        } else if (Math.abs(place.getY()) >= platform.getYSize() - distanceFromEdge) {
+        } else if (distanceFromPlatfromCenter >= platform.getYSize() - distanceFromEdge) {
             logger.trace("AI too close to the y edge");
 
             ai.setYVelocity(-ai.getYVelocity());
@@ -62,7 +62,7 @@ public class AvoidEdge extends Job {
             fail();
             logger.info("Moving to in direction" + ai.getVelocity());
         }
-        logger.trace("Finishing AvoidEdge with success: no edges to avoid");
+        logger.trace("Finishing AvoidEdge with success: no Sedges to avoid");
         succeed();
 
 
