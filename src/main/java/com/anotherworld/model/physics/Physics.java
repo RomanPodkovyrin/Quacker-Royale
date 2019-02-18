@@ -52,7 +52,9 @@ public class Physics {
         float newXCoordinate = object.getXCoordinate() + object.getXVelocity();
         float newYCoordinate = object.getYCoordinate() + object.getYVelocity();
         object.setCoordinates(newXCoordinate, newYCoordinate);
-        logger.debug("Object's location updated successfully");
+        logger.debug((object instanceof Player ? "Player "
+                + ((Player) object).getCharacterID() : "Ball ")
+                + "location updated successfully");
     }
 
     /**
@@ -63,15 +65,22 @@ public class Physics {
      * @param b
      *            the second object to check
      */
-    public static boolean checkCollision(AbstractMovable a, AbstractMovable b) {
-        float xDistance = a.getXCoordinate() - b.getXCoordinate();
-        float yDistance = a.getYCoordinate() - b.getYCoordinate();
+    public static boolean checkCollision(AbstractMovable objectA,
+            AbstractMovable objectB) {
+        float xDistance = objectA.getXCoordinate() - objectB.getXCoordinate();
+        float yDistance = objectA.getYCoordinate() - objectB.getYCoordinate();
 
-        float sumOfRadii = a.getRadius() + b.getRadius();
+        float sumOfRadii = objectA.getRadius() + objectB.getRadius();
         float distanceSquared = xDistance * xDistance + yDistance * yDistance;
 
         boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
-        logger.debug("Checked if the two objects are colliding");
+        logger.debug((objectA instanceof Ball ? "Ball" : "Player "
+                + ((Player) objectA).getCharacterID())
+                + " and "
+                + (objectB instanceof Ball ? "Ball" : "Player "
+                        + ((Player) objectB).getCharacterID())
+                + " are "
+                + ((!isOverlapping) ? "not" : "") + " colliding");
         return isOverlapping;
     }
 
@@ -79,8 +88,8 @@ public class Physics {
      * Check if the ball is colliding on the wall: If Y of the ball is colliding
      * Y of the wall (check if the value of north of the ball is lesser than
      * value of north of the wall, else check if the value of south of the ball
-     * is greater than value of south of the wall)
-     * If X of the ball is colliding X of the wall.
+     * is greater than value of south of the wall) If X of the ball is colliding
+     * X of the wall.
      * 
      * @param a
      *            the ball to check for collisions
@@ -103,7 +112,6 @@ public class Physics {
         // South and West of the Wall.
         Matrix southWestWall = new Matrix((wall.getXCoordinate() - xSize),
                 (wall.getYCoordinate() + ySize));
-
         if (northEast.getY() < (northEastWall.getY())) {
             a.setCoordinates(circleX, northEastWall.getY() + circleR);
             a.setYVelocity(-a.getYVelocity());
@@ -212,26 +220,31 @@ public class Physics {
             objectA.setAngle(angle);
         }
         if (xDifference < (distance) && xDifference < 0) {
-            objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 10,
+            objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 5,
                     coordB.getY());
         } else if (Math.abs(xDifference) < (distance)) {
-            objectB.setCoordinates(coordB.getX() - objectA.getRadius() / 10,
+            objectB.setCoordinates(coordB.getX() - objectA.getRadius() / 5,
                     coordB.getY());
         }
         if (yDifference < (distance) && yDifference < 0) {
             objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() + objectA.getRadius() / 10);
+                    coordB.getY() + objectA.getRadius() / 8);
         } else if (Math.abs(yDifference) < (distance)) {
             objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() - objectA.getRadius() / 10);
+                    coordB.getY() - objectA.getRadius() / 8);
         }
-        logger.debug((objectA instanceof Ball ? "Ball" : "Player")
-                + " collided with"
-                + (objectB instanceof Ball ? "Ball" : "Player"));
+        logger.debug("Completed collision event between "
+                + (objectA instanceof Ball ? "Ball" : "Player "
+                        + ((Player) objectA).getCharacterID())
+                + " and "
+                + (objectB instanceof Ball ? "Ball" : "Player "
+                        + ((Player) objectB).getCharacterID()));
     }
+
     /**
      * This method allows player to have a slow speed to the current direction
      * which looks like it is falling off the edge.
+     * 
      * @param player
      */
     public static void falling(Player player) {
@@ -239,6 +252,15 @@ public class Physics {
         player.setVelocity((float) (fallingSpeed * Math.sin(angle)),
                 (float) (fallingSpeed * Math.cos(angle)));
     }
+
+    // public static void charge(Player player) {
+    // int charge = player.getChargeLevel();
+    // float speedIncreases = 1 + (1 / 5 * charge);
+    // float speed = player.getSpeed() * speedIncreases;
+    // float angle = player.getAngle();
+    // player.setVelocity((float)(speed*Math.sin(angle)),(float)(speed*Math.cos(angle)));
+    // player.setChargeLevel(charge>0?charge-1:charge);
+    // }
 
     /**
      * Check every items in the game if they have collision First: Ball: check

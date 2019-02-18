@@ -30,6 +30,7 @@ public class Main {
 
     }
 
+    
     public void startTheGame() {
 
         GameSettings settings = new GameSettings(4,3,4, true, true);
@@ -68,7 +69,13 @@ public class Main {
         startTheGame();
     }
 
-
+    public void sfxSetting(boolean on) {
+        //TODO: this function is to enable the sound effect before the game start.
+    }
+    
+    public void musicSetting(boolean on) {
+        //TODO: this function is to enable the music before the game start.
+    }
 
 
 }
