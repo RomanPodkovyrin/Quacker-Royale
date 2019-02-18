@@ -14,6 +14,16 @@ public class BallDisplayObject extends DisplayObject {
         super(DisplayObject.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
         this.displayData = displayData;
     }
+    
+    @Override
+    public void transform() {
+        super.transform();
+        if (displayData.isDangerous()) {
+            super.setColour(1, 0, 0);
+        } else {
+            super.setColour(0, 1, 0);
+        }
+    }
 
     @Override
     public float getTheta() {

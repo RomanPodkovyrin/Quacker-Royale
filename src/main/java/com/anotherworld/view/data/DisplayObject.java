@@ -33,9 +33,24 @@ public abstract class DisplayObject {
 
     private int vaoId;
     
+    private int texture;
+    
+    private float r;
+    
+    private float g;
+    
+    private float b;
+
     public DisplayObject(Matrix2d points, int displayType) {
+        this(points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
+    }
+    
+    public DisplayObject(Matrix2d points, int displayType, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
+        this.r = r;
+        this.g = g;
+        this.b = b;
         createOpenglObjects(this);
     }
     
@@ -50,30 +65,26 @@ public abstract class DisplayObject {
         FloatBuffer f = displayObject.getFloatBuffer();
         glBufferData(GL_ARRAY_BUFFER, f, GL_STATIC_DRAW);
         
-        glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
-        
         glEnableVertexAttribArray(0);
+        
+        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        displayObject.edges = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.edges);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), displayObject.edges);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        //displayObject.texture = glGenBuffers();
+        //glBindBuffer(GL_TEXTURE_2D, displayObject.texture);
         
         glBindVertexArray(0);
         
+        //displayObject.edges = glGenBuffers();
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.edges);
+        //glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), displayObject.edges);
+
+        //glVertexAttribPointer(1, 1, GL_FLOAT, false, 0, 0);
         
-    }
-    
-    /**
-     * Cleans opengl of the object's representation.
-     */
-    public void destroyObject() {
-        logger.trace("Destroying object containing " + vaoId);
-        glDeleteBuffers(vertices);
-        glDeleteBuffers(edges);
-        glDeleteBuffers(vaoId);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        
+        
     }
     
     /**
@@ -117,7 +128,7 @@ public abstract class DisplayObject {
      * @param h The height of the rectangle
      * @return The points of the rectangle
      */
-    protected final static Matrix2d genRectangle(float w, float h) {
+    protected static final Matrix2d genRectangle(float w, float h) {
         Matrix2d points = new Matrix2d(4, 4);
         points.setValue(0, 0, -w / 2);
         points.setValue(1, 0, h / 2);
@@ -140,7 +151,7 @@ public abstract class DisplayObject {
      * @param r The radius of the circle
      * @return The points of the circle
      */
-    protected final static Matrix2d genCircle(float r) {
+    protected static final Matrix2d genCircle(float r) {
         Matrix2d points = new Matrix2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
@@ -154,50 +165,44 @@ public abstract class DisplayObject {
     }
     
     /**
-     * Returns the display mode needed to correctly display the object's points.
-     * @return The opengl display mode
+     * Cleans opengl of the object's representation.
      */
-    public int getDisplayType() {
-        return displayType;
+    public void destroyObject() {
+        logger.debug("Destroying object containing vaoId " + vaoId + ", vertices " + vertices + ", edges " + edges);
+        glDeleteBuffers(vertices);
+        glDeleteBuffers(edges);
+        glDeleteBuffers(vaoId);
     }
     
     /**
-     * Returns the angle of the object in degrees.
-     * @return the angle of the object
+     * Returns the display mode needed to correctly display the object's points.
+     * @return The opengl display mode
      */
-    public abstract float getTheta();
-    
-    /**
-     * Returns the x position of the object.
-     * @return the x position
-     */
-    public abstract float getX();
-    
-    /**
-     * Returns the y position of the object.
-     * @return the y position
-     */
-    public abstract float getY();
+    private int getDisplayType() {
+        return displayType;
+    }
     
     public void draw() {
-        logger.trace("Buffer vaoID " + (glIsBuffer(vaoId) ? "exists" : "wasn't found"));
-        logger.trace("Buffer vertices " + (glIsBuffer(vertices) ? "exists" : "wasn't found"));
-        logger.trace("Buffer edges " + (glIsBuffer(edges) ? "exists" : "wasn't found"));
+        logger.trace("Buffer vaoID " + vaoId + " " + (glIsVertexArray(vaoId) ? "exists" : "wasn't found"));
+        logger.trace("Buffer vertices " + vertices + " " + (glIsBuffer(vertices) ? "exists" : "wasn't found"));
+        logger.trace("Buffer edges " + edges + " " + (glIsBuffer(edges) ? "exists" : "wasn't found"));
         
         glBindVertexArray(vaoId);
         glEnableVertexAttribArray(0);
+        
+        glColor3f(r, g, b);
 
-        glBindBuffer(GL_ARRAY_BUFFER, vertices);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edges);
-        glVertexPointer(4, GL_FLOAT, 0, 0l);
-        glEnableClientState(GL_VERTEX_ARRAY);
+        //glBindBuffer(GL_ARRAY_BUFFER, vertices);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edges);
+        //glVertexPointer(4, GL_FLOAT, 0, 0l);
+        //glEnableClientState(GL_VERTEX_ARRAY);
         
         glDrawArrays(GL_POINTS, 0, this.points.getN());
 
-        glDisableClientState(GL_VERTEX_ARRAY);
+        //glDisableClientState(GL_VERTEX_ARRAY);
         
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        //glBindBuffer(GL_ARRAY_BUFFER, 0);
         glDisableVertexAttribArray(0);
         glBindVertexArray(0);
         
@@ -225,6 +230,30 @@ public abstract class DisplayObject {
         b.flip();
         return b;
     }
+    
+    protected void setColour(float r, float g, float b) {
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
+    
+    /**
+     * Returns the angle of the object in degrees.
+     * @return the angle of the object
+     */
+    public abstract float getTheta();
+    
+    /**
+     * Returns the x position of the object.
+     * @return the x position
+     */
+    public abstract float getX();
+    
+    /**
+     * Returns the y position of the object.
+     * @return the y position
+     */
+    public abstract float getY();
     
     /**
      * Returns true if the camera should track the object.

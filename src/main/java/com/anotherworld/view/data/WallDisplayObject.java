@@ -1,6 +1,6 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
+import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
 
 import com.anotherworld.tools.datapool.WallData;
 
@@ -13,7 +13,7 @@ public class WallDisplayObject extends DisplayObject {
      * @param displayData The wall to display
      */
     public WallDisplayObject(WallData displayData) {
-        super(DisplayObject.genWall(displayData.getWidth(), displayData.getHeight(), 1), GL_TRIANGLE_FAN);
+        super(DisplayObject.genWall(displayData.getWidth(), displayData.getHeight(), 1), GL_TRIANGLE_STRIP);
         this.displayData = displayData;
     }
 
