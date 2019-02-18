@@ -10,6 +10,7 @@ public class AudioControl {
         backgroundMusic = new BackgroundMusic();
         soundEffects = new SoundEffects();
 
+
         // soundEffects set up
     }
 

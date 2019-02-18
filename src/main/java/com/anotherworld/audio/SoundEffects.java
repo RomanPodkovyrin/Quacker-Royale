@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class SoundEffects {
+public class SoundEffects implements Runnable{
     //https://freesound.org/people/qubodup/sounds/332060/
     private String ballCollidedWithWallSound =  "./res/audio/ball_collided_with_the_wall.au";
     //https://freesound.org/people/jeckkech/sounds/391658/
@@ -18,10 +18,37 @@ public class SoundEffects {
     private byte[] abData;
     private AudioFormat audioFormat;
     private DataLine.Info information;
+    private Thread effect;
+    private boolean running = true;
+    private File currentFile;
 
     public SoundEffects(){
         ballCollidedWithWallFile = new File(ballCollidedWithWallSound);
         playerCollidedWithBallFile = new File(playerCollidedWithBallSound);
+
+        effect = new Thread(this);
+        effect.start();
+    }
+
+    public void run()
+    {
+        while(running) {
+            if (currentFile == null) {
+                // nothing plays
+            } else {
+
+                try {
+                    createLine(currentFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                }
+                currentFile = null;
+            }
+
+
+        }
     }
 
     private void createLine(File filename) throws IOException, LineUnavailableException {
@@ -52,19 +79,21 @@ public class SoundEffects {
     }
 
     public void ballCollidedWithWall() throws IOException {
-        try {
-            createLine(ballCollidedWithWallFile);
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            createLine(ballCollidedWithWallFile);
+//        } catch (LineUnavailableException e) {
+//            e.printStackTrace();
+//        }
+        currentFile = ballCollidedWithWallFile;
     }
 
     public void playerCollidedWithBall() throws IOException {
-        try {
-            createLine(playerCollidedWithBallFile);
-        } catch (LineUnavailableException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            createLine(playerCollidedWithBallFile);
+//        } catch (LineUnavailableException e) {
+//            e.printStackTrace();
+//        }
+        currentFile = playerCollidedWithBallFile;
     }
 
     public static void main(String[] args) throws IOException {
