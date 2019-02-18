@@ -1,6 +1,6 @@
 package com.anotherworld.network;
 
-import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -11,12 +11,18 @@ public class GameClient {
     private DatagramSocket socket;
     private InetAddress address;
     private int port = 4445;
-    private String playersIPs[];
+    private BallData ballData;
+    private PlayerData playerData;
+    private GameSessionData gameSessionData;
+    private MovableData movableData;
+    private PlatformData platformData;
+    private WallData wallData;
 
     public GameClient() throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
         address = InetAddress.getByName("localhost");
         System.out.println("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
+        System.out.println();
     }
 
     public void sendDataToServer(String msg) {
@@ -41,29 +47,40 @@ public class GameClient {
         System.out.println("From server: " + new String(packet.getData()));
     }
 
-    public Object getObjectFromServer() throws IOException{
+    public void getObjectFromServer() throws IOException, ClassNotFoundException {
         byte incomingData[] = new byte[1024];
         DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
         socket.receive(incomingPacket);
         byte data[] = incomingPacket.getData();
-        ByteArrayInputStream in = new ByteArrayInputStream(data);
-        ObjectInputStream is = new ObjectInputStream(in);
-        System.out.println();
-        BallData ballData = null;
-        try {
-            ballData = (BallData) is.readObject();
-            System.out.println("Ball object received = "+ballData);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
+        Object object = objectInputStream.readObject();
+        if(object instanceof BallData){
+                ballData = (BallData) object;
+                System.out.println("Ball object received. Is ball dangerous? : "+ballData.isDangerous());
+                //BallData class update method
+        } else if(object instanceof PlayerData) {
+            playerData = (PlayerData) object;
+            System.out.println("Player data object has been received");
+        } else if(object instanceof GameSessionData){
+            gameSessionData = (GameSessionData) object;
+            System.out.println("GameSessionData object has been received");
+        }  else if(object instanceof MovableData){
+            movableData = (MovableData) object;
+        } else if(object instanceof PlatformData){
+            platformData = (PlatformData) object;
+            System.out.println("PlatformData object has been received");
+        } else if(object instanceof WallData){
+            wallData = (WallData) object;
+            System.out.println("WallData object has been received");
         }
-        return ballData;
     }
 
     public void closeSocket() {
         socket.close();
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         GameClient client = new GameClient();
         int counter=0;
         while(true){
