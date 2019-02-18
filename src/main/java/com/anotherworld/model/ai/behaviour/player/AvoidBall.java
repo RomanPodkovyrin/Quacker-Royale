@@ -180,7 +180,8 @@ public class AvoidBall extends Job {
 
         }
 
-        boolean save =  imminentDangerBalls.isEmpty(); //| !tooFar;
+        //TODO fix the length prediction
+        boolean save =  imminentDangerBalls.isEmpty()| !tooFar;
         logger.trace("AI is " + (save ? "Save" : "in Danger"));
         return save;
     }
