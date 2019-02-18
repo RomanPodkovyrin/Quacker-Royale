@@ -137,11 +137,13 @@ public class AI {
     public void action() {
         logger.info("AI action called.");
 
+        //TODO make then work in the order, not all at the same tick
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
                 Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
                 if (pair.getKey().getState() == ObjectState.DEAD) {
                     logger.info(pair.getKey().getCharacterID() + " is dead");
+                    pair.getKey().setVelocity(0,0);
                     return;
                 }
                 logger.info(pair.getKey().getCharacterID() + " Starting AI");
