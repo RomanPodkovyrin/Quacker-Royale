@@ -95,11 +95,15 @@ public class BackgroundMusic implements Runnable
 
     }
 
-    private void terminateMusic(){
-        line.stop();
-        line.drain();
+    public void terminateMusic(){
+        //TODO those 3 lines prevent linux from shutting down the thread
+//        line.stop();
+//        line.drain();
         line.close();
-        System.exit(0);
+        running = false;
+//        music.interrupt();
+        System.out.println("Check");
+//        System.exit(0);
     }
 
     public static void main(String[] args){

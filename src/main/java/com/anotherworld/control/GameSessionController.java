@@ -1,5 +1,6 @@
 package com.anotherworld.control;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -44,6 +45,9 @@ public class GameSessionController {
 
         this.session = settings.createSession();
         this.view = view;
+
+        AudioControl.setUp();
+        AudioControl.playBackGroundMusic();
 
         // Starting the View thread
         this.viewThread = new Thread(view);
@@ -119,6 +123,17 @@ public class GameSessionController {
             // Reset dropped frames
             framesDropped = 0;
         }
+
+        shutDownSequence();
+    }
+
+    private void shutDownSequence() {
+        logger.debug("Initialising Shut down sequence");
+        //stop the music
+        AudioControl.stopBackgroundMusic();
+        logger.trace("Music stopped");
+        //send out the message saying that either host or client have disconnected
+        //if a client has disconnected should we just give control to the ai ?
     }
 
     private void networking() {

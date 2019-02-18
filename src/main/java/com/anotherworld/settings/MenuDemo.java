@@ -52,6 +52,7 @@ public class MenuDemo extends Application {
         buttonSinglePlayer.setOnAction(e -> {
             // start the game
             control.startSinglePlayer();
+            System.out.println("Finished the game");
 //            window.close();
         });
         buttonSinglePlayer.setMinWidth(width * 0.5);
