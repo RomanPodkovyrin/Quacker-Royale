@@ -15,12 +15,12 @@ public class Main {
 
     private static Logger logger = LogManager.getLogger(Main.class);
 
-//    public static void main (String args[]) {
-//        Main main = new Main();
-//        main.startTheGame();
-//        MenuDemo viewMenu = new MenuDemo(this);
-//
-//    }
+    public static void main (String args[]) {
+        Main main = new Main();
+        main.startTheGame();
+        MenuDemo viewMenu = new MenuDemo();
+
+    }
 
     public void add(MenuDemo view) {
         this.view = view;
@@ -32,8 +32,6 @@ public class Main {
 
     
     public void startTheGame() {
-        BackgroundMusic bm = new BackgroundMusic();
-        bm.playBackgroundMusic();
 
         GameSettings settings = new GameSettings(4,3,4, true, true);
 

@@ -46,9 +46,11 @@ public class MenuDemo extends Application {
         Button buttonSinglePlayer = new Button("Play SinglePlayer");
         buttonSinglePlayer.setOnAction(e -> {
             // start the game
-                control.startSinglePlayer();
-                // window.close();
-            });
+            
+            control.startSinglePlayer();
+            System.out.println("Finished the game");
+//            window.close();
+        });
         buttonSinglePlayer.setMinWidth(width * 0.5);
         buttonSinglePlayer.setMinHeight(height * 0.1);
         buttonSinglePlayer.setBackground(new Background(new BackgroundFill(
