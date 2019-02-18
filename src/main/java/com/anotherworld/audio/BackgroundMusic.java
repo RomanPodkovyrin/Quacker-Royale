@@ -23,15 +23,7 @@ public class BackgroundMusic implements Runnable
 
     public BackgroundMusic(){
         soundFile = new File(fileLocation);
-        try {
-            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        audioFormat = audioInputStream.getFormat();
-        information = new DataLine.Info(SourceDataLine.class, audioFormat);
+
     }
 
     public void playBackgroundMusic()
@@ -56,6 +48,17 @@ public class BackgroundMusic implements Runnable
     }
 
     private void createLine() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        audioFormat = audioInputStream.getFormat();
+        information = new DataLine.Info(SourceDataLine.class, audioFormat);
+
         line = (SourceDataLine) AudioSystem.getLine(information);
         line.open(audioFormat);
         unMuteSound();
@@ -95,11 +98,15 @@ public class BackgroundMusic implements Runnable
 
     }
 
-    private void terminateMusic(){
-        line.stop();
-        line.drain();
+    public void terminateMusic(){
+        //TODO those 3 lines prevent linux from shutting down the thread
+//        line.stop();
+//        line.drain();
         line.close();
-        System.exit(0);
+        running = false;
+//        music.interrupt();
+        System.out.println("Check");
+//        System.exit(0);
     }
 
     public static void main(String[] args){
