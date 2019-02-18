@@ -35,8 +35,9 @@ public class Server extends Thread {
             logger.debug("The client port is: " + packet.getPort());
             logger.debug("The client address is: " + packet.getAddress());
             System.out.println("From client to server: " + received);
+            BallData ballData = new BallData(true, 10, 10, ObjectState.IDLE, 15, 1);
             try {
-                sendObjectToClient(packet.getPort());
+                sendObjectToClient(ballData, packet.getPort());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -49,7 +50,7 @@ public class Server extends Thread {
         socket.close();
     }
 
-    public void sendToClient(byte[] dataToSend, int port) throws UnknownHostException {
+    public void sendStringToClient(byte[] dataToSend, int port) throws UnknownHostException {
         System.out.println("port is: " + port);
         for(int i = 0; i < numberOfPlayers; i++) {
             InetAddress playerIP = InetAddress.getByName(playersIPs[i]);
@@ -63,11 +64,10 @@ public class Server extends Thread {
         }
     }
 
-    public void sendObjectToClient(int port) throws IOException {
-        BallData ballData = new BallData(true, 10, 10, ObjectState.IDLE, 15, 1);
+    public void sendObjectToClient(Object object, int port) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(outputStream);
-        os.writeObject(ballData);
+        os.writeObject(object);
         byte[] data = outputStream.toByteArray();
         for(int i = 0; i < numberOfPlayers; i++) {
             InetAddress playerIP = InetAddress.getByName(playersIPs[i]);
