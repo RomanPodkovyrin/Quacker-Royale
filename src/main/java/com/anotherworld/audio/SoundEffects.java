@@ -1,11 +1,8 @@
 package com.anotherworld.audio;
 
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
-import java.io.FileInputStream;
+import javax.sound.sampled.*;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Scanner;
 
 public class SoundEffects {
@@ -13,17 +10,61 @@ public class SoundEffects {
     private String ballCollidedWithWallSound =  "./res/audio/ball_collided_with_the_wall.au";
     //https://freesound.org/people/jeckkech/sounds/391658/
     private String playerCollidedWithBallSound = "./res/audio/player_collided_with_ball.au";
+    private File ballCollidedWithWallFile;
+    private File playerCollidedWithBallFile;
+    private SourceDataLine line;
+    private AudioInputStream audioInputStream;
+    private int numberOfBytesRead;
+    private byte[] abData;
+    private AudioFormat audioFormat;
+    private DataLine.Info information;
+
+    public SoundEffects(){
+        ballCollidedWithWallFile = new File(ballCollidedWithWallSound);
+        playerCollidedWithBallFile = new File(playerCollidedWithBallSound);
+    }
+
+    private void createLine(File filename) throws IOException, LineUnavailableException {
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(filename);
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        audioFormat = audioInputStream.getFormat();
+        information = new DataLine.Info(SourceDataLine.class, audioFormat);
+        line = (SourceDataLine) AudioSystem.getLine(information);
+        line.open(audioFormat);
+        line.start();
+        numberOfBytesRead = 0;
+        abData = new byte[254000];
+        while (numberOfBytesRead != -1)
+        {
+            numberOfBytesRead = audioInputStream.read(abData, 0, abData.length);
+            if (numberOfBytesRead >= 0)
+            {
+                line.write(abData, 0, numberOfBytesRead);
+            }
+        }
+        line.drain();
+        line.close();
+    }
 
     public void ballCollidedWithWall() throws IOException {
-        InputStream in = new FileInputStream(ballCollidedWithWallSound);
-        AudioStream audioStream = new AudioStream(in);
-        AudioPlayer.player.start(audioStream);
+        try {
+            createLine(ballCollidedWithWallFile);
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
     public void playerCollidedWithBall() throws IOException {
-        InputStream in = new FileInputStream(playerCollidedWithBallSound);
-        AudioStream audioStream = new AudioStream(in);
-        AudioPlayer.player.start(audioStream);
+        try {
+            createLine(playerCollidedWithBallFile);
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) throws IOException {

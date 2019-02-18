@@ -9,7 +9,7 @@ import javax.sound.sampled.*;
 
 public class BackgroundMusic implements Runnable
 {
-    private String fileLocation = "./res/audio/background_music.wav";
+    private String fileLocation = "./res/audio/ball_collided_with_the_wall.au";
     private SourceDataLine line;
     private FloatControl volume;
     private File soundFile;
@@ -23,15 +23,6 @@ public class BackgroundMusic implements Runnable
 
     public BackgroundMusic(){
         soundFile = new File(fileLocation);
-        try {
-            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        audioFormat = audioInputStream.getFormat();
-        information = new DataLine.Info(SourceDataLine.class, audioFormat);
     }
 
     public void playBackgroundMusic()
@@ -56,6 +47,16 @@ public class BackgroundMusic implements Runnable
     }
 
     private void createLine() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        audioFormat = audioInputStream.getFormat();
+        information = new DataLine.Info(SourceDataLine.class, audioFormat);
         line = (SourceDataLine) AudioSystem.getLine(information);
         line.open(audioFormat);
         unMuteSound();
