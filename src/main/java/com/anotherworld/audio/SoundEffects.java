@@ -1,5 +1,9 @@
 package com.anotherworld.audio;
 
+import com.anotherworld.model.logic.GameSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
@@ -10,8 +14,15 @@ public class SoundEffects implements Runnable{
     private String ballCollidedWithWallSound =  "./res/audio/ball_collided_with_the_wall.au";
     //https://freesound.org/people/jeckkech/sounds/391658/
     private String playerCollidedWithBallSound = "./res/audio/player_collided_with_ball.au";
+    //https://freesound.org/people/Autistic%20Lucario/sounds/142608/
+    private String error ="./res/audio/error.wav";
+            //https://freesound.org/people/ProjectsU012/sounds/341695/
+    private String beep = "./res/audio/beep.wav";
     private File ballCollidedWithWallFile;
     private File playerCollidedWithBallFile;
+    private File errorFile;
+    private File beepFile;
+
     private SourceDataLine line;
     private AudioInputStream audioInputStream;
     private int numberOfBytesRead;
@@ -22,9 +33,13 @@ public class SoundEffects implements Runnable{
     private boolean running = true;
     private File currentFile;
 
+    private static Logger logger = LogManager.getLogger(SoundEffects.class);
+
     public SoundEffects(){
         ballCollidedWithWallFile = new File(ballCollidedWithWallSound);
         playerCollidedWithBallFile = new File(playerCollidedWithBallSound);
+        errorFile = new File(error);
+        beepFile = new File(beep);
 
         effect = new Thread(this);
         effect.start();
@@ -33,9 +48,16 @@ public class SoundEffects implements Runnable{
     public void run()
     {
         while(running) {
+            try{
+                Thread.sleep(0);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             if (currentFile == null) {
                 // nothing plays
             } else {
+                logger.trace("Playing " + currentFile);
 
                 try {
                     createLine(currentFile);
@@ -43,8 +65,10 @@ public class SoundEffects implements Runnable{
                     e.printStackTrace();
                 } catch (LineUnavailableException e) {
                     e.printStackTrace();
+                } finally {
+                    currentFile = null;
                 }
-                currentFile = null;
+
             }
 
 
@@ -84,7 +108,8 @@ public class SoundEffects implements Runnable{
 //        } catch (LineUnavailableException e) {
 //            e.printStackTrace();
 //        }
-        currentFile = ballCollidedWithWallFile;
+        logger.trace("Play ball sound");
+        currentFile = beepFile;
     }
 
     public void playerCollidedWithBall() throws IOException {
@@ -104,9 +129,11 @@ public class SoundEffects implements Runnable{
             int i = sc.nextInt();
             if(i == 1){
                 sound.ballCollidedWithWall();
+                System.out.println("BAll");
             }
             else if(i ==2){
                 sound.playerCollidedWithBall();
+                System.out.println("Player");
             }
         }
     }
