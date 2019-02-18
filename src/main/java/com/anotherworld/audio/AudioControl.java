@@ -1,5 +1,7 @@
 package com.anotherworld.audio;
 
+import java.io.IOException;
+
 public class AudioControl {
     private static BackgroundMusic backgroundMusic ;
     private static SoundEffects soundEffects;
@@ -18,6 +20,23 @@ public class AudioControl {
 
     public static void stopBackgroundMusic() {
         backgroundMusic.terminateMusic();
+    }
+
+    public static void playerCollidedWithBall() {
+        try {
+
+            soundEffects.playerCollidedWithBall();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void ballCollidedWithWall() {
+        try {
+            soundEffects.ballCollidedWithWall();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

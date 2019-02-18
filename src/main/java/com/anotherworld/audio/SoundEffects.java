@@ -47,8 +47,8 @@ public class SoundEffects {
                 line.write(abData, 0, numberOfBytesRead);
             }
         }
-        line.drain();
-        line.close();
+//        line.drain();
+//        line.close();
     }
 
     public void ballCollidedWithWall() throws IOException {
