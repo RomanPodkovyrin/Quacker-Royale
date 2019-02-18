@@ -9,7 +9,7 @@ import javax.sound.sampled.*;
 
 public class BackgroundMusic implements Runnable
 {
-    private String fileLocation = "./res/audio/ball_collided_with_the_wall.au";
+    private String fileLocation = "./res/audio/background_music.wav";
     private SourceDataLine line;
     private FloatControl volume;
     private File soundFile;

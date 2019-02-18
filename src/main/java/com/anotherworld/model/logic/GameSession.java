@@ -1,5 +1,6 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
@@ -84,6 +85,7 @@ public class GameSession {
             // Check if a ball has collided with a player.
             for (Player player : this.allPlayers) {
                 if(Physics.checkCollision(ball, player)) {
+                    AudioControl.playerCollidedWithBall();
                     Physics.collided(ball, player);
                     if (!ball.isDangerous()){
                         ball.setDangerous(true);
@@ -96,6 +98,8 @@ public class GameSession {
             for (Ball ballB : this.balls) {
                 if (!ball.equals(ballB) && Physics.checkCollision(ball, ballB)){
                     Physics.collided(ball, ballB);
+                    AudioControl.ballCollidedWithWall();
+
                 }
             }
         }
@@ -105,6 +109,7 @@ public class GameSession {
             for (Player playerB : this.allPlayers) {
                 if(!playerA.equals(playerB) && Physics.checkCollision(playerA, playerB)) {
                     Physics.collided(playerA, playerB);
+
                 }
             }
 
