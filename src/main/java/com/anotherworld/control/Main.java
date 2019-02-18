@@ -15,12 +15,12 @@ public class Main {
 
     private static Logger logger = LogManager.getLogger(Main.class);
 
-//    public static void main (String args[]) {
-//        Main main = new Main();
-//        main.startTheGame();
-//        MenuDemo viewMenu = new MenuDemo(this);
-//
-//    }
+    public static void main (String args[]) {
+        Main main = new Main();
+        main.startTheGame();
+        MenuDemo viewMenu = new MenuDemo();
+
+    }
 
     public void add(MenuDemo view) {
         this.view = view;
