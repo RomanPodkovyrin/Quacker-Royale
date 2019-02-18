@@ -31,8 +31,6 @@ public class Main {
     }
 
     public void startTheGame() {
-        BackgroundMusic bm = new BackgroundMusic();
-        bm.playBackgroundMusic();
 
         GameSettings settings = new GameSettings(4,3,4, true, true);
 
