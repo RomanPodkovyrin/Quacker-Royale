@@ -1,5 +1,7 @@
 package com.anotherworld.model.ai.tools;
 
+import java.io.Serializable;
+
 /**
  * This class hold x and y values to represent a point or vector.*
  * [p1] <- x
@@ -8,7 +10,7 @@ package com.anotherworld.model.ai.tools;
  *
  * @author Roman P
  */
-public class Matrix {
+public class Matrix implements Serializable {
     private float x;
     private float y;
 
@@ -53,6 +55,27 @@ public class Matrix {
      */
     public Matrix sub(Matrix n) {
         return new Matrix(x - n.getX(), y - n.getY());
+    }
+
+    /**
+     * Normalizes the vector returns a new instance without modifying the current one.
+     *
+     * @return returns normalized vector
+     */
+    public Matrix normalize() {
+
+        float magnitude = MatrixMath.magnitude(this);
+        return new Matrix(x / magnitude, y / magnitude);
+    }
+
+    /**
+     * Normalizes the vector by modifying the current one
+     */
+    public void normalizeThis() {
+
+        float magnitude = MatrixMath.magnitude(this);
+        x = x / magnitude;
+        y = y / magnitude;
     }
 
     /**

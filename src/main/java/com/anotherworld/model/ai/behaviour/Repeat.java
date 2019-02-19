@@ -3,16 +3,17 @@ package com.anotherworld.model.ai.behaviour;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
+
 
 /**
- * Repeats the Job infinite amount of times or the number that is specified. Does not care if fails or succeeds
+ * Repeats the Job infinite amount of times or the number that is specified. Does not care if fails or succeeds.
  * @author Roman
  */
-public class Repeat extends Job{
+public class Repeat extends Job {
 
     private static Logger logger = LogManager.getLogger(Repeat.class);
 
@@ -58,7 +59,7 @@ public class Repeat extends Job{
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
 
-        logger.debug("Starting Repeat Job");
+        logger.trace("Starting Repeat Job");
 
         if (job.isRunning()) {
             job.act(ai, players, balls, platform);

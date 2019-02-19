@@ -6,14 +6,15 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
+import java.util.Random;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 /**
- *Makes sure that the AI doesn't come too close to the edge
+ *Makes sure that the AI doesn't come too close to the edge.
+ * success - no edge to avoid
+ * fail - near the edge
  * @author Roman
  */
 public class AvoidEdge extends Job {
@@ -38,50 +39,40 @@ public class AvoidEdge extends Job {
         logger.debug("Running AvoidEdge");
 
         // get x y Matrix of the Platform
-        //##############################################
         //TODO change it
-        Matrix platformCoordinates = new Matrix(platform.getXCoordinate(),platform.getYCoordinate()); // Change it
-        // #############################################
-        Random random = new Random();
+        Matrix platformCoordinates = new Matrix(platform.getXCoordinate(),platform.getYCoordinate());
 
-        Matrix place = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
+        float distanceFromPlatfromCenter = MatrixMath.distanceAB(platformCoordinates,ai.getCoordinates());
 
-        if (Math.abs(place.getX()) >= platform.getXSize() - distanceFromEdge) {
-            // too close to x
-            // go Left Or Right
-//            random.nextBoolean()?;
-            if ((place.getX() < platformCoordinates.getX() & isPointing(ai.getVelocity(),270)) | (place.getX() > platformCoordinates.getX() & isPointing(ai.getVelocity(),90))) {
-                ai.setXVelocity(0);
-                ai.setYVelocity(random.nextBoolean()? 1: -1);
-                fail();
-                logger.debug("Near the Edge");
-                return;
-            }
+        // Checks if the AI is near the horizontal edge
+        if (distanceFromPlatfromCenter >= platform.getXSize() - distanceFromEdge) {
+            logger.trace("AI too close to the x edge");
+            ai.setYVelocity(-ai.getYVelocity());
+            ai.setXVelocity(-ai.getXVelocity());
+            fail();
+            logger.info("Moving to in direction " + ai.getVelocity());
 
 
+        // Checks if the AI is near the vertical edge
+        } else if (distanceFromPlatfromCenter >= platform.getYSize() - distanceFromEdge) {
+            logger.trace("AI too close to the y edge");
 
-        } else if (Math.abs(place.getY()) >= platform.getYSize() - distanceFromEdge) {
-            // too close to y
-            // go Up or Down
-            if ((place.getY() < platformCoordinates.getY() & isPointing(ai.getVelocity(),0)) | (place.getY() > platformCoordinates.getY() & isPointing(ai.getVelocity(),180))) {
-                ai.setYVelocity(0);
-                ai.setXVelocity(random.nextBoolean() ? 1 : -1);
-                fail();
-                logger.debug("Near the Edge");
-                return;
-            }
-        } else {
-            ai.setVelocity(0,0);
+            ai.setYVelocity(-ai.getYVelocity());
+            ai.setXVelocity(-ai.getXVelocity());
+            fail();
+            logger.info("Moving to in direction" + ai.getVelocity());
         }
-        logger.debug("Finishing AvoidEdge with success");
+        logger.trace("Finishing AvoidEdge with success: no Sedges to avoid");
         succeed();
+
 
     }
 
+    @Deprecated
     private boolean isPointing(Matrix directions, int angle) {
         float aiAngle = MatrixMath.vectorAngle(directions);
 
-        if (((angle - 90) % 360) > aiAngle | ((angle + 90) % 360) < aiAngle ) {
+        if (((angle - 90) % 360) > aiAngle | ((angle + 90) % 360) < aiAngle) {
             return true;
         }
         return false;

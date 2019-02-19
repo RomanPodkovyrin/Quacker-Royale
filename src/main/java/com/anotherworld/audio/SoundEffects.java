@@ -1,29 +1,124 @@
 package com.anotherworld.audio;
 
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
+import com.anotherworld.model.logic.GameSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.FileInputStream;
+import javax.sound.sampled.*;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Scanner;
 
-public class SoundEffects {
+public class SoundEffects implements Runnable{
+    //https://freesound.org/people/qubodup/sounds/332060/
     private String ballCollidedWithWallSound =  "./res/audio/ball_collided_with_the_wall.au";
+    //https://freesound.org/people/jeckkech/sounds/391658/
     private String playerCollidedWithBallSound = "./res/audio/player_collided_with_ball.au";
+    //https://freesound.org/people/Autistic%20Lucario/sounds/142608/
+    private String error ="./res/audio/error.wav";
+            //https://freesound.org/people/ProjectsU012/sounds/341695/
+    private String beep = "./res/audio/beep.wav";
+    private File ballCollidedWithWallFile;
+    private File playerCollidedWithBallFile;
+    private File errorFile;
+    private File beepFile;
+
+    private SourceDataLine line;
+    private AudioInputStream audioInputStream;
+    private int numberOfBytesRead;
+    private byte[] abData;
+    private AudioFormat audioFormat;
+    private DataLine.Info information;
+    private Thread effect;
+    private boolean running = true;
+    private File currentFile;
+
+    private static Logger logger = LogManager.getLogger(SoundEffects.class);
+
+    public SoundEffects(){
+        ballCollidedWithWallFile = new File(ballCollidedWithWallSound);
+        playerCollidedWithBallFile = new File(playerCollidedWithBallSound);
+        errorFile = new File(error);
+        beepFile = new File(beep);
+
+        effect = new Thread(this);
+        effect.start();
+    }
+
+    public void run()
+    {
+        while(running) {
+            try{
+                Thread.sleep(0);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            if (currentFile == null) {
+                // nothing plays
+            } else {
+                logger.trace("Playing " + currentFile);
+
+                try {
+                    createLine(currentFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                } finally {
+                    currentFile = null;
+                }
+
+            }
+
+
+        }
+    }
+
+    private void createLine(File filename) throws IOException, LineUnavailableException {
+        try {
+            audioInputStream = AudioSystem.getAudioInputStream(filename);
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        audioFormat = audioInputStream.getFormat();
+        information = new DataLine.Info(SourceDataLine.class, audioFormat);
+        line = (SourceDataLine) AudioSystem.getLine(information);
+        line.open(audioFormat);
+        line.start();
+        numberOfBytesRead = 0;
+        abData = new byte[254000];
+        while (numberOfBytesRead != -1)
+        {
+            numberOfBytesRead = audioInputStream.read(abData, 0, abData.length);
+            if (numberOfBytesRead >= 0)
+            {
+                line.write(abData, 0, numberOfBytesRead);
+            }
+        }
+//        line.drain();
+//        line.close();
+    }
 
     public void ballCollidedWithWall() throws IOException {
-        //https://freesound.org/people/qubodup/sounds/332060/
-        InputStream in = new FileInputStream(ballCollidedWithWallSound);
-        AudioStream audioStream = new AudioStream(in);
-        AudioPlayer.player.start(audioStream);
+//        try {
+//            createLine(ballCollidedWithWallFile);
+//        } catch (LineUnavailableException e) {
+//            e.printStackTrace();
+//        }
+        logger.trace("Play ball sound");
+        currentFile = beepFile;
     }
 
     public void playerCollidedWithBall() throws IOException {
-        //https://freesound.org/people/jeckkech/sounds/391658/
-        InputStream in = new FileInputStream(playerCollidedWithBallSound);
-        AudioStream audioStream = new AudioStream(in);
-        AudioPlayer.player.start(audioStream);
+//        try {
+//            createLine(playerCollidedWithBallFile);
+//        } catch (LineUnavailableException e) {
+//            e.printStackTrace();
+//        }
+        currentFile = playerCollidedWithBallFile;
     }
 
     public static void main(String[] args) throws IOException {
@@ -34,9 +129,11 @@ public class SoundEffects {
             int i = sc.nextInt();
             if(i == 1){
                 sound.ballCollidedWithWall();
+                System.out.println("BAll");
             }
             else if(i ==2){
                 sound.playerCollidedWithBall();
+                System.out.println("Player");
             }
         }
     }

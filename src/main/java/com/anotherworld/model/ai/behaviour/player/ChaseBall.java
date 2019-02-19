@@ -41,8 +41,8 @@ public class ChaseBall extends Job {
 
         logger.debug("Starting ChaseBall Job");
         for (Ball ball: balls){
-            if (!ball.isDangerous() & isRunning()) {
-                logger.debug("Chasing the Ball");
+            if (!ball.isDangerous() & isRunning() & platform.isOnPlatform(ball.getCoordinates())) {
+                logger.debug("Chasing the Ball at " + ball.getCoordinates());
                 Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
                 Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), neighbour);
                 if (MatrixMath.distanceAB(ai.getCoordinates(),neighbour) <= ball.getRadius() + ai.getRadius()) {
@@ -50,11 +50,12 @@ public class ChaseBall extends Job {
                     return;
                 }
                 if (vector.getX() != 0) {
-                    ai.setXVelocity((vector.getX() / Math.abs(vector.getX())) * 0.1f);
+                    ai.setXVelocity((vector.getX() / Math.abs(vector.getX())) * ai.getSpeed());
                 }
                 if (vector.getY() != 0) {
-                    ai.setYVelocity((vector.getY() / Math.abs(vector.getY())) * 0.1f);
+                    ai.setYVelocity((vector.getY() / Math.abs(vector.getY())) * ai.getSpeed());
                 }
+                succeed();
                 return;
             } else {
                 logger.debug("Finishing ChaseBall with fail: nothing to chase");

@@ -1,8 +1,6 @@
 package com.anotherworld.model.physics;
 
-import java.awt.List;
-import java.io.IOException;
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Wall;
@@ -13,11 +11,14 @@ import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
 
+import java.awt.List;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-
 public class PhysicsTest {
+    
     @Test
     public void theCoordinateOfAnobjectShouldUpdate() {
         Physics.setUp();
@@ -47,6 +48,7 @@ public class PhysicsTest {
         assertEquals(yCoord, aball.getYCoordinate(), 0.0f);
     }
 
+    @Test
     public void theBallShouldChangeTheVelocityWhenItHitWalls() {
         BallData a = new BallData(false, 91.1f, 52.3f, null, 12.1f, 3.0f);
         Ball aball = new Ball(a);
@@ -54,8 +56,8 @@ public class PhysicsTest {
         float xVelocity = 2.0f;
         aball.setYVelocity(yVelocity);
         aball.setXVelocity(xVelocity);
-        WallData wallb = new WallData();
-        Wall wall = new Wall(wallb, 45.0f, 45.0f);
+        WallData wallb = new WallData(45.0f, 45.0f);
+        Wall wall = new Wall(wallb);
         float northBound = wall.getYCoordinate() + wall.getYSize() / 2;
         aball.setCoordinates(aball.getXCoordinate(), northBound);
         Physics.bouncedWall(aball, wall);
@@ -72,6 +74,7 @@ public class PhysicsTest {
         assertEquals(xVelocity, aball.getXVelocity(), 0.0f);
     }
 
+    @Test
     public void collisionShouldHappen() {
         Physics.setUp();
         BallData a = new BallData(false, 91.1f, 52.3f, null, 12.1f, 3.0f);
@@ -82,6 +85,7 @@ public class PhysicsTest {
         assertEquals(false, Physics.checkCollision(aball, bball));
     }
 
+    @Test
     public void updateAttributesWhenCollisionHappened() {
         Physics.setUp();
         BallData a = new BallData(false, 91.1f, 52.3f, null, 12.1f, 3.0f);
@@ -89,8 +93,8 @@ public class PhysicsTest {
         PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f, null, 12.1f,
                 3.0f);
         Player player = new Player(b, false);
-        WallData wallb = new WallData();
-        Wall wall = new Wall(wallb, 45.0f, 45.0f);
+        WallData wallb = new WallData(45.0f, 45.0f);
+        Wall wall = new Wall(wallb);
         ArrayList<Player> listOfPlayers = new ArrayList<>();
         listOfPlayers.add(player);
         ArrayList<Ball> listOfBalls = new ArrayList<>();

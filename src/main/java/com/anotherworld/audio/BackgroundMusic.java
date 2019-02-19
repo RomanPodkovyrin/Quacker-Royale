@@ -3,71 +3,125 @@ package com.anotherworld.audio;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
-public class BackgroundMusic {
-    private boolean released = false;
-    private AudioInputStream stream;
-    private Clip clip;
-    private FloatControl volumeControl;
-    private boolean playing = false;
-    private String backgroundSongPath = "./res/audio/background_music.wav";
+import javax.sound.sampled.*;
 
-    public BackgroundMusic() {
-        File file = new File(backgroundSongPath);
+
+public class BackgroundMusic implements Runnable
+{
+    private String fileLocation = "./res/audio/background_music.wav";
+    private SourceDataLine line;
+    private FloatControl volume;
+    private File soundFile;
+    private AudioInputStream audioInputStream;
+    private int numberOfBytesRead;
+    private byte[] abData;
+    private AudioFormat audioFormat;
+    private DataLine.Info information;
+    private boolean running = true;
+    private Thread music;
+
+    public BackgroundMusic(){
+        soundFile = new File(fileLocation);
+
+    }
+
+    public void playBackgroundMusic()
+    {
+        music = new Thread(this);
+        music.start();
+    }
+
+    public void run()
+    {
+        while(running) {
+            try {
+                createLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void createLine() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+
         try {
-            stream = AudioSystem.getAudioInputStream(file);
-            clip = AudioSystem.getClip();
-            clip.open(stream);
-            volumeControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volumeControl.setValue(volumeControl.getMaximum());
-            released = true;
-        } catch (LineUnavailableException | UnsupportedAudioFileException | IOException exception) {
-            exception.printStackTrace();
+            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        audioFormat = audioInputStream.getFormat();
+        information = new DataLine.Info(SourceDataLine.class, audioFormat);
+
+        line = (SourceDataLine) AudioSystem.getLine(information);
+        line.open(audioFormat);
+        unMuteSound();
+        line.start();
+        numberOfBytesRead = 0;
+        abData = new byte[254000];
+        while (numberOfBytesRead != -1)
+        {
+            numberOfBytesRead = audioInputStream.read(abData, 0, abData.length);
+            if (numberOfBytesRead >= 0)
+            {
+                line.write(abData, 0, numberOfBytesRead);
+            }
+        }
+        line.drain();
+        line.close();
+    }
+
+    private void muteSound(){
+        if( line.isControlSupported( FloatControl.Type.MASTER_GAIN)) {
+            volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+            volume.setValue(volume.getMinimum());
+        } else{
+            volume = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
+            volume.setValue(volume.getMinimum());
         }
     }
 
-    public void playBackgroundMusic() {
-        clip.setFramePosition(0);
-        clip.start();
-        playing = true;
-        clip.loop(100);
-    }
-
-    public void muteSound(){
-        volumeControl.setValue(volumeControl.getMinimum());
-    }
-
-    public void unMuteSound(){
-        volumeControl.setValue(volumeControl.getMaximum());
-    }
-
-    public void stop() {
-        if (playing) {
-            playing = false;
-            clip.stop();
+    private void unMuteSound(){
+        if( line.isControlSupported( FloatControl.Type.MASTER_GAIN)) {
+            volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
+            volume.setValue(volume.getMaximum());
+        } else{
+            volume = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
+            volume.setValue(volume.getMaximum());
         }
+
     }
 
-    public static void main(String[] args) throws IOException, LineUnavailableException, UnsupportedAudioFileException, InterruptedException {
-        //The code below and a main method itself is for demonstration purposes, so it shows how we can use it in a future
-        BackgroundMusic bMusic = new BackgroundMusic();
-        bMusic.playBackgroundMusic();
+    public void terminateMusic(){
+        //TODO those 3 lines prevent linux from shutting down the thread
+//        line.stop();
+//        line.drain();
+        line.close();
+        running = false;
+//        music.interrupt();
+        System.out.println("Check");
+//        System.exit(0);
+    }
+
+    public static void main(String[] args){
+        BackgroundMusic ba = new BackgroundMusic();
+        ba.playBackgroundMusic();
         while (true) {
             Scanner sc = new Scanner(System.in);
             int input = sc.nextInt();
             if(input == 1){
-                bMusic.muteSound();
+                ba.muteSound();
             }
-            else if( input == 2){
-                bMusic.unMuteSound();
-            }
-//        }
+            else if(input == 2)
+                ba.unMuteSound();
+            else if(input == 3)
+                ba.terminateMusic();
         }
     }
 }
