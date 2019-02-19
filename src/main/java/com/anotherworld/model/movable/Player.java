@@ -28,6 +28,10 @@ public class Player extends AbstractMovable {
 
     public boolean isDead() { return playerData.getState() == ObjectState.DEAD; }
 
+    public void damage(int damageDealt) {
+        playerData.setHealth(playerData.getHealth() - damageDealt);
+    }
+
     public void kill() {
         playerData.setState(ObjectState.DEAD);
         playerData.setSpeed(0);

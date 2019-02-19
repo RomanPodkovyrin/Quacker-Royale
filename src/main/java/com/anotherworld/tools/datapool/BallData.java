@@ -14,6 +14,7 @@ public class BallData extends MovableData implements BallDisplayData, Serializab
 
     private boolean dangerous;
     private int timer;
+    private int damage = 10; // TODO: Create damage in the constructor.
 
     public BallData(boolean dangerous,
                     float xCoordinate, float yCoordinate,
@@ -22,6 +23,9 @@ public class BallData extends MovableData implements BallDisplayData, Serializab
         this.dangerous = dangerous;
         this.timer = 0;
     }
+
+    public int getDamage() { return damage; }
+    public void setDamage(int damage) { this.damage = damage; }
 
     public boolean isDangerous() { return dangerous; }
     public void setDangerous(boolean dangerous) { this.dangerous = dangerous; }

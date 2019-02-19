@@ -94,7 +94,7 @@ public class GameSession {
                     if (!ball.isDangerous()){
                         ball.setDangerous(true);
                         ball.setTimer(BallData.MAX_TIMER);
-                    } else player.setHealth(player.getHealth() - 1);
+                    } else player.damage(ball.getDamage());
                 }
             }
 

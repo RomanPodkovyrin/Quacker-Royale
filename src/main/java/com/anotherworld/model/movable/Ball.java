@@ -9,8 +9,9 @@ public class Ball extends AbstractMovable {
     public Ball(BallData ballData){
         super(ballData);
         this.ballData = ballData;
-//        ballData.setDangerous(false);
     }
+
+    public int getDamage() { return ballData.getDamage(); }
 
     public boolean isDangerous() { return ballData.isDangerous(); }
     public void setDangerous(boolean dangerous) { ballData.setDangerous(dangerous); }
