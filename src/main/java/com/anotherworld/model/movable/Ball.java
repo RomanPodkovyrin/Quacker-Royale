@@ -18,7 +18,10 @@ public class Ball extends AbstractMovable {
 
     public int getTimer() { return ballData.getTimer(); }
     public void setTimer(int time) { ballData.setTimer(time); }
-    public void decrementTimer() { ballData.decrementTimer(); }
+
+    public void reduceTimer(int amount) {
+        ballData.setTimer(ballData.getTimer() - amount);
+    }
 
     public String toString() {
         return "Location: x "+ getXCoordinate() + " y " + getYCoordinate();

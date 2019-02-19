@@ -7,11 +7,6 @@ import java.io.Serializable;
 
 public class BallData extends MovableData implements BallDisplayData, Serializable {
 
-    /**
-     * The amount of frames the ball will stay dangerous.
-     */
-    public static final int MAX_TIMER = 2000;
-
     private boolean dangerous;
     private int timer;
     private int damage = 10; // TODO: Create damage in the constructor.
@@ -32,5 +27,4 @@ public class BallData extends MovableData implements BallDisplayData, Serializab
 
     public int getTimer() { return timer; }
     public void setTimer(int time) { this.timer = time; }
-    public void decrementTimer() { this.timer--; }
 }
