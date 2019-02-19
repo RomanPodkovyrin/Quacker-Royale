@@ -2,6 +2,7 @@ package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
 import static org.lwjgl.opengl.GL11.glEnableClientState;
+import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL45.*;
 
 import com.anotherworld.tools.datapool.WallData;
@@ -59,15 +60,25 @@ public abstract class DisplayObject {
         displayObject.vaoId = glGenVertexArrays();
         glBindVertexArray(displayObject.vaoId);
         
-        glEnableVertexAttribArray(0);
-        
-        
         displayObject.vertices = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, displayObject.vertices);
         FloatBuffer f = displayObject.getFloatBuffer();
         glBufferData(GL_ARRAY_BUFFER, f, GL_STATIC_DRAW);
         
+        glEnableVertexAttribArray(0);
+        
         glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        int colour = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, colour);
+        FloatBuffer g = displayObject.getColourBuffer();
+        glBufferData(GL_ARRAY_BUFFER, g, GL_STATIC_DRAW);
+        
+        glEnableVertexAttribArray(1);
+        
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
@@ -157,7 +168,6 @@ public abstract class DisplayObject {
         for (int i = 0; i <= 36; i += 1) {
             points.setValue(0, i + 1, r * (float)(Math.sin(((double)i / 18) * Math.PI)));
             points.setValue(1, i + 1, r * (float)(Math.cos(((double)i / 18) * Math.PI)));
-            logger.trace(points.getValue(0, i + 1) + ":" + points.getValue(1, i + 1));
             points.setValue(3, i + 1, 1f);
         }
         return points;
@@ -188,16 +198,18 @@ public abstract class DisplayObject {
         
         glBindVertexArray(vaoId);
         glEnableVertexAttribArray(0);
+        glEnableVertexAttribArray(1);
         
         //glColor3f(r, g, b);
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edges);
         
-        glDrawElements(GL_POINTS, this.points.getN(), GL_UNSIGNED_INT, 0);
+        glDrawElements(GL_LINE_LOOP, this.points.getN(), GL_UNSIGNED_INT, 0);
         //glDrawArrays(GL_POINTS, 0, this.points.getN());
 
         glDisableClientState(GL_VERTEX_ARRAY);
 
+        glDisableVertexAttribArray(1);
         glDisableVertexAttribArray(0);
         glBindVertexArray(0);
         
@@ -213,6 +225,18 @@ public abstract class DisplayObject {
         b.put(points.getPoints());
         b.flip();
         return b;
+    }
+    
+    private FloatBuffer getColourBuffer() {
+        FloatBuffer buff = BufferUtils.createFloatBuffer(points.getPoints().length);
+        for (int i = 0; i < points.getN(); i++) {
+            buff.put(this.r);
+            buff.put(this.g);
+            buff.put(this.b);
+            buff.put(1f);
+        }
+        buff.flip();
+        return buff;
     }
     
     private IntBuffer getIndexBuffer() {

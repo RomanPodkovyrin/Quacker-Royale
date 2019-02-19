@@ -58,10 +58,10 @@ public class GraphicsDisplay {
      */
     public void draw() {
         glPushMatrix();
-        Camera.transform(camera);
+        //Camera.transform(camera);
         for (int i = 0; i < objects.size(); i++) {
             glPushMatrix();
-            objects.get(i).transform();
+            //objects.get(i).transform();
             objects.get(i).draw();
             glPopMatrix();
         }

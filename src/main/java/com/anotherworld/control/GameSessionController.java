@@ -69,7 +69,7 @@ public class GameSessionController {
 
     private void mainLoop() {
         render();
-        
+        /*
         int framesDropped = 0;
 
         // Time at the start of the loop
@@ -111,7 +111,7 @@ public class GameSessionController {
 
             // Fixes dropped frameRate
             while ((sleepTime < 0) && (framesDropped < MAX_FRAME_DROP)) {
-                logger.trace("Frames lost");
+                logger.trace("Frames lost " + framesDropped);
                 // updates the Game logic
                 session.updatePlayer(keyListener.getKeyPresses());
                 session.update();
@@ -124,7 +124,7 @@ public class GameSessionController {
             // Reset dropped frames
             framesDropped = 0;
         }
-
+        */
         shutDownSequence();
     }
 

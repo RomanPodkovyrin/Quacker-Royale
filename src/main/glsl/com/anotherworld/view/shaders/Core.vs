@@ -1,10 +1,11 @@
-#version 320 es
+#version 130
 
-precision mediump float;
+//precision mediump float;
 in vec4 position;
-//out vec4 outColour;
+in vec4 colour;
+out vec4 vertexColour;
 
 void main() {
-    //outColour = vec4(1.0, 1.0, 1.0, 1.0);
     gl_Position = position;
+    vertexColour = colour;
 }

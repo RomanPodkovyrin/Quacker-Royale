@@ -1,9 +1,9 @@
-#version 320 es
+#version 130
 
 precision mediump float;
-//in vec4 vertexColor;
-out vec4 outColor;
+in vec4 vertexColour;
+out vec4 outColour;
 
 void main() {
-    outColor = vec4(1.0, 1.0, 1.0, 1.0);//vertexColor;
+    outColour = /*vec4(1.0, 1.0, 1.0, 1.0);*/vertexColour;
 }

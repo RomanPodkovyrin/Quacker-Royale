@@ -1,6 +1,7 @@
 package com.anotherworld.view;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -171,7 +172,16 @@ public class View implements Runnable {
         glAttachShader(programme, vertexShaderId);
         glAttachShader(programme, fragShaderId);
         
+        glBindAttribLocation(programme, 0, "position");
+        glBindAttribLocation(programme, 1, "colour");
+        
         glLinkProgram(programme);
+        
+        logger.debug("Fragment shader id " + fragShaderId);
+        logger.debug("Vertex shader id " + vertexShaderId);
+        logger.debug("Programme shader id " + programme);
+        
+        logger.info("Programme info: " + glGetProgramInfoLog(programme));
         
         while (!glfwWindowShouldClose(window)) {
 
@@ -190,6 +200,13 @@ public class View implements Runnable {
             currentScene.draw(width, height);
 
             glFlush();
+            
+            int error = glGetError();
+            
+            while (error != GL_NO_ERROR) {
+                logger.error("GL error " + error);
+                error = glGetError();
+            }
 
             glfwSwapBuffers(window);
 
