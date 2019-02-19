@@ -97,11 +97,11 @@ public class GameSettings {
         for (int i = 0; i < numberOfBalls; i++) {
 
             int side = (int)(Math.random() * 4) + 1;
-            float xMin = 0;
-            float xMax = 0;
+            float xMin = platform.getxSize() + platform.getXCoordinate();
+            float xMax = platform.getxSize() + platform.getXCoordinate();
 
-            float yMin = 0;
-            float yMax = 0;
+            float yMin = platform.getySize() + platform.getYCoordinate();
+            float yMax = platform.getySize() + platform.getYCoordinate();
 
             float ballRadius =  Float.parseFloat(propertyFileLogic.getValue("BALL_RADIUS"));
             float ballSpeed = Float.parseFloat(propertyFileLogic.getValue("BALL_SPEED"));
@@ -178,7 +178,7 @@ public class GameSettings {
 
     private void createWall() throws IOException{
         //again where is the center
-        WallData wall = new WallData(50,50);
+        WallData wall = new WallData(80,45);
 
         wall.setxSize(Float.parseFloat(propertyFileLogic.getValue("WALL_X_SIZE")));
         wall.setWidth(wall.getxSize() * 2);
@@ -191,7 +191,7 @@ public class GameSettings {
     private void createPlatform() throws IOException {
         // new PlatformData();
         // Where is a center
-        PlatformData platform = new PlatformData(50,50);
+        PlatformData platform = new PlatformData(80,45);
 
         platform.setxSize(Float.parseFloat(propertyFileLogic.getValue("PLATFORM_X_SIZE")));
         platform.setWidth(platform.getxSize() * 2);

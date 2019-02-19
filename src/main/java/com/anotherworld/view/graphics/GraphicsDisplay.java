@@ -1,5 +1,7 @@
 package com.anotherworld.view.graphics;
 
+import static org.lwjgl.opengl.GL46.*;
+
 import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
@@ -21,8 +23,10 @@ public class GraphicsDisplay {
     private final float height;
     private final float width;
     
-    protected ArrayList<DisplayObject> objects;
+    private Camera camera;
     
+    protected ArrayList<DisplayObject> objects;
+
     /**
      * Creates a new Graphics display (Uses normalised device coordinates).
      * @param x The x position
@@ -31,7 +35,7 @@ public class GraphicsDisplay {
      * @param width The display width
      * @throws IncoherentGraphicsDisplay If the display would go outside of the window
      */
-    public GraphicsDisplay(float x, float y, float height, float width) {
+    public GraphicsDisplay(float x, float y, float height, float width, Camera camera) {
         if (!(-1f <= x && x <= 1f
                 && -1f <= y && y <= 1f
                 && 0f <= height && height <= 2f
@@ -44,6 +48,7 @@ public class GraphicsDisplay {
         this.y = y;
         this.height = height;
         this.width = width;
+        this.camera = camera;
         objects = new ArrayList<>();
     }
 
@@ -51,21 +56,17 @@ public class GraphicsDisplay {
      * Returns an array list of matrices containing the objects to be drawn.
      * @return The list of matrices
      */
-    public ArrayList<DisplayObject> draw() {
+    public void draw() {
+        glPushMatrix();
+        glMatrixMode(GL_MODELVIEW);
+        Camera.transform(camera);
         for (int i = 0; i < objects.size(); i++) {
-            objects.get(i).clearTransformations();
-            transformObject(objects.get(i));
+            glPushMatrix();
+            objects.get(i).transform();
+            objects.get(i).draw();
+            glPopMatrix();
         }
-        return objects;
-    }
-    
-    private void transformObject(DisplayObject obj) {
-        Matrix2d modifier = Matrix2d.homTranslation2d(obj.getX(), obj.getY());
-
-        modifier = modifier.mult(Matrix2d.homRotation2d(obj.getTheta()));
-
-        obj.transform(modifier);
-
+        glPopMatrix();
     }
     
     public float getX() {
@@ -82,6 +83,12 @@ public class GraphicsDisplay {
     
     public float getWidth() {
         return width;
+    }
+
+    public void destroyObjects() {
+        for (DisplayObject d : objects) {
+            d.destroyObject();
+        }
     }
     
 }

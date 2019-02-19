@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.*;
 
 /**
  * Controller object that connects the View and the Model of the game.
@@ -50,19 +51,8 @@ public class GameSessionController {
         this.view = view;
 
         AudioControl.setUp();
-        Boolean startMusic = true;
-        try {
-            PropertyReader sound = new PropertyReader("gamesession.properties");
-            if (sound.getValue("backgroundMusic").equals("off")){
-                startMusic = false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        AudioControl.playBackGroundMusic();
 
-        if (startMusic) {
-            AudioControl.playBackGroundMusic();
-        }
 
 
         // Starting the View thread
@@ -79,12 +69,12 @@ public class GameSessionController {
         // Obtain the key listener.
         this.keyListener = view.getKeyListener();
         mainLoop();
-
+        
     }
 
     private void mainLoop() {
         render();
-
+        
         int framesDropped = 0;
 
         // Time at the start of the loop
@@ -126,7 +116,7 @@ public class GameSessionController {
 
             // Fixes dropped frameRate
             while ((sleepTime < 0) && (framesDropped < MAX_FRAME_DROP)) {
-                logger.trace("Frames lost");
+                logger.trace("Frames lost " + framesDropped);
                 // updates the Game logic
                 session.updatePlayer(keyListener.getKeyPresses());
                 session.update();
@@ -139,7 +129,7 @@ public class GameSessionController {
             // Reset dropped frames
             framesDropped = 0;
         }
-
+        
         shutDownSequence();
     }
 

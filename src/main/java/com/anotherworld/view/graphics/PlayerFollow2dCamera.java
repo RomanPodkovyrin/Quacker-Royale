@@ -4,18 +4,28 @@ import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Creates a camera that follows objects that return true from shouldCameraFollow.
  * @author Jake Stewart
  *
  */
 public class PlayerFollow2dCamera implements Camera {
+    
+    private static Logger logger = LogManager.getLogger();
+    
     private final float height;
     private final float width;
+    
+    private float currentX;
+    private float currentY;
+    
     private ArrayList<DisplayObject> objects;
 
-    public PlayerFollow2dCamera(float width, float height) {
-        this(new ArrayList<>(), width, height);
+    public PlayerFollow2dCamera(float x, float y, float width, float height) {
+        this(new ArrayList<>(), x, y, width, height);
     }
     
     /**
@@ -24,10 +34,12 @@ public class PlayerFollow2dCamera implements Camera {
      * @param width The width of the camera
      * @param height The height of the camera
      */
-    public PlayerFollow2dCamera(ArrayList<DisplayObject> objects, float width, float height) {
+    public PlayerFollow2dCamera(ArrayList<DisplayObject> objects, float x, float y, float width, float height) {
         this.width = width;
         this.height = height;
         this.objects = objects;
+        this.currentX = x;
+        this.currentY = y;
     }
     
     /**
@@ -48,8 +60,14 @@ public class PlayerFollow2dCamera implements Camera {
                 i++;
             }
         }
-        x /= i;
-        return x - (width / 2);
+        x /= Math.max(i, 1);
+        if (x > currentX) {
+            currentX += Math.min(Math.abs(x - currentX), 0.2f);
+        } else {
+            currentX -= Math.min(Math.abs(x - currentX), 0.2f);
+        }
+        logger.debug("Camera x is " + currentX);
+        return currentX;
     }
 
     @Override
@@ -62,8 +80,14 @@ public class PlayerFollow2dCamera implements Camera {
                 i++;
             }
         }
-        y /= i;
-        return y - (height / 2);
+        y /= Math.max(i, 1);
+        if (y > currentY) {
+            currentY += Math.min(Math.abs(y - currentY), 0.2f);
+        } else {
+            currentY -= Math.min(Math.abs(y - currentY), 0.2f);
+        }
+        logger.debug("Camera y is " + currentY);
+        return currentY;
     }
 
     @Override

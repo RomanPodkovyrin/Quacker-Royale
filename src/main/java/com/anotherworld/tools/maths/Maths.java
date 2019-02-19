@@ -10,12 +10,10 @@ import java.util.Random;
 public class Maths {
 
     public static float getRandom(float min, float max) {
-        Random r = new Random(System.currentTimeMillis());
         return min + ((float) Math.random()) * (max - min);
     }
 
     public static int getRandom(int min, int max) {
-        Random r = new Random(System.currentTimeMillis());
         return min + ((int)Math.random()) * (max - min);
     }
 }
