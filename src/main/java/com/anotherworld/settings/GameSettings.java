@@ -26,11 +26,35 @@ import static com.anotherworld.tools.maths.Maths.getRandom;
 public class GameSettings {
 
     private static Logger logger = LogManager.getLogger(GameSettings.class);
+
+    // Settings regarding the number of players
     private int numberOfPlayers;
     private int numberofAIPlayers;
+    private int numberOfBall;
+
+    // Settings regarding the player defaults
+    private static float defaultPlayerSpeed;
+    private float defaultPlayerRadius;
+    private static int defaultPlayerHealth;
+
+    // Settings regarding the ball defaults
+    private static int defaultBallMaxTimer;
+    private static int defaultBallTimerDecrement;
+    private static float defaultBallSpeed;
+    private float defaultBallRadius;
+    private static int defaultBallDamage;
+
+    // Settings regarding the wall defaults
+    private float defaultWallXSize;
+    private float defaultWallYSize;
+
+    //Settings regarding the platform defaults
+    private float defaultPlatformXSize;
+    private float defaultPlatformYSize;
+
+    // Sound settings
     private boolean musicSound;
     private boolean effectsSound;
-    private int numberOfBall;
 
     private PlayerData currentPlayer;
     private ArrayList<PlayerData> players = new ArrayList<>();
@@ -41,7 +65,6 @@ public class GameSettings {
 
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser" ));
 
-    private PropertyReader propertyFileLogic;
     private static PropertyReader gamesession;
 
 
@@ -54,7 +77,23 @@ public class GameSettings {
         this.effectsSound = effectsSound;
 
         try {
-            propertyFileLogic = new PropertyReader("logic.properties");
+            PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
+
+            this.defaultPlayerSpeed  = Float.parseFloat(propertyFileLogic.getValue("PLAYER_SPEED"));
+            this.defaultPlayerHealth = Integer.parseInt(propertyFileLogic.getValue("PLAYER_HEALTH"));
+            this.defaultPlayerRadius = Float.parseFloat(propertyFileLogic.getValue("PLAYER_RADIUS"));
+
+            this.defaultBallMaxTimer = Integer.parseInt(propertyFileLogic.getValue("BALL_MAX_TIMER"));
+            this.defaultBallTimerDecrement = Integer.parseInt(propertyFileLogic.getValue("BALL_TIMER_DEC"));
+            this.defaultBallSpeed  = Float.parseFloat(propertyFileLogic.getValue("BALL_SPEED"));
+            this.defaultBallDamage = Integer.parseInt(propertyFileLogic.getValue("BALL_DAMAGE"));
+            this.defaultBallRadius =  Float.parseFloat(propertyFileLogic.getValue("BALL_RADIUS"));
+
+            this.defaultWallXSize = Float.parseFloat(propertyFileLogic.getValue("WALL_X_SIZE"));
+            this.defaultWallYSize = Float.parseFloat(propertyFileLogic.getValue("WALL_Y_SIZE"));
+
+            this.defaultPlatformXSize = Float.parseFloat(propertyFileLogic.getValue("PLATFORM_X_SIZE"));
+            this.defaultPlatformYSize = Float.parseFloat(propertyFileLogic.getValue("PLATFORM_Y_SIZE"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,8 +142,8 @@ public class GameSettings {
             float yMin = platform.getySize() + platform.getYCoordinate();
             float yMax = platform.getySize() + platform.getYCoordinate();
 
-            float ballRadius =  Float.parseFloat(propertyFileLogic.getValue("BALL_RADIUS"));
-            float ballSpeed = Float.parseFloat(propertyFileLogic.getValue("BALL_SPEED"));
+            float ballRadius =  defaultBallRadius;
+            float ballSpeed = defaultBallSpeed;
             switch (side) {
                 case 0: // Left side
                     logger.trace("left");
@@ -180,10 +219,10 @@ public class GameSettings {
         //again where is the center
         WallData wall = new WallData(80,45);
 
-        wall.setxSize(Float.parseFloat(propertyFileLogic.getValue("WALL_X_SIZE")));
+        wall.setxSize(defaultWallXSize);
         wall.setWidth(wall.getxSize() * 2);
 
-        wall.setySize(Float.parseFloat(propertyFileLogic.getValue("WALL_Y_SIZE")));
+        wall.setySize(defaultWallYSize);
         wall.setHeight(wall.getySize() * 2);
         walls.add(wall);
     }
@@ -193,10 +232,10 @@ public class GameSettings {
         // Where is a center
         PlatformData platform = new PlatformData(80,45);
 
-        platform.setxSize(Float.parseFloat(propertyFileLogic.getValue("PLATFORM_X_SIZE")));
+        platform.setxSize(defaultPlatformXSize);
         platform.setWidth(platform.getxSize() * 2);
 
-        platform.setySize(Float.parseFloat(propertyFileLogic.getValue("PLATFORM_Y_SIZE")));
+        platform.setySize(defaultPlatformYSize);
         platform.setHeight(platform.getySize() * 2);
 
         platforms.add(platform);
@@ -205,9 +244,9 @@ public class GameSettings {
 
     private void createPlayers(int numberOfPlayers, int numberofAIPlayers) throws IOException {
         PlatformData platform = platforms.get(0);
-        int playerHealth = Integer.parseInt(propertyFileLogic.getValue("PLAYER_HEALTH"));
-        float playerRadius = Float.parseFloat(propertyFileLogic.getValue("PLAYER_RADIUS"));
-        float playerSpeed = Float.parseFloat(propertyFileLogic.getValue("PLAYER_SPEED"));
+        int playerHealth = defaultPlayerHealth;
+        float playerRadius = defaultPlayerRadius;
+        float playerSpeed = defaultPlayerSpeed;
         for (int i = 0; i < numberOfPlayers; i++) {
             float distanceFromBoarder = 5;
             float xRandom = getRandom(platform.getXCoordinate() - platform.getxSize() + distanceFromBoarder,
@@ -271,4 +310,17 @@ public class GameSettings {
     public PlayerData getCurrentPlayer() {
         return currentPlayer;
     }
+
+
+    public static float getDefaultPlayerSpeed() { return defaultPlayerSpeed; }
+
+    public static int getDefaultPlayerHealth() { return defaultPlayerHealth; }
+
+    public static int getBallMaxTimer() { return defaultBallMaxTimer; }
+
+    public static int getBallTimerDecrement() { return defaultBallTimerDecrement; }
+
+    public static float getDefaultBallSpeed() { return defaultBallSpeed; }
+
+    public static int getDefaultBallDamage() { return defaultBallDamage; }
 }
