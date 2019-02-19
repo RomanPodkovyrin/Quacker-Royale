@@ -87,6 +87,7 @@ public class AI {
         // TODO ai gets very jittery when getting close to the edge
         survival.add(new AvoidEdge());
         survival.add(new AvoidBall());
+        survival.add(new AvoidNeutralPlayer());
         //survival.add(new AvoidPlayerCharge);
         return survival;
     }
@@ -142,13 +143,14 @@ public class AI {
             for (int i = 0; i < aiPlayers.size(); i++) {
                 Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
                 if (pair.getKey().getState() == ObjectState.DEAD) {
+
                     logger.info(pair.getKey().getCharacterID() + " is dead");
                     pair.getKey().setVelocity(0,0);
-                    return;
-                }
-                logger.info(pair.getKey().getCharacterID() + " Starting AI");
+                } else {
+                    logger.info(pair.getKey().getCharacterID() + " Starting AI");
 
-                jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
+                    jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
+                }
             }
             tick = tick + 1;
         } else if (tick == 10) {
