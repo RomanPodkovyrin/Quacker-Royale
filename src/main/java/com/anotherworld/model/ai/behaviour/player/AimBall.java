@@ -64,6 +64,12 @@ public class AimBall extends Job {
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+
+        this.ai = ai;
+        this.players = players;
+        this.balls = balls;
+        this.platform = platform;
+
         Ball targetBall = null;
         Player targetPlayer = null;
         logger.info("Aim ball start");

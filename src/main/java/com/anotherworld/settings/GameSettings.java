@@ -4,7 +4,6 @@ import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlatformData;
@@ -42,7 +41,8 @@ public class GameSettings {
 
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser" ));
 
-    private PropertyReader propertyFile ;
+    private PropertyReader propertyFileLogic;
+    private static PropertyReader gamesession;
 
 
     public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls, boolean musicSound, boolean effectsSound) {
@@ -54,11 +54,38 @@ public class GameSettings {
         this.effectsSound = effectsSound;
 
         try {
-            propertyFile = new PropertyReader("logic.properties");
+            propertyFileLogic = new PropertyReader("logic.properties");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+    }
+
+    public static boolean toggleOnOff(String setting){
+        boolean settingState = false;
+        try{
+        gamesession = new PropertyReader("gamesession.properties");
+        String state = gamesession.getValue(setting);
+        switch (state){
+            case "on":
+                settingState = false;
+                gamesession.setValue(setting,"off");
+                break;
+            case "off":
+                settingState = true;
+                gamesession.setValue(setting,"on");
+                break;
+            default:
+                settingState = false;
+                gamesession.setValue(setting,"off");
+                break;
+        }
+        } catch (IOException e) {
+        e.printStackTrace();
+        }
+
+
+        return settingState;
     }
 
     private void createBalls(int numberOfBalls) throws IOException{
@@ -76,8 +103,8 @@ public class GameSettings {
             float yMin = 0;
             float yMax = 0;
 
-            float ballRadius =  Float.parseFloat(propertyFile.getValue("BALL_RADIUS"));
-            float ballSpeed = Float.parseFloat(propertyFile.getValue("BALL_SPEED"));
+            float ballRadius =  Float.parseFloat(propertyFileLogic.getValue("BALL_RADIUS"));
+            float ballSpeed = Float.parseFloat(propertyFileLogic.getValue("BALL_SPEED"));
             switch (side) {
                 case 0: // Left side
                     logger.trace("left");
@@ -153,10 +180,10 @@ public class GameSettings {
         //again where is the center
         WallData wall = new WallData(50,50);
 
-        wall.setxSize(Float.parseFloat(propertyFile.getValue("WALL_X_SIZE")));
+        wall.setxSize(Float.parseFloat(propertyFileLogic.getValue("WALL_X_SIZE")));
         wall.setWidth(wall.getxSize() * 2);
 
-        wall.setySize(Float.parseFloat(propertyFile.getValue("WALL_Y_SIZE")));
+        wall.setySize(Float.parseFloat(propertyFileLogic.getValue("WALL_Y_SIZE")));
         wall.setHeight(wall.getySize() * 2);
         walls.add(wall);
     }
@@ -166,10 +193,10 @@ public class GameSettings {
         // Where is a center
         PlatformData platform = new PlatformData(50,50);
 
-        platform.setxSize(Float.parseFloat(propertyFile.getValue("PLATFORM_X_SIZE")));
+        platform.setxSize(Float.parseFloat(propertyFileLogic.getValue("PLATFORM_X_SIZE")));
         platform.setWidth(platform.getxSize() * 2);
 
-        platform.setySize(Float.parseFloat(propertyFile.getValue("PLATFORM_Y_SIZE")));
+        platform.setySize(Float.parseFloat(propertyFileLogic.getValue("PLATFORM_Y_SIZE")));
         platform.setHeight(platform.getySize() * 2);
 
         platforms.add(platform);
@@ -178,9 +205,9 @@ public class GameSettings {
 
     private void createPlayers(int numberOfPlayers, int numberofAIPlayers) throws IOException {
         PlatformData platform = platforms.get(0);
-        int playerHealth = Integer.parseInt(propertyFile.getValue("PLAYER_HEALTH"));
-        float playerRadius = Float.parseFloat(propertyFile.getValue("PLAYER_RADIUS"));
-        float playerSpeed = Float.parseFloat(propertyFile.getValue("PLAYER_SPEED"));
+        int playerHealth = Integer.parseInt(propertyFileLogic.getValue("PLAYER_HEALTH"));
+        float playerRadius = Float.parseFloat(propertyFileLogic.getValue("PLAYER_RADIUS"));
+        float playerSpeed = Float.parseFloat(propertyFileLogic.getValue("PLAYER_SPEED"));
         for (int i = 0; i < numberOfPlayers; i++) {
             float distanceFromBoarder = 5;
             float xRandom = getRandom(platform.getXCoordinate() - platform.getxSize() + distanceFromBoarder,

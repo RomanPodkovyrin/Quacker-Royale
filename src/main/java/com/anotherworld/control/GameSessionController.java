@@ -3,11 +3,13 @@ package com.anotherworld.control;
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.settings.GameSettings;
+import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +40,7 @@ public class GameSessionController {
 
 
 
+
     //TODO make a constructor for the real main (Main.java)
     public GameSessionController(View view, GameSettings settings) throws KeyListenerNotFoundException {
 
@@ -47,7 +50,20 @@ public class GameSessionController {
         this.view = view;
 
         AudioControl.setUp();
-        AudioControl.playBackGroundMusic();
+        Boolean startMusic = true;
+        try {
+            PropertyReader sound = new PropertyReader("gamesession.properties");
+            if (sound.getValue("backgroundMusic").equals("off")){
+                startMusic = false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (startMusic) {
+            AudioControl.playBackGroundMusic();
+        }
+
 
         // Starting the View thread
         this.viewThread = new Thread(view);
