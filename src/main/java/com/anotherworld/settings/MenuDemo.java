@@ -89,7 +89,7 @@ public class MenuDemo extends Application {
         backToMenu.setMinHeight(height * 0.1);
         backToMenu.setBackground(new Background(new BackgroundFill(Color.rgb(9,
                 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-
+        ;
         backToMenu.setOnAction(e -> window.setScene(scene1));
         backToMenu.setFont(font);
         Button musicButton = new Button("Music: On");
