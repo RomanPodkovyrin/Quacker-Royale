@@ -1,6 +1,7 @@
 package com.anotherworld.settings;
 
 import com.anotherworld.control.Main;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.awt.Dimension;
@@ -35,32 +37,36 @@ public class MenuDemo extends Application {
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
 
+        final Font font = new Font("Arial", height / 27);
         Label label1 = new Label("Welcome to the main page");
+        label1.setFont(font);
         Button button1 = new Button("Go to settings");
         button1.setOnAction(e -> window.setScene(scene2));
         button1.setMinWidth(width * 0.5);
         button1.setMinHeight(height * 0.1);
         button1.setBackground(new Background(new BackgroundFill(Color.rgb(9,
                 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-
+        button1.setFont(font);
         Button buttonSinglePlayer = new Button("Play SinglePlayer");
         buttonSinglePlayer.setOnAction(e -> {
             // start the game
-            
-            control.startSinglePlayer();
-            System.out.println("Finished the game");
-//            window.close();
-        });
+
+                control.startSinglePlayer();
+                System.out.println("Finished the game");
+                // window.close();
+            });
         buttonSinglePlayer.setMinWidth(width * 0.5);
         buttonSinglePlayer.setMinHeight(height * 0.1);
         buttonSinglePlayer.setBackground(new Background(new BackgroundFill(
                 Color.rgb(9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
+        buttonSinglePlayer.setFont(font);
 
         Button buttonMultiPlayer = new Button("Play MultiPlayer");
         buttonMultiPlayer.setMinWidth(width * 0.5);
         buttonMultiPlayer.setMinHeight(height * 0.1);
         buttonMultiPlayer.setBackground(new Background(new BackgroundFill(Color
                 .rgb(9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
+        buttonMultiPlayer.setFont(font);
 
         // Layout 1 - children are laid out in vertical column
         VBox layout1 = new VBox(20);
@@ -77,6 +83,7 @@ public class MenuDemo extends Application {
                 screenSize.getHeight(), Color.BLACK);
 
         Label setting = new Label("Welcome to settings");
+        setting.setFont(font);
         Button backToMenu = new Button("Go to main page");
         backToMenu.setMinWidth(width * 0.5);
         backToMenu.setMinHeight(height * 0.1);
@@ -84,23 +91,25 @@ public class MenuDemo extends Application {
                 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
 
         backToMenu.setOnAction(e -> window.setScene(scene1));
+        backToMenu.setFont(font);
         Button musicButton = new Button("Music: On");
         musicButton.setMinWidth(width * 0.5);
         musicButton.setMinHeight(height * 0.1);
         musicButton.setBackground(new Background(new BackgroundFill(Color.rgb(
                 9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-        musicButton
-                .setOnAction(e -> musicButton
-                        .setText("Music: "+ (musicButton.getText().split(" ")[1].equals("On") ? "Off" : "On")));
+        musicButton.setOnAction(e -> musicButton.setText("Music: "
+                + (musicButton.getText().split(" ")[1].equals("On") ? "Off"
+                        : "On")));
+        musicButton.setFont(font);
         Button sfxButton = new Button("SFX: On");
         sfxButton.setMinWidth(width * 0.5);
         sfxButton.setMinHeight(height * 0.1);
         sfxButton.setBackground(new Background(new BackgroundFill(Color.rgb(9,
                 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-        sfxButton
-                .setOnAction(e -> sfxButton.setText("SFX: "+ (sfxButton.getText().split(" ")[1].equals("On") ? "Off"
+        sfxButton.setOnAction(e -> sfxButton.setText("SFX: "
+                + (sfxButton.getText().split(" ")[1].equals("On") ? "Off"
                         : "On")));
-
+        sfxButton.setFont(font);
         // Layout 2 - children are laid out in vertical column
         VBox layout2 = new VBox(20);
         layout2.setPadding(new Insets(10, 50, 50, 50));
