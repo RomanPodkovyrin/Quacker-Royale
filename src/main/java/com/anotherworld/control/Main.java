@@ -43,7 +43,7 @@ public class Main {
         GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 
         try {
-            View view = new View((int)(mode.width() * 0.75), (int)(mode.height() * 0.75));
+            View view = new View((int)(mode.width()), (int)(mode.height()));
 
             new GameSessionController(view, settings);
 
