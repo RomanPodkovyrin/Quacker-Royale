@@ -59,13 +59,13 @@ public abstract class DisplayObject {
         displayObject.vaoId = glGenVertexArrays();
         glBindVertexArray(displayObject.vaoId);
         
+        glEnableVertexAttribArray(0);
+        
         
         displayObject.vertices = glGenBuffers();
         glBindBuffer(GL_ARRAY_BUFFER, displayObject.vertices);
         FloatBuffer f = displayObject.getFloatBuffer();
         glBufferData(GL_ARRAY_BUFFER, f, GL_STATIC_DRAW);
-        
-        glEnableVertexAttribArray(0);
         
         glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
         

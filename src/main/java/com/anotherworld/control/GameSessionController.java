@@ -68,7 +68,7 @@ public class GameSessionController {
     private void mainLoop() {
         render();
         while(viewThread.isAlive()) {
-            //update();
+            update();
 
             try{
                 Thread.sleep(1000/60);
