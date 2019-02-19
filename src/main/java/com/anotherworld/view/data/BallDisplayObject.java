@@ -41,6 +41,11 @@ public class BallDisplayObject extends DisplayObject {
     }
     
     @Override
+    public boolean shouldDraw() {
+        return true;
+    }
+    
+    @Override
     public boolean shouldCameraFollow() {
         return false;
     }

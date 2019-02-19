@@ -197,19 +197,21 @@ public abstract class DisplayObject {
         logger.trace("Buffer vertices " + verticesId + " " + (glIsBuffer(verticesId) ? "exists" : "wasn't found"));
         logger.trace("Buffer edges " + edgesId + " " + (glIsBuffer(edgesId) ? "exists" : "wasn't found"));
         
-        glBindVertexArray(vaoId);
-        glEnableVertexAttribArray(0);
-        glEnableVertexAttribArray(1);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgesId);
-        
-        glDrawElements(this.getDisplayType(), this.points.getN(), GL_UNSIGNED_INT, 0);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-
-        glDisableVertexAttribArray(1);
-        glDisableVertexAttribArray(0);
-        glBindVertexArray(0);
+        if (this.shouldDraw()) {
+            glBindVertexArray(vaoId);
+            glEnableVertexAttribArray(0);
+            glEnableVertexAttribArray(1);
+    
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgesId);
+            
+            glDrawElements(this.getDisplayType(), this.points.getN(), GL_UNSIGNED_INT, 0);
+    
+            glDisableClientState(GL_VERTEX_ARRAY);
+    
+            glDisableVertexAttribArray(1);
+            glDisableVertexAttribArray(0);
+            glBindVertexArray(0);
+        }
         
     }
     
@@ -267,6 +269,18 @@ public abstract class DisplayObject {
         return false;
     }
     
+    public float getR() {
+        return r;
+    }
+
+    public float getG() {
+        return g;
+    }
+
+    public float getB() {
+        return b;
+    }
+    
     /**
      * Returns the angle of the object in degrees.
      * @return the angle of the object
@@ -284,6 +298,8 @@ public abstract class DisplayObject {
      * @return the y position
      */
     public abstract float getY();
+    
+    public abstract boolean shouldDraw();
     
     /**
      * Returns true if the camera should track the object.
