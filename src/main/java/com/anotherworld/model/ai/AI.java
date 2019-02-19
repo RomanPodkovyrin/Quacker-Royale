@@ -98,7 +98,7 @@ public class AI {
 
         ArrayList<Job> ballAim = new ArrayList<>();
         ballAim.add(new NeutralBallCheck());
-        ballAim.add(new AimBall());
+//        ballAim.add(new AimBall());
 
         domination.add(new SequenceSuccess(ballAim));
         // TODO chase the player gets the ai stuck
