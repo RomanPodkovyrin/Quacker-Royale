@@ -1,5 +1,6 @@
 package com.anotherworld.control;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.audio.BackgroundMusic;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
@@ -70,16 +71,18 @@ public class Main {
         startTheGame();
     }
 
-    public boolean sfxSetting(boolean on) {
-        boolean state = GameSettings.toggleOnOff("soundEffects");
-        logger.info("Toggle soundEffect " );
-        return state;
+    public static boolean sfxSetting(boolean on) {
+//        boolean state = GameSettings.toggleOnOff("soundEffects");
+        logger.info("Toggle soundEffect "  + on);
+        AudioControl.setEffectsOn(on);
+        return on;
     }
     
-    public boolean musicSetting(boolean on) {
-        boolean state = GameSettings.toggleOnOff("backgroundMusic");
-        logger.info("Toggle backgroundMusic "  );
-        return state;
+    public static boolean musicSetting(boolean on) {
+        AudioControl.setMusicOn(on);
+//        boolean state = GameSettings.toggleOnOff("backgroundMusic");
+        logger.info("Toggle backgroundMusic "  + on);
+        return on;
     }
 
 
