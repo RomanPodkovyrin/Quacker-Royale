@@ -97,11 +97,11 @@ public class GameSettings {
         for (int i = 0; i < numberOfBalls; i++) {
 
             int side = (int)(Math.random() * 4) + 1;
-            float xMin = 0;
-            float xMax = 0;
+            float xMin = platform.getxSize() + platform.getXCoordinate();
+            float xMax = platform.getxSize() + platform.getXCoordinate();
 
-            float yMin = 0;
-            float yMax = 0;
+            float yMin = platform.getySize() + platform.getYCoordinate();
+            float yMax = platform.getySize() + platform.getYCoordinate();
 
             float ballRadius =  Float.parseFloat(propertyFileLogic.getValue("BALL_RADIUS"));
             float ballSpeed = Float.parseFloat(propertyFileLogic.getValue("BALL_SPEED"));

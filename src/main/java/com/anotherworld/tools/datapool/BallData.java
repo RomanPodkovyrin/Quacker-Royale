@@ -10,7 +10,7 @@ public class BallData extends MovableData implements BallDisplayData, Serializab
     /**
      * The amount of frames the ball will stay dangerous.
      */
-    public static final int MAX_TIMER = 2000;
+    public static final int MAX_TIMER = 200;
 
     private boolean dangerous;
     private int timer;

@@ -35,7 +35,7 @@ public class AvoidEdge extends Job {
         this.players = players;
         this.balls = balls;
         this.platform = platform;
-        float distanceFromEdge = ai.getRadius();
+        float distanceFromEdge = ai.getRadius()*2;
         logger.debug("Running AvoidEdge");
 
         // get x y Matrix of the Platform
