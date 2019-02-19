@@ -74,7 +74,7 @@ public class Main {
     public static boolean sfxSetting(boolean on) {
 //        boolean state = GameSettings.toggleOnOff("soundEffects");
         logger.info("Toggle soundEffect "  + on);
-        AudioControl.setMusicOn(on);
+        AudioControl.setEffectsOn(on);
         return on;
     }
     

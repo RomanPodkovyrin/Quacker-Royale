@@ -97,18 +97,32 @@ public class MenuDemo extends Application {
         musicButton.setMinHeight(height * 0.1);
         musicButton.setBackground(new Background(new BackgroundFill(Color.rgb(
                 9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-        musicButton.setOnAction(e -> musicButton.setText("Music: "
-                + (musicButton.getText().split(" ")[1].equals("On") ? "Off"
-                        : "On")));
+        musicButton.setOnAction(e ->{
+            musicButton.setText("Music: "
+                    + (musicButton.getText().split(" ")[1].equals("On") ? "Off"
+                    : "On"));
+            if (musicButton.getText().split(" ")[1].equals("On")) {
+                Main.musicSetting(true);
+            } else {
+                Main.musicSetting(false);
+            }
+        });
         musicButton.setFont(font);
         Button sfxButton = new Button("SFX: On");
         sfxButton.setMinWidth(width * 0.5);
         sfxButton.setMinHeight(height * 0.1);
         sfxButton.setBackground(new Background(new BackgroundFill(Color.rgb(9,
                 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-        sfxButton.setOnAction(e -> sfxButton.setText("SFX: "
-                + (sfxButton.getText().split(" ")[1].equals("On") ? "Off"
-                        : "On")));
+        sfxButton.setOnAction(e -> {
+            sfxButton.setText("SFX: "
+                    + (sfxButton.getText().split(" ")[1].equals("On") ? "Off"
+                    : "On"));
+            if (sfxButton.getText().split(" ")[1].equals("On")) {
+                Main.sfxSetting(true);
+            } else {
+                Main.sfxSetting(false);
+            }
+        });
         sfxButton.setFont(font);
         // Layout 2 - children are laid out in vertical column
         VBox layout2 = new VBox(20);

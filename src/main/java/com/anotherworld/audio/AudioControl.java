@@ -12,7 +12,7 @@ public class AudioControl {
         if (musicOn) {
             backgroundMusic = new BackgroundMusic();
         }
-        if (musicOn) {
+        if (effectsOn) {
             soundEffects = new SoundEffects();
         }
 
