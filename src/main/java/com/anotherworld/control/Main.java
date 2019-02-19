@@ -8,6 +8,8 @@ import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWVidMode;
 
 import java.awt.*;
 
@@ -37,11 +39,11 @@ public class Main {
 
         GameSettings settings = new GameSettings(4,3,4, true, true);
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        System.out.println(screenSize.getWidth() + " * " + screenSize.getHeight());
+        GLFW.glfwInit();
+        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 
         try {
-            View view = new View((int )screenSize.getWidth(),(int) screenSize.getHeight());
+            View view = new View((int)(mode.width() * 0.75), (int)(mode.height() * 0.75));
 
             new GameSessionController(view, settings);
 
