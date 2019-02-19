@@ -112,6 +112,9 @@ public class GameSession {
 
             // Check if a player has collided with another player.
             for (Player playerB : this.allPlayers) {
+
+                if (playerB.isDead()) continue;
+                
                 if(!playerA.equals(playerB)
                         && Physics.checkCollision(playerA, playerB)) {
                     Physics.collided(playerA, playerB);

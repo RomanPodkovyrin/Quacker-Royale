@@ -138,4 +138,8 @@ public class SoundEffects implements Runnable{
         }
     }
 
+    public void stopSoundEffects() {
+        running = false;
+    }
+
 }

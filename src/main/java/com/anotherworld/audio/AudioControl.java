@@ -40,4 +40,8 @@ public class AudioControl {
         }
     }
 
+    public static void stopSoundEffects() {
+        soundEffects.stopSoundEffects();
+    }
+
 }
