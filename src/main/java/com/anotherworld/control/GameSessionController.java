@@ -50,19 +50,8 @@ public class GameSessionController {
         this.view = view;
 
         AudioControl.setUp();
-        Boolean startMusic = true;
-        try {
-            PropertyReader sound = new PropertyReader("gamesession.properties");
-            if (sound.getValue("backgroundMusic").equals("off")){
-                startMusic = false;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        AudioControl.playBackGroundMusic();
 
-        if (startMusic) {
-            AudioControl.playBackGroundMusic();
-        }
 
 
         // Starting the View thread

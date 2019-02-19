@@ -5,43 +5,66 @@ import java.io.IOException;
 public class AudioControl {
     private static BackgroundMusic backgroundMusic ;
     private static SoundEffects soundEffects;
+    private static boolean musicOn = true;
+    private static boolean effectsOn = true;
 
     public static void setUp() {
-        backgroundMusic = new BackgroundMusic();
-        soundEffects = new SoundEffects();
+        if (musicOn) {
+            backgroundMusic = new BackgroundMusic();
+        }
+        if (musicOn) {
+            soundEffects = new SoundEffects();
+        }
 
 
         // soundEffects set up
     }
 
-    public static void playBackGroundMusic() {
+    public static void setMusicOn(boolean musicOn) {
+        AudioControl.musicOn = musicOn;
+    }
 
-        backgroundMusic.playBackgroundMusic();
+    public static void setEffectsOn(boolean effectsOn) {
+        AudioControl.effectsOn = effectsOn;
+    }
+
+    public static void playBackGroundMusic() {
+        if (musicOn) {
+            backgroundMusic.playBackgroundMusic();
+        }
     }
 
     public static void stopBackgroundMusic() {
-        backgroundMusic.terminateMusic();
+        if (musicOn) {
+            backgroundMusic.terminateMusic();
+        }
     }
 
     public static void playerCollidedWithBall() {
-        try {
+        if (effectsOn) {
+            try {
 
-            soundEffects.playerCollidedWithBall();
-        } catch (IOException e) {
-            e.printStackTrace();
+                soundEffects.playerCollidedWithBall();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public static void ballCollidedWithWall() {
-        try {
-            soundEffects.ballCollidedWithWall();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (effectsOn) {
+            try {
+                soundEffects.ballCollidedWithWall();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public static void stopSoundEffects() {
-        soundEffects.stopSoundEffects();
+        if (effectsOn) {
+            soundEffects.stopSoundEffects();
+        }
     }
 
 }
