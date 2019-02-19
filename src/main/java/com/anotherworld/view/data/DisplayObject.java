@@ -67,7 +67,7 @@ public abstract class DisplayObject {
         
         glEnableVertexAttribArray(0);
         
-        glVertexAttribPointer(0, 3, GL_FLOAT, false, 0, 0);
+        glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
@@ -76,13 +76,10 @@ public abstract class DisplayObject {
         
         glBindVertexArray(0);
         
-        //displayObject.edges = glGenBuffers();
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.edges);
-        //glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), displayObject.edges);
-
-        //glVertexAttribPointer(1, 1, GL_FLOAT, false, 0, 0);
-        
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        displayObject.edges = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.edges);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         
         
     }
@@ -152,6 +149,7 @@ public abstract class DisplayObject {
      * @return The points of the circle
      */
     protected static final Matrix2d genCircle(float r) {
+        r = 0.5f;
         Matrix2d points = new Matrix2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
@@ -159,6 +157,7 @@ public abstract class DisplayObject {
         for (int i = 0; i <= 36; i += 1) {
             points.setValue(0, i + 1, r * (float)(Math.sin(((double)i / 18) * Math.PI)));
             points.setValue(1, i + 1, r * (float)(Math.cos(((double)i / 18) * Math.PI)));
+            logger.trace(points.getValue(0, i + 1) + ":" + points.getValue(1, i + 1));
             points.setValue(3, i + 1, 1f);
         }
         return points;
@@ -190,19 +189,15 @@ public abstract class DisplayObject {
         glBindVertexArray(vaoId);
         glEnableVertexAttribArray(0);
         
-        glColor3f(r, g, b);
+        //glColor3f(r, g, b);
 
-        //glBindBuffer(GL_ARRAY_BUFFER, vertices);
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edges);
-        //glVertexPointer(4, GL_FLOAT, 0, 0l);
-        //glEnableClientState(GL_VERTEX_ARRAY);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edges);
         
-        glDrawArrays(GL_POINTS, 0, this.points.getN());
+        glDrawElements(GL_POINTS, this.points.getN(), GL_UNSIGNED_INT, 0);
+        //glDrawArrays(GL_POINTS, 0, this.points.getN());
 
-        //glDisableClientState(GL_VERTEX_ARRAY);
-        
-        //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        //glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glDisableClientState(GL_VERTEX_ARRAY);
+
         glDisableVertexAttribArray(0);
         glBindVertexArray(0);
         
