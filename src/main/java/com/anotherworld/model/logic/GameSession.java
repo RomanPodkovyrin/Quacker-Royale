@@ -80,7 +80,9 @@ public class GameSession {
         for(Ball ball : this.balls) {
 
             // Check if a ball has collided with the wall.
-            Physics.bouncedWall(ball, this.wall);
+            if (Physics.bouncedWall(ball, this.wall)) {
+                AudioControl.ballCollidedWithWall();
+            }
 
             // Check if a ball has collided with a player.
             for (Player player : this.allPlayers) {

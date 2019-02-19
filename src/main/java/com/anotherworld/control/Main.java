@@ -27,6 +27,7 @@ public class Main {
     }
 
     public Main() {
+        // need to set default config files?
 
     }
 
@@ -69,12 +70,16 @@ public class Main {
         startTheGame();
     }
 
-    public void sfxSetting(boolean on) {
-        //TODO: this function is to enable the sound effect before the game start.
+    public boolean sfxSetting(boolean on) {
+        boolean state = GameSettings.toggleOnOff("soundEffects");
+        logger.info("Toggle soundEffect " );
+        return state;
     }
     
-    public void musicSetting(boolean on) {
-        //TODO: this function is to enable the music before the game start.
+    public boolean musicSetting(boolean on) {
+        boolean state = GameSettings.toggleOnOff("backgroundMusic");
+        logger.info("Toggle backgroundMusic "  );
+        return state;
     }
 
 
