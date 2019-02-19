@@ -35,32 +35,43 @@ public class AvoidEdge extends Job {
         this.players = players;
         this.balls = balls;
         this.platform = platform;
-        float distanceFromEdge = ai.getRadius();
+        float distanceFromEdge = ai.getRadius()/2;
         logger.debug("Running AvoidEdge");
 
         // get x y Matrix of the Platform
         //TODO change it
         Matrix platformCoordinates = new Matrix(platform.getXCoordinate(),platform.getYCoordinate());
 
-        float distanceFromPlatfromCenter = MatrixMath.distanceAB(platformCoordinates,ai.getCoordinates());
+        Matrix vectorFromPlatformCenter = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
 
         // Checks if the AI is near the horizontal edge
-        if (distanceFromPlatfromCenter >= platform.getXSize() - distanceFromEdge) {
-            logger.trace("AI too close to the x edge");
+        if (Math.abs(vectorFromPlatformCenter.getX()) >= platform.getXSize() - distanceFromEdge) {
+            logger.trace("AI too close to the x edge " + distanceFromEdge + " " + (platform.getXSize() - distanceFromEdge));
+
+            if (ai.getXVelocity() == 0 & ai.getYVelocity() ==0){
+                logger.error("No movement " + ai.getCoordinates() + " p  " + platformCoordinates + " xside " + platform.getXSize() + " yside " + platform.getYSize());
+                System.exit(0);
+            }
             ai.setYVelocity(-ai.getYVelocity());
             ai.setXVelocity(-ai.getXVelocity());
             fail();
             logger.info("Moving to in direction " + ai.getVelocity());
+            return;
 
 
         // Checks if the AI is near the vertical edge
-        } else if (distanceFromPlatfromCenter >= platform.getYSize() - distanceFromEdge) {
-            logger.trace("AI too close to the y edge");
+        } else if (Math.abs(vectorFromPlatformCenter.getY()) >= platform.getYSize() - distanceFromEdge) {
+            logger.trace("AI too close to the y edge " +vectorFromPlatformCenter +" " + (platform.getYSize() - distanceFromEdge));
 
+            if (ai.getXVelocity() == 0 & ai.getYVelocity() ==0){
+                logger.error("No movement " + ai.getCoordinates() + " p  " + platformCoordinates + " xside " + platform.getXSize() + " yside " + platform.getYSize());
+                System.exit(0);
+            }
             ai.setYVelocity(-ai.getYVelocity());
             ai.setXVelocity(-ai.getXVelocity());
             fail();
             logger.info("Moving to in direction" + ai.getVelocity());
+            return;
         }
         logger.trace("Finishing AvoidEdge with success: no Sedges to avoid");
         succeed();
