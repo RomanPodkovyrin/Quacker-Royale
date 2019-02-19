@@ -70,13 +70,13 @@ public class Main {
         startTheGame();
     }
 
-    public boolean sfxSetting(boolean on) {
+    public static boolean sfxSetting(boolean on) {
         boolean state = GameSettings.toggleOnOff("soundEffects");
         logger.info("Toggle soundEffect " );
         return state;
     }
     
-    public boolean musicSetting(boolean on) {
+    public static boolean musicSetting(boolean on) {
         boolean state = GameSettings.toggleOnOff("backgroundMusic");
         logger.info("Toggle backgroundMusic "  );
         return state;
