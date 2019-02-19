@@ -100,7 +100,7 @@ public class GameSession {
             for (Ball ballB : this.balls) {
                 if (!ball.equals(ballB) && Physics.checkCollision(ball, ballB)){
                     Physics.collided(ball, ballB);
-                    AudioControl.ballCollidedWithWall();
+
 
                 }
             }
