@@ -28,11 +28,13 @@ public abstract class DisplayObject {
     
     private final int displayType;
     
-    private int vertices;
+    private int verticesId;
 
-    private int edges;
+    private int edgesId;
 
     private int vaoId;
+    
+    private int colourId;
     
     private int texture;
     
@@ -60,8 +62,8 @@ public abstract class DisplayObject {
         displayObject.vaoId = glGenVertexArrays();
         glBindVertexArray(displayObject.vaoId);
         
-        displayObject.vertices = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, displayObject.vertices);
+        displayObject.verticesId = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, displayObject.verticesId);
         FloatBuffer f = displayObject.getFloatBuffer();
         glBufferData(GL_ARRAY_BUFFER, f, GL_STATIC_DRAW);
         
@@ -71,8 +73,8 @@ public abstract class DisplayObject {
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        int colour = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, colour);
+        displayObject.colourId = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, displayObject.colourId);
         FloatBuffer g = displayObject.getColourBuffer();
         glBufferData(GL_ARRAY_BUFFER, g, GL_STATIC_DRAW);
         
@@ -87,8 +89,8 @@ public abstract class DisplayObject {
         
         glBindVertexArray(0);
         
-        displayObject.edges = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.edges);
+        displayObject.edgesId = glGenBuffers();
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.edgesId);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         
@@ -160,7 +162,6 @@ public abstract class DisplayObject {
      * @return The points of the circle
      */
     protected static final Matrix2d genCircle(float r) {
-        r = 0.5f;
         Matrix2d points = new Matrix2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
@@ -177,9 +178,9 @@ public abstract class DisplayObject {
      * Cleans opengl of the object's representation.
      */
     public void destroyObject() {
-        logger.debug("Destroying object containing vaoId " + vaoId + ", vertices " + vertices + ", edges " + edges);
-        glDeleteBuffers(vertices);
-        glDeleteBuffers(edges);
+        logger.debug("Destroying object containing vaoId " + vaoId + ", vertices " + verticesId + ", edges " + edgesId);
+        glDeleteBuffers(verticesId);
+        glDeleteBuffers(edgesId);
         glDeleteBuffers(vaoId);
     }
     
@@ -193,19 +194,16 @@ public abstract class DisplayObject {
     
     public void draw() {
         logger.trace("Buffer vaoID " + vaoId + " " + (glIsVertexArray(vaoId) ? "exists" : "wasn't found"));
-        logger.trace("Buffer vertices " + vertices + " " + (glIsBuffer(vertices) ? "exists" : "wasn't found"));
-        logger.trace("Buffer edges " + edges + " " + (glIsBuffer(edges) ? "exists" : "wasn't found"));
+        logger.trace("Buffer vertices " + verticesId + " " + (glIsBuffer(verticesId) ? "exists" : "wasn't found"));
+        logger.trace("Buffer edges " + edgesId + " " + (glIsBuffer(edgesId) ? "exists" : "wasn't found"));
         
         glBindVertexArray(vaoId);
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);
-        
-        //glColor3f(r, g, b);
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edges);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgesId);
         
-        glDrawElements(GL_LINE_LOOP, this.points.getN(), GL_UNSIGNED_INT, 0);
-        //glDrawArrays(GL_POINTS, 0, this.points.getN());
+        glDrawElements(this.getDisplayType(), this.points.getN(), GL_UNSIGNED_INT, 0);
 
         glDisableClientState(GL_VERTEX_ARRAY);
 
@@ -251,9 +249,22 @@ public abstract class DisplayObject {
     }
     
     protected void setColour(float r, float g, float b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
+        if (floatNotEq(this.r, r) || floatNotEq(this.g, g) || floatNotEq(this.b, b)) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            glBindBuffer(GL_ARRAY_BUFFER, this.colourId);
+            FloatBuffer f = this.getColourBuffer();
+            glBufferData(GL_ARRAY_BUFFER, f, GL_DYNAMIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
+    }
+    
+    private boolean floatNotEq(float a, float b) {
+        if (a != b) {
+            return true;
+        }
+        return false;
     }
     
     /**

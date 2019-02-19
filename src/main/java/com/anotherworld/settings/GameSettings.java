@@ -151,7 +151,7 @@ public class GameSettings {
 
     private void createWall() throws IOException{
         //again where is the center
-        WallData wall = new WallData(50,50);
+        WallData wall = new WallData(80,45);
 
         wall.setxSize(Float.parseFloat(propertyFile.getValue("WALL_X_SIZE")));
         wall.setWidth(wall.getxSize() * 2);
@@ -164,7 +164,7 @@ public class GameSettings {
     private void createPlatform() throws IOException {
         // new PlatformData();
         // Where is a center
-        PlatformData platform = new PlatformData(50,50);
+        PlatformData platform = new PlatformData(80,45);
 
         platform.setxSize(Float.parseFloat(propertyFile.getValue("PLATFORM_X_SIZE")));
         platform.setWidth(platform.getxSize() * 2);

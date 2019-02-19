@@ -10,12 +10,9 @@ import java.util.ArrayList;
  *
  */
 public class GameDisplay extends GraphicsDisplay {
-
-    private Camera camera;
     
     public GameDisplay(float x, float y, float height, float width, Camera camera) {
         super(x, y, height, width, camera);
-        this.camera = camera;
     }
 
     /**

@@ -69,7 +69,7 @@ public class GameSessionController {
 
     private void mainLoop() {
         render();
-        /*
+        
         int framesDropped = 0;
 
         // Time at the start of the loop
@@ -124,7 +124,7 @@ public class GameSessionController {
             // Reset dropped frames
             framesDropped = 0;
         }
-        */
+        
         shutDownSequence();
     }
 
