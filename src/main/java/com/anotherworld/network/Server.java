@@ -15,7 +15,7 @@ public class Server extends Thread {
     private DatagramSocket socket;
     private boolean serverIsRunning;
     private byte[] dataReceived;
-    private int numberOfPlayers = 3;
+    private int numberOfPlayers = 2;
     private String playersIPs[];
     private int port = 4445;
 
@@ -26,7 +26,7 @@ public class Server extends Thread {
         playersIPs = new String[numberOfPlayers];
         playersIPs[0] = "localhost";
         playersIPs[1] = "10.42.0.133";
-        playersIPs[2] = "10.42.0.215";
+        //playersIPs[2] = "10.42.0.215";
     }
 
     public void run() {
