@@ -25,6 +25,16 @@ public class PlatformData implements RectangleDisplayData, Serializable {
         this.yCoordinate = y;
     }
 
+    public void copyObject(PlatformData data) {
+        this.stage = data.getStage();
+        this.xSize = data.getxSize();
+        this.ySize = data.getySize();
+        this.width = data.getWidth();
+        this.height = data.getHeight();
+        this.xCoordinate = data.getXCoordinate();
+        this.yCoordinate = data.getYCoordinate();
+    }
+
 
     public int getStage() {
         return stage;

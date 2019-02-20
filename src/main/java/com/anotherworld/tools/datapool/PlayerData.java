@@ -25,6 +25,13 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
         this.maxHealth = health;
     }
 
+    public void copyObject(PlayerData data) {
+        this.characterID = data.getCharacterID();
+        this.health = data.getHealth();
+//        this.maxHealth = data.getMaxHealth();
+        super.copyObject(data);
+    }
+
     public String getCharacterID() { return characterID; }
     public void setCharacterID(String characterID) { this.characterID = characterID; }
 
