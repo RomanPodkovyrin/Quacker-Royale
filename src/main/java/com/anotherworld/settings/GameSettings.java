@@ -52,10 +52,6 @@ public class GameSettings {
     private float defaultPlatformXSize;
     private float defaultPlatformYSize;
 
-    // Sound settings
-    private boolean musicSound;
-    private boolean effectsSound;
-
     private PlayerData currentPlayer;
     private ArrayList<PlayerData> players = new ArrayList<>();
     private ArrayList<PlayerData> ai = new ArrayList<>();
@@ -68,13 +64,11 @@ public class GameSettings {
     private static PropertyReader gamesession;
 
 
-    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls, boolean musicSound, boolean effectsSound) {
+    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
 
         this.numberOfPlayers = numberOfPlayers;
         this.numberofAIPlayers = numberOfAIPlayers;
         this.numberOfBall = numberOfBalls;
-        this.musicSound = musicSound;
-        this.effectsSound = effectsSound;
 
         try {
             PropertyReader propertyFileLogic = new PropertyReader("logic.properties");

@@ -37,7 +37,7 @@ public class Main {
     
     public void startTheGame() {
 
-        GameSettings settings = new GameSettings(4,3,5, true, true);
+        GameSettings settings = new GameSettings(4,3,5);
 
         GLFW.glfwInit();
         GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
@@ -53,6 +53,15 @@ public class Main {
             logger.fatal(ex);
             ex.printStackTrace();
         }
+    }
+
+    public void host() {
+        // start the server
+        // wait for clients to connect
+        // count number of network players
+        int numberOfNetworkPlayer = 1;
+
+
     }
 
     public void startMultiplayer(boolean host) {

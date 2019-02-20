@@ -170,6 +170,7 @@ public class GameSession {
      * @param keyPresses
      */
     public void updatePlayer(ArrayList<Input> keyPresses) {
+        // TODO think about the way to control network players
         if (keyPresses.contains(Input.CHARGE)) {
             //TODO: Implement charge action.
         } else {
