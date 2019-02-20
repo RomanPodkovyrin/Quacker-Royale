@@ -84,9 +84,9 @@ public class AI {
     private ArrayList<Job> getSurvival() {
         // Set up of the survival instincts
         ArrayList<Job> survival = new ArrayList<>();
-        // TODO ai gets very jittery when getting close to the edge
         survival.add(new AvoidEdge());
         survival.add(new AvoidBall());
+        survival.add(new AvoidNeutralPlayer());
         //survival.add(new AvoidPlayerCharge);
         return survival;
     }
@@ -98,7 +98,9 @@ public class AI {
 
         ArrayList<Job> ballAim = new ArrayList<>();
         ballAim.add(new NeutralBallCheck());
-        ballAim.add(new AimBall());
+//        ballAim.add(new AimBall());
+
+        domination.add(new SequenceSuccess(ballAim));
         // TODO chase the player gets the ai stuck
         return  domination;
     }
@@ -142,13 +144,14 @@ public class AI {
             for (int i = 0; i < aiPlayers.size(); i++) {
                 Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
                 if (pair.getKey().getState() == ObjectState.DEAD) {
+
                     logger.info(pair.getKey().getCharacterID() + " is dead");
                     pair.getKey().setVelocity(0,0);
-                    return;
-                }
-                logger.info(pair.getKey().getCharacterID() + " Starting AI");
+                } else {
+                    logger.info(pair.getKey().getCharacterID() + " Starting AI");
 
-                jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
+                    jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
+                }
             }
             tick = tick + 1;
         } else if (tick == 10) {

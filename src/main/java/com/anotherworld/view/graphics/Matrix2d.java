@@ -5,9 +5,10 @@ package com.anotherworld.view.graphics;
  * @author Jake Stewart
  *
  */
+@Deprecated
 public class Matrix2d {
 
-    private float[][] value;
+    private float[] value;
     private int m;
     private int n;
 
@@ -21,7 +22,7 @@ public class Matrix2d {
         if (m < 0 || n < 0) {
             throw new MatrixSizeException("Size must be non negative");
         }
-        value = new float[m][n];
+        value = new float[m * n];
         this.m = m;
         this.n = n;
     }
@@ -37,7 +38,7 @@ public class Matrix2d {
         if (i < 0 || j < 0 || i >= this.getM() || j >= this.getN()) {
             throw new MatrixSizeException("Cell not in matrix");
         }
-        value[i][j] = v;
+        value[i + j * m] = v;
     }
 
     /**
@@ -55,7 +56,7 @@ public class Matrix2d {
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                result.value[i][j] = this.value[i][j] + b.value[i][j];
+                result.value[i + j * m] = this.value[i + j * m] + b.value[i + j * m];
             }
         }
         return result;
@@ -76,7 +77,7 @@ public class Matrix2d {
 
         for (int i = 0; i < m; i++) {
             for (int j = 0; i < n; j++) {
-                result.value[i][j] = this.value[i][j] - b.value[i][j];
+                result.value[i + j * m] = this.value[i + j * m] - b.value[i + j * m];
             }
         }
         return result;
@@ -98,9 +99,9 @@ public class Matrix2d {
             for (int j = 0; j < b.getN(); j++) {
                 float v = 0f;
                 for (int k = 0; k < a.getN(); k++) {
-                    v += a.value[i][k] * b.value[k][j];
+                    v += a.value[i + k * m] * b.value[k + j * m];
                 }
-                result.value[i][j] = v;
+                result.value[i + j * m] = v;
             }
         }
         return result;
@@ -133,7 +134,11 @@ public class Matrix2d {
         if (i < 0 || j < 0 || i >= this.getM() || j >= this.getN()) {
             throw new MatrixSizeException("Cell not in matrix");
         }
-        return value[i][j];
+        return value[i + j * m];
+    }
+    
+    public float[] getPoints() {
+        return value;
     }
 
     /**
@@ -144,7 +149,7 @@ public class Matrix2d {
     public static final Matrix2d genIdentity(int l) {
         Matrix2d result = new Matrix2d(l, l);
         for (int k = 0; k < l; k++) {
-            result.value[k][k] = 1f;
+            result.value[k + k * l] = 1f;
         }
         return result;
     }
@@ -157,11 +162,11 @@ public class Matrix2d {
     public static final Matrix2d homRotation2d(float theta) {
         Matrix2d result = new Matrix2d(3, 3);
         theta = theta * (float) Math.PI / 180f;
-        result.value[0][0] = (float) Math.cos(theta);
-        result.value[1][0] = (float) Math.sin(theta);
-        result.value[0][1] = -(float) Math.sin(theta);
-        result.value[1][1] = (float) Math.cos(theta);
-        result.value[2][2] = 1f;
+        result.value[0] = (float) Math.cos(theta);
+        result.value[1] = (float) Math.sin(theta);
+        result.value[3] = -(float) Math.sin(theta);
+        result.value[4] = (float) Math.cos(theta);
+        result.value[8] = 1f;
         return result;
     }
 
@@ -173,8 +178,8 @@ public class Matrix2d {
      */
     public static final Matrix2d homTranslation2d(float x, float y) {
         Matrix2d result = Matrix2d.genIdentity(3);
-        result.value[0][2] = x;
-        result.value[1][2] = y;
+        result.value[6] = x;
+        result.value[7] = y;
         return result;
     }
 
@@ -186,9 +191,9 @@ public class Matrix2d {
      */
     public static final Matrix2d homScale2d(float x, float y) {
         Matrix2d result = new Matrix2d(3, 3);
-        result.value[0][0] = x;
-        result.value[1][1] = y;
-        result.value[2][2] = 1;
+        result.value[0] = x;
+        result.value[4] = y;
+        result.value[8] = 1;
         return result;
     }
     
@@ -197,7 +202,7 @@ public class Matrix2d {
         String r = "";
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                r = r + (value[i][j] + (j < n - 1 ? "," : "\n"));
+                r = r + (value[i+ j * m ] + (j < n - 1 ? "," : "\n"));
             }
         }
         return r;

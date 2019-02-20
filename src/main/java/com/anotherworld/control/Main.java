@@ -1,5 +1,6 @@
 package com.anotherworld.control;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.audio.BackgroundMusic;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
@@ -7,6 +8,8 @@ import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWVidMode;
 
 import java.awt.*;
 
@@ -27,6 +30,7 @@ public class Main {
     }
 
     public Main() {
+        // need to set default config files?
 
     }
 
@@ -35,11 +39,11 @@ public class Main {
 
         GameSettings settings = new GameSettings(4,3,4, true, true);
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        System.out.println(screenSize.getWidth() + " * " + screenSize.getHeight());
+        GLFW.glfwInit();
+        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 
         try {
-            View view = new View((int )screenSize.getWidth(),(int) screenSize.getHeight());
+            View view = new View((int)(mode.width()), (int)(mode.height()));
 
             new GameSessionController(view, settings);
 
@@ -69,12 +73,18 @@ public class Main {
         startTheGame();
     }
 
-    public void sfxSetting(boolean on) {
-        //TODO: this function is to enable the sound effect before the game start.
+    public static boolean sfxSetting(boolean on) {
+//        boolean state = GameSettings.toggleOnOff("soundEffects");
+        logger.info("Toggle soundEffect "  + on);
+        AudioControl.setEffectsOn(on);
+        return on;
     }
     
-    public void musicSetting(boolean on) {
-        //TODO: this function is to enable the music before the game start.
+    public static boolean musicSetting(boolean on) {
+        AudioControl.setMusicOn(on);
+//        boolean state = GameSettings.toggleOnOff("backgroundMusic");
+        logger.info("Toggle backgroundMusic "  + on);
+        return on;
     }
 
 

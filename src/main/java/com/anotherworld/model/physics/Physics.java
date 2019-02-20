@@ -96,12 +96,13 @@ public class Physics {
      * @param wall
      *            the wall to check for collisions
      */
-    public static void bouncedWall(Ball a, Wall wall) {
+    public static boolean bouncedWall(Ball a, Wall wall) {
         float circleR = a.getRadius();
         float circleX = a.getXCoordinate();
         float circleY = a.getYCoordinate();
         float xSize = wall.getXSize();
         float ySize = wall.getYSize();
+        boolean bounced = false;
         // North and East of the ball.
         Matrix northEast = new Matrix(circleX + circleR, circleY - circleR);
         // South and West of the ball.
@@ -116,20 +117,26 @@ public class Physics {
             a.setCoordinates(circleX, northEastWall.getY() + circleR);
             a.setYVelocity(-a.getYVelocity());
             logger.debug("The ball is bouncing on the North of Wall");
+            bounced = true;
         } else if (southWest.getY() > southWestWall.getY()) {
             a.setCoordinates(circleX, southWestWall.getY() - circleR);
             a.setYVelocity(-a.getYVelocity());
             logger.debug("The ball is bouncing on the South of Wall");
+            bounced = true;
         }
         if (northEast.getX() > northEastWall.getX()) {
             a.setCoordinates(northEast.getX() - circleR, circleY);
             a.setXVelocity(-a.getXVelocity());
             logger.debug("The ball is bouncing on the East of Wall");
+            bounced = true;
         } else if (southWest.getX() < southWestWall.getX()) {
             a.setCoordinates(southWest.getX() + circleR, circleY);
             a.setXVelocity(-a.getXVelocity());
             logger.debug("The ball is bouncing on the West of Wall");
+            bounced = true;
         }
+
+        return bounced;
     }
 
     //
@@ -219,6 +226,7 @@ public class Physics {
                     (float) (objectA.getSpeed() * Math.cos(angle)));
             objectA.setAngle(angle);
         }
+
         if (xDifference < (distance) && xDifference < 0) {
             objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 5,
                     coordB.getY());
@@ -228,10 +236,10 @@ public class Physics {
         }
         if (yDifference < (distance) && yDifference < 0) {
             objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() + objectA.getRadius() / 8);
+                    coordB.getY() + objectA.getRadius() / 5);
         } else if (Math.abs(yDifference) < (distance)) {
             objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() - objectA.getRadius() / 8);
+                    coordB.getY() - objectA.getRadius() / 5);
         }
         logger.debug("Completed collision event between "
                 + (objectA instanceof Ball ? "Ball" : "Player "

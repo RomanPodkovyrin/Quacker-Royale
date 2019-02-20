@@ -1,10 +1,6 @@
 package com.anotherworld.view.graphics;
 
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import static org.lwjgl.opengl.GL11.glViewport;
+import static org.lwjgl.opengl.GL45.*;
 
 import com.anotherworld.view.data.DisplayObject;
 
@@ -12,6 +8,7 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.opengl.GL45;
 
 /**
  * Creates and manages a view state like view game or main menu.
@@ -43,27 +40,8 @@ public class Scene {
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
             glViewport(x, y, w, h);
-            ArrayList<DisplayObject> toDraw = display.draw();
-            logger.trace("Drawing " + toDraw.size() + " objects");
-            for (int j = 0; j < toDraw.size(); j++) {
-                drawObject(toDraw.get(j));
-            }
-            
+            display.draw();
         }
-    }
-
-    /**
-     * Draws an object to the screen.
-     * @param a The object to draw
-     */
-    private void drawObject(DisplayObject obj) {
-        glBegin(obj.getDisplayType());
-        glColor3f(obj.getColourR(), obj.getColourG(), obj.getColourB());
-        for (int j = 0; j < obj.getPoints().getN(); j++) {
-            glVertex2f(obj.getPoints().getValue(0, j) / obj.getPoints().getValue(2, j),
-                    obj.getPoints().getValue(1, j) / obj.getPoints().getValue(2, j));
-        }
-        glEnd();
     }
     
     /**
@@ -87,6 +65,12 @@ public class Scene {
     private int convertScale(float floatScale, int intScale, int intValue) {
         logger.trace("Converting scale " + floatScale);
         return Math.min(intScale - intValue, Math.max(0, (int)Math.round((floatScale / 2f) * ((float)intScale))));
+    }
+
+    public void destoryObjects() {
+        for (GraphicsDisplay d : displays) {
+            d.destroyObjects();
+        }
     }
     
 }

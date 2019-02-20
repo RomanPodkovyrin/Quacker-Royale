@@ -1,6 +1,10 @@
 package com.anotherworld.view;
 
+import com.anotherworld.tools.datapool.WallData;
+import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.PlayerDisplayData;
+import com.anotherworld.view.data.RectangleDisplayData;
 
 import java.util.ArrayList;
 
@@ -11,22 +15,38 @@ import java.util.ArrayList;
  */
 class UpdateDisplayObjects implements ViewEvent {
     
-    private final ArrayList<DisplayObject> objects;
-
-    /**
-     * Creates an event to update the view's objects with the given objects.
-     * @param objects The new display objects
-     */
-    public UpdateDisplayObjects(ArrayList<DisplayObject> objects) {
-        this.objects = objects;
-    }
+    private final ArrayList<? extends PlayerDisplayData> playerObjects;
+    private final ArrayList<? extends BallDisplayData> ballObjects;
+    private final ArrayList<? extends RectangleDisplayData> rectangleObjects;
+    private final ArrayList<? extends WallData> wallObjects;
     
+    public UpdateDisplayObjects(ArrayList<? extends PlayerDisplayData> playerObjects,
+            ArrayList<? extends BallDisplayData> ballObjects,
+            ArrayList<? extends RectangleDisplayData> rectangleObjects, ArrayList<? extends WallData> wallObjects) {
+        this.playerObjects = playerObjects;
+        this.ballObjects = ballObjects;
+        this.rectangleObjects = rectangleObjects;
+        this.wallObjects = wallObjects;
+    }
+
     /**
      * Returns the new objects for the view.
      * @return the new objects
      */
-    public ArrayList<DisplayObject> getObjects() {
-        return objects;
+    public ArrayList<? extends PlayerDisplayData> getPlayerObjects() {
+        return playerObjects;
+    }
+
+    public ArrayList<? extends BallDisplayData> getBallObjects() {
+        return ballObjects;
+    }
+
+    public ArrayList<? extends RectangleDisplayData> getRectangleObjects() {
+        return rectangleObjects;
+    }
+
+    public ArrayList<? extends WallData> getWallObjects() {
+        return wallObjects;
     }
 
 }

@@ -18,10 +18,16 @@ public class SoundEffects implements Runnable{
     private String error ="./res/audio/error.wav";
             //https://freesound.org/people/ProjectsU012/sounds/341695/
     private String beep = "./res/audio/beep.wav";
+    //https://freesound.org/people/Ekokubza123/sounds/104183/
+    private String punch = "./res/audio/punch.wav";
+    //https://freesound.org/people/Leszek_Szary/sounds/146726/
+    private String jump = "./res/audio/jump.wav";
     private File ballCollidedWithWallFile;
     private File playerCollidedWithBallFile;
     private File errorFile;
     private File beepFile;
+    private File punchFile;
+    private File jumpFile;
 
     private SourceDataLine line;
     private AudioInputStream audioInputStream;
@@ -40,6 +46,8 @@ public class SoundEffects implements Runnable{
         playerCollidedWithBallFile = new File(playerCollidedWithBallSound);
         errorFile = new File(error);
         beepFile = new File(beep);
+        punchFile = new File(punch);
+        jumpFile = new File(jump);
         effect = new Thread(this);
         effect.start();
     }
@@ -98,8 +106,9 @@ public class SoundEffects implements Runnable{
 
     public void ballCollidedWithWall() {
         logger.trace("Play ball sound");
-        currentFile = beepFile;
+        currentFile = jumpFile;
     }
+
 
     public void playerCollidedWithBall() {
         currentFile = playerCollidedWithBallFile;
@@ -120,6 +129,10 @@ public class SoundEffects implements Runnable{
                 System.out.println("Player");
             }
         }
+    }
+
+    public void stopSoundEffects() {
+        running = false;
     }
 
 }

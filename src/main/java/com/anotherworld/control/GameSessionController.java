@@ -3,15 +3,18 @@ package com.anotherworld.control;
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.settings.GameSettings;
+import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.glfw.*;
 
 /**
  * Controller object that connects the View and the Model of the game.
@@ -38,6 +41,7 @@ public class GameSessionController {
 
 
 
+
     //TODO make a constructor for the real main (Main.java)
     public GameSessionController(View view, GameSettings settings) throws KeyListenerNotFoundException {
 
@@ -48,6 +52,8 @@ public class GameSessionController {
 
         AudioControl.setUp();
         AudioControl.playBackGroundMusic();
+
+
 
         // Starting the View thread
         this.viewThread = new Thread(view);
@@ -63,12 +69,12 @@ public class GameSessionController {
         // Obtain the key listener.
         this.keyListener = view.getKeyListener();
         mainLoop();
-
+        
     }
 
     private void mainLoop() {
         render();
-
+        
         int framesDropped = 0;
 
         // Time at the start of the loop
@@ -110,7 +116,7 @@ public class GameSessionController {
 
             // Fixes dropped frameRate
             while ((sleepTime < 0) && (framesDropped < MAX_FRAME_DROP)) {
-                logger.trace("Frames lost");
+                logger.trace("Frames lost " + framesDropped);
                 // updates the Game logic
                 session.updatePlayer(keyListener.getKeyPresses());
                 session.update();
@@ -123,7 +129,7 @@ public class GameSessionController {
             // Reset dropped frames
             framesDropped = 0;
         }
-
+        
         shutDownSequence();
     }
 
@@ -132,6 +138,8 @@ public class GameSessionController {
         //stop the music
         AudioControl.stopBackgroundMusic();
         logger.trace("Music stopped");
+        AudioControl.stopSoundEffects();
+        logger.trace("Stopped SoundEffects");
         //send out the message saying that either host or client have disconnected
         //if a client has disconnected should we just give control to the ai ?
     }
