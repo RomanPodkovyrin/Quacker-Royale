@@ -115,23 +115,23 @@ public class Physics {
                 (wall.getYCoordinate() + ySize));
         if (northEast.getY() < (northEastWall.getY())) {
             a.setCoordinates(circleX, northEastWall.getY() + circleR);
-            a.setYVelocity(-a.getYVelocity());
+            a.setYVelocity(Math.abs(a.getYVelocity()));
             logger.debug("The ball is bouncing on the North of Wall");
             bounced = true;
         } else if (southWest.getY() > southWestWall.getY()) {
             a.setCoordinates(circleX, southWestWall.getY() - circleR);
-            a.setYVelocity(-a.getYVelocity());
+            a.setYVelocity(-Math.abs(a.getYVelocity()));
             logger.debug("The ball is bouncing on the South of Wall");
             bounced = true;
         }
         if (northEast.getX() > northEastWall.getX()) {
             a.setCoordinates(northEast.getX() - circleR, circleY);
-            a.setXVelocity(-a.getXVelocity());
+            a.setXVelocity(-Math.abs(a.getXVelocity()));
             logger.debug("The ball is bouncing on the East of Wall");
             bounced = true;
         } else if (southWest.getX() < southWestWall.getX()) {
             a.setCoordinates(southWest.getX() + circleR, circleY);
-            a.setXVelocity(-a.getXVelocity());
+            a.setXVelocity(Math.abs(a.getXVelocity()));
             logger.debug("The ball is bouncing on the West of Wall");
             bounced = true;
         }
@@ -220,26 +220,39 @@ public class Physics {
         float yDifference = objectA.getYCoordinate() - objectB.getYCoordinate();
         float distance = objectA.getRadius() + objectB.getRadius();
         if (objectA instanceof Ball) {
+            objectB.setCoordinates(
+                    objectB.getXCoordinate() + objectA.getXVelocity(),
+                    objectB.getYCoordinate() + objectA.getYVelocity());
             Matrix angleFinding = coordA.sub(coordB);
             float angle = MatrixMath.vectorAngle(angleFinding);
             objectA.setVelocity((float) (objectA.getSpeed() * Math.sin(angle)),
                     (float) (objectA.getSpeed() * Math.cos(angle)));
             objectA.setAngle(angle);
-        }
-
-        if (xDifference < (distance) && xDifference < 0) {
-            objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 5,
-                    coordB.getY());
-        } else if (Math.abs(xDifference) < (distance)) {
-            objectB.setCoordinates(coordB.getX() - objectA.getRadius() / 5,
-                    coordB.getY());
-        }
-        if (yDifference < (distance) && yDifference < 0) {
-            objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() + objectA.getRadius() / 5);
-        } else if (Math.abs(yDifference) < (distance)) {
-            objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() - objectA.getRadius() / 5);
+            if (objectB instanceof Ball) {
+                objectA.setCoordinates(
+                        objectA.getXCoordinate() + objectB.getXVelocity(),
+                        objectA.getYCoordinate() + objectB.getYVelocity());
+                angleFinding = coordB.sub(coordA);
+                angle = MatrixMath.vectorAngle(angleFinding);
+                objectB.setVelocity((float) (objectB.getSpeed() * Math.sin(angle)),
+                        (float) (objectB.getSpeed() * Math.cos(angle)));
+                objectB.setAngle(angle);
+            }
+        } else {
+            if (xDifference < (distance) && xDifference < 0) {
+                objectB.setCoordinates(coordB.getX() + objectA.getRadius() / 10,
+                        coordB.getY());
+            } else if (Math.abs(xDifference) < (distance)) {
+                objectB.setCoordinates(coordB.getX() - objectA.getRadius() / 10,
+                        coordB.getY());
+            }
+            if (yDifference < (distance) && yDifference < 0) {
+                objectB.setCoordinates(coordB.getX(),
+                        coordB.getY() + objectA.getRadius() / 10);
+            } else if (Math.abs(yDifference) < (distance)) {
+                objectB.setCoordinates(coordB.getX(),
+                        coordB.getY() - objectA.getRadius() / 10);
+            }
         }
         logger.debug("Completed collision event between "
                 + (objectA instanceof Ball ? "Ball" : "Player "
