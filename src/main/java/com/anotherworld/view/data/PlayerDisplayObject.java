@@ -11,6 +11,9 @@ public class PlayerDisplayObject extends DisplayObject {
     private float lastYLocation;
     private static final float MAX_X_SCALE = 1f;
     private static final float MAX_X_DIFF = 5f;
+    private float maxR;
+    private float maxG;
+    private float maxB;
     
     /**
      * Creates a display object to display a player.
@@ -21,6 +24,23 @@ public class PlayerDisplayObject extends DisplayObject {
         this.displayData = displayData;
         this.lastXLocation = displayData.getXCoordinate();
         this.lastYLocation = displayData.getYCoordinate();
+        this.setColours();
+    }
+    
+    private void setColours() {
+        maxR = (float)Math.random();
+        maxG = (float)Math.random();
+        maxB = (float)Math.random();
+        
+        float randomCo = (float)(1 + Math.random() * 0.2);
+        
+        float max = randomCo * Math.max(Math.max(maxR, maxG), maxB);
+
+        maxR = maxR / max;
+        maxG = maxG / max;
+        maxB = maxB / max;
+        
+        this.setColour(maxR, maxG, maxB);
     }
     
     private float diff(float x, float y, float x1, float y1) {
@@ -31,7 +51,9 @@ public class PlayerDisplayObject extends DisplayObject {
     public void transform() {
         super.transform();
         
-        this.setColour(((float)displayData.getHealth() / 70f), (float)displayData.getHealth() / 70f, 0);
+        float healthCo = (float)displayData.getHealth() / (float)displayData.getMaxHealth();
+        
+        this.setColour(healthCo * maxR, healthCo * maxG, healthCo * maxB);
         
         /*if (diff(this.getX(), this.getY(), this.lastXLocation, this.lastYLocation) > MAX_X_DIFF) {
             

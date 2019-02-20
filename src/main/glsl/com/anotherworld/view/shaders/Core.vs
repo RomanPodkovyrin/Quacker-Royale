@@ -1,15 +1,15 @@
-#version 130
+#version 120
 
 //precision mediump float;
-in vec4 position;
-in vec4 colour;
+attribute vec4 position;
+attribute vec4 colour;
 
 //TODO IMPLEMENT THIS
 //uniform vec4 gl_ModelViewProjectionMatrix
 
-out vec4 vertexColour;
+//varying vec4 gl_FrontColor;
 
 void main() {
     gl_Position = gl_ModelViewProjectionMatrix * position;
-    vertexColour = colour;
+    gl_FrontColor = colour;
 }

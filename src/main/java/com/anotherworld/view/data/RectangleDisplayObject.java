@@ -11,7 +11,7 @@ public class RectangleDisplayObject extends DisplayObject {
      * @param displayData The rectangle to display
      */
     public RectangleDisplayObject(RectangleDisplayData displayData) {
-        super(DisplayObject.genRectangle(displayData.getWidth(), displayData.getHeight()), GL_TRIANGLE_FAN);
+        super(DisplayObject.genRectangle(displayData.getWidth(), displayData.getHeight()), GL_TRIANGLE_FAN, 0.6f, 0.4f, 0f);
         this.displayData = displayData;
     }
 
