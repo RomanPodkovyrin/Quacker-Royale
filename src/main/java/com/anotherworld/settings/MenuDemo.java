@@ -8,6 +8,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -15,6 +16,8 @@ import javafx.stage.Stage;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+
+import javax.swing.JTextField;
 
 import static javafx.application.Application.launch;
 
@@ -38,6 +41,7 @@ public class MenuDemo extends Application {
         double height = screenSize.getHeight();
 
         final Font font = new Font("Arial", height / 27);
+
         Label label1 = new Label("Welcome to the main page");
         label1.setFont(font);
         Button button1 = new Button("Go to settings");
@@ -73,8 +77,8 @@ public class MenuDemo extends Application {
         layout1.setPadding(new Insets(10, 50, 50, 50));
         layout1.setSpacing(10);
         layout1.setAlignment(Pos.CENTER);
-        layout1.getChildren().addAll(label1, button1, buttonSinglePlayer,
-                buttonMultiPlayer);
+        layout1.getChildren().addAll(label1, buttonSinglePlayer,
+                buttonMultiPlayer, button1);
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(layout1);
         borderPane.setBackground(new Background(new BackgroundFill(Color.BLACK,
@@ -97,10 +101,10 @@ public class MenuDemo extends Application {
         musicButton.setMinHeight(height * 0.1);
         musicButton.setBackground(new Background(new BackgroundFill(Color.rgb(
                 9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-        musicButton.setOnAction(e ->{
+        musicButton.setOnAction(e -> {
             musicButton.setText("Music: "
                     + (musicButton.getText().split(" ")[1].equals("On") ? "Off"
-                    : "On"));
+                            : "On"));
             if (musicButton.getText().split(" ")[1].equals("On")) {
                 Main.musicSetting(true);
             } else {
@@ -117,7 +121,7 @@ public class MenuDemo extends Application {
         sfxButton.setOnAction(e -> {
             sfxButton.setText("SFX: "
                     + (sfxButton.getText().split(" ")[1].equals("On") ? "Off"
-                    : "On"));
+                            : "On"));
             if (sfxButton.getText().split(" ")[1].equals("On")) {
                 Main.sfxSetting(true);
             } else {
@@ -138,6 +142,111 @@ public class MenuDemo extends Application {
                 Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
         scene2 = new Scene(borderPane2, screenSize.getWidth(),
                 screenSize.getHeight(), Color.BLACK);
+
+        Label multi = new Label("Multiplayer");
+        multi.setFont(font);
+        Button buttonHost = new Button("Host");
+        buttonHost.setMinWidth(width * 0.5);
+        buttonHost.setMinHeight(height * 0.1);
+        buttonHost.setBackground(new Background(new BackgroundFill(Color.rgb(9,
+                100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
+        buttonHost.setFont(font);
+
+        Button buttonClient = new Button("Client");
+        buttonClient.setMinWidth(width * 0.5);
+        buttonClient.setMinHeight(height * 0.1);
+        buttonClient.setBackground(new Background(new BackgroundFill(Color.rgb(
+                9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
+        buttonClient.setFont(font);
+
+        Button backToMenu2 = new Button("Go to main page");
+        backToMenu2.setMinWidth(width * 0.5);
+        backToMenu2.setMinHeight(height * 0.1);
+        backToMenu2.setBackground(new Background(new BackgroundFill(Color.rgb(
+                9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
+        ;
+        backToMenu2.setOnAction(e -> window.setScene(scene1));
+        backToMenu2.setFont(font);
+
+        // Layout 1 - children are laid out in vertical column
+        VBox layout3 = new VBox(20);
+        layout3.setPadding(new Insets(10, 50, 50, 50));
+        layout3.setSpacing(10);
+        layout3.setAlignment(Pos.CENTER);
+        layout3.getChildren().addAll(multi, buttonHost, buttonClient,
+                backToMenu2);
+        BorderPane borderPane3 = new BorderPane();
+        borderPane3.setCenter(layout3);
+        borderPane3.setBackground(new Background(new BackgroundFill(
+                Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        Scene scene3 = new Scene(borderPane3, screenSize.getWidth(),
+                screenSize.getHeight(), Color.BLACK);
+        buttonMultiPlayer.setOnAction(e -> window.setScene(scene3));
+        
+        Label client = new Label(
+                "Please type in the IP and Port of the host and press connect");
+        multi.setFont(font);
+        TextField ipAndPort = new TextField("");
+        ipAndPort.setMinWidth(width * 0.5);
+        ipAndPort.setMinHeight(height * 0.1);
+        ipAndPort.setFont(font);
+        Button buttonConnect = new Button("Connect");
+        buttonConnect.setMinWidth(width * 0.5);
+        buttonConnect.setMinHeight(height * 0.1);
+        buttonConnect.setBackground(new Background(new BackgroundFill(Color
+                .rgb(9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
+        buttonConnect.setFont(font);
+
+        Button backToMulti = new Button("Go back");
+        backToMulti.setMinWidth(width * 0.5);
+        backToMulti.setMinHeight(height * 0.1);
+        backToMulti.setBackground(new Background(new BackgroundFill(Color.rgb(
+                9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
+        ;
+        backToMulti.setOnAction(e -> window.setScene(scene3));
+        backToMulti.setFont(font);
+
+        // Layout 1 - children are laid out in vertical column
+        VBox layout4 = new VBox(20);
+        layout4.setPadding(new Insets(10, 50, 50, 50));
+        layout4.setSpacing(10);
+        layout4.setAlignment(Pos.CENTER);
+        layout4.getChildren().addAll(client, ipAndPort, buttonConnect,
+                backToMulti);
+        BorderPane borderPane4 = new BorderPane();
+        borderPane4.setCenter(layout4);
+        borderPane4.setBackground(new Background(new BackgroundFill(
+                Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        Scene scene4 = new Scene(borderPane4, screenSize.getWidth(),
+                screenSize.getHeight(), Color.BLACK);
+        buttonClient.setOnAction(e -> window.setScene(scene4));
+        
+        Label host = new Label("Hosting...");
+        host.setFont(font);
+
+        Button backToMulti2 = new Button("Go back");
+        backToMulti2.setMinWidth(width * 0.5);
+        backToMulti2.setMinHeight(height * 0.1);
+        backToMulti2.setBackground(new Background(new BackgroundFill(Color.rgb(
+                9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
+        ;
+        backToMulti2.setOnAction(e -> window.setScene(scene3));
+        backToMulti2.setFont(font);
+
+        // Layout 1 - children are laid out in vertical column
+        VBox layout5 = new VBox(20);
+        layout5.setPadding(new Insets(10, 50, 50, 50));
+        layout5.setSpacing(10);
+        layout5.setAlignment(Pos.CENTER);
+        layout5.getChildren().addAll(host, backToMulti2);
+        BorderPane borderPane5 = new BorderPane();
+        borderPane5.setCenter(layout5);
+        borderPane5.setBackground(new Background(new BackgroundFill(
+                Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+        Scene scene5 = new Scene(borderPane5, screenSize.getWidth(),
+                screenSize.getHeight(), Color.BLACK);
+
+        buttonHost.setOnAction(e -> window.setScene(scene5));
 
         window.setScene(scene1);
         window.setTitle("application");
