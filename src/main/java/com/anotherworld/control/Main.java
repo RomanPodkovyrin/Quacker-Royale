@@ -37,7 +37,7 @@ public class Main {
     
     public void startTheGame() {
 
-        GameSettings settings = new GameSettings(4,3,4, true, true);
+        GameSettings settings = new GameSettings(4,3,5, true, true);
 
         GLFW.glfwInit();
         GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());

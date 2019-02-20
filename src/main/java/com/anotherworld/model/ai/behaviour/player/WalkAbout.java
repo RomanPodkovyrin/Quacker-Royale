@@ -45,11 +45,11 @@ public class WalkAbout extends Job {
      * Sets a random coordinates for the ai to walk to.
      */
     private void setRandomCoordinates() {
-        float xcoordinate = getRandom(platform.getXCoordinate() - platform.getXSize() + ai.getRadius(),
-                platform.getXCoordinate() + platform.getXSize() - ai.getRadius());
+        float xcoordinate = getRandom(platform.getXCoordinate() - platform.getXSize() + ai.getRadius() * 2,
+                platform.getXCoordinate() + platform.getXSize() - ai.getRadius() * 2);
 
-        float ycoordinate = getRandom(platform.getYCoordinate() - platform.getYSize() + ai.getRadius(),
-                platform.getYCoordinate() + platform.getYSize() - ai.getRadius());
+        float ycoordinate = getRandom(platform.getYCoordinate() - platform.getYSize() + ai.getRadius() *2,
+                platform.getYCoordinate() + platform.getYSize() - ai.getRadius() * 2);
         destination = new Matrix(xcoordinate, ycoordinate);
         logger.trace("Set Random coordinates to: " + destination);
     }

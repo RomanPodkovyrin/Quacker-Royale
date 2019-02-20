@@ -98,9 +98,9 @@ public class AI {
 
         ArrayList<Job> ballAim = new ArrayList<>();
         ballAim.add(new NeutralBallCheck());
-//        ballAim.add(new AimBall());
+        ballAim.add(new AimBall());
 
-        domination.add(new SequenceSuccess(ballAim));
+//        domination.add(new SequenceSuccess(ballAim));
         // TODO chase the player gets the ai stuck
         return  domination;
     }
@@ -153,7 +153,7 @@ public class AI {
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
                 }
             }
-            tick = tick + 1;
+//            tick = tick + 1;
         } else if (tick == 10) {
             tick = 0;
         } else {
