@@ -6,10 +6,7 @@ import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
 import com.anotherworld.model.physics.Physics;
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.tools.datapool.BallData;
-import com.anotherworld.tools.datapool.PlatformData;
-import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.datapool.WallData;
+import com.anotherworld.tools.datapool.*;
 import com.anotherworld.tools.input.Input;
 
 import org.apache.logging.log4j.LogManager;
@@ -35,10 +32,12 @@ public class GameSession {
     private ArrayList<Ball> balls;
     private Platform platform;
     private Wall wall;
+    private GameSessionData gameSessionData;
 
     public GameSession(PlayerData currentPlayer, ArrayList<PlayerData> players, ArrayList<PlayerData> ais,
-            ArrayList<BallData> balls, PlatformData platform, WallData wall) {
+                       ArrayList<BallData> balls, PlatformData platform, WallData wall, GameSessionData gameSessionData) {
 
+        this.gameSessionData = gameSessionData;
         this.currentPlayer = new Player(currentPlayer, false);
 
         this.players = new ArrayList<>();

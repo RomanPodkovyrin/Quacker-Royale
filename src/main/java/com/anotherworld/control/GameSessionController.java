@@ -5,6 +5,7 @@ import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
@@ -73,6 +74,36 @@ public class GameSessionController {
         
     }
 
+    private void clientControl() {
+
+        // TODO implement client side of the network
+
+        // send the given key presses to the host
+        ArrayList<Input> keyPresses = keyListener.getKeyPresses();
+        if (keyPresses.contains(Input.CHARGE)) {
+            //TODO: Implement charge action.
+        } else {
+            if (keyPresses.contains(Input.UP)) {
+                //
+            } else if (keyPresses.contains(Input.DOWN)) {
+                //
+            }
+            else {
+                //
+            }
+
+            if (keyPresses.contains(Input.LEFT)) {
+
+            }
+            else if (keyPresses.contains(Input.RIGHT)) {
+               //
+            }
+            else {
+                //
+            }
+        }
+    }
+
     private void mainLoop() {
         render();
         
@@ -89,8 +120,9 @@ public class GameSessionController {
 
         while (viewThread.isAlive()) {
 
-            // TODO implement client side of the network
             // if client check if there are game objects to update
+            clientControl();
+
 
             // Get time before computation
             startTime = System.currentTimeMillis();
@@ -133,12 +165,18 @@ public class GameSessionController {
             // Reset dropped frames
             framesDropped = 0;
 
-            // TODO implement host game state sender
-            // if network game and host
-            // Send the game states to clients
+            // send game object to client
+            hostControl();
+
         }
         
         shutDownSequence();
+    }
+
+    private void hostControl() {
+        // TODO implement host game state sender
+        // if network game and host
+        // Send the game states to clients
     }
 
     private void shutDownSequence() {
