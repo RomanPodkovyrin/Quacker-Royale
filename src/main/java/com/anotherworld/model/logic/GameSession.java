@@ -5,6 +5,7 @@ import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
 import com.anotherworld.model.physics.Physics;
+import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -89,12 +90,16 @@ public class GameSession {
                 if (player.isDead()) continue;
 
                 if(Physics.checkCollision(ball, player)) {
+
                     AudioControl.playerCollidedWithBall();
-                    Physics.collided(ball, player);
+
                     if (!ball.isDangerous()){
                         ball.setDangerous(true);
-                        ball.setTimer(BallData.MAX_TIMER);
-                    } else player.setHealth(player.getHealth() - 1);
+                        ball.setTimer(GameSettings.getBallMaxTimer());
+                        ball.setSpeed(2);
+                    } else player.damage(ball.getDamage());
+
+                    Physics.collided(ball, player);
                 }
             }
 
@@ -102,8 +107,6 @@ public class GameSession {
             for (Ball ballB : this.balls) {
                 if (!ball.equals(ballB) && Physics.checkCollision(ball, ballB)){
                     Physics.collided(ball, ballB);
-
-
                 }
             }
         }
@@ -152,8 +155,11 @@ public class GameSession {
 
             // Handle the danger state of the balls.
             if (ball.isDangerous()) {
-                ball.decrementTimer();
-                if (ball.getTimer() == 0) ball.setDangerous(false);
+                ball.reduceTimer(GameSettings.getBallTimerDecrement());
+                if (ball.getTimer() <= 0) {
+                    ball.setDangerous(false);
+                    ball.setSpeed(GameSettings.getDefaultBallSpeed());
+                }
             }
         }
 
