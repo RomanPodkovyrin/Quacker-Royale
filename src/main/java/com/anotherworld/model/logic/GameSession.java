@@ -34,8 +34,10 @@ public class GameSession {
     private Wall wall;
     private GameSessionData gameSessionData;
 
-    public GameSession(PlayerData currentPlayer, ArrayList<PlayerData> players, ArrayList<PlayerData> ais,
-                       ArrayList<BallData> balls, PlatformData platform, WallData wall, GameSessionData gameSessionData) {
+    public GameSession(PlayerData currentPlayer,
+                       ArrayList<PlayerData> players, ArrayList<PlayerData> ais, ArrayList<BallData> balls,
+                       PlatformData platform, WallData wall,
+                       GameSessionData gameSessionData) {
 
         this.gameSessionData = gameSessionData;
         this.currentPlayer = new Player(currentPlayer, false);
@@ -160,6 +162,19 @@ public class GameSession {
                     ball.setSpeed(GameSettings.getDefaultBallSpeed());
                 }
             }
+        }
+
+        gameSessionData.incrementTicksElapsed();
+        logger.debug("ticksElapsed: " + gameSessionData.getTicksElapsed());
+
+        if (gameSessionData.getTicksElapsed() % 60 == 0) {
+            gameSessionData.decrementTimeLeft();
+            System.out.println("timeLeft: " + gameSessionData.getTimeLeft());
+            System.out.println(gameSessionData.getTimeToNextStage()*(platform.getStage()-1));
+        }
+        if (gameSessionData.getTimeLeft() < gameSessionData.getTimeToNextStage()*(platform.getStage()-1)){
+            platform.nextStage();
+            wall.nextStage();
         }
 
     }

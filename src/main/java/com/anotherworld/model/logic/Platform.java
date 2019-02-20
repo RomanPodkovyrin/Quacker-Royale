@@ -37,9 +37,8 @@ public class Platform {
      */
     public void nextStage(){
         int stage = getStage();
-        int maxStage = platformData.getMaxStage();
-        if (stage < maxStage) {
-            platformData.setStage(stage + 1);
+        if (stage > 0) {
+            platformData.setStage(stage - 1);
             this.setXSize(getXSize() - getXShrink());
             this.setYSize(getYSize() - getYShrink());
         }
