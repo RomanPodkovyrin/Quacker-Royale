@@ -35,9 +35,8 @@ public class Wall {
      */
     public void nextStage(){
         int stage = getStage();
-        int maxStage = wallData.getMaxStage();
-        if (stage < maxStage) {
-            wallData.setStage(stage + 1);
+        if (stage > 0) {
+            wallData.setStage(stage - 1);
             this.setXSize(getXSize() - getXShrink());
             this.setYSize(getYSize() - getYShrink());
         }
