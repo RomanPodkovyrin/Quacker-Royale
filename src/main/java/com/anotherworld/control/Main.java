@@ -56,12 +56,29 @@ public class Main {
     }
 
     public void host() {
+        // TODO write the logic
         // start the server
         // wait for clients to connect
         // count number of network players
         int numberOfNetworkPlayer = 1;
+        // Create the game settings
 
+        // TODO Implement network
+        // Check if network game and a host
+        // if yes then send all game objects to clients
 
+        // Start the game with the current settings
+
+    }
+
+    public void connect() {
+        // TODO write the logic
+        // Enter the ip you want to connect to
+        // wait for the command from host to start the game
+
+        // recieve the game objects from the host.
+        // create the game setting
+        // start the game with the current settings
     }
 
     public void startMultiplayer(boolean host) {

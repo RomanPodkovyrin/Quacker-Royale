@@ -140,6 +140,7 @@ public class AI {
         logger.info("AI action called.");
 
         //TODO make then work in the order, not all at the same tick
+        //TODO make a black board so that ai can chose characters which are not take and balls
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
                 Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
