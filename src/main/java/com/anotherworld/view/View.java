@@ -115,7 +115,7 @@ public class View implements Runnable {
         logger.debug("Creating window");
         window = glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL);
 
-        glfwSetWindowPos(window, width / 4, height / 4);
+        glfwSetWindowPos(window, width / 8, height / 8);
         
         if (window == null) {
             logger.fatal("Unable to create game window");
