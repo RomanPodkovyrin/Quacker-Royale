@@ -2,6 +2,7 @@ package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.audio.BackgroundMusic;
+import com.anotherworld.network.GameLobby;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
@@ -15,6 +16,7 @@ import java.awt.*;
 
 public class Main {
     private MenuDemo view;
+    private GameLobby lobby;
 
     private static Logger logger = LogManager.getLogger(Main.class);
 
@@ -81,19 +83,6 @@ public class Main {
         // start the game with the current settings
     }
 
-    public void startMultiplayer(boolean host) {
-        if (host) {
-            // establish the connection
-            // wait for people to connect
-            // tell when to start the game
-            // finds how many people connected
-            startTheGame();
-            // when all players have been created
-            // allocate the player id to the ip address so network knows who to send it to
-        } else {
-            // find the host and connect
-        }
-    }
 
     public void startSinglePlayer() {
         startTheGame();
