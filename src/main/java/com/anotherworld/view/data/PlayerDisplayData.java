@@ -6,4 +6,6 @@ public interface PlayerDisplayData extends CircleDisplayData {
     
     public int getHealth();
     
+    public int getMaxHealth();
+    
 }

@@ -14,6 +14,7 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
 
     private String characterID;
     private int health;
+    private final int maxHealth;
 
     public PlayerData(String characterID, int health,
                       float xCoordinate, float yCoordinate,
@@ -21,6 +22,7 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
         super(xCoordinate, yCoordinate, state, speed, radius);
         this.characterID = characterID;
         this.health = health;
+        this.maxHealth = health;
     }
 
     public String getCharacterID() { return characterID; }
@@ -28,4 +30,9 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
 
     public int getHealth() { return health; }
     public void setHealth(int health) { this.health = health; }
+    
+    public int getMaxHealth() {
+        return this.maxHealth;
+    }
+    
 }
