@@ -13,6 +13,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Main {
     private MenuDemo view;
@@ -22,7 +23,7 @@ public class Main {
 
     public static void main (String args[]) {
         Main main = new Main();
-        main.startTheGame();
+        main.startTheGame(2,0,3);
         MenuDemo viewMenu = new MenuDemo();
 
     }
@@ -37,9 +38,9 @@ public class Main {
     }
 
     
-    public void startTheGame() {
+    public void startTheGame(int numberOfplayers, int ai, int balls) {
 
-        GameSettings settings = new GameSettings(4,3,5);
+        GameSettings settings = new GameSettings(numberOfplayers,ai,balls);
 
         GLFW.glfwInit();
         GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
@@ -62,9 +63,48 @@ public class Main {
         // start the server
         // wait for clients to connect
         // count number of network players
-        int numberOfNetworkPlayer = 1;
+        GameLobby lobby = new GameLobby(true);
+        ArrayList<String> players = lobby.getNetworkPlayers();
+        // waits for one player to connect
+        while (players.isEmpty()) {
+
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+            players = lobby.getNetworkPlayers();
+
+        }
+
+        int numberOfNetworkPlayer = players.size();
         // Create the game settings
 
+//        startTheGame(numberOfNetworkPlayer + 1, 0,3);
+
+        GameSettings settings = new GameSettings(numberOfNetworkPlayer + 1,0,3);
+        settings.getCurrentPlayer();
+        settings.getPlayers();
+
+        settings.getBalls();
+        settings.getPlatform();
+        settings.getWall();
+        settings.getGameSession();
+
+        GLFW.glfwInit();
+        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+
+        try {
+            View view = new View((int)(mode.width()), (int)(mode.height()));
+
+            new GameSessionController(view, settings);
+
+        } catch (KeyListenerNotFoundException ex) {
+            logger.fatal(ex);
+        } catch (RuntimeException ex) {
+            logger.fatal(ex);
+            ex.printStackTrace();
+        }
         // TODO Implement network
         // Check if network game and a host
         // if yes then send all game objects to clients
@@ -77,6 +117,19 @@ public class Main {
         // TODO write the logic
         // Enter the ip you want to connect to
         // wait for the command from host to start the game
+        GameLobby lobby = new GameLobby(true);
+
+        while (!lobby.isConnected()) {
+
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e){
+                e.printStackTrace();
+            }
+        }
+
+        GameSettings settings = new GameSettings(null,null,null,null,null,null,null);
+
 
         // recieve the game objects from the host.
         // create the game setting
@@ -85,7 +138,7 @@ public class Main {
 
 
     public void startSinglePlayer() {
-        startTheGame();
+        startTheGame(4,3,6);
     }
 
     public static boolean sfxSetting(boolean on) {

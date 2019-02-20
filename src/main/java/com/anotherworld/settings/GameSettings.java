@@ -62,6 +62,18 @@ public class GameSettings {
 
     private static PropertyReader gamesession;
 
+    public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
+                        ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSession) {
+        this.currentPlayer = currentPlayer;
+        this.players = players;
+        this.ai = ai;
+        this.balls = balls;
+        this.platforms = platforms;
+        this.walls = walls;
+        this.gameSession = gameSession;
+
+    }
+
 
     public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
 
