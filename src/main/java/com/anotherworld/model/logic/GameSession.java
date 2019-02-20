@@ -96,7 +96,7 @@ public class GameSession {
                     if (!ball.isDangerous()){
                         ball.setDangerous(true);
                         ball.setTimer(GameSettings.getBallMaxTimer());
-                        ball.setSpeed(2);
+                        ball.setSpeed(ball.getSpeed() * 2);
                     } else player.damage(ball.getDamage());
 
                     Physics.collided(ball, player);
