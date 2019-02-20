@@ -138,7 +138,7 @@ public class Main {
 
 
     public void startSinglePlayer() {
-        startTheGame(4,3,6);
+        startTheGame(4,3,4);
     }
 
     public static boolean sfxSetting(boolean on) {
