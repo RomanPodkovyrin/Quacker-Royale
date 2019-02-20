@@ -1,6 +1,7 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL45.*;
+import static org.lwjgl.opengl.GL46.GL_TRIANGLE_STRIP;
+import static org.lwjgl.opengl.GL46.glScalef;
 
 import com.anotherworld.tools.datapool.WallData;
 

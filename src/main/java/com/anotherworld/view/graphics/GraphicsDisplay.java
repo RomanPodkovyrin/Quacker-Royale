@@ -53,8 +53,7 @@ public class GraphicsDisplay {
     }
 
     /**
-     * Returns an array list of matrices containing the objects to be drawn.
-     * @return The list of matrices
+     * Returns draws the objects it contains to the screen.
      */
     public void draw() {
         glPushMatrix();
@@ -85,6 +84,9 @@ public class GraphicsDisplay {
         return width;
     }
 
+    /**
+     * Deletes the opengl buffers it has bound.
+     */
     public void destroyObjects() {
         for (DisplayObject d : objects) {
             d.destroyObject();

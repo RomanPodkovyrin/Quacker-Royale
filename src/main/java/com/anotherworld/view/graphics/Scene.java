@@ -1,14 +1,11 @@
 package com.anotherworld.view.graphics;
 
-import static org.lwjgl.opengl.GL45.*;
-
-import com.anotherworld.view.data.DisplayObject;
+import static org.lwjgl.opengl.GL46.glViewport;
 
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.GL45;
 
 /**
  * Creates and manages a view state like view game or main menu.
@@ -67,6 +64,9 @@ public class Scene {
         return Math.min(intScale - intValue, Math.max(0, (int)Math.round((floatScale / 2f) * ((float)intScale))));
     }
 
+    /**
+     * Destroys the opengl buffers of for for the display objects in all of the scenes displays.
+     */
     public void destoryObjects() {
         for (GraphicsDisplay d : displays) {
             d.destroyObjects();

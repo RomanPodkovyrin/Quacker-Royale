@@ -1,6 +1,6 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
+import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
 
 public class BallDisplayObject extends DisplayObject {
 

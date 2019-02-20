@@ -202,7 +202,7 @@ public class Matrix2d {
         String r = "";
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
-                r = r + (value[i+ j * m ] + (j < n - 1 ? "," : "\n"));
+                r = r + (value[i + j * m ] + (j < n - 1 ? "," : "\n"));
             }
         }
         return r;

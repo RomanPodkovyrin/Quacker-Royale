@@ -1,6 +1,8 @@
 package com.anotherworld.view;
 
-import static org.lwjgl.opengl.GL46.*;
+import static org.lwjgl.opengl.GL46.glCompileShader;
+import static org.lwjgl.opengl.GL46.glCreateShader;
+import static org.lwjgl.opengl.GL46.glShaderSource;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +26,11 @@ public class Shader {
         this.shaderType = shaderType;
     }
 
+    /**
+     * Creates an opengl shader and allocates it an id.
+     * @return Returns the shader's opengl id
+     * @throws IOException If the file given couldn't be loaded
+     */
     public int createShader() throws IOException {
         int shader = 0;
         logger.debug("Attempting to create shader type " + shaderType + " from " + fileName);

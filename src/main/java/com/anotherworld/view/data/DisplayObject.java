@@ -1,11 +1,7 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
-import static org.lwjgl.opengl.GL11.glEnableClientState;
-import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.opengl.GL45.*;
 
-import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.view.graphics.Matrix2d;
 
 import java.nio.FloatBuffer;
@@ -48,6 +44,14 @@ public abstract class DisplayObject {
         this(points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
     
+    /**
+     * Creates a display object from the given points.
+     * @param points The points to display the object
+     * @param displayType The way the points should be displayed
+     * @param r How red the object is 0 to 1
+     * @param g How green the object is 0 to 1
+     * @param b How blue the object is 0 to 1
+     */
     public DisplayObject(Matrix2d points, int displayType, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
@@ -192,6 +196,9 @@ public abstract class DisplayObject {
         return displayType;
     }
     
+    /**
+     * Draws the object using the stored points.
+     */
     public void draw() {
         logger.trace("Buffer vaoID " + vaoId + " " + (glIsVertexArray(vaoId) ? "exists" : "wasn't found"));
         logger.trace("Buffer vertices " + verticesId + " " + (glIsBuffer(verticesId) ? "exists" : "wasn't found"));
@@ -299,6 +306,10 @@ public abstract class DisplayObject {
      */
     public abstract float getY();
     
+    /**
+     * Returns true if the object should be drawn.
+     * @return if the object should be drawn
+     */
     public abstract boolean shouldDraw();
     
     /**

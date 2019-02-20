@@ -1,10 +1,11 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL45.*;
-
-import java.util.Optional;
+import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
+import static org.lwjgl.opengl.GL46.glScalef;
 
 import com.anotherworld.model.movable.ObjectState;
+
+import java.util.Optional;
 
 public class PlayerDisplayObject extends DisplayObject {
 
