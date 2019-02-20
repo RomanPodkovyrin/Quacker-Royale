@@ -113,6 +113,7 @@ public class MenuDemo extends Application {
         sfxButton.setMinHeight(height * 0.1);
         sfxButton.setBackground(new Background(new BackgroundFill(Color.rgb(9,
                 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
+
         sfxButton.setOnAction(e -> {
             sfxButton.setText("SFX: "
                     + (sfxButton.getText().split(" ")[1].equals("On") ? "Off"
