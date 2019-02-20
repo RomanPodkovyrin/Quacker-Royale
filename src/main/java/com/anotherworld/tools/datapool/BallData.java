@@ -18,6 +18,13 @@ public class BallData extends MovableData implements BallDisplayData, Serializab
         this.dangerous = dangerous;
         this.timer = 0;
     }
+    public void copyObject(BallData data) {
+        this.dangerous = data.isDangerous();
+        this.timer = data.getTimer();
+        this.damage = data.getDamage();
+        super.copyObject(data);
+    }
+
 
     public int getDamage() { return damage; }
     public void setDamage(int damage) { this.damage = damage; }

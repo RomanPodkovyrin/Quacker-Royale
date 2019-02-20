@@ -26,6 +26,15 @@ public abstract class MovableData implements DisplayData, Serializable {
         this.state = state;
     }
 
+    public void copyObject(MovableData data) {
+        this.coordinates = data.getCoordinates();
+        this.velocity = data.getVelocity();
+        this.state = data.getState();
+        this.angle = data.getAngle();
+        this.speed = data.getSpeed();
+        this.radius = data.getRadius();
+    }
+
     /**
      * Gets the coordinates of the player
      * @return Matrix object with player coordinates
