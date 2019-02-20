@@ -98,9 +98,9 @@ public class AI {
 
         ArrayList<Job> ballAim = new ArrayList<>();
         ballAim.add(new NeutralBallCheck());
-//        ballAim.add(new AimBall());
+        ballAim.add(new AimBall());
 
-        domination.add(new SequenceSuccess(ballAim));
+//        domination.add(new SequenceSuccess(ballAim));
         // TODO chase the player gets the ai stuck
         return  domination;
     }
@@ -140,6 +140,7 @@ public class AI {
         logger.info("AI action called.");
 
         //TODO make then work in the order, not all at the same tick
+        //TODO make a black board so that ai can chose characters which are not take and balls
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
                 Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
@@ -153,7 +154,7 @@ public class AI {
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
                 }
             }
-            tick = tick + 1;
+//            tick = tick + 1;
         } else if (tick == 10) {
             tick = 0;
         } else {

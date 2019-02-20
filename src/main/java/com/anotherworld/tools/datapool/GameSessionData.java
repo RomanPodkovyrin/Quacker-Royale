@@ -10,7 +10,7 @@ public class GameSessionData implements Serializable {
 
     private long timeLeft;
 
-    GameSessionData(long totalGameTime) {
+    public GameSessionData(long totalGameTime) {
         this.timeLeft = totalGameTime;
     }
 
