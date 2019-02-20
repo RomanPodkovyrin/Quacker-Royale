@@ -5,10 +5,7 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.PropertyReader;
-import com.anotherworld.tools.datapool.BallData;
-import com.anotherworld.tools.datapool.PlatformData;
-import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.datapool.WallData;
+import com.anotherworld.tools.datapool.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,29 +49,25 @@ public class GameSettings {
     private float defaultPlatformXSize;
     private float defaultPlatformYSize;
 
-    // Sound settings
-    private boolean musicSound;
-    private boolean effectsSound;
-
+    // Game object
     private PlayerData currentPlayer;
     private ArrayList<PlayerData> players = new ArrayList<>();
     private ArrayList<PlayerData> ai = new ArrayList<>();
     private ArrayList<BallData> balls = new ArrayList<>();
     private ArrayList<PlatformData> platforms = new ArrayList<>();
     private ArrayList<WallData> walls = new ArrayList<>();
+    private GameSessionData gameSession;
 
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser" ));
 
     private static PropertyReader gamesession;
 
 
-    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls, boolean musicSound, boolean effectsSound) {
+    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
 
         this.numberOfPlayers = numberOfPlayers;
         this.numberofAIPlayers = numberOfAIPlayers;
         this.numberOfBall = numberOfBalls;
-        this.musicSound = musicSound;
-        this.effectsSound = effectsSound;
 
         try {
             PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
@@ -228,7 +221,6 @@ public class GameSettings {
     }
 
     private void createPlatform() throws IOException {
-        // new PlatformData();
         // Where is a center
         PlatformData platform = new PlatformData(80,45);
 
@@ -267,8 +259,13 @@ public class GameSettings {
 
     }
 
+    private void createGameSession() {
+        this.gameSession = new GameSessionData(1000000);
+    }
+
     public GameSession createSession() {
         createGameFiles();
+        // TODO give the gameSessionData into gameSession
         return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0));
     }
 
@@ -278,6 +275,7 @@ public class GameSettings {
             createWall();
             createPlayers(numberOfPlayers, numberofAIPlayers);
             createBalls(numberOfBall);
+            createGameSession();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -301,6 +299,10 @@ public class GameSettings {
 
     public ArrayList<PlatformData> getPlatform() {
         return platforms;
+    }
+
+    public GameSessionData getGameSession() {
+        return gameSession;
     }
 
     public ArrayList<WallData> getWall() {

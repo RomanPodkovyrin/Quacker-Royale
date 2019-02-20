@@ -37,7 +37,7 @@ public class Main {
     
     public void startTheGame() {
 
-        GameSettings settings = new GameSettings(4,3,4, true, true);
+        GameSettings settings = new GameSettings(4,3,5);
 
         GLFW.glfwInit();
         GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
@@ -53,6 +53,32 @@ public class Main {
             logger.fatal(ex);
             ex.printStackTrace();
         }
+    }
+
+    public void host() {
+        // TODO write the logic
+        // start the server
+        // wait for clients to connect
+        // count number of network players
+        int numberOfNetworkPlayer = 1;
+        // Create the game settings
+
+        // TODO Implement network
+        // Check if network game and a host
+        // if yes then send all game objects to clients
+
+        // Start the game with the current settings
+
+    }
+
+    public void connect() {
+        // TODO write the logic
+        // Enter the ip you want to connect to
+        // wait for the command from host to start the game
+
+        // recieve the game objects from the host.
+        // create the game setting
+        // start the game with the current settings
     }
 
     public void startMultiplayer(boolean host) {

@@ -50,6 +50,7 @@ public class GameSessionController {
         this.session = settings.createSession();
         this.view = view;
 
+        // Starting the background music and effects threads
         AudioControl.setUp();
         AudioControl.playBackGroundMusic();
 
@@ -87,6 +88,9 @@ public class GameSessionController {
 
 
         while (viewThread.isAlive()) {
+
+            // TODO implement client side of the network
+            // if client check if there are game objects to update
 
             // Get time before computation
             startTime = System.currentTimeMillis();
@@ -128,6 +132,10 @@ public class GameSessionController {
 
             // Reset dropped frames
             framesDropped = 0;
+
+            // TODO implement host game state sender
+            // if network game and host
+            // Send the game states to clients
         }
         
         shutDownSequence();
@@ -164,4 +172,6 @@ public class GameSessionController {
                                settings.getPlatform(),
                                settings.getWall());
     }
+
+    // TODO need key listener which would be sending the client key preses to host
 }
