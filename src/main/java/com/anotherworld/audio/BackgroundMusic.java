@@ -23,7 +23,6 @@ public class BackgroundMusic implements Runnable
 
     public BackgroundMusic(){
         soundFile = new File(fileLocation);
-
     }
 
     public void playBackgroundMusic()
