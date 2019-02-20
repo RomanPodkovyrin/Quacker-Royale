@@ -278,7 +278,7 @@ public class GameSettings {
     public GameSession createSession() {
         createGameFiles();
         // TODO give the gameSessionData into gameSession
-        return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0));
+        return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0),gameSession);
     }
 
     private void createGameFiles () {

@@ -9,7 +9,7 @@ public class BallData extends MovableData implements BallDisplayData, Serializab
 
     private boolean dangerous;
     private int timer;
-    private int damage = 10; // TODO: Create damage in the constructor.
+    private int damage = 5; // TODO: Create damage in the constructor.
 
     public BallData(boolean dangerous,
                     float xCoordinate, float yCoordinate,
