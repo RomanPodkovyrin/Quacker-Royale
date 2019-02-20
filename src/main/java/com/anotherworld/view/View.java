@@ -11,6 +11,7 @@ import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.BallDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.HealthBarDisplayObject;
 import com.anotherworld.view.data.PlayerDisplayData;
 import com.anotherworld.view.data.PlayerDisplayObject;
 import com.anotherworld.view.data.RectangleDisplayData;
@@ -235,6 +236,7 @@ public class View implements Runnable {
             }
             for (int i = 0; i < updateEvent.getPlayerObjects().size(); i++) {
                 disObj.add(new PlayerDisplayObject(updateEvent.getPlayerObjects().get(i)));
+                disObj.add(new HealthBarDisplayObject(updateEvent.getPlayerObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
                 disObj.add(new BallDisplayObject(updateEvent.getBallObjects().get(i)));

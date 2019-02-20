@@ -34,17 +34,17 @@ public class PlayerDisplayObject extends DisplayObject {
     }
     
     private void setColours() {
-        maxR = (float)Math.random();
-        maxG = (float)Math.random();
-        maxB = (float)Math.random();
+        maxR = (float)(0.5f + Math.random() * 0.5f);
+        maxG = (float)(0.5f + Math.random() * 0.5f);
+        maxB = (float)(0.5f + Math.random() * 0.5f);
         
-        float randomCo = (float)(1 + Math.random() * 0.2);
+        float randomCo = (float)(0.5f + Math.random() * 0.5f);
         
         float max = randomCo * Math.max(Math.max(maxR, maxG), maxB);
 
-        maxR = maxR / max;
-        maxG = maxG / max;
-        maxB = maxB / max;
+        //maxR = maxR / max;
+        //maxG = maxG / max;
+        //maxB = maxB / max;
         
         this.setColour(maxR, maxG, maxB);
     }
@@ -57,9 +57,9 @@ public class PlayerDisplayObject extends DisplayObject {
     public void transform() {
         super.transform();
         
-        float healthCo = (float)displayData.getHealth() / (float)displayData.getMaxHealth();
+        //float healthCo = (float)displayData.getHealth() / (float)displayData.getMaxHealth();
         
-        this.setColour(healthCo * maxR, healthCo * maxG, healthCo * maxB);
+        //this.setColour(healthCo * maxR, healthCo * maxG, healthCo * maxB);
         
         if (displayData.getState() == ObjectState.DEAD) {
             if (!startedFalling.isPresent()) {
