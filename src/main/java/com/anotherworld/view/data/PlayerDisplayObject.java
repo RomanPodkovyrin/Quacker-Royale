@@ -2,6 +2,8 @@ package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL45.*;
 
+import java.util.Optional;
+
 import com.anotherworld.model.movable.ObjectState;
 
 public class PlayerDisplayObject extends DisplayObject {
@@ -15,6 +17,8 @@ public class PlayerDisplayObject extends DisplayObject {
     private float maxG;
     private float maxB;
     
+    private Optional<Long> startedFalling;
+    
     /**
      * Creates a display object to display a player.
      * @param displayData The player to display
@@ -25,6 +29,7 @@ public class PlayerDisplayObject extends DisplayObject {
         this.lastXLocation = displayData.getXCoordinate();
         this.lastYLocation = displayData.getYCoordinate();
         this.setColours();
+        this.startedFalling = Optional.empty();
     }
     
     private void setColours() {
@@ -55,6 +60,16 @@ public class PlayerDisplayObject extends DisplayObject {
         
         this.setColour(healthCo * maxR, healthCo * maxG, healthCo * maxB);
         
+        if (displayData.getState() == ObjectState.DEAD) {
+            if (!startedFalling.isPresent()) {
+                startedFalling = Optional.of(System.currentTimeMillis());
+            }
+            float timeFalling = System.currentTimeMillis() - startedFalling.get();
+            timeFalling = timeFalling / 1000;
+            float fallingRatio = 1 / (1 + timeFalling * timeFalling * 4.8f);
+            glScalef(fallingRatio, fallingRatio, 1);
+        }
+        
         /*if (diff(this.getX(), this.getY(), this.lastXLocation, this.lastYLocation) > MAX_X_DIFF) {
             
         }
@@ -81,7 +96,8 @@ public class PlayerDisplayObject extends DisplayObject {
     
     @Override
     public boolean shouldDraw() {
-        return displayData.getState() != ObjectState.DEAD;
+        return true;
+        //return displayData.getState() != ObjectState.DEAD;
     }
     
     @Override

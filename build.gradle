@@ -38,7 +38,7 @@ sourceSets {
 }
 
 // Declares the location of the main method
-mainClassName = 'com.anotherworld.control.Main'
+mainClassName = 'com.anotherworld.settings.MenuDemo'
 
 run {
     args += '-xStartOnFirstThread'
