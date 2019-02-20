@@ -1,9 +1,10 @@
-#version 130
+#version 120
 
-precision mediump float;
-in vec4 vertexColour;
-out vec4 outColour;
+//precision mediump float;
+//varying vec4 outColour;
+//varying vec4 vertexColour;
+//varying vec4 gl_Color;
 
 void main() {
-    outColour = /*vec4(1.0, 1.0, 1.0, 1.0);*/vertexColour;
+    gl_FragColor = gl_Color;
 }
