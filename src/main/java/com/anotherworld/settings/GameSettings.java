@@ -272,7 +272,7 @@ public class GameSettings {
     }
 
     private void createGameSession() {
-        this.gameSession = new GameSessionData(1000000);
+        this.gameSession = new GameSessionData(60);
     }
 
     public GameSession createSession() {
@@ -324,7 +324,6 @@ public class GameSettings {
     public PlayerData getCurrentPlayer() {
         return currentPlayer;
     }
-
 
     public static float getDefaultPlayerSpeed() { return defaultPlayerSpeed; }
 
