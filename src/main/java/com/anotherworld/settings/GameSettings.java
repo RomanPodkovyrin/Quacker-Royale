@@ -62,6 +62,18 @@ public class GameSettings {
 
     private static PropertyReader gamesession;
 
+    public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
+                        ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSession) {
+        this.currentPlayer = currentPlayer;
+        this.players = players;
+        this.ai = ai;
+        this.balls = balls;
+        this.platforms = platforms;
+        this.walls = walls;
+        this.gameSession = gameSession;
+
+    }
+
 
     public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
 
@@ -260,13 +272,13 @@ public class GameSettings {
     }
 
     private void createGameSession() {
-        this.gameSession = new GameSessionData(1000000);
+        this.gameSession = new GameSessionData(60);
     }
 
     public GameSession createSession() {
         createGameFiles();
         // TODO give the gameSessionData into gameSession
-        return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0));
+        return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0),gameSession);
     }
 
     private void createGameFiles () {
@@ -312,7 +324,6 @@ public class GameSettings {
     public PlayerData getCurrentPlayer() {
         return currentPlayer;
     }
-
 
     public static float getDefaultPlayerSpeed() { return defaultPlayerSpeed; }
 

@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class WallData implements RectangleDisplayData, Serializable {
 
-    private int stage = 1;
+    private int stage = 3;
     private static final int MAXSTAGE = 4;
     private static final float xShrink = 10;
     private static final float yShrink = 20;
@@ -24,6 +24,16 @@ public class WallData implements RectangleDisplayData, Serializable {
         this.xCoordinate = x;
         this.yCoordinate = y;
 
+    }
+
+    public void copyObject(WallData data) {
+        this.stage = data.getStage();
+        this.xSize = data.getxSize();
+        this.ySize = data.getySize();
+        this.width = data.getWidth();
+        this.height = data.getHeight();
+        this.xCoordinate = data.getXCoordinate();
+        this.yCoordinate = data.getYCoordinate();
     }
 
     public int getStage() {

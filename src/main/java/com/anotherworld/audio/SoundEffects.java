@@ -48,7 +48,6 @@ public class SoundEffects implements Runnable{
         beepFile = new File(beep);
         punchFile = new File(punch);
         jumpFile = new File(jump);
-
         effect = new Thread(this);
         effect.start();
     }
@@ -76,10 +75,7 @@ public class SoundEffects implements Runnable{
                 } finally {
                     currentFile = null;
                 }
-
             }
-
-
         }
     }
 
@@ -106,30 +102,19 @@ public class SoundEffects implements Runnable{
                 line.write(abData, 0, numberOfBytesRead);
             }
         }
-//        line.drain();
-//        line.close();
     }
 
-    public void ballCollidedWithWall() throws IOException {
-//        try {
-//            createLine(ballCollidedWithWallFile);
-//        } catch (LineUnavailableException e) {
-//            e.printStackTrace();
-//        }
+    public void ballCollidedWithWall() {
         logger.trace("Play ball sound");
         currentFile = jumpFile;
     }
 
-    public void playerCollidedWithBall() throws IOException {
-//        try {
-//            createLine(playerCollidedWithBallFile);
-//        } catch (LineUnavailableException e) {
-//            e.printStackTrace();
-//        }
-        currentFile = punchFile;
+
+    public void playerCollidedWithBall() {
+        currentFile = playerCollidedWithBallFile;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         // The code below and a main method itself is for demonstration purposes, so it shows how we can use it in a future
         SoundEffects sound = new SoundEffects();
         while(true){
