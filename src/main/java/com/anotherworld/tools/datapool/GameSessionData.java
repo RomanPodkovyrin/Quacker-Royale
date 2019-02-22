@@ -8,10 +8,14 @@ import java.io.Serializable;
  */
 public class GameSessionData implements Serializable {
 
+    private long ticksElapsed;
+    private long timeToNextStage;
     private long timeLeft;
 
     public GameSessionData(long totalGameTime) {
-        this.timeLeft = totalGameTime;
+        this.timeLeft        = totalGameTime;
+        this.timeToNextStage = totalGameTime / 3; //TODO: Integrate '3' with config file.
+        this.ticksElapsed    = 0;
     }
 
     public long getTimeLeft() {
@@ -21,6 +25,14 @@ public class GameSessionData implements Serializable {
     public void setTimeLeft(long timeLeft) {
         this.timeLeft = timeLeft;
     }
+
+    public long getTicksElapsed() { return ticksElapsed; }
+
+    public void setTicksElapsed(long ticksElapsed) { this.ticksElapsed = ticksElapsed; }
+
+    public long getTimeToNextStage() { return timeToNextStage; }
+
+    public void incrementTicksElapsed() { this.ticksElapsed++; }
 
     public void decrementTimeLeft() { this.timeLeft--; }
 }
