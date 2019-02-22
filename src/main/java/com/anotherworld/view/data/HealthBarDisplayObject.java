@@ -5,8 +5,6 @@ import static org.lwjgl.opengl.GL46.glScalef;
 
 import com.anotherworld.model.movable.ObjectState;
 
-import java.util.Optional;
-
 public class HealthBarDisplayObject extends DisplayObject {
 
     private final PlayerDisplayData displayData;
@@ -41,13 +39,12 @@ public class HealthBarDisplayObject extends DisplayObject {
 
     @Override
     public float getY() {
-        return displayData.getYCoordinate()- displayData.getRadius() - 1f;
+        return displayData.getYCoordinate() - displayData.getRadius() - 1f;
     }
     
     @Override
     public boolean shouldDraw() {
-        return true;
-        //return displayData.getState() != ObjectState.DEAD;
+        return displayData.getState() != ObjectState.DEAD;
     }
     
     @Override
