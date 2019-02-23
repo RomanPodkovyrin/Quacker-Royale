@@ -1,7 +1,8 @@
 package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
-import static org.lwjgl.opengl.GL46.glScalef;
+
+import com.anotherworld.view.Programme;
 
 /** 
  * Stores and manages the data needed to display a rectangle.
@@ -28,10 +29,10 @@ public class RectangleDisplayObject extends DisplayObject {
     }
     
     @Override
-    public void transform() {
-        super.transform();
+    public void transform(Programme programme) {
+        super.transform(programme);
         
-        glScalef(displayData.getWidth() / maxWidth, displayData.getHeight() / maxHeight, 1f);
+        programme.scalef(displayData.getWidth() / maxWidth, displayData.getHeight() / maxHeight, 1f);
         
     }
 

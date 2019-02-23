@@ -154,9 +154,9 @@ public class View implements Runnable {
                 }
             }
             
-            glLoadIdentity();
+            programme.loadIdentity();
             
-            currentScene.draw(width, height);
+            currentScene.draw(width, height, programme);
 
             glFlush();
             
@@ -176,7 +176,7 @@ public class View implements Runnable {
         }
         logger.info("Closing window");
         currentScene.destoryObjects();
-        programme.delete();
+        programme.destroy();
         glfwTerminate();
     }
     

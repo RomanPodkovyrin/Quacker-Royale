@@ -2,6 +2,8 @@ package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
 
+import com.anotherworld.view.Programme;
+
 /**
  * Manages displaying a ball object.
  * @author Jake Stewart
@@ -21,8 +23,8 @@ public class BallDisplayObject extends DisplayObject {
     }
     
     @Override
-    public void transform() {
-        super.transform();
+    public void transform(Programme programme) {
+        super.transform(programme);
         if (displayData.isDangerous()) {
             super.setColour(1, 0, 0);
         } else {

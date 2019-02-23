@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.anotherworld.view.Programme;
+
 /**
  * Creates and manages a view state like view game or main menu.
  * @author Jake Stewart
@@ -27,7 +29,7 @@ public class Scene {
      * @param width The width of the window in pixels
      * @param height The height of the window in pixels
      */
-    public void draw(int width, int height) {
+    public void draw(int width, int height, Programme programme) {
         logger.debug("Drawing Scene");
         for (int i = 0; i < displays.size(); i++) {
             logger.trace("Drawing scene: " + i);
@@ -37,7 +39,7 @@ public class Scene {
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
             glViewport(x, y, w, h);
-            display.draw();
+            display.draw(programme);
         }
     }
     

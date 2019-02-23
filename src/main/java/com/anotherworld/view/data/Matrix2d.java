@@ -7,7 +7,6 @@ import com.anotherworld.view.graphics.MatrixSizeException;
  * @author Jake Stewart
  *
  */
-@Deprecated
 public class Matrix2d extends Points2d {
 
     /**
@@ -26,8 +25,7 @@ public class Matrix2d extends Points2d {
      * @return This matrix (a) + b
      * @throws MatrixSizeException If the two matrices are of different size
      */
-    @Deprecated
-    public Matrix2d add(Matrix2d b) {
+    public Matrix2d add(Points2d b) {
         if (b.getM() != this.getM() || b.getN() != this.getN()) {
             throw new MatrixSizeException("Matrix a and b are of different size");
         }
@@ -47,8 +45,7 @@ public class Matrix2d extends Points2d {
      * @return This matrix (a) - b
      * @throws MatrixSizeException If the two matrices are of different size
      */
-    @Deprecated
-    public Matrix2d sub(Matrix2d b) {
+    public Matrix2d sub(Points2d b) {
         if (b.getM() != this.getM() || b.getN() != this.getN()) {
             throw new MatrixSizeException("Matrix a and b are of different size");
         }
@@ -68,7 +65,7 @@ public class Matrix2d extends Points2d {
      * @return This matrix (a) * b
      * @throws MatrixSizeException When it is impossible to multiply the two matrices together
      */
-    public Matrix2d mult(Matrix2d b) { // Multiplies this * b
+    public Matrix2d mult(Points2d b) { // Multiplies this * b
         Matrix2d a = this;
         if (a.getN() != b.getM()) {
             throw new MatrixSizeException("Matrix a and b are of incompatible sizes");
@@ -104,13 +101,14 @@ public class Matrix2d extends Points2d {
      * @param theta The angle in degrees
      * @return The 3 by 3 matrix
      */
-    public static final Matrix2d homRotation2d(float theta) {
-        Matrix2d result = new Matrix2d(3, 3);
+    public static final Matrix2d homRotate3d(float theta) {
+        Matrix2d result = new Matrix2d(4, 4);
         theta = theta * (float) Math.PI / 180f;
         result.setValue(0, 0, (float) Math.cos(theta));
         result.setValue(1, 0, (float) Math.sin(theta));
         result.setValue(0, 1, -(float) Math.sin(theta));
         result.setValue(1, 1, (float) Math.cos(theta));
+        result.setValue(2, 2, 1f);
         result.setValue(3, 3, 1f);
         return result;
     }
@@ -121,10 +119,11 @@ public class Matrix2d extends Points2d {
      * @param y The translation in the y-axis
      * @return The 3 by 3 matrix
      */
-    public static final Matrix2d homTranslation2d(float x, float y) {
-        Matrix2d result = Matrix2d.genIdentity(3);
+    public static final Matrix2d homTranslate3d(float x, float y, float z) {
+        Matrix2d result = Matrix2d.genIdentity(4);
         result.setValue(0, 3, x);
         result.setValue(1, 3, y);
+        result.setValue(2, 3, z);
         return result;
     }
 
@@ -134,10 +133,11 @@ public class Matrix2d extends Points2d {
      * @param y The scale in the y-axis
      * @return The 3 by 3 matrix
      */
-    public static final Matrix2d homScale2d(float x, float y) {
-        Matrix2d result = new Matrix2d(3, 3);
+    public static final Matrix2d homScale3d(float x, float y, float z) {
+        Matrix2d result = new Matrix2d(4, 4);
         result.setValue(0, 0, x);
         result.setValue(1, 1, y);
+        result.setValue(2, 2, z);
         result.setValue(3, 3, 1f);
         return result;
     }

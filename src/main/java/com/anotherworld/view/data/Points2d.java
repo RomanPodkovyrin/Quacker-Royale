@@ -1,7 +1,5 @@
 package com.anotherworld.view.data;
 
-import com.anotherworld.view.graphics.MatrixSizeException;
-
 /**
  * Stores an array of points that define an object.
  * @author Jake Stewart
@@ -21,7 +19,7 @@ public class Points2d {
      */
     public Points2d(int m, int n) {
         if (m < 0 || n < 0) {
-            throw new MatrixSizeException("Size must be non negative");
+            throw new IndexOutOfBoundsException("Size must be non negative");
         }
         value = new float[m * n];
         this.m = m;
@@ -37,7 +35,7 @@ public class Points2d {
      */
     public void setValue(int i, int j, float v) {
         if (i < 0 || j < 0 || i >= this.getM() || j >= this.getN()) {
-            throw new MatrixSizeException("Cell not in matrix");
+            throw new IndexOutOfBoundsException("Cell not in matrix");
         }
         value[i + j * m] = v;
     }
@@ -51,7 +49,7 @@ public class Points2d {
      */
     public float getValue(int i, int j) {
         if (i < 0 || j < 0 || i >= this.getM() || j >= this.getN()) {
-            throw new MatrixSizeException("Cell not in matrix");
+            throw new IndexOutOfBoundsException("Cell not in matrix");
         }
         return value[i + j * m];
     }

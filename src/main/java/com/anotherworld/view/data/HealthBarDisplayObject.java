@@ -1,9 +1,9 @@
 package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
-import static org.lwjgl.opengl.GL46.glScalef;
 
 import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.view.Programme;
 
 /**
  * Manages and stores the data to display a health bar.
@@ -24,12 +24,12 @@ public class HealthBarDisplayObject extends DisplayObject {
     }
     
     @Override
-    public void transform() {
-        super.transform();
+    public void transform(Programme programme) {
+        super.transform(programme);
         
         float healthCo = (float)displayData.getHealth() / (float)displayData.getMaxHealth();
         
-        glScalef(healthCo, 1, 1);
+        programme.scalef(healthCo, 1, 1);
     }
 
     @Override

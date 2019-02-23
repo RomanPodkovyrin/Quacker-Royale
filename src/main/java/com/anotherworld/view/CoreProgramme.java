@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
  * @author Jake Stewart
  *
  */
-public class CoreProgramme implements Programme {
+public class CoreProgramme extends Programme {
 
     private static Logger logger = LogManager.getLogger();
     
@@ -87,7 +87,7 @@ public class CoreProgramme implements Programme {
     }
     
     @Override
-    public void delete() {
+    public void destroy() {
         this.close();
         vertexShader.destroy();
         fragShader.destroy();
@@ -102,6 +102,36 @@ public class CoreProgramme implements Programme {
     @Override
     public boolean supportsVertArrayObj() {
         return true;
+    }
+
+    @Override
+    public void loadIdentity() {
+        glLoadIdentity();
+    }
+
+    @Override
+    public void pushMatrix() {
+        glPushMatrix();
+    }
+
+    @Override
+    public void translatef(float x, float y, float z) {
+        glTranslatef(x, y, z);
+    }
+
+    @Override
+    public void scalef(float x, float y, float z) {
+        glScalef(x, y, z);
+    }
+
+    @Override
+    public void rotatef(float angle, float x, float y, float z) {
+        glRotatef(angle, x, y, z);
+    }
+
+    @Override
+    public void popMatrix() {
+        glPopMatrix();
     }
 
 }

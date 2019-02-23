@@ -2,6 +2,7 @@ package com.anotherworld.view.graphics;
 
 import static org.lwjgl.opengl.GL46.*;
 
+import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
@@ -55,17 +56,16 @@ public class GraphicsDisplay {
     /**
      * Returns draws the objects it contains to the screen.
      */
-    public void draw() {
-        glPushMatrix();
-        glMatrixMode(GL_MODELVIEW);
-        Camera.transform(camera);
+    public void draw(Programme programme) {
+        programme.pushMatrix();
+        programme.transform(camera);
         for (int i = 0; i < objects.size(); i++) {
-            glPushMatrix();
-            objects.get(i).transform();
+            programme.pushMatrix();
+            objects.get(i).transform(programme);
             objects.get(i).draw();
-            glPopMatrix();
+            programme.popMatrix();
         }
-        glPopMatrix();
+        programme.popMatrix();
     }
     
     public float getX() {

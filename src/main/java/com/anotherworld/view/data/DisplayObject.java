@@ -2,6 +2,8 @@ package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.*;
 
+import com.anotherworld.view.Programme;
+
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -143,9 +145,9 @@ public abstract class DisplayObject {
         
     }
     
-    public void transform() {
-        glTranslatef(this.getX(), this.getY(), 0);
-        glRotatef(-this.getTheta(), 0, 0, 1);
+    public void transform(Programme programme) {
+        programme.translatef(this.getX(), this.getY(), 0);
+        programme.rotatef(-this.getTheta(), 0, 0, 1);
     }
     
     private FloatBuffer getFloatBuffer() {
@@ -197,14 +199,26 @@ public abstract class DisplayObject {
         return false;
     }
     
+    /**
+     * Returns how red the object is.
+     * @return how red the object is
+     */
     public float getR() {
         return r;
     }
 
+    /**
+     * Returns how green the object is.
+     * @return how green the object is
+     */
     public float getG() {
         return g;
     }
 
+    /**
+     * Returns how blue the object is.
+     * @return how blue the object is
+     */
     public float getB() {
         return b;
     }

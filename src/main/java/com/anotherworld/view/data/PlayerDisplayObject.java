@@ -1,9 +1,9 @@
 package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
-import static org.lwjgl.opengl.GL46.glScalef;
 
 import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.view.Programme;
 
 import java.util.Optional;
 
@@ -59,8 +59,8 @@ public class PlayerDisplayObject extends DisplayObject {
     }
     
     @Override
-    public void transform() {
-        super.transform();
+    public void transform(Programme programme) {
+        super.transform(programme);
         
         //float healthCo = (float)displayData.getHealth() / (float)displayData.getMaxHealth();
         
@@ -73,7 +73,7 @@ public class PlayerDisplayObject extends DisplayObject {
             float timeFalling = System.currentTimeMillis() - startedFalling.get();
             timeFalling = timeFalling / 1000;
             float fallingRatio = 1 / (1 + timeFalling * timeFalling * 4.8f);
-            glScalef(fallingRatio, fallingRatio, 1);
+            programme.scalef(fallingRatio, fallingRatio, 1);
         }
         
         /*if (diff(this.getX(), this.getY(), this.lastXLocation, this.lastYLocation) > MAX_X_DIFF) {
