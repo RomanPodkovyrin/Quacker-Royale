@@ -7,6 +7,11 @@ import com.anotherworld.model.movable.ObjectState;
 
 import java.util.Optional;
 
+/**
+ * Stores and manages the data needed to display a player.
+ * @author Jake Stewart
+ *
+ */
 public class PlayerDisplayObject extends DisplayObject {
 
     private final PlayerDisplayData displayData;

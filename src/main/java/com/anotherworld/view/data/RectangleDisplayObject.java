@@ -3,6 +3,11 @@ package com.anotherworld.view.data;
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
 import static org.lwjgl.opengl.GL46.glScalef;
 
+/** 
+ * Stores and manages the data needed to display a rectangle.
+ * @author Jake Stewart
+ *
+ */
 public class RectangleDisplayObject extends DisplayObject {
 
     private final RectangleDisplayData displayData;

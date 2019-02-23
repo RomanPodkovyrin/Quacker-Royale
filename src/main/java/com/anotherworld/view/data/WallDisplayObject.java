@@ -5,6 +5,11 @@ import static org.lwjgl.opengl.GL46.glScalef;
 
 import com.anotherworld.tools.datapool.WallData;
 
+/**
+ * Manages and stores the data needed to display a wall object.
+ * @author Jake Stewart
+ *
+ */
 public class WallDisplayObject extends DisplayObject {
 
     private final RectangleDisplayData displayData;

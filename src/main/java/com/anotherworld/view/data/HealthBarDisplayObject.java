@@ -5,6 +5,11 @@ import static org.lwjgl.opengl.GL46.glScalef;
 
 import com.anotherworld.model.movable.ObjectState;
 
+/**
+ * Manages and stores the data to display a health bar.
+ * @author Jake Stewart
+ *
+ */
 public class HealthBarDisplayObject extends DisplayObject {
 
     private final PlayerDisplayData displayData;

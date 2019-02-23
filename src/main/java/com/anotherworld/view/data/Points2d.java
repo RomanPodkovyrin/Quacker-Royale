@@ -2,6 +2,11 @@ package com.anotherworld.view.data;
 
 import com.anotherworld.view.graphics.MatrixSizeException;
 
+/**
+ * Stores an array of points that define an object.
+ * @author Jake Stewart
+ *
+ */
 public class Points2d {
 
     private float[] value;
