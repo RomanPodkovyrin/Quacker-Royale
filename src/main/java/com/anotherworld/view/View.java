@@ -134,61 +134,19 @@ public class View implements Runnable {
 
         currentScene = new GameScene();
         
-        //THERE NEED FOR SIGNIFICANT EDITING
-        
-        logger.info("Creating shaders");
-
-        Shader vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Core.vs", GL_VERTEX_SHADER);
-        Shader fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Core.frag", GL_FRAGMENT_SHADER);
-        
-        int vertexShaderId;
-        int fragShaderId;
+        Programme programme;
         try {
-            fragShaderId = fragShader.createShader();
-            vertexShaderId = vertexShader.createShader();
-        } catch (IOException e) {
-            logger.fatal("Couldn't load shader");
-            throw new RuntimeException("Shaders couldn't be initialised");
+            programme = new CoreProgramme();
+        } catch (ProgrammeUnavailableException e) {
+            logger.fatal("Couldn't start any rendering engines");
+            throw new RuntimeException("Couldn't start any rendering program");
         }
-        
-        int programme = glCreateProgram();
-        
-        if (vertexShaderId == 0 || fragShaderId == 0 || programme == 0) {
-            logger.fatal("One of the shaders wasn't initialised");
-            throw new RuntimeException("Shaders couldn't be initialised");
-        }
-        
-        if (glGetShaderi(vertexShaderId, GL_COMPILE_STATUS) == 0) {
-            logger.fatal("Vertex shader could't be complied");
-            logger.fatal("Vertex shader log: " + glGetShaderInfoLog(vertexShaderId));
-            throw new RuntimeException("Vertex shader wasn't complied");
-        }
-        
-        if (glGetShaderi(fragShaderId, GL_COMPILE_STATUS) == 0) {
-            logger.fatal("Fragment shader could't be complied");
-            logger.fatal("Fragment shader log: " + glGetShaderInfoLog(fragShaderId));
-            throw new RuntimeException("Fragment shader wasn't complied");
-        }
-        
-        glAttachShader(programme, vertexShaderId);
-        glAttachShader(programme, fragShaderId);
-        
-        glBindAttribLocation(programme, 0, "position");
-        glBindAttribLocation(programme, 1, "colour");
-        
-        glLinkProgram(programme);
-        
-        logger.debug("Fragment shader id " + fragShaderId);
-        logger.debug("Vertex shader id " + vertexShaderId);
-        logger.debug("Programme shader id " + programme);
-        
-        logger.info("Programme info: " + glGetProgramInfoLog(programme));
         
         while (!glfwWindowShouldClose(window)) {
 
             glClear(GL_COLOR_BUFFER_BIT);
             
-            glUseProgram(programme);
+            programme.use();
             
             synchronized (eventQueue) {
                 while (!eventQueue.isEmpty()) {
@@ -218,9 +176,7 @@ public class View implements Runnable {
         }
         logger.info("Closing window");
         currentScene.destoryObjects();
-        glDeleteProgram(programme);
-        glDeleteShader(vertexShaderId);
-        glDeleteShader(fragShaderId);
+        programme.delete();
         glfwTerminate();
     }
     

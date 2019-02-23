@@ -1,4 +1,6 @@
-package com.anotherworld.view.graphics;
+package com.anotherworld.view.data;
+
+import com.anotherworld.view.graphics.MatrixSizeException;
 
 /**
  * Creates and manipulates a 2d matrix.
@@ -6,11 +8,7 @@ package com.anotherworld.view.graphics;
  *
  */
 @Deprecated
-public class Matrix2d {
-
-    private float[] value;
-    private int m;
-    private int n;
+public class Matrix2d extends Points2d {
 
     /**
      * Creates a 2d matrix with a height of m and a width of n.
@@ -19,26 +17,7 @@ public class Matrix2d {
      * @throws MatrixSizeException When m or n are less than 0
      */
     public Matrix2d(int m, int n) {
-        if (m < 0 || n < 0) {
-            throw new MatrixSizeException("Size must be non negative");
-        }
-        value = new float[m * n];
-        this.m = m;
-        this.n = n;
-    }
-
-    /**
-     * Sets the value of a matrix cell.
-     * @param i The "y" of the cell from 0 to m - 1
-     * @param j The "x" of the cell from 0 to n - 1
-     * @param v The new value for the cell location
-     * @throws MatrixSizeException If i or j do not fall in the matrix
-     */
-    public void setValue(int i, int j, float v) {
-        if (i < 0 || j < 0 || i >= this.getM() || j >= this.getN()) {
-            throw new MatrixSizeException("Cell not in matrix");
-        }
-        value[i + j * m] = v;
+        super(m, n);
     }
 
     /**
@@ -52,11 +31,11 @@ public class Matrix2d {
         if (b.getM() != this.getM() || b.getN() != this.getN()) {
             throw new MatrixSizeException("Matrix a and b are of different size");
         }
-        Matrix2d result = new Matrix2d(m, n);
+        Matrix2d result = new Matrix2d(this.getM(), this.getN());
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                result.value[i + j * m] = this.value[i + j * m] + b.value[i + j * m];
+        for (int i = 0; i < this.getM(); i++) {
+            for (int j = 0; j < this.getN(); j++) {
+                result.setValue(i, j, this.getValue(i, j) + b.getValue(i, j));
             }
         }
         return result;
@@ -73,11 +52,11 @@ public class Matrix2d {
         if (b.getM() != this.getM() || b.getN() != this.getN()) {
             throw new MatrixSizeException("Matrix a and b are of different size");
         }
-        Matrix2d result = new Matrix2d(m, n);
+        Matrix2d result = new Matrix2d(this.getM(), this.getN());
 
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; i < n; j++) {
-                result.value[i + j * m] = this.value[i + j * m] - b.value[i + j * m];
+        for (int i = 0; i < this.getM(); i++) {
+            for (int j = 0; j < this.getN(); j++) {
+                result.setValue(i, j, this.getValue(i, j) - b.getValue(i, j));
             }
         }
         return result;
@@ -99,46 +78,12 @@ public class Matrix2d {
             for (int j = 0; j < b.getN(); j++) {
                 float v = 0f;
                 for (int k = 0; k < a.getN(); k++) {
-                    v += a.value[i + k * m] * b.value[k + j * m];
+                    v += a.getValue(i, k) * b.getValue(k, j);
                 }
-                result.value[i + j * m] = v;
+                result.setValue(i, j, v);
             }
         }
         return result;
-    }
-
-    /**
-     * Returns the "height" of the matrix.
-     * @return the "height" m
-     */
-    public int getM() {
-        return m;
-    }
-
-    /**
-     * Returns the "width" of the matrix.
-     * @return the "width" n
-     */
-    public int getN() {
-        return n;
-    }
-
-    /**
-     * Returns the value stored in a cell.
-     * @param i the "y" of the cell
-     * @param j the "x" of the cell
-     * @return the value of i, j
-     * @throws MatrixSizeException if cell is not in matrix
-     */
-    public float getValue(int i, int j) {
-        if (i < 0 || j < 0 || i >= this.getM() || j >= this.getN()) {
-            throw new MatrixSizeException("Cell not in matrix");
-        }
-        return value[i + j * m];
-    }
-    
-    public float[] getPoints() {
-        return value;
     }
 
     /**
@@ -149,7 +94,7 @@ public class Matrix2d {
     public static final Matrix2d genIdentity(int l) {
         Matrix2d result = new Matrix2d(l, l);
         for (int k = 0; k < l; k++) {
-            result.value[k + k * l] = 1f;
+            result.setValue(k, k, 1f);
         }
         return result;
     }
@@ -162,11 +107,11 @@ public class Matrix2d {
     public static final Matrix2d homRotation2d(float theta) {
         Matrix2d result = new Matrix2d(3, 3);
         theta = theta * (float) Math.PI / 180f;
-        result.value[0] = (float) Math.cos(theta);
-        result.value[1] = (float) Math.sin(theta);
-        result.value[3] = -(float) Math.sin(theta);
-        result.value[4] = (float) Math.cos(theta);
-        result.value[8] = 1f;
+        result.setValue(0, 0, (float) Math.cos(theta));
+        result.setValue(1, 0, (float) Math.sin(theta));
+        result.setValue(0, 1, -(float) Math.sin(theta));
+        result.setValue(1, 1, (float) Math.cos(theta));
+        result.setValue(3, 3, 1f);
         return result;
     }
 
@@ -178,8 +123,8 @@ public class Matrix2d {
      */
     public static final Matrix2d homTranslation2d(float x, float y) {
         Matrix2d result = Matrix2d.genIdentity(3);
-        result.value[6] = x;
-        result.value[7] = y;
+        result.setValue(0, 3, x);
+        result.setValue(1, 3, y);
         return result;
     }
 
@@ -191,21 +136,10 @@ public class Matrix2d {
      */
     public static final Matrix2d homScale2d(float x, float y) {
         Matrix2d result = new Matrix2d(3, 3);
-        result.value[0] = x;
-        result.value[4] = y;
-        result.value[8] = 1;
+        result.setValue(0, 0, x);
+        result.setValue(1, 1, y);
+        result.setValue(3, 3, 1f);
         return result;
-    }
-    
-    @Override
-    public String toString() {
-        String r = "";
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                r = r + (value[i + j * m ] + (j < n - 1 ? "," : "\n"));
-            }
-        }
-        return r;
     }
 
 }

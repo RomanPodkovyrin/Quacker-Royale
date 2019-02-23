@@ -2,6 +2,11 @@ package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
 
+/**
+ * Manages displaying a ball object.
+ * @author Jake Stewart
+ *
+ */
 public class BallDisplayObject extends DisplayObject {
 
     private final BallDisplayData displayData;
@@ -11,7 +16,7 @@ public class BallDisplayObject extends DisplayObject {
      * @param displayData The ball to display
      */
     public BallDisplayObject(BallDisplayData displayData) {
-        super(DisplayObject.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
+        super(Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
         this.displayData = displayData;
     }
     

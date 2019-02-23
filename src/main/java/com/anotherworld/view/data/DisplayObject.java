@@ -1,8 +1,6 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL45.*;
-
-import com.anotherworld.view.graphics.Matrix2d;
+import static org.lwjgl.opengl.GL46.*;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -12,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
 
 /**
- * Stores information about an object to display to the screen which can be made of multiple shapes.
+ * Stores and displays information about an object to display to the screen which can be made of multiple shapes.
  * @author Jake Stewart
  *
  */
@@ -20,7 +18,7 @@ public abstract class DisplayObject {
 
     private static Logger logger = LogManager.getLogger(DisplayObject.class);
     
-    private final Matrix2d points;
+    private final Points2d points;
     
     private final int displayType;
     
@@ -40,7 +38,7 @@ public abstract class DisplayObject {
     
     private float b;
 
-    public DisplayObject(Matrix2d points, int displayType) {
+    public DisplayObject(Points2d points, int displayType) {
         this(points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
     
@@ -52,7 +50,7 @@ public abstract class DisplayObject {
      * @param g How green the object is 0 to 1
      * @param b How blue the object is 0 to 1
      */
-    public DisplayObject(Matrix2d points, int displayType, float r, float g, float b) {
+    public DisplayObject(Points2d points, int displayType, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
         this.r = r;
@@ -99,83 +97,6 @@ public abstract class DisplayObject {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         
         
-    }
-    
-    /**
-     * Generates the points of a wall with thickness adding to the outside of the object.
-     * @param w The width of the wall
-     * @param h The height of the wall
-     * @param t The thickness of the wall
-     * @return The wall's points
-     */
-    protected static final Matrix2d genWall(float w, float h, float t) {
-        Matrix2d points = new Matrix2d(4, 10);
-        points.setValue(0, 0, -w / 2 - t);
-        points.setValue(1, 0, h / 2 + t);
-        points.setValue(0, 1, -w / 2);
-        points.setValue(1, 1, h / 2);
-        points.setValue(0, 2, w / 2 + t);
-        points.setValue(1, 2, h / 2 + t);
-        points.setValue(0, 3, w / 2);
-        points.setValue(1, 3, h / 2);
-        points.setValue(0, 4, w / 2 + t);
-        points.setValue(1, 4, -h / 2 - t);
-        points.setValue(0, 5, w / 2);
-        points.setValue(1, 5, -h / 2);
-        points.setValue(0, 6, -w / 2 - t);
-        points.setValue(1, 6, -h / 2 - t);
-        points.setValue(0, 7, -w / 2);
-        points.setValue(1, 7, -h / 2);
-        points.setValue(0, 8, -w / 2 - t);
-        points.setValue(1, 8, h / 2 + t);
-        points.setValue(0, 9, -w / 2);
-        points.setValue(1, 9, h / 2);
-        for (int j = 0; j < 10; j++) {
-            points.setValue(3, j, 1f);
-        }
-        return points;
-    }
-    
-    /**
-     * Generates the points of a rectangle.
-     * @param w The width of the rectangle
-     * @param h The height of the rectangle
-     * @return The points of the rectangle
-     */
-    protected static final Matrix2d genRectangle(float w, float h) {
-        Matrix2d points = new Matrix2d(4, 4);
-        points.setValue(0, 0, -w / 2);
-        points.setValue(1, 0, h / 2);
-        points.setValue(0, 1, w / 2);
-        points.setValue(1, 1, h / 2);
-        points.setValue(0, 2, w / 2);
-        points.setValue(1, 2, -h / 2);
-        points.setValue(0, 3, -w / 2);
-        points.setValue(1, 3, -h / 2);
-        
-        for (int j = 0; j < 4; j++) {
-            points.setValue(3, j, 1f);
-        }
-        
-        return points;
-    }
-    
-    /**
-     * Generates the points of a circle.
-     * @param r The radius of the circle
-     * @return The points of the circle
-     */
-    protected static final Matrix2d genCircle(float r) {
-        Matrix2d points = new Matrix2d(4, 38);
-        points.setValue(0, 0, 0f);
-        points.setValue(1, 0, 0f);
-        points.setValue(3, 0, 1f);
-        for (int i = 0; i <= 36; i += 1) {
-            points.setValue(0, i + 1, r * (float)(Math.sin(((double)i / 18) * Math.PI)));
-            points.setValue(1, i + 1, r * (float)(Math.cos(((double)i / 18) * Math.PI)));
-            points.setValue(3, i + 1, 1f);
-        }
-        return points;
     }
     
     /**
