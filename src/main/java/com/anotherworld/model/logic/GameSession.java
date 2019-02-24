@@ -164,14 +164,15 @@ public class GameSession {
             }
         }
 
+        // Handling the time-based elements of the game
+
         gameSessionData.incrementTicksElapsed();
         logger.debug("ticksElapsed: " + gameSessionData.getTicksElapsed());
 
-        if (gameSessionData.getTicksElapsed() % 60 == 0) {
-            if(gameSessionData.getTimeLeft() > 0) gameSessionData.decrementTimeLeft();
-            System.out.println("timeLeft: " + gameSessionData.getTimeLeft());
-            System.out.println(gameSessionData.getTimeToNextStage()*(platform.getStage()-1));
+        if (gameSessionData.getTicksElapsed() % 60 == 0 && gameSessionData.getTimeLeft() > 0) {
+            gameSessionData.decrementTimeLeft();
         }
+
         if (gameSessionData.getTimeLeft() < gameSessionData.getTimeToNextStage()*(platform.getStage()-1)){
             platform.nextStage();
             wall.nextStage();
@@ -184,7 +185,6 @@ public class GameSession {
      * @param keyPresses
      */
     public void updatePlayer(ArrayList<Input> keyPresses) {
-        // TODO think about the way to control network players
         if (keyPresses.contains(Input.CHARGE)) {
             //TODO: Implement charge action.
         } else {
