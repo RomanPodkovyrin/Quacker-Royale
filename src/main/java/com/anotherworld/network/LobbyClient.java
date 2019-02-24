@@ -43,7 +43,7 @@ public class LobbyClient {
     }
 
     public static void main(String arg[]) throws Exception {
-        LobbyClient client = new LobbyClient("localhost");
+        LobbyClient client = new LobbyClient("10.42.0.1");
         client.sendMyIp();
         client.waitForGameToStart();
     }

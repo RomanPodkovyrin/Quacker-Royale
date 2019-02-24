@@ -9,22 +9,25 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.*;
+import java.util.ArrayList;
 
 public class Server extends Thread {
     private static Logger logger = LogManager.getLogger(Server.class);
     private DatagramSocket socket;
     private boolean serverIsRunning;
     private byte[] dataReceived;
-    private int numberOfPlayers = 3;
-    private String playersIPs[];
+    private int numberOfPlayers;
     private int port = 4445;
+    private ArrayList<String> IPs;
 
-    public Server() throws SocketException, UnknownHostException {
+    public Server(ArrayList<String> IPs) throws SocketException, UnknownHostException {
         socket = new DatagramSocket(port);
         dataReceived = new byte[32];
+        this.IPs = IPs;
+        this.numberOfPlayers = IPs.size();
         System.out.println("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
-        playersIPs = new String[numberOfPlayers];
-        playersIPs[0] = "localhost";
+        //playersIPs = new String[numberOfPlayers];
+        //playersIPs[0] = "localhost";
         //playersIPs[1] = "10.42.0.133";
         //playersIPs[2] = "10.42.0.215";
     }
@@ -55,7 +58,7 @@ public class Server extends Thread {
     public void sendStringToClient(byte[] dataToSend, int port) throws UnknownHostException {
         System.out.println("port is: " + port);
         for(int i = 0; i < numberOfPlayers; i++) {
-            InetAddress playerIP = InetAddress.getByName(playersIPs[i]);
+            InetAddress playerIP = InetAddress.getByName(IPs.get(i));
             DatagramPacket packet
                     = new DatagramPacket(dataToSend, dataToSend.length, playerIP, port);
             try {
@@ -72,7 +75,7 @@ public class Server extends Thread {
         os.writeObject(object);
         byte[] data = outputStream.toByteArray();
         for(int i = 0; i < numberOfPlayers; i++) {
-            InetAddress playerIP = InetAddress.getByName(playersIPs[i]);
+            InetAddress playerIP = InetAddress.getByName(IPs.get(i));
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, playerIP, port);
             socket.send(sendPacket);
         }
@@ -88,7 +91,7 @@ public class Server extends Thread {
         return received;
     }
 
-    public static void main(String[] args) throws SocketException, UnknownHostException {
-        new Server().start();
-    }
+//    public static void main(String[] args) throws SocketException, UnknownHostException {
+//        new Server().start();
+//    }
 }
