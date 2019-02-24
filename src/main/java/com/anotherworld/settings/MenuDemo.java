@@ -200,7 +200,7 @@ public class MenuDemo extends Application {
                 .rgb(9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
         buttonConnect.setFont(font);
         buttonConnect.setOnAction(e ->{
-            control.connect();
+            control.connect(ipAndPort.getText());
         });
 
         Button backToMulti = new Button("Go back");
