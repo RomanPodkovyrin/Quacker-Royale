@@ -111,6 +111,11 @@ public class Main {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        try {
+            server.sendObjectToClient(settings.getCurrentPlayer(), 4445);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         settings.getCurrentPlayer();
         settings.getPlayers();
@@ -148,7 +153,12 @@ public class Main {
         // wait for the command from host to start the game
 
         LobbyClient lobbyClient = new LobbyClient(serverIP);
-        logger.info("Connecting to lobby host");
+        try {
+            lobbyClient.sendMyIp();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        logger.info("Connecting to lobby host " + serverIP);
         try {
             lobbyClient.waitForGameToStart();
         } catch (IOException e) {
