@@ -3,6 +3,9 @@ package com.anotherworld.control;
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.audio.BackgroundMusic;
 import com.anotherworld.network.GameLobby;
+import com.anotherworld.network.LobbyClient;
+import com.anotherworld.network.LobbyServer;
+import com.anotherworld.network.Server;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
@@ -13,12 +16,15 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class Main {
     private MenuDemo view;
     private GameLobby lobby;
-
+    private ArrayList<String> playersIPaddresses = new ArrayList<>();
     private static Logger logger = LogManager.getLogger(Main.class);
 
     public static void main (String args[]) {
@@ -63,26 +69,45 @@ public class Main {
         // start the server
         // wait for clients to connect
         // count number of network players
-        GameLobby lobby = new GameLobby(true);
-        ArrayList<String> players = lobby.getNetworkPlayers();
+        int numberOfPlayers = 2;
+        LobbyServer lobbyServer = new LobbyServer(numberOfPlayers);
+        logger.info("Started the lobby server");
+        //GameLobby lobby = new GameLobby(true);
+        //ArrayList<String> players = lobby.getNetworkPlayers();
         // waits for one player to connect
-        while (players.isEmpty()) {
+        while (!lobbyServer.isReady()) {
 
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e){
                 e.printStackTrace();
             }
-            players = lobby.getNetworkPlayers();
+            playersIPaddresses = lobbyServer.getIPs();
 
         }
-
-        int numberOfNetworkPlayer = players.size();
+        logger.info("Setting up the game session");
         // Create the game settings
+//        boolean run = false;
+//        while (!run) {
+//            try {
+//                Thread.sleep(1);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
 //        startTheGame(numberOfNetworkPlayer + 1, 0,3);
 
-        GameSettings settings = new GameSettings(numberOfNetworkPlayer + 1,0,3);
+        GameSettings settings = new GameSettings(numberOfPlayers + 1,0,3);
+        Server server = null;
+        try {
+            server  = new Server(playersIPaddresses);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
         settings.getCurrentPlayer();
         settings.getPlayers();
 
@@ -113,21 +138,19 @@ public class Main {
 
     }
 
-    public void connect() {
+    public void connect(String serverIP) {
         // TODO write the logic
         // Enter the ip you want to connect to
         // wait for the command from host to start the game
-        GameLobby lobby = new GameLobby(true);
 
-        while (!lobby.isConnected()) {
-
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e){
-                e.printStackTrace();
-            }
+        LobbyClient lobbyClient = new LobbyClient(serverIP);
+        logger.info("Connecting to lobby host");
+        try {
+            lobbyClient.waitForGameToStart();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
+        logger.info("Setting up the game session");
         GameSettings settings = new GameSettings(null,null,null,null,null,null,null);
 
 
