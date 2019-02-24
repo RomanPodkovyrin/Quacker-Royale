@@ -67,10 +67,10 @@ public class Physics {
      */
     public static boolean checkCollision(AbstractMovable objectA,
             AbstractMovable objectB) {
-        float xDistance = objectA.getXCoordinate() - objectB.getXCoordinate()
-                - objectB.getXVelocity() + objectA.getYVelocity();
-        float yDistance = objectA.getYCoordinate() - objectB.getYCoordinate()
-                - objectB.getYVelocity() + objectA.getYVelocity();
+        float xDistance = (objectA.getXCoordinate() + objectA.getXVelocity())
+                - (objectB.getXCoordinate() + objectB.getXVelocity());
+        float yDistance = (objectA.getYCoordinate() + objectA.getYVelocity())
+                - (objectB.getYCoordinate() + objectB.getYVelocity());
 
         float sumOfRadii = objectA.getRadius() + objectB.getRadius();
         float distanceSquared = xDistance * xDistance + yDistance * yDistance;
@@ -217,49 +217,23 @@ public class Physics {
 
         Matrix coordA = objectA.getCoordinates();
         Matrix coordB = objectB.getCoordinates();
+        Matrix angleFinding = coordA.sub(coordB);
+        float angle = MatrixMath.vectorAngle(angleFinding);
 
-        float xDifference = objectA.getXCoordinate() - objectB.getXCoordinate();
-        float yDifference = objectA.getYCoordinate() - objectB.getYCoordinate();
-        float distance = objectA.getRadius() + objectB.getRadius();
         if (objectA instanceof Ball) {
-            Matrix angleFinding = coordA.sub(coordB);
-            float angle = MatrixMath.vectorAngle(angleFinding);
-
-            // objectA.setCoordinates(
-            // objectA.getXCoordinate() - objectA.getXVelocity()
-            // - objectB.getXVelocity(), objectA.getYCoordinate()
-            // - objectA.getYVelocity() - objectB.getXVelocity());
-            // objectB.setCoordinates(
-            // objectB.getXCoordinate() + objectA.getXVelocity()
-            // + objectB.getXVelocity(), objectB.getYCoordinate()
-            // + objectA.getYVelocity() + objectB.getYVelocity());
 
             objectA.setVelocity((float) (objectA.getSpeed() * Math.sin(angle)),
                     (float) (objectA.getSpeed() * Math.cos(angle)));
             objectA.setAngle(angle);
 
-            // if (objectB instanceof Ball) {
-            // angleFinding = coordB.sub(coordA);
-            // angle = MatrixMath.vectorAngle(angleFinding);
-            // objectA.setVelocity((float) (objectA.getSpeed() *
-            // Math.sin(angle)),
-            // (float) (objectA.getSpeed() * Math.cos(angle)));
-            // objectA.setAngle(angle);
-            // }
-        }
-        if (xDifference < (distance) && xDifference < 0) {
-            objectB.setCoordinates(coordB.getX() + objectB.getRadius() / 5,
-                    coordB.getY());
-        } else if (Math.abs(xDifference) < (distance)) {
-            objectB.setCoordinates(coordB.getX() - objectB.getRadius() / 5,
-                    coordB.getY());
-        }
-        if (yDifference < (distance) && yDifference < 0) {
-            objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() + objectB.getRadius() / 5);
-        } else if (Math.abs(yDifference) < (distance)) {
-            objectB.setCoordinates(coordB.getX(),
-                    coordB.getY() - objectB.getRadius() / 5);
+            if (objectB instanceof Ball) {
+                angleFinding = coordB.sub(coordA);
+                angle = MatrixMath.vectorAngle(angleFinding);
+                objectB.setVelocity(
+                        (float) (objectA.getSpeed() * Math.sin(angle)),
+                        (float) (objectA.getSpeed() * Math.cos(angle)));
+                objectB.setAngle(angle);
+            }
         }
 
         logger.debug("Completed collision event between "
