@@ -168,7 +168,7 @@ public class GameSession {
         logger.debug("ticksElapsed: " + gameSessionData.getTicksElapsed());
 
         if (gameSessionData.getTicksElapsed() % 60 == 0) {
-            gameSessionData.decrementTimeLeft();
+            if(gameSessionData.getTimeLeft() > 0) gameSessionData.decrementTimeLeft();
             System.out.println("timeLeft: " + gameSessionData.getTimeLeft());
             System.out.println(gameSessionData.getTimeToNextStage()*(platform.getStage()-1));
         }
