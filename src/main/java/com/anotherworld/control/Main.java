@@ -144,7 +144,12 @@ public class Main {
         // wait for the command from host to start the game
 
         LobbyClient lobbyClient = new LobbyClient(serverIP);
-        logger.info("Connecting to lobby host");
+        try {
+            lobbyClient.sendMyIp();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        logger.info("Connecting to lobby host " + serverIP);
         try {
             lobbyClient.waitForGameToStart();
         } catch (IOException e) {
