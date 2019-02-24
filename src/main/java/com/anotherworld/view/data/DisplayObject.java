@@ -32,7 +32,7 @@ public abstract class DisplayObject {
     
     private int colourId;
     
-    private int texture;
+    private int textureId;
     
     private float r;
     
@@ -87,9 +87,6 @@ public abstract class DisplayObject {
         glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        //displayObject.texture = glGenBuffers();
-        //glBindBuffer(GL_TEXTURE_2D, displayObject.texture);
         
         glBindVertexArray(0);
         
@@ -152,7 +149,9 @@ public abstract class DisplayObject {
     
     private FloatBuffer getFloatBuffer() {
         FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
-        b.put(points.getPoints());
+        for (Float f : points.getPoints()) {
+            b.put(f);
+        }
         b.flip();
         return b;
     }
@@ -176,6 +175,16 @@ public abstract class DisplayObject {
             bs[i] = i;
         }
         b.put(bs);
+        b.flip();
+        return b;
+    }
+    
+    private FloatBuffer getTextureBuffer() {
+        FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
+        for (int i = 0; i < points.getN(); i++) {
+            b.put((float)Math.random());
+            b.put((float)Math.random());
+        }
         b.flip();
         return b;
     }

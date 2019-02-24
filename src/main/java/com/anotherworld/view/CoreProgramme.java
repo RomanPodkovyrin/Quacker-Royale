@@ -17,6 +17,7 @@ public class CoreProgramme extends Programme {
     private static Logger logger = LogManager.getLogger();
     
     private int programmeId;
+    private TextureMap textureMap;
     private Shader vertexShader;
     private Shader fragShader;
     
@@ -26,6 +27,8 @@ public class CoreProgramme extends Programme {
      */
     public CoreProgramme() throws ProgrammeUnavailableException {
         init();
+
+        textureMap = new TextureMap("alien.png");
     }
     
     private void init() throws ProgrammeUnavailableException {
@@ -74,16 +77,21 @@ public class CoreProgramme extends Programme {
         
         logger.info("Programme info: " + glGetProgramInfoLog(programmeId));
         
+        logger.debug("Loading texture map");
     }
     
     @Override
     public void use() {
+        glEnable(GL_TEXTURE_2D);
         glUseProgram(programmeId);
+        glBindTexture(GL_TEXTURE_2D, textureMap.getId());
     }
 
     @Override
     public void close() {
+        glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
+        glDisable(GL_TEXTURE_2D);
     }
     
     @Override

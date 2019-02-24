@@ -1,5 +1,8 @@
 package com.anotherworld.view.data;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 /**
  * Stores an array of points that define an object.
  * @author Jake Stewart
@@ -17,10 +20,12 @@ public class Points2d {
      * @param n The number of points
      * @throws MatrixSizeException When m or n are less than 0
      */
+    @SuppressWarnings("unchecked")
     public Points2d(int m, int n) {
         if (m < 0 || n < 0) {
             throw new IndexOutOfBoundsException("Size must be non negative");
         }
+        //value = (T[])Array.newInstance(type, m * n);
         value = new float[m * n];
         this.m = m;
         this.n = n;

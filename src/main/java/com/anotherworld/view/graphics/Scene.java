@@ -2,12 +2,12 @@ package com.anotherworld.view.graphics;
 
 import static org.lwjgl.opengl.GL46.glViewport;
 
+import com.anotherworld.view.Programme;
+
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.anotherworld.view.Programme;
 
 /**
  * Creates and manages a view state like view game or main menu.
