@@ -151,6 +151,9 @@ public class MenuDemo extends Application {
         buttonHost.setBackground(new Background(new BackgroundFill(Color.rgb(9,
                 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
         buttonHost.setFont(font);
+        buttonHost.setOnAction(e->{
+            control.host();
+        });
 
         Button buttonClient = new Button("Client");
         buttonClient.setMinWidth(width * 0.5);
@@ -196,6 +199,9 @@ public class MenuDemo extends Application {
         buttonConnect.setBackground(new Background(new BackgroundFill(Color
                 .rgb(9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
         buttonConnect.setFont(font);
+        buttonConnect.setOnAction(e ->{
+            control.connect();
+        });
 
         Button backToMulti = new Button("Go back");
         backToMulti.setMinWidth(width * 0.5);
