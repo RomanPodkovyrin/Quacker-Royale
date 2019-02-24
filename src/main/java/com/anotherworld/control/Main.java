@@ -107,6 +107,11 @@ public class Main {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        try {
+            server.sendObjectToClient(settings.getCurrentPlayer(), 4445);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         settings.getCurrentPlayer();
         settings.getPlayers();
