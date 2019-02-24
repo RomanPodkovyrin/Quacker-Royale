@@ -10,7 +10,7 @@ public class PlatformData implements RectangleDisplayData, Serializable {
     private int stage = 3;
     private static final int MAXSTAGE = 4;
     private static final float xShrink = 10;
-    private static final float yShrink = 20;
+    private static final float yShrink = 10;
 
     private float xSize = 60;
     private float ySize = 30;
