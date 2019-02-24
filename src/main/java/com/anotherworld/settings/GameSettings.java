@@ -18,7 +18,7 @@ import static com.anotherworld.tools.maths.Maths.getRandom;
 /**
  * This class allows view to call the functions to change individual settings and prepare the game.
  *
- * @author Roman
+ * @author Roman, Alfi
  */
 public class GameSettings {
 

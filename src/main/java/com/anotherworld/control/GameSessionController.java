@@ -102,6 +102,11 @@ public class GameSessionController {
                 //
             }
         }
+
+
+
+        //TODO check if there are any new objects to update
+        // gets all the objects send from host and updates the current reference
     }
 
     private void mainLoop() {
