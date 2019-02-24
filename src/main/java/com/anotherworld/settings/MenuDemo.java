@@ -151,9 +151,6 @@ public class MenuDemo extends Application {
         buttonHost.setBackground(new Background(new BackgroundFill(Color.rgb(9,
                 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
         buttonHost.setFont(font);
-        buttonHost.setOnAction(e->{
-            control.host();
-        });
 
         Button buttonClient = new Button("Client");
         buttonClient.setMinWidth(width * 0.5);
@@ -252,7 +249,12 @@ public class MenuDemo extends Application {
         Scene scene5 = new Scene(borderPane5, screenSize.getWidth(),
                 screenSize.getHeight(), Color.BLACK);
 
-        buttonHost.setOnAction(e -> window.setScene(scene5));
+        buttonHost.setOnAction(e -> {
+            window.setScene(scene5);
+            System.out.println("Pressed host");
+            control.host();
+
+        });
 
         window.setScene(scene1);
         window.setTitle("application");
