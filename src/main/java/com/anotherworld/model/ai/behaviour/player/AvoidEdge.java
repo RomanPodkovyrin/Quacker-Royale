@@ -43,17 +43,16 @@ public class AvoidEdge extends Job {
         Matrix platformCoordinates = new Matrix(platform.getXCoordinate(),platform.getYCoordinate());
 
         Matrix vectorFromPlatformCenter = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
+        Matrix toCenter = MatrixMath.pointsVector(ai.getCoordinates(),platformCoordinates);
+        toCenter = new Matrix((toCenter.getX()/Math.abs(toCenter.getX()) )* ai.getSpeed() ,(toCenter.getY()/Math.abs(toCenter.getY()))* ai.getSpeed());
 
         // Checks if the AI is near the horizontal edge
         if (Math.abs(vectorFromPlatformCenter.getX()) >= platform.getXSize() - distanceFromEdge) {
             logger.trace("AI too close to the x edge " + distanceFromEdge + " " + (platform.getXSize() - distanceFromEdge));
 
-            if (ai.getXVelocity() == 0 & ai.getYVelocity() ==0){
-                logger.error("No movement " + ai.getCoordinates() + " p  " + platformCoordinates + " xside " + platform.getXSize() + " yside " + platform.getYSize());
-                System.exit(0);
-            }
-            ai.setYVelocity(-ai.getYVelocity());
-            ai.setXVelocity(-ai.getXVelocity());
+//            ai.setYVelocity(-ai.getYVelocity());
+//            ai.setXVelocity(-ai.getXVelocity());
+            ai.setVelocity(toCenter.getX(),toCenter.getY());
             fail();
             logger.info("Moving to in direction " + ai.getVelocity());
             return;
@@ -63,12 +62,9 @@ public class AvoidEdge extends Job {
         } else if (Math.abs(vectorFromPlatformCenter.getY()) >= platform.getYSize() - distanceFromEdge) {
             logger.trace("AI too close to the y edge " +vectorFromPlatformCenter +" " + (platform.getYSize() - distanceFromEdge));
 
-            if (ai.getXVelocity() == 0 & ai.getYVelocity() ==0){
-                logger.error("No movement " + ai.getCoordinates() + " p  " + platformCoordinates + " xside " + platform.getXSize() + " yside " + platform.getYSize());
-                System.exit(0);
-            }
-            ai.setYVelocity(-ai.getYVelocity());
-            ai.setXVelocity(-ai.getXVelocity());
+//            ai.setYVelocity(-ai.getYVelocity());
+//            ai.setXVelocity(-ai.getXVelocity());
+            ai.setVelocity(toCenter.getX(),toCenter.getY());
             fail();
             logger.info("Moving to in direction" + ai.getVelocity());
             return;
