@@ -65,12 +65,16 @@ public class Main {
     }
 
     public void host() {
+        logger.info("User starting the server");
         // TODO write the logic
         // start the server
         // wait for clients to connect
         // count number of network players
-        int numberOfPlayers = 2;
+        int numberOfPlayers = 1;
+        //LobbyServer lobbyServer = new LobbyServer(numberOfPlayers);
         LobbyServer lobbyServer = new LobbyServer(numberOfPlayers);
+        lobbyServer.start();
+
         logger.info("Started the lobby server");
         //GameLobby lobby = new GameLobby(true);
         //ArrayList<String> players = lobby.getNetworkPlayers();
