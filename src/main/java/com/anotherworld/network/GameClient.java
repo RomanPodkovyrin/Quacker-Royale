@@ -14,7 +14,6 @@ public class GameClient {
     private BallData ballData;
     private PlayerData playerData;
     private GameSessionData gameSessionData;
-    private MovableData movableData;
     private PlatformData platformData;
     private WallData wallData;
 
@@ -65,8 +64,6 @@ public class GameClient {
         } else if(object instanceof GameSessionData){
             gameSessionData = (GameSessionData) object;
             System.out.println("GameSessionData object has been received");
-        }  else if(object instanceof MovableData){
-            movableData = (MovableData) object;
         } else if(object instanceof PlatformData){
             platformData = (PlatformData) object;
             System.out.println("PlatformData object has been received");
