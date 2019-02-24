@@ -26,10 +26,6 @@ public class Server extends Thread {
         this.IPs = IPs;
         this.numberOfPlayers = IPs.size();
         System.out.println("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
-        //playersIPs = new String[numberOfPlayers];
-        //playersIPs[0] = "localhost";
-        //playersIPs[1] = "10.42.0.133";
-        //playersIPs[2] = "10.42.0.215";
     }
 
     public void run() {
