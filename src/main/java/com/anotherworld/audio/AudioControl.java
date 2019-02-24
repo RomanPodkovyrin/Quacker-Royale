@@ -42,22 +42,14 @@ public class AudioControl {
 
     public static void playerCollidedWithBall() {
         if (effectsOn) {
-            try {
 
-                soundEffects.playerCollidedWithBall();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            soundEffects.playerCollidedWithBall();
         }
     }
 
     public static void ballCollidedWithWall() {
         if (effectsOn) {
-            try {
-                soundEffects.ballCollidedWithWall();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            soundEffects.ballCollidedWithWall();
         }
     }
 

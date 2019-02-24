@@ -15,17 +15,17 @@ public class Server extends Thread {
     private DatagramSocket socket;
     private boolean serverIsRunning;
     private byte[] dataReceived;
-    private int numberOfPlayers = 2;
+    private int numberOfPlayers = 3;
     private String playersIPs[];
     private int port = 4445;
 
     public Server() throws SocketException, UnknownHostException {
         socket = new DatagramSocket(port);
-        dataReceived = new byte[1024];
+        dataReceived = new byte[32];
         System.out.println("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
         playersIPs = new String[numberOfPlayers];
         playersIPs[0] = "localhost";
-        playersIPs[1] = "10.42.0.133";
+        //playersIPs[1] = "10.42.0.133";
         //playersIPs[2] = "10.42.0.215";
     }
 
@@ -84,8 +84,8 @@ public class Server extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        String messageFromClient = new String(packet.getData());
-        return messageFromClient;
+        String received = new String(packet.getData(), 0, packet.getLength());
+        return received;
     }
 
     public static void main(String[] args) throws SocketException, UnknownHostException {
