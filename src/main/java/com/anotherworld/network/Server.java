@@ -65,7 +65,12 @@ public class Server extends Thread {
         try {
 //            sendObjectToClients(HostPlayer);
             logger.trace("Sending all the players");
-            sendObjectToClients(networkPlayers.add(HostPlayer));
+            ArrayList<PlayerData> temp = new ArrayList<>();
+            temp.addAll(networkPlayers);
+            temp.add(HostPlayer);
+            sendObjectToClients(temp);
+            logger.trace("Sending all balls");
+            sendObjectToClients(balls);
             logger.trace("Sending the platform");
             sendObjectToClients(platform);
             logger.trace("Sending the Wall");
@@ -102,7 +107,7 @@ public class Server extends Thread {
         ObjectOutputStream os = new ObjectOutputStream(outputStream);
         os.writeObject(object);
         byte[] data = outputStream.toByteArray();
-        logger.trace("Number of players: " + IPs.size());
+//        logger.trace("Number of players: " + IPs.size());
         for(int i = 0; i < numberOfPlayers; i++) {
             logger.trace("i " + i + " Ips.get(i) " + IPs.get(i) + " " );
             InetAddress playerIP = InetAddress.getByName(IPs.get(i));
