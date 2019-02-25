@@ -91,7 +91,6 @@ public class Server extends Thread {
     public static void main(String[] args) throws SocketException, UnknownHostException {
         ArrayList<String> ips = new ArrayList<String>();
         ips.add("localhost");
-        ips.add("localhost");
         new Server(ips).start();
     }
 }
