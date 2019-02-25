@@ -112,7 +112,7 @@ public class Main {
             e.printStackTrace();
         }
         try {
-            server.sendObjectToClient(settings.getCurrentPlayer(), 4445);
+            server.sendObjectToClients(settings.getCurrentPlayer());
         } catch (IOException e) {
             e.printStackTrace();
         }
