@@ -23,7 +23,7 @@ public class GameClient extends Thread{
         System.out.println("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
         sendDataToServer("set up connection message");
         waitForGameToStart();
-        start();
+//        start();
     }
 
     public void run(){
