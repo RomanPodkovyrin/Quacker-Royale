@@ -2,10 +2,7 @@ package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.audio.BackgroundMusic;
-import com.anotherworld.network.GameLobby;
-import com.anotherworld.network.LobbyClient;
-import com.anotherworld.network.LobbyServer;
-import com.anotherworld.network.Server;
+import com.anotherworld.network.*;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
@@ -83,6 +80,20 @@ public class Main {
         //GameLobby lobby = new GameLobby(true);
         //ArrayList<String> players = lobby.getNetworkPlayers();
         // waits for one player to connect
+
+
+        logger.trace("All network players: " + playersIPaddresses);
+        GameSettings settings = new GameSettings(numberOfPlayers + 1,0,3);
+        Server server = null;
+        try {
+            server  = new Server(numberOfPlayers, settings);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+
         while (!lobbyServer.isReady()) {
 
             try {
@@ -104,30 +115,9 @@ public class Main {
             }
         }
 
+        settings.setServer(server);
 //        startTheGame(numberOfNetworkPlayer + 1, 0,3);
 
-        GameSettings settings = new GameSettings(numberOfPlayers + 1,0,3);
-        Server server = null;
-        try {
-            server  = new Server(playersIPaddresses);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        try {
-            server.sendObjectToClients(settings.getCurrentPlayer());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        settings.getCurrentPlayer();
-        settings.getPlayers();
-
-        settings.getBalls();
-        settings.getPlatform();
-        settings.getWall();
-        settings.getGameSession();
 
         GLFW.glfwInit();
         GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
@@ -169,9 +159,44 @@ public class Main {
             e.printStackTrace();
         }
         logger.info("Setting up the game session");
-        GameSettings settings = new GameSettings(null,null,null,null,null,null,null);
 
+        GameClient client = null;
+        try {
+            client = new GameClient(serverIP);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
 
+//        while(true) {
+//
+//            try {
+//                Thread.sleep(1);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        GameSettings settings = new GameSettings(null,null,null,null,null,null,null);
+//
+//        settings.setClient(client);
+//
+//
+//        GLFW.glfwInit();
+//        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+//
+//        try {
+//            View view = new View((int)(mode.width()), (int)(mode.height()));
+//
+//            new GameSessionController(view, settings);
+//
+//        } catch (KeyListenerNotFoundException ex) {
+//            logger.fatal(ex);
+//        } catch (RuntimeException ex) {
+//            logger.fatal(ex);
+//            ex.printStackTrace();
+//        }
         // recieve the game objects from the host.
         // create the game setting
         // start the game with the current settings

@@ -250,8 +250,9 @@ public class MenuDemo extends Application {
                 screenSize.getHeight(), Color.BLACK);
 
         buttonHost.setOnAction(e -> {
+            control.host();
             window.setScene(scene5);
-//            control.host();
+
 
         });
 
