@@ -87,6 +87,7 @@ public class Main {
         Server server = null;
         try {
             server  = new Server(numberOfPlayers, settings);
+            server.start();
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (UnknownHostException e) {
@@ -163,6 +164,7 @@ public class Main {
         GameClient client = null;
         try {
             client = new GameClient(serverIP);
+            client.start();
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (UnknownHostException e) {

@@ -64,9 +64,13 @@ public class Server extends Thread {
         }
         try {
 //            sendObjectToClients(HostPlayer);
+            logger.trace("Sending all the players");
             sendObjectToClients(networkPlayers.add(HostPlayer));
+            logger.trace("Sending the platform");
             sendObjectToClients(platform);
+            logger.trace("Sending the Wall");
             sendObjectToClients(wall);
+            logger.trace("Sending the game session");
             sendObjectToClients(gamesession);
         } catch (IOException e) {
             e.printStackTrace();
