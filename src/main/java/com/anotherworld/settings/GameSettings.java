@@ -4,6 +4,8 @@ import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.network.GameClient;
+import com.anotherworld.network.Server;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.*;
 import org.apache.logging.log4j.LogManager;
@@ -62,6 +64,9 @@ public class GameSettings {
 
     private static PropertyReader gamesession;
 
+    private Server server = null;
+    private GameClient client = null;
+
     public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
                         ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSession) {
         this.currentPlayer = currentPlayer;
@@ -103,7 +108,41 @@ public class GameSettings {
             e.printStackTrace();
         }
 
+        createGameFiles();
     }
+
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    public static void setLogger(Logger logger) {
+        GameSettings.logger = logger;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
+    public GameClient getClient() {
+        return client;
+    }
+
+    public void setClient(GameClient client) {
+        this.client = client;
+    }
+
+    public boolean isServer() {
+        return server!=null;
+    }
+
+    public  boolean isClient() {
+        return  client!=null;
+    }
+
 
     public static boolean toggleOnOff(String setting){
         boolean settingState = false;
@@ -276,7 +315,6 @@ public class GameSettings {
     }
 
     public GameSession createSession() {
-        createGameFiles();
         // TODO give the gameSessionData into gameSession
         return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0),gameSession);
     }
