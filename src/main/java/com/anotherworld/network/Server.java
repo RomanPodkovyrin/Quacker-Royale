@@ -1,7 +1,5 @@
 package com.anotherworld.network;
 
-import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.tools.datapool.BallData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,45 +17,46 @@ public class Server extends Thread {
     private int numberOfPlayers;
     private int port = 4445;
     private ArrayList<String> IPs;
+    private ArrayList<Integer> clientsPorts;
 
     public Server(ArrayList<String> IPs) throws SocketException, UnknownHostException {
         socket = new DatagramSocket(port);
         dataReceived = new byte[32];
-        this.IPs = IPs;
         this.numberOfPlayers = IPs.size();
-        System.out.println("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
+        this.clientsPorts = new ArrayList<Integer>();
+        this.IPs = new ArrayList<String>();
+        logger.info("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
     }
 
     public void run() {
         serverIsRunning = true;
-        while (serverIsRunning) {
+        //get the ports of all the players before while starts
+        for(int i = 0; i< numberOfPlayers; i++){
             DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
-            String received = getFromClient(packet);
-            logger.debug("The client port is: " + packet.getPort());
-            logger.debug("The client address is: " + packet.getAddress());
-            System.out.println("From client to server: " + received);
-            BallData ballData = new BallData(true, 10, 10, ObjectState.IDLE, 15, 1);
-            try {
-                //sendObjectToClient(ballData, packet.getPort());
-                sendObjectToClient(ballData, packet.getPort());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            getFromClient(packet);
+            logger.info("Client has connected on port " + packet.getPort());
+            clientsPorts.add(packet.getPort());
+            IPs.add(packet.getAddress().toString().substring(1));
         }
+        try {
+            sendStringToClient("game started".getBytes());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        while(serverIsRunning){
+            DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
+            String keyPresses = getFromClient(packet);
+            System.out.println(keyPresses);
+            }
+
         socket.close();
     }
 
-    public void sendStringToClient(byte[] dataToSend, int port) throws UnknownHostException {
-        System.out.println("port is: " + port);
+    public void sendStringToClient(byte[] dataToSend) throws UnknownHostException {
         for(int i = 0; i < numberOfPlayers; i++) {
             InetAddress playerIP = InetAddress.getByName(IPs.get(i));
             DatagramPacket packet
-                    = new DatagramPacket(dataToSend, dataToSend.length, playerIP, port);
+                    = new DatagramPacket(dataToSend, dataToSend.length, playerIP, clientsPorts.get(i));
             try {
                 this.socket.send(packet);
             } catch (IOException e) {
@@ -66,14 +65,14 @@ public class Server extends Thread {
         }
     }
 
-    public void sendObjectToClient(Object object, int port) throws IOException {
+    public void sendObjectToClients(Object object) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(outputStream);
         os.writeObject(object);
         byte[] data = outputStream.toByteArray();
         for(int i = 0; i < numberOfPlayers; i++) {
             InetAddress playerIP = InetAddress.getByName(IPs.get(i));
-            DatagramPacket sendPacket = new DatagramPacket(data, data.length, playerIP, port);
+            DatagramPacket sendPacket = new DatagramPacket(data, data.length, playerIP, clientsPorts.get(i));
             socket.send(sendPacket);
         }
     }
@@ -88,10 +87,10 @@ public class Server extends Thread {
         return received;
     }
 
+
     public static void main(String[] args) throws SocketException, UnknownHostException {
-        ArrayList<String> ips = new ArrayList<>();
-        ips.add("10.42.0.133");
-        ips.add("10.42.0.63");
+        ArrayList<String> ips = new ArrayList<String>();
+        ips.add("localhost");
         new Server(ips).start();
     }
 }

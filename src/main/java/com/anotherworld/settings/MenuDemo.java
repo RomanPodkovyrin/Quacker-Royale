@@ -251,8 +251,7 @@ public class MenuDemo extends Application {
 
         buttonHost.setOnAction(e -> {
             window.setScene(scene5);
-            System.out.println("Pressed host");
-            control.host();
+//            control.host();
 
         });
 

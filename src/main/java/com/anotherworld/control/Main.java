@@ -26,6 +26,7 @@ public class Main {
     private GameLobby lobby;
     private ArrayList<String> playersIPaddresses = new ArrayList<>();
     private static Logger logger = LogManager.getLogger(Main.class);
+    boolean runTheHostGame = false;
 
     public static void main (String args[]) {
         Main main = new Main();
@@ -34,6 +35,9 @@ public class Main {
 
     }
 
+    public void setRunTheHostGame(boolean run) {
+        this.runTheHostGame = run;
+    }
     public void add(MenuDemo view) {
         this.view = view;
     }
@@ -91,14 +95,14 @@ public class Main {
         }
         logger.info("Setting up the game session");
         // Create the game settings
-//        boolean run = false;
-//        while (!run) {
-//            try {
-//                Thread.sleep(1);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
+        runTheHostGame = true;
+        while (!runTheHostGame) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
 //        startTheGame(numberOfNetworkPlayer + 1, 0,3);
 
@@ -112,7 +116,7 @@ public class Main {
             e.printStackTrace();
         }
         try {
-            server.sendObjectToClient(settings.getCurrentPlayer(), 4445);
+            server.sendObjectToClients(settings.getCurrentPlayer());
         } catch (IOException e) {
             e.printStackTrace();
         }

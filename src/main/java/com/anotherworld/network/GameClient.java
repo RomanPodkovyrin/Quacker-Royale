@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.*;
 
-public class GameClient {
+public class GameClient extends Thread{
     private DatagramSocket socket;
     private InetAddress address;
     private int port = 4445;
@@ -17,11 +17,25 @@ public class GameClient {
     private PlatformData platformData;
     private WallData wallData;
 
-    public GameClient() throws SocketException, UnknownHostException {
+    public GameClient(String serverIP) throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
-        address = InetAddress.getByName("localhost");
+        address = InetAddress.getByName(serverIP);
         System.out.println("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
-        System.out.println();
+        sendDataToServer("set up connection message");
+        waitForGameToStart();
+        start();
+    }
+
+    public void run(){
+        while(true){
+            try {
+                getObjectFromServer();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void sendDataToServer(String msg) {
@@ -35,7 +49,7 @@ public class GameClient {
         }
     }
 
-    public void getDataFromServer(){
+    public void waitForGameToStart(){
         byte[] data = new byte[32];
         DatagramPacket packet = new DatagramPacket(data, data.length);
         try {
@@ -43,7 +57,6 @@ public class GameClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("From server: " + new String(packet.getData()));
     }
 
     public void getObjectFromServer() throws IOException, ClassNotFoundException {
@@ -78,13 +91,16 @@ public class GameClient {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        GameClient client = new GameClient();
+        GameClient client = new GameClient("10.42.0.1");
         int counter=0;
         while(true){
             counter++;
-            client.sendDataToServer( "hello from anton"+counter);
-            //client.getDataFromServer();
-            client.getObjectFromServer();
+            client.sendDataToServer( "hello from anton "+counter);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
