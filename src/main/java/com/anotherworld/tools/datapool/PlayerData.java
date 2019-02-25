@@ -13,8 +13,11 @@ import java.io.Serializable;
 public class PlayerData extends MovableData implements PlayerDisplayData, Serializable {
 
     private String characterID;
-    private int health;
+
     private final int maxHealth;
+    private int health;
+
+    private int chargeLevel;
 
     public PlayerData(String characterID, int health,
                       float xCoordinate, float yCoordinate,
@@ -23,6 +26,7 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
         this.characterID = characterID;
         this.health = health;
         this.maxHealth = health;
+        this.chargeLevel = 0;
     }
 
     public void copyObject(PlayerData data) {
@@ -41,5 +45,8 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
     public int getMaxHealth() {
         return this.maxHealth;
     }
+
+    public int getChargeLevel() { return this.chargeLevel; }
+    public void setChargeLevel(int chargeLevel) { this.chargeLevel = chargeLevel; }
     
 }

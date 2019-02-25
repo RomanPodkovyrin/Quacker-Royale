@@ -186,7 +186,8 @@ public class GameSession {
      */
     public void updatePlayer(ArrayList<Input> keyPresses) {
         if (keyPresses.contains(Input.CHARGE)) {
-            //TODO: Implement charge action.
+            if(currentPlayer.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge())
+                currentPlayer.incrementChargeLevel();
         } else {
             if (keyPresses.contains(Input.UP)) currentPlayer.setYVelocity(-currentPlayer.getSpeed());
             else if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());
