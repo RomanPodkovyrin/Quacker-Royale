@@ -51,7 +51,7 @@ public class LobbyServer extends Thread{
     private void getPlayersIP() throws IOException {
         Socket lobbySocket = TCPsocket.accept();
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
-        System.out.println("Received from: " + lobbySocket.getInetAddress().getHostAddress());
+        System.out.println("Received from: " + lobbySocket.getInetAddress().getHostAddress()+ " on port" + lobbySocket.getPort());
         clientSockets.add(lobbySocket.getOutputStream());
         playersIPAddresses.add(lobbySocket.getInetAddress().getHostAddress());
         countPlayers();

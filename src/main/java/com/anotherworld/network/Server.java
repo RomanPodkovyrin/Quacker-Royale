@@ -38,6 +38,7 @@ public class Server extends Thread {
             System.out.println("From client to server: " + received);
             BallData ballData = new BallData(true, 10, 10, ObjectState.IDLE, 15, 1);
             try {
+                //sendObjectToClient(ballData, packet.getPort());
                 sendObjectToClient(ballData, packet.getPort());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -87,7 +88,10 @@ public class Server extends Thread {
         return received;
     }
 
-//    public static void main(String[] args) throws SocketException, UnknownHostException {
-//        new Server().start();
-//    }
+    public static void main(String[] args) throws SocketException, UnknownHostException {
+        ArrayList<String> ips = new ArrayList<>();
+        ips.add("10.42.0.133");
+        ips.add("10.42.0.63");
+        new Server(ips).start();
+    }
 }
