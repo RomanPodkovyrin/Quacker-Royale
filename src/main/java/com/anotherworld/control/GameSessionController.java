@@ -2,6 +2,7 @@ package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -39,12 +40,13 @@ public class GameSessionController {
     private View view;
     private Thread viewThread;
     private KeyListener keyListener;
+    private NetworkController network;
 
 
 
 
     //TODO make a constructor for the real main (Main.java)
-    public GameSessionController(View view, GameSettings settings) throws KeyListenerNotFoundException {
+    public GameSessionController(View view, GameSettings settings, NetworkController network) throws KeyListenerNotFoundException {
 
         this.settings = settings;
 
@@ -54,7 +56,6 @@ public class GameSessionController {
         // Starting the background music and effects threads
         AudioControl.setUp();
         AudioControl.playBackGroundMusic();
-
 
 
         // Starting the View thread
@@ -70,44 +71,21 @@ public class GameSessionController {
 
         // Obtain the key listener.
         this.keyListener = view.getKeyListener();
+
+        // Setting up the network
+
+        this.network = network;
+
+        if (network!=null) {
+            network.setKeyListener(keyListener);
+        }
+
+        // Starting the main loop
         mainLoop();
         
     }
 
-    private void clientControl() {
 
-        // TODO implement client side of the network
-
-        // send the given key presses to the host
-        ArrayList<Input> keyPresses = keyListener.getKeyPresses();
-        if (keyPresses.contains(Input.CHARGE)) {
-            //TODO: Implement charge action.
-        } else {
-            if (keyPresses.contains(Input.UP)) {
-                //
-            } else if (keyPresses.contains(Input.DOWN)) {
-                //
-            }
-            else {
-                //
-            }
-
-            if (keyPresses.contains(Input.LEFT)) {
-
-            }
-            else if (keyPresses.contains(Input.RIGHT)) {
-               //
-            }
-            else {
-                //
-            }
-        }
-
-
-
-        //TODO check if there are any new objects to update
-        // gets all the objects send from host and updates the current reference
-    }
 
     private void mainLoop() {
         render();
@@ -126,7 +104,7 @@ public class GameSessionController {
         while (viewThread.isAlive()) {
 
             // if client check if there are game objects to update
-            clientControl();
+//            network.clientControl();
 
 
             // Get time before computation
@@ -171,18 +149,14 @@ public class GameSessionController {
             framesDropped = 0;
 
             // send game object to client
-            hostControl();
+//            network.hostControl();
 
         }
         
         shutDownSequence();
     }
 
-    private void hostControl() {
-        // TODO implement host game state sender
-        // if network game and host
-        // Send the game states to clients
-    }
+
 
     private void shutDownSequence() {
         logger.debug("Initialising Shut down sequence");

@@ -94,6 +94,11 @@ public class WalkAbout extends Job {
         ai.setXVelocity(vector.getX() * ai.getSpeed());
         ai.setYVelocity(vector.getY() * ai.getSpeed());
         logger.info("Walking about: Moving to " + destination);
+        if (!platform.isOnPlatform(destination)) {
+            logger.info("destination no longer on the platform");
+            succeed();
+            newDestination = true;
+        }
     }
 
     /**
