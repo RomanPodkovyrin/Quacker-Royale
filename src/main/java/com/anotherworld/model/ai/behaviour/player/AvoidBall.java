@@ -1,6 +1,5 @@
 package com.anotherworld.model.ai.behaviour.player;
 
-import com.anotherworld.model.ai.AIDataPool;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;
@@ -148,7 +147,6 @@ public class AvoidBall extends Job {
         logger.trace("Possibly Dangerous Balls: " + possibleDangerBalls.size());
         logger.trace("Dangerous Balls: " + dangerBalls.size());
         logger.trace("Imminently Dangerous Balls: " + imminentDangerBalls.size());
-        AIDataPool.setBalls(possibleDangerBalls,dangerBalls,imminentDangerBalls);
 
     }
 
@@ -171,8 +169,8 @@ public class AvoidBall extends Job {
 
             Ball ball = imminentDangerBalls.get(0);
             Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
-            float ballRate = MatrixMath.distanceAB(ball.getCoordinates(),neighbour)/ ball.getSpeed();
-            float aiRate = MatrixMath.distanceAB(ai.getCoordinates(),neighbour)/ ai.getSpeed();
+            float ballRate = MatrixMath.distanceAB(ball.getCoordinates(),neighbour) / ball.getSpeed();
+            float aiRate = MatrixMath.distanceAB(ai.getCoordinates(),neighbour) / ai.getSpeed();
             if (ballRate < aiRate) {
                 logger.info("Too far away safe");
                 tooFar = false;
@@ -181,7 +179,7 @@ public class AvoidBall extends Job {
         }
 
         //TODO fix the length prediction
-        boolean save =  imminentDangerBalls.isEmpty()| tooFar;
+        boolean save =  imminentDangerBalls.isEmpty() | tooFar;
         logger.trace("AI is " + (save ? "Save" : "in Danger"));
         return save;
     }

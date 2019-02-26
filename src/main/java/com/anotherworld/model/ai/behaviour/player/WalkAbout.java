@@ -1,5 +1,7 @@
 package com.anotherworld.model.ai.behaviour.player;
 
+import static com.anotherworld.tools.maths.Maths.getRandom;
+
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.anotherworld.tools.maths.Maths.getRandom;
+
 
 /**
  * Sets random coordinates for the ai to walk to.
@@ -48,7 +50,7 @@ public class WalkAbout extends Job {
         float xcoordinate = getRandom(platform.getXCoordinate() - platform.getXSize() + ai.getRadius() * 2,
                 platform.getXCoordinate() + platform.getXSize() - ai.getRadius() * 2);
 
-        float ycoordinate = getRandom(platform.getYCoordinate() - platform.getYSize() + ai.getRadius() *2,
+        float ycoordinate = getRandom(platform.getYCoordinate() - platform.getYSize() + ai.getRadius() * 2,
                 platform.getYCoordinate() + platform.getYSize() - ai.getRadius() * 2);
         destination = new Matrix(xcoordinate, ycoordinate);
         logger.trace("Set Random coordinates to: " + destination);
