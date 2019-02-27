@@ -7,10 +7,10 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 
 /**
  * This class makes AI go around the player if one of them is abstraction the way.
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class AvoidNeutralPlayer extends Job {
 
     private static Logger logger = LogManager.getLogger(AvoidNeutralPlayer.class);
+
     @Override
     public void reset() {
 
@@ -33,7 +34,7 @@ public class AvoidNeutralPlayer extends Job {
 
         for (Player player: players) {
             if (!player.isDead()) {
-                if (MatrixMath.distanceAB(player.getCoordinates(), ai.getCoordinates()) <= player.getRadius() + ai.getRadius() + 0.1) {
+                if (MatrixMath.distanceAB(player.getCoordinates(), ai.getCoordinates()) <= player.getRadius() + ai.getRadius() + 0.5) {
                     fail();
                     logger.info("Avoiding player " + player.getCharacterID());
                     Matrix vector = MatrixMath.pointsVector(player.getCoordinates(),ai.getCoordinates());
@@ -47,8 +48,8 @@ public class AvoidNeutralPlayer extends Job {
             }
         }
 
-            succeed();
-            logger.trace("No player to avoid");
+        succeed();
+        logger.trace("No player to avoid");
 
     }
 }
