@@ -78,6 +78,12 @@ public class GameClient extends Thread{
             ArrayList<?> ballOrPlayer = ((ArrayList<?>)object);
             if(ballOrPlayer.get(0) instanceof PlayerData){
                 playerData = (ArrayList<PlayerData>) ballOrPlayer;
+                for (int i = 0; i < playerData.size(); i ++ ) {
+                    if (playerData.get(i).getObjectID().equals(myID)) {
+                        clientPlayer = playerData.get(i);
+                        playerData.remove(i);
+                    }
+                }
                 System.out.println("Player data object has been received");
             } else if(ballOrPlayer.get(0) instanceof BallData){
                 ballData = (ArrayList<BallData>) ballOrPlayer;

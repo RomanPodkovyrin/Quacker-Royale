@@ -102,9 +102,6 @@ public class NetworkController {
 
 
 
-
-
-
             //TODO check if there are any new objects to update
             // gets all the objects send from host and updates the current reference
             ArrayList<PlayerData> playerUpdate = null;
@@ -153,8 +150,6 @@ public class NetworkController {
             // TODO send the states of of the game to clients
             // Regardless of the situation send all the game object to clients
 
-
-
             // Get all the button pressed from clients and update game objects accordingly
 
             // Should i be done before sending the objects ?
@@ -162,6 +157,7 @@ public class NetworkController {
 
 
             // TODO get the button presses from the client
+            // check player id and trigger the appropriate action based on the button press
 
         }
     }
