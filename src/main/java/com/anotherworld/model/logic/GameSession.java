@@ -101,6 +101,7 @@ public class GameSession {
                     } else player.damage(ball.getDamage());
 
                     Physics.collided(ball, player);
+                    System.out.println(player.getCharacterID() + " collide with ball");
                 }
             }
 
@@ -143,7 +144,6 @@ public class GameSession {
     public void update(){
 
         ai.action();
-        collisionCheck();
 
         for (Player player : allPlayers) {
             Physics.move(player);
@@ -164,6 +164,8 @@ public class GameSession {
             }
         }
 
+
+        collisionCheck();
         // Handling the time-based elements of the game
 
         gameSessionData.incrementTicksElapsed();
@@ -186,8 +188,12 @@ public class GameSession {
      */
     public void updatePlayer(ArrayList<Input> keyPresses) {
         if (keyPresses.contains(Input.CHARGE)) {
-            if(currentPlayer.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge())
+            currentPlayer.setVelocity(0, 0);
+            currentPlayer.setState(ObjectState.CHARGING);
+            if(currentPlayer.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()
+                && gameSessionData.getTicksElapsed() % 60 == 0) {
                 currentPlayer.incrementChargeLevel();
+            }
         } else {
             if (keyPresses.contains(Input.UP)) currentPlayer.setYVelocity(-currentPlayer.getSpeed());
             else if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());

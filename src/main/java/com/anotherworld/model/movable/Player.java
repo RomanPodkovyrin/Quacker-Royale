@@ -28,7 +28,7 @@ public class Player extends AbstractMovable {
 
     public void setChargeLevel(int chargeLevel) { playerData.setChargeLevel(chargeLevel); }
 
-    public void incrementChargeLevel() { this.setChargeLevel(this.getChargeLevel() + 1)}
+    public void incrementChargeLevel() { this.setChargeLevel(this.getChargeLevel() + 1); }
 
     public boolean isDead() { return playerData.getState() == ObjectState.DEAD; }
 
