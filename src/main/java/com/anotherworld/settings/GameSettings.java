@@ -70,12 +70,19 @@ public class GameSettings {
     public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
                         ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSession) {
         this.currentPlayer = currentPlayer;
+        logger.info("GameSettings current player: " + currentPlayer);
         this.players = players;
+        logger.info("GameSettings players: " + players);
         this.ai = ai;
+        logger.info("GameSettings ai: " + ai);
         this.balls = balls;
+        logger.info("GameSettings balls: " + balls);
         this.platforms = platforms;
+        logger.info("GameSettings platform: " + platforms);
         this.walls = walls;
+        logger.info("GameSettings wall: " + walls);
         this.gameSession = gameSession;
+        logger.info("GameSettings session: " + gameSession);
 
     }
 

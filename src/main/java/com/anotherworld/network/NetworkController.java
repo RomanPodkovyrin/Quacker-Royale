@@ -104,41 +104,43 @@ public class NetworkController {
 
             //TODO check if there are any new objects to update
             // gets all the objects send from host and updates the current reference
-            ArrayList<PlayerData> playerUpdate = null;
-            ArrayList<BallData> ballUpdate =null;
-            PlatformData platformUpdate = null;
-            WallData wallUpdate = null;
-            GameSessionData sessionUpdate = null;
-
-            // update Players
-            for (PlayerData data: playerUpdate) {
-                for (PlayerData player: allPlayers) {
-                    if (data.getObjectID().equals(player.getObjectID())) {
-                        player.copyObject(data);
-                    }
-
-                }
-            }
-
-            // update balls
-            // TODO need ball ids
-            for (BallData data: ballUpdate) {
-                for(BallData ball: balls) {
-                    if (data.getObjectID().equals(ball.getObjectID())) {
-                        ball.copyObject(data);
-                    }
-                }
-            }
-            // update platform
-            platform.copyObject(platformUpdate);
-
-            // update wall
-            wall.copyObject(wallUpdate);
-
-            // update session
-            gameSessionData.copyObject(sessionUpdate);
-
-
+            ArrayList<PlayerData> playerUpdate = client.getPlayerData();
+            ArrayList<BallData> ballUpdate = client.getBallData();
+            PlatformData platformUpdate = client.getPlatformData();
+            WallData wallUpdate = client.getWallData();
+            GameSessionData sessionUpdate = client.getGameSessionData();
+//
+//            if (playerUpdate != null) {
+//                // update Players
+//                for (PlayerData data : playerUpdate) {
+//                    for (PlayerData player : allPlayers) {
+//                        if (data.getObjectID().equals(player.getObjectID())) {
+//                            player.copyObject(data);
+//                        }
+//
+//                    }
+//                }
+//            }
+//
+//            // update balls
+//            // TODO need ball ids
+//            for (BallData data: ballUpdate) {
+//                for(BallData ball: balls) {
+//                    if (data.getObjectID().equals(ball.getObjectID())) {
+//                        ball.copyObject(data);
+//                    }
+//                }
+//            }
+//            // update platform
+//            platform.copyObject(platformUpdate);
+//
+//            // update wall
+//            wall.copyObject(wallUpdate);
+//
+//            // update session
+//            gameSessionData.copyObject(sessionUpdate);
+//
+//
 
         }
 
