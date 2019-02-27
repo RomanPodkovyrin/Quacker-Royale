@@ -104,7 +104,7 @@ public class GameSessionController {
         while (viewThread.isAlive()) {
 
             // if client check if there are game objects to update
-//            network.clientControl();
+            network.clientControl();
 
 
             // Get time before computation
@@ -149,7 +149,7 @@ public class GameSessionController {
             framesDropped = 0;
 
             // send game object to client
-//            network.hostControl();
+            network.hostControl();
 
         }
         
