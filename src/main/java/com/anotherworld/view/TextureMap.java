@@ -15,8 +15,10 @@ import static org.lwjgl.opengl.GL46.glTexImage2D;
 import static org.lwjgl.opengl.GL46.glTexParameteri;
 
 import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
+import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 import static org.lwjgl.stb.STBImage.stbi_load;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -33,6 +35,8 @@ public class TextureMap {
     
     private final int width;
     
+    private final int comp;
+    
     private final ByteBuffer pixels;
     
     private final int id;
@@ -41,13 +45,18 @@ public class TextureMap {
      * Loads the texture map from the specified location.
      * @param location the texture map location
      */
-    public TextureMap(String location) {
+    public TextureMap(String location) throws IOException {
         IntBuffer x = BufferUtils.createIntBuffer(1);
         IntBuffer y = BufferUtils.createIntBuffer(1);
         IntBuffer comp = BufferUtils.createIntBuffer(1);
         pixels = stbi_load(location, x, y, comp, STBI_rgb_alpha);
         height = y.get();
         width = x.get();
+        this.comp = comp.get();
+        if (pixels == null) {
+            throw new IOException(stbi_failure_reason());
+        }
+        pixels.limit(pixels.capacity());
         id = loadTextureMap();
     }
 
@@ -73,7 +82,7 @@ public class TextureMap {
      * Returns the height of the texture map in pixels.
      * @return the height
      */
-    private int getHeight() {
+    public int getHeight() {
         return height;
     }
 
@@ -81,7 +90,7 @@ public class TextureMap {
      * Returns the width of the texture map in pixels.
      * @return the width
      */
-    private int getWidth() {
+    public int getWidth() {
         return width;
     }
     
@@ -105,8 +114,20 @@ public class TextureMap {
      * Returns the pixels as a float array.
      * @return the pixels
      */
-    private ByteBuffer getPixels() {
+    public ByteBuffer getPixels() {
+        pixels.flip();
+        pixels.limit(pixels.capacity());
         return pixels;
+    }
+    
+    @Override
+    public String toString() {
+        String s = "x: " + width + "y: " + height + "# of channels: " + comp + "size: " + pixels.capacity() + "\n";
+        //TODO make this more efficient
+        while (pixels.hasRemaining()) {
+            s = s + pixels.get() + ";";
+        }
+        return s;
     }
     
 }

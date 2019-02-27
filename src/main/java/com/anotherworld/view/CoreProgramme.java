@@ -3,6 +3,7 @@ package com.anotherworld.view;
 import static org.lwjgl.opengl.GL46.*; 
 
 import java.io.IOException;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,7 @@ public class CoreProgramme extends Programme {
     private static Logger logger = LogManager.getLogger();
     
     private int programmeId;
+    private Optional<Integer> uniformId;
     private TextureMap textureMap;
     private Shader vertexShader;
     private Shader fragShader;
@@ -27,8 +29,13 @@ public class CoreProgramme extends Programme {
      */
     public CoreProgramme() throws ProgrammeUnavailableException {
         init();
-
-        textureMap = new TextureMap("alien.png");
+        uniformId = Optional.empty();
+        try {
+            textureMap = new TextureMap("res/images/alien.png");
+        } catch (IOException ex) {
+            logger.catching(ex);
+            throw new ProgrammeUnavailableException("Couldn't load texture map");
+        }
     }
     
     private void init() throws ProgrammeUnavailableException {
@@ -36,8 +43,8 @@ public class CoreProgramme extends Programme {
         
         try {
 
-            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Core.vs", GL_VERTEX_SHADER);
-            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Core.frag", GL_FRAGMENT_SHADER);
+            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Texture.vs", GL_VERTEX_SHADER);
+            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Texture.frag", GL_FRAGMENT_SHADER);
             
         } catch (IOException e) {
             logger.warn("Couldn't load shader");
@@ -68,6 +75,7 @@ public class CoreProgramme extends Programme {
         
         glBindAttribLocation(programmeId, 0, "position");
         glBindAttribLocation(programmeId, 1, "colour");
+        glBindAttribLocation(programmeId, 2, "texture");
         
         glLinkProgram(programmeId);
         
@@ -80,11 +88,17 @@ public class CoreProgramme extends Programme {
         logger.debug("Loading texture map");
     }
     
+    private void setUpUniform() {
+        uniformId = Optional.of(glGetUniformLocation(programmeId, "tex"));
+        glProgramUniform1i(programmeId, uniformId.get(), 0);
+    }
+    
     @Override
     public void use() {
         glEnable(GL_TEXTURE_2D);
         glUseProgram(programmeId);
         glBindTexture(GL_TEXTURE_2D, textureMap.getId());
+        setUpUniform();
     }
 
     @Override
