@@ -12,10 +12,10 @@ public class Player extends AbstractMovable {
         this.playerData = playerData;
     }
 
-    public String getCharacterID() { return playerData.getCharacterID(); }
+    public String getCharacterID() { return playerData.getObjectID(); }
 
     public void setCharacterID(String characterID) {
-        playerData.setCharacterID(characterID);
+        playerData.setObjectID(characterID);
     }
 
     public int getHealth() { return playerData.getHealth(); }

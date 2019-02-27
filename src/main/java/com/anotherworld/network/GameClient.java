@@ -6,16 +6,19 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.*;
+import java.util.ArrayList;
 
 public class GameClient extends Thread{
     private DatagramSocket socket;
     private InetAddress address;
     private int port = 4445;
-    private BallData ballData;
-    private PlayerData playerData;
+    private ArrayList<BallData> ballData;
+    private ArrayList<PlayerData> playerData;
     private GameSessionData gameSessionData;
     private PlatformData platformData;
     private WallData wallData;
+    private PlayerData clientPlayer;
+    private String myID;
 
     public GameClient(String serverIP) throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
@@ -23,7 +26,7 @@ public class GameClient extends Thread{
         System.out.println("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
         sendDataToServer("set up connection message");
         waitForGameToStart();
-        start();
+//        start();
     }
 
     public void run(){
@@ -50,13 +53,15 @@ public class GameClient extends Thread{
     }
 
     public void waitForGameToStart(){
-        byte[] data = new byte[32];
+        byte[] data = new byte[16];
         DatagramPacket packet = new DatagramPacket(data, data.length);
         try {
             socket.receive(packet);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        String received = new String(packet.getData(), 0, packet.getLength());
+        System.out.println("My id is:" + received);
     }
 
     public void getObjectFromServer() throws IOException, ClassNotFoundException {
@@ -67,13 +72,17 @@ public class GameClient extends Thread{
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
         Object object = objectInputStream.readObject();
-        if(object instanceof BallData){
-                ballData = (BallData) object;
-                System.out.println("Ball object received. Is ball dangerous? : "+ballData.isDangerous());
-                //BallData class update method
-        } else if(object instanceof PlayerData) {
-            playerData = (PlayerData) object;
-            System.out.println("Player data object has been received");
+        if(object instanceof ArrayList<?>) {
+            System.out.println("ArrayList has been received");
+            System.out.println(" array : " + object);
+            ArrayList<?> ballOrPlayer = ((ArrayList<?>)object);
+            if(ballOrPlayer.get(0) instanceof PlayerData){
+                playerData = (ArrayList<PlayerData>) ballOrPlayer;
+                System.out.println("Player data object has been received");
+            } else if(ballOrPlayer.get(0) instanceof BallData){
+                ballData = (ArrayList<BallData>) ballOrPlayer;
+                System.out.println("Ball object received.");
+            }
         } else if(object instanceof GameSessionData){
             gameSessionData = (GameSessionData) object;
             System.out.println("GameSessionData object has been received");

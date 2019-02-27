@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Server extends Thread {
     private static Logger logger = LogManager.getLogger(Server.class);
@@ -20,6 +21,7 @@ public class Server extends Thread {
     private int port = 4445;
     private ArrayList<String> IPs;
     private ArrayList<Integer> clientsPorts;
+    private HashMap<String, String> ipToID = new HashMap<>();
 
     // Game data to be sent to client
     private PlayerData HostPlayer;
@@ -32,6 +34,7 @@ public class Server extends Thread {
 
     public Server(int IPs, GameSettings settings) throws SocketException, UnknownHostException {
         HostPlayer = settings.getCurrentPlayer();
+
         networkPlayers = settings.getPlayers();
 
         balls = settings.getBalls();
@@ -58,15 +61,24 @@ public class Server extends Thread {
         }
         logger.trace("Size of IPs " + IPs.size());
         try {
-            sendStringToClient("game started".getBytes());
+            sendPlayerID();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
         try {
 //            sendObjectToClients(HostPlayer);
-            sendObjectToClients(networkPlayers.add(HostPlayer));
+            logger.trace("Sending all the players");
+            ArrayList<PlayerData> temp = new ArrayList<>();
+            temp.addAll(networkPlayers);
+            temp.add(HostPlayer);
+            sendObjectToClients(temp);
+            logger.trace("Sending all balls");
+            sendObjectToClients(balls);
+            logger.trace("Sending the platform");
             sendObjectToClients(platform);
+            logger.trace("Sending the Wall");
             sendObjectToClients(wall);
+            logger.trace("Sending the game session");
             sendObjectToClients(gamesession);
         } catch (IOException e) {
             e.printStackTrace();
@@ -93,18 +105,34 @@ public class Server extends Thread {
         }
     }
 
+    public void sendPlayerID() throws UnknownHostException {
+        for(int i = 0; i < numberOfPlayers; i++) {
+            byte[] dataToSend = networkPlayers.get(i).getObjectID().getBytes();
+            ipToID.put(IPs.get(i), networkPlayers.get(i).getObjectID());
+            InetAddress playerIP = InetAddress.getByName(IPs.get(i));
+            DatagramPacket packet
+                    = new DatagramPacket(dataToSend, dataToSend.length, playerIP, clientsPorts.get(i));
+            try {
+                this.socket.send(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void sendObjectToClients(Object object) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(outputStream);
         os.writeObject(object);
         byte[] data = outputStream.toByteArray();
-        logger.trace("Number of players: " + IPs.size());
+//        logger.trace("Number of players: " + IPs.size());
         for(int i = 0; i < numberOfPlayers; i++) {
             logger.trace("i " + i + " Ips.get(i) " + IPs.get(i) + " " );
             InetAddress playerIP = InetAddress.getByName(IPs.get(i));
             DatagramPacket sendPacket = new DatagramPacket(data, data.length, playerIP, clientsPorts.get(i));
             socket.send(sendPacket);
         }
+        networkPlayers.get(0).getObjectID();
     }
 
     public String getFromClient(DatagramPacket packet){

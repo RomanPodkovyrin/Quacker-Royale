@@ -1,5 +1,9 @@
 package com.anotherworld.audio;
 
+import com.anotherworld.control.GameSessionController;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -21,6 +25,8 @@ public class BackgroundMusic implements Runnable
     private boolean running = true;
     private Thread music;
 
+    private static Logger logger = LogManager.getLogger(BackgroundMusic.class);
+
     public BackgroundMusic(){
         soundFile = new File(fileLocation);
     }
@@ -34,6 +40,7 @@ public class BackgroundMusic implements Runnable
     public void run()
     {
         while(running) {
+//            System.out.println("Still alive background");
             try {
                 createLine();
             } catch (IOException e) {
@@ -101,10 +108,10 @@ public class BackgroundMusic implements Runnable
         //TODO those 3 lines prevent linux from shutting down the thread
 //        line.stop();
 //        line.drain();
+        music.stop();
         line.close();
         running = false;
 //        music.interrupt();
-        System.out.println("Check");
 //        System.exit(0);
     }
 

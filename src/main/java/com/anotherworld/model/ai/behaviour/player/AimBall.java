@@ -13,7 +13,8 @@ import org.apache.logging.log4j.Logger;
 import java.util.ArrayList;
 
 /**
- * This Job aims to ball towards
+ * This Job aims to ball towards players.
+ *
  * success - aiming
  * fail - too far away or nothing to aim
  */
@@ -39,18 +40,19 @@ public class AimBall extends Job {
     public boolean onTheSide(Matrix vectorCheck, Matrix line, float degree) {
         float lineDegree = MatrixMath.vectorAngle(line);
         float checkDegree = MatrixMath.vectorAngle(vectorCheck);
-        if (withingTheRange(checkDegree,(lineDegree - 180)%360, lineDegree)){
+        if (withingTheRange(checkDegree,(lineDegree - 180) % 360, lineDegree)) {
             return true;
         }
         return false;
     }
+
     public boolean withingTheRange(float check, float from, float to) {
         if (from < to) {
             if (check < to & check > from) {
                 return true;
             }
             return false;
-        } else if (from > to){
+        } else if (from > to) {
             if (check < to | check > from) {
                 return true;
             }
@@ -127,8 +129,8 @@ public class AimBall extends Job {
 
         float hypotenuse = targetPlayer.getRadius() + targetBall.getRadius();
 
-        float angle1 =( MatrixMath.vectorAngle(MatrixMath.pointsVector(neighbour,ai.getCoordinates())) - MatrixMath.vectorAngle(fromNeighbourToPlayer) ) % 360;
-        float angle2 =( MatrixMath.vectorAngle(MatrixMath.pointsVector(ai.getCoordinates(),neighbour)) - MatrixMath.vectorAngle(fromNeighbourToPlayer) ) % 360;
+        float angle1 = ( MatrixMath.vectorAngle(MatrixMath.pointsVector(neighbour,ai.getCoordinates())) - MatrixMath.vectorAngle(fromNeighbourToPlayer) ) % 360;
+        float angle2 = ( MatrixMath.vectorAngle(MatrixMath.pointsVector(ai.getCoordinates(),neighbour)) - MatrixMath.vectorAngle(fromNeighbourToPlayer) ) % 360;
         float angle =angle1;
         System.out.println(angle);
         float adjacent = (float ) (hypotenuse * Math.cos(angle));

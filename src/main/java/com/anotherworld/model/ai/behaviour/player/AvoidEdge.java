@@ -44,7 +44,7 @@ public class AvoidEdge extends Job {
 
         Matrix vectorFromPlatformCenter = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
         Matrix toCenter = MatrixMath.pointsVector(ai.getCoordinates(),platformCoordinates);
-        toCenter = new Matrix((toCenter.getX()/Math.abs(toCenter.getX()) )* ai.getSpeed() ,(toCenter.getY()/Math.abs(toCenter.getY()))* ai.getSpeed());
+        toCenter = new Matrix((toCenter.getX() / Math.abs(toCenter.getX())) * ai.getSpeed(),(toCenter.getY() / Math.abs(toCenter.getY())) * ai.getSpeed());
 
         // Checks if the AI is near the horizontal edge
         if (Math.abs(vectorFromPlatformCenter.getX()) >= platform.getXSize() - distanceFromEdge) {
@@ -60,7 +60,7 @@ public class AvoidEdge extends Job {
 
         // Checks if the AI is near the vertical edge
         } else if (Math.abs(vectorFromPlatformCenter.getY()) >= platform.getYSize() - distanceFromEdge) {
-            logger.trace("AI too close to the y edge " +vectorFromPlatformCenter +" " + (platform.getYSize() - distanceFromEdge));
+            logger.trace("AI too close to the y edge " + vectorFromPlatformCenter + " " + (platform.getYSize() - distanceFromEdge));
 
 //            ai.setYVelocity(-ai.getYVelocity());
 //            ai.setXVelocity(-ai.getXVelocity());
@@ -69,7 +69,7 @@ public class AvoidEdge extends Job {
             logger.info("Moving to in direction" + ai.getVelocity());
             return;
         }
-        logger.trace("Finishing AvoidEdge with success: no Sedges to avoid");
+        logger.trace("Finishing AvoidEdge with success: no edges to avoid");
         succeed();
 
 
