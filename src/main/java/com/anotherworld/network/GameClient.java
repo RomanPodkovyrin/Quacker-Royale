@@ -17,6 +17,8 @@ public class GameClient extends Thread{
     private GameSessionData gameSessionData;
     private PlatformData platformData;
     private WallData wallData;
+    private PlayerData clientPlayer;
+    private String myID;
 
     public GameClient(String serverIP) throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
@@ -51,13 +53,15 @@ public class GameClient extends Thread{
     }
 
     public void waitForGameToStart(){
-        byte[] data = new byte[32];
+        byte[] data = new byte[16];
         DatagramPacket packet = new DatagramPacket(data, data.length);
         try {
             socket.receive(packet);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        String received = new String(packet.getData(), 0, packet.getLength());
+        System.out.println("My id is:" + received);
     }
 
     public void getObjectFromServer() throws IOException, ClassNotFoundException {
