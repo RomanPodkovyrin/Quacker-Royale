@@ -182,14 +182,14 @@ public class GameSession {
 
     }
 
-    /**
-     * Updates the current player's velocity based on the given list of inputs.
-     * @param keyPresses
-     */
     public void updatePlayer(ArrayList<Input> keyPresses) {
         updatePlayer(this.currentPlayer, keyPresses, this.gameSessionData);
     }
 
+    /**
+     * Updates the current player's velocity based on the given list of inputs.
+     * @param keyPresses
+     */
     public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {
 
@@ -207,6 +207,7 @@ public class GameSession {
         } else if (player.getState() == ObjectState.CHARGING) {
             System.out.println("DASH!");
             player.setState(ObjectState.DASHING);
+            Physics.charge(player);
             player.setTimeStartedCharging(0);
         } else {
             if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
