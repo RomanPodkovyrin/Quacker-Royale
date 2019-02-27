@@ -1,15 +1,19 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
+import com.anotherworld.model.logic.Platform;
 import com.anotherworld.network.*;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
+import com.anotherworld.tools.datapool.*;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -177,35 +181,62 @@ public class Main {
         // give the setting the client object
 
         // start the game as usual with the given game setting
+        boolean waitingForObjects = true;
 
-//        while(true) {
-//
-//            try {
-//                Thread.sleep(1);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        GameSettings settings = new GameSettings(null,null,null,null,null,null,null);
-//
-//        settings.setClient(client);
-//
-//
-//        GLFW.glfwInit();
-//        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-//
-//        try {
-//            View view = new View((int)(mode.width()), (int)(mode.height()));
-//
-//            new GameSessionController(view, settings);
-//
-//        } catch (KeyListenerNotFoundException ex) {
-//            logger.fatal(ex);
-//        } catch (RuntimeException ex) {
-//            logger.fatal(ex);
-//            ex.printStackTrace();
-//        }
+        ArrayList<PlayerData> allPlayers = null;
+        ArrayList<BallData> allBalls = null ;
+        PlayerData myPlayer= null ;
+        PlatformData platform= null ;
+        WallData wall= null;
+        GameSessionData session = null;
+
+        while(waitingForObjects) {
+
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            allPlayers = client.getPlayerData();
+            allBalls = client.getBallData();
+            myPlayer = client.getClientPlayer();
+            platform = client.getPlatformData();
+            wall = client.getWallData();
+            session = client.getGameSessionData();
+            if (!(allPlayers == null & allBalls == null & myPlayer == null & platform == null & wall == null & session == null)) {
+                waitingForObjects = false;
+            }
+        }
+        ArrayList<PlatformData> platforms = new ArrayList<>();
+        platforms.add(platform);
+
+        ArrayList<WallData> walls = new ArrayList<>();
+        walls.add(wall);
+
+
+
+
+        GameSettings settings = new GameSettings(myPlayer,allPlayers,new ArrayList<PlayerData>(),allBalls,platforms,walls,session);
+
+        settings.setClient(client);
+
+        NetworkController network = new NetworkController(client, settings);
+
+        GLFW.glfwInit();
+        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+
+        try {
+            View view = new View((int)(mode.width()), (int)(mode.height()));
+
+            new GameSessionController(view, settings, network);
+
+        } catch (KeyListenerNotFoundException ex) {
+            logger.fatal(ex);
+        } catch (RuntimeException ex) {
+            logger.fatal(ex);
+            ex.printStackTrace();
+        }
         // recieve the game objects from the host.
         // create the game setting
         // start the game with the current settings
