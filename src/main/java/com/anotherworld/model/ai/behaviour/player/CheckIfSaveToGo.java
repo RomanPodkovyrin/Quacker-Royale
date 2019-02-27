@@ -1,6 +1,5 @@
 package com.anotherworld.model.ai.behaviour.player;
 
-import com.anotherworld.model.ai.AIDataPool;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;

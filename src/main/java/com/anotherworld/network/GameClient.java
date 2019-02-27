@@ -12,12 +12,12 @@ public class GameClient extends Thread{
     private DatagramSocket socket;
     private InetAddress address;
     private int port = 4445;
-    private ArrayList<BallData> ballData;
-    private ArrayList<PlayerData> playerData;
-    private GameSessionData gameSessionData;
-    private PlatformData platformData;
-    private WallData wallData;
-    private PlayerData clientPlayer;
+    private ArrayList<BallData> ballData = null;
+    private ArrayList<PlayerData> playerData = null;
+    private GameSessionData gameSessionData = null;
+    private PlatformData platformData = null;
+    private WallData wallData = null;
+    private PlayerData clientPlayer = null;
     private String myID;
 
     public GameClient(String serverIP) throws SocketException, UnknownHostException {
@@ -26,7 +26,6 @@ public class GameClient extends Thread{
         System.out.println("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
         sendDataToServer("set up connection message");
         waitForGameToStart();
-//        start();
     }
 
     public void run(){
@@ -93,6 +92,35 @@ public class GameClient extends Thread{
             wallData = (WallData) object;
             System.out.println("WallData object has been received");
         }
+    }
+
+    public ArrayList<BallData> getBallData(){
+        return this.ballData;
+    }
+
+    public ArrayList<PlayerData> getPlayerData(){
+        return this.playerData;
+    }
+
+    public GameSessionData getGameSessionData(){
+        return this.gameSessionData;
+    }
+
+    public PlatformData getPlatformData(){
+        return this.platformData;
+    }
+
+    public WallData getWallData(){
+        return this.wallData;
+    }
+
+    public PlayerData getClientPlayer(){
+        for (int i = 0; i < playerData.size(); i ++ ) {
+            if (playerData.get(i).getObjectID().equals(myID)) {
+                clientPlayer = playerData.get(i);
+            }
+        }
+        return this.clientPlayer;
     }
 
     public void closeSocket() {
