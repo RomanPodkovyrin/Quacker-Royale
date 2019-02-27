@@ -1,23 +1,23 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.audio.BackgroundMusic;
 import com.anotherworld.network.*;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
+/**
+ * @author roman
+ */
 public class Main {
     private MenuDemo view;
     private GameLobby lobby;
@@ -25,7 +25,7 @@ public class Main {
     private static Logger logger = LogManager.getLogger(Main.class);
     boolean runTheHostGame = false;
 
-    public static void main (String args[]) {
+    public static void main(String []args) {
         Main main = new Main();
         main.startTheGame(2,0,3);
         MenuDemo viewMenu = new MenuDemo();
@@ -35,6 +35,7 @@ public class Main {
     public void setRunTheHostGame(boolean run) {
         this.runTheHostGame = run;
     }
+
     public void add(MenuDemo view) {
         this.view = view;
     }
@@ -67,7 +68,6 @@ public class Main {
 
     public void host() {
         logger.info("User starting the server");
-        // TODO write the logic
         // start the server
         // wait for clients to connect
         // count number of network players
@@ -99,7 +99,7 @@ public class Main {
 
             try {
                 Thread.sleep(1);
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             playersIPaddresses = lobbyServer.getIPs();
@@ -135,7 +135,6 @@ public class Main {
             logger.fatal(ex);
             ex.printStackTrace();
         }
-        // TODO Implement network
         // Check if network game and a host
         // if yes then send all game objects to clients
 
@@ -144,7 +143,6 @@ public class Main {
     }
 
     public void connect(String serverIP) {
-        // TODO write the logic
         // Enter the ip you want to connect to
         // wait for the command from host to start the game
 
@@ -171,6 +169,14 @@ public class Main {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+
+        // get the send object from the server
+
+        // make a new game settings with those objects
+
+        // give the setting the client object
+
+        // start the game as usual with the given game setting
 
 //        while(true) {
 //
