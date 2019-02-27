@@ -9,6 +9,8 @@ import java.io.Serializable;
 
 public abstract class MovableData implements DisplayData, Serializable {
 
+
+    private String objectID;
     private Matrix coordinates;
     private Matrix velocity;
     private ObjectState state;
@@ -16,8 +18,9 @@ public abstract class MovableData implements DisplayData, Serializable {
     private float speed;
     private float radius;
 
-    public MovableData(float xCoordinate, float yCoordinate, ObjectState state,
+    public MovableData(String objectID, float xCoordinate, float yCoordinate, ObjectState state,
                        float speed, float radius) {
+        this.objectID = objectID;
         this.setCoordinates(xCoordinate, yCoordinate);
         this.setVelocity(0,0);
         this.angle = 0;
@@ -129,5 +132,10 @@ public abstract class MovableData implements DisplayData, Serializable {
     public float getRadius() { return radius; }
 
     public void setRadius(float radius) { this.radius = radius; }
+
+    public String getObjectID() { return objectID; }
+
+    public void setObjectID(String objectID) { this.objectID = objectID; }
+
 
 }

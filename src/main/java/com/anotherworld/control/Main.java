@@ -1,23 +1,27 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.audio.BackgroundMusic;
+import com.anotherworld.model.logic.Platform;
 import com.anotherworld.network.*;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
+import com.anotherworld.tools.datapool.*;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
 
-import java.awt.*;
-import java.io.IOException;
-import java.net.SocketException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
+/**
+ * @author roman
+ */
 public class Main {
     private MenuDemo view;
     private GameLobby lobby;
@@ -25,7 +29,7 @@ public class Main {
     private static Logger logger = LogManager.getLogger(Main.class);
     boolean runTheHostGame = false;
 
-    public static void main (String args[]) {
+    public static void main(String []args) {
         Main main = new Main();
         main.startTheGame(2,0,3);
         MenuDemo viewMenu = new MenuDemo();
@@ -35,6 +39,7 @@ public class Main {
     public void setRunTheHostGame(boolean run) {
         this.runTheHostGame = run;
     }
+
     public void add(MenuDemo view) {
         this.view = view;
     }
@@ -55,7 +60,7 @@ public class Main {
         try {
             View view = new View((int)(mode.width() * 0.8), (int)(mode.height() * 0.8));
 
-            new GameSessionController(view, settings);
+            new GameSessionController(view, settings, new NetworkController());
 
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);
@@ -67,7 +72,6 @@ public class Main {
 
     public void host() {
         logger.info("User starting the server");
-        // TODO write the logic
         // start the server
         // wait for clients to connect
         // count number of network players
@@ -87,6 +91,7 @@ public class Main {
         Server server = null;
         try {
             server  = new Server(numberOfPlayers, settings);
+            server.start();
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (UnknownHostException e) {
@@ -98,7 +103,7 @@ public class Main {
 
             try {
                 Thread.sleep(1);
-            } catch (InterruptedException e){
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             playersIPaddresses = lobbyServer.getIPs();
@@ -116,6 +121,7 @@ public class Main {
         }
 
         settings.setServer(server);
+        NetworkController network = new NetworkController(server, settings);
 //        startTheGame(numberOfNetworkPlayer + 1, 0,3);
 
 
@@ -125,7 +131,7 @@ public class Main {
         try {
             View view = new View((int)(mode.width()), (int)(mode.height()));
 
-            new GameSessionController(view, settings);
+            new GameSessionController(view, settings, network);
 
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);
@@ -133,7 +139,6 @@ public class Main {
             logger.fatal(ex);
             ex.printStackTrace();
         }
-        // TODO Implement network
         // Check if network game and a host
         // if yes then send all game objects to clients
 
@@ -142,7 +147,6 @@ public class Main {
     }
 
     public void connect(String serverIP) {
-        // TODO write the logic
         // Enter the ip you want to connect to
         // wait for the command from host to start the game
 
@@ -163,40 +167,76 @@ public class Main {
         GameClient client = null;
         try {
             client = new GameClient(serverIP);
+            client.start();
         } catch (SocketException e) {
             e.printStackTrace();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
 
-//        while(true) {
-//
-//            try {
-//                Thread.sleep(1);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        GameSettings settings = new GameSettings(null,null,null,null,null,null,null);
-//
-//        settings.setClient(client);
-//
-//
-//        GLFW.glfwInit();
-//        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-//
-//        try {
-//            View view = new View((int)(mode.width()), (int)(mode.height()));
-//
-//            new GameSessionController(view, settings);
-//
-//        } catch (KeyListenerNotFoundException ex) {
-//            logger.fatal(ex);
-//        } catch (RuntimeException ex) {
-//            logger.fatal(ex);
-//            ex.printStackTrace();
-//        }
+        // get the send object from the server
+
+        // make a new game settings with those objects
+
+        // give the setting the client object
+
+        // start the game as usual with the given game setting
+        boolean waitingForObjects = true;
+
+        ArrayList<PlayerData> allPlayers = null;
+        ArrayList<BallData> allBalls = null ;
+        PlayerData myPlayer= null ;
+        PlatformData platform= null ;
+        WallData wall= null;
+        GameSessionData session = null;
+
+        while(waitingForObjects) {
+
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            allPlayers = client.getPlayerData();
+            allBalls = client.getBallData();
+            myPlayer = client.getClientPlayer();
+            platform = client.getPlatformData();
+            wall = client.getWallData();
+            session = client.getGameSessionData();
+            if (!(allPlayers == null & allBalls == null & myPlayer == null & platform == null & wall == null & session == null)) {
+                waitingForObjects = false;
+            }
+        }
+        ArrayList<PlatformData> platforms = new ArrayList<>();
+        platforms.add(platform);
+
+        ArrayList<WallData> walls = new ArrayList<>();
+        walls.add(wall);
+
+
+
+
+        GameSettings settings = new GameSettings(myPlayer,allPlayers,new ArrayList<PlayerData>(),allBalls,platforms,walls,session);
+
+        settings.setClient(client);
+
+        NetworkController network = new NetworkController(client, settings);
+
+        GLFW.glfwInit();
+        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+
+        try {
+            View view = new View((int)(mode.width()), (int)(mode.height()));
+
+            new GameSessionController(view, settings, network);
+
+        } catch (KeyListenerNotFoundException ex) {
+            logger.fatal(ex);
+        } catch (RuntimeException ex) {
+            logger.fatal(ex);
+            ex.printStackTrace();
+        }
         // recieve the game objects from the host.
         // create the game setting
         // start the game with the current settings
@@ -204,7 +244,7 @@ public class Main {
 
 
     public void startSinglePlayer() {
-        startTheGame(4,3,4);
+        startTheGame(4,3,6);
     }
 
     public static boolean sfxSetting(boolean on) {

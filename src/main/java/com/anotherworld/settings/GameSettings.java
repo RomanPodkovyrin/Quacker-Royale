@@ -256,7 +256,7 @@ public class GameSettings {
 
             // set random location with random direction
             // probably towards the middle
-            BallData newBall = new BallData(false,newBallXCoordinate,newBallYCoordinate,ObjectState.IDLE,ballSpeed,ballRadius);
+            BallData newBall = new BallData("ball " + i ,false,newBallXCoordinate,newBallYCoordinate,ObjectState.IDLE,ballSpeed,ballRadius);
             balls.add(newBall);
         }
 
