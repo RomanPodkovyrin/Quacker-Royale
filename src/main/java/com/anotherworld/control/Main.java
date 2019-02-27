@@ -191,9 +191,9 @@ public class Main {
         GameSessionData session = null;
 
         while(waitingForObjects) {
-
+            System.out.println("Hello ");
             try {
-                Thread.sleep(1);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -204,10 +204,20 @@ public class Main {
             platform = client.getPlatformData();
             wall = client.getWallData();
             session = client.getGameSessionData();
-            if (!(allPlayers == null & allBalls == null & myPlayer == null & platform == null & wall == null & session == null)) {
+
+            if ((allPlayers != null & allBalls != null & myPlayer != null & platform != null & wall != null & session != null)) {
+                logger.info("Got all objects");
                 waitingForObjects = false;
             }
         }
+        System.out.println(allPlayers + " " + allBalls + " " + myPlayer + " " +platform + " " + wall + " " + session);
+
+        for (int i = 0; i < allPlayers.size(); i++) {
+            if (allPlayers.get(i).getObjectID().equals(myPlayer.getObjectID())) {
+                allPlayers.remove(i);
+            }
+        }
+
         ArrayList<PlatformData> platforms = new ArrayList<>();
         platforms.add(platform);
 

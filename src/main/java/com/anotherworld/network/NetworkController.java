@@ -5,7 +5,10 @@ import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.*;
 import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class NetworkController {
@@ -20,6 +23,7 @@ public class NetworkController {
     private PlatformData platform;
     private WallData wall;
     private GameSessionData gameSessionData;
+    private static Logger logger = LogManager.getLogger(NetworkController.class);
 
     public NetworkController() {
 
@@ -28,11 +32,14 @@ public class NetworkController {
     public NetworkController(GameClient client, GameSettings settings) {
         this.client = client;
         this.settings = settings;
+        setUpGameSettion(settings);
+
     }
 
     public NetworkController(Server server, GameSettings settings) {
         this.server = server;
         this.settings = settings;
+        setUpGameSettion(settings);
     }
 
     private void setUpGameSettion(GameSettings settings) {
@@ -104,19 +111,21 @@ public class NetworkController {
 
             //TODO check if there are any new objects to update
             // gets all the objects send from host and updates the current reference
-            ArrayList<PlayerData> playerUpdate = null;
-            ArrayList<BallData> ballUpdate =null;
-            PlatformData platformUpdate = null;
-            WallData wallUpdate = null;
-            GameSessionData sessionUpdate = null;
+            ArrayList<PlayerData> playerUpdate = client.getPlayerData();
+            ArrayList<BallData> ballUpdate = client.getBallData();
+            PlatformData platformUpdate = client.getPlatformData();
+            WallData wallUpdate = client.getWallData();
+            GameSessionData sessionUpdate = client.getGameSessionData();
 
-            // update Players
-            for (PlayerData data: playerUpdate) {
-                for (PlayerData player: allPlayers) {
-                    if (data.getObjectID().equals(player.getObjectID())) {
-                        player.copyObject(data);
+            if (playerUpdate != null) {
+                // update Players
+                for (PlayerData data : playerUpdate) {
+                    for (PlayerData player : allPlayers) {
+                        if (data.getObjectID().equals(player.getObjectID())) {
+                            player.copyObject(data);
+                        }
+
                     }
-
                 }
             }
 
@@ -148,6 +157,37 @@ public class NetworkController {
     public void hostControl() {
         if (isServer()) {
             // TODO send the states of of the game to clients
+
+            logger.trace("Sending all the players");
+            try {
+                server.sendObjectToClients(allPlayers);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            logger.trace("Sending all balls");
+            try {
+                server.sendObjectToClients(balls);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            logger.trace("Sending the platform");
+            try {
+                server.sendObjectToClients(platform);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            logger.trace("Sending the Wall");
+            try {
+                server.sendObjectToClients(wall);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            logger.trace("Sending the game session");
+            try {
+                server.sendObjectToClients(gameSessionData);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             // Regardless of the situation send all the game object to clients
 
             // Get all the button pressed from clients and update game objects accordingly
