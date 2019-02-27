@@ -12,12 +12,12 @@ public class GameClient extends Thread{
     private DatagramSocket socket;
     private InetAddress address;
     private int port = 4445;
-    private ArrayList<BallData> ballData;
-    private ArrayList<PlayerData> playerData;
-    private GameSessionData gameSessionData;
-    private PlatformData platformData;
-    private WallData wallData;
-    private PlayerData clientPlayer;
+    private ArrayList<BallData> ballData = null;
+    private ArrayList<PlayerData> playerData = null;
+    private GameSessionData gameSessionData = null;
+    private PlatformData platformData = null;
+    private WallData wallData = null;
+    private PlayerData clientPlayer = null;
     private String myID;
 
     public GameClient(String serverIP) throws SocketException, UnknownHostException {
@@ -77,12 +77,6 @@ public class GameClient extends Thread{
             ArrayList<?> ballOrPlayer = ((ArrayList<?>)object);
             if(ballOrPlayer.get(0) instanceof PlayerData){
                 playerData = (ArrayList<PlayerData>) ballOrPlayer;
-                for (int i = 0; i < playerData.size(); i ++ ) {
-                    if (playerData.get(i).getObjectID().equals(myID)) {
-                        clientPlayer = playerData.get(i);
-                        playerData.remove(i);
-                    }
-                }
                 System.out.println("Player data object has been received");
             } else if(ballOrPlayer.get(0) instanceof BallData){
                 ballData = (ArrayList<BallData>) ballOrPlayer;
@@ -121,6 +115,11 @@ public class GameClient extends Thread{
     }
 
     public PlayerData getClientPlayer(){
+        for (int i = 0; i < playerData.size(); i ++ ) {
+            if (playerData.get(i).getObjectID().equals(myID)) {
+                clientPlayer = playerData.get(i);
+            }
+        }
         return this.clientPlayer;
     }
 
