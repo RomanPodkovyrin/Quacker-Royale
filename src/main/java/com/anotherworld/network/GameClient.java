@@ -26,7 +26,6 @@ public class GameClient extends Thread{
         System.out.println("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
         sendDataToServer("set up connection message");
         waitForGameToStart();
-//        start();
     }
 
     public void run(){
@@ -99,6 +98,30 @@ public class GameClient extends Thread{
             wallData = (WallData) object;
             System.out.println("WallData object has been received");
         }
+    }
+
+    public ArrayList<BallData> getBallData(){
+        return this.ballData;
+    }
+
+    public ArrayList<PlayerData> getPlayerData(){
+        return this.playerData;
+    }
+
+    public GameSessionData getGameSessionData(){
+        return this.gameSessionData;
+    }
+
+    public PlatformData getPlatformData(){
+        return this.platformData;
+    }
+
+    public WallData getWallData(){
+        return this.wallData;
+    }
+
+    public PlayerData getClientPlayer(){
+        return this.clientPlayer;
     }
 
     public void closeSocket() {
