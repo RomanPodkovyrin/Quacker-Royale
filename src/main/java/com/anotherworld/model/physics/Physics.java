@@ -193,8 +193,8 @@ public class Physics {
         double angleBetweenCircles = Math.atan2(pointB.getY() - pointA.getY(),
                 pointB.getX() - pointA.getX());
 
-        float radiusA = objectA.getRadius();
-        float radiusB = objectB.getRadius();
+        float radiusA = objectA.getRadius()*1.2f;
+        float radiusB = objectB.getRadius()*1.2f;
 
         Matrix midpointBetweenCircles = new Matrix(
                 (pointA.getX() + pointB.getX()) / 2,
@@ -262,25 +262,21 @@ public class Physics {
         Matrix coordB = objectB.getCoordinates();
         Matrix angleFinding = coordA.sub(coordB);
         float angle = MatrixMath.vectorAngle(angleFinding);
-        float dist = objectA.getRadius() + objectB.getRadius();
-
-        float overLap = overLapping(objectA, objectB);
-        
 
         if (objectA instanceof Ball) {
-            objectA.setVelocity((float) (objectA.getSpeed() * Math.sin(angle)),
-                    (float) (objectA.getSpeed() * Math.cos(angle)));
+            objectA.setVelocity((float) (objectA.getSpeed() * Math.cos(angle)),
+                    (float) (objectA.getSpeed() * Math.sin(angle)));
             objectA.setAngle(angle);
 
             if (objectB instanceof Ball) {
                 angleFinding = coordB.sub(coordA);
                 angle = MatrixMath.vectorAngle(angleFinding);
                 objectB.setVelocity(
-                        (float) (objectA.getSpeed() * Math.sin(angle)),
-                        (float) (objectA.getSpeed() * Math.cos(angle)));
+                        (float) (objectA.getSpeed() * Math.cos(angle)),
+                        (float) (objectA.getSpeed() * Math.sin(angle)));
                 objectB.setAngle(angle);
             }
-            
+
         }
         ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
         Matrix safe = newCoordinate.get(0);
@@ -307,13 +303,13 @@ public class Physics {
                 (float) (fallingSpeed * Math.cos(angle)));
     }
 
-    // public static void charge(Player player) {
-    // int charge = player.getChargeLevel();
-    // float speedIncreases = 1 + (1 / 5 * charge);
-    // float speed = player.getSpeed() * speedIncreases;
-    // float angle = player.getAngle();
-    // player.setVelocity((float) (speed * Math.sin(angle)),
-    // (float) (speed * Math.cos(angle)));
-    // player.setChargeLevel(charge > 0 ? charge - 1 : charge);
-    // }
+//     public static void charge(Player player) {
+//     int charge = player.getChargeLevel();
+//     float speedIncreases = 1 + (1 / 5 * charge);
+//     float speed = player.getSpeed() * speedIncreases;
+//     float angle = player.getAngle();
+//     player.setVelocity((float) (speed * Math.sin(angle)),
+//     (float) (speed * Math.cos(angle)));
+//     player.setChargeLevel(charge > 0 ? charge - 1 : charge);
+//     }
 }
