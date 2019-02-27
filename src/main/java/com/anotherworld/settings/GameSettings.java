@@ -83,15 +83,10 @@ public class GameSettings {
         logger.info("GameSettings wall: " + walls);
         this.gameSession = gameSession;
         logger.info("GameSettings session: " + gameSession);
+        loadAllGameValues();
 
     }
-
-
-    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
-
-        this.numberOfPlayers = numberOfPlayers;
-        this.numberofAIPlayers = numberOfAIPlayers;
-        this.numberOfBall = numberOfBalls;
+    public  void loadAllGameValues() {
 
         try {
             PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
@@ -115,6 +110,16 @@ public class GameSettings {
             e.printStackTrace();
         }
 
+    }
+
+
+    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
+
+        this.numberOfPlayers = numberOfPlayers;
+        this.numberofAIPlayers = numberOfAIPlayers;
+        this.numberOfBall = numberOfBalls;
+
+        loadAllGameValues();
         createGameFiles();
     }
 
