@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 
 public class PlayerData extends MovableData implements PlayerDisplayData, Serializable {
-    
+
     private String characterID;
 
     private final int maxHealth;

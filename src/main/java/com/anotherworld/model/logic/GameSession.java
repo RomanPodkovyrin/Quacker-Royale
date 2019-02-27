@@ -187,21 +187,35 @@ public class GameSession {
      * @param keyPresses
      */
     public void updatePlayer(ArrayList<Input> keyPresses) {
-        if (keyPresses.contains(Input.CHARGE)) {
-            currentPlayer.setVelocity(0, 0);
-            currentPlayer.setState(ObjectState.CHARGING);
-            if(currentPlayer.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()
-                && gameSessionData.getTicksElapsed() % 60 == 0) {
-                currentPlayer.incrementChargeLevel();
-            }
-        } else {
-            if (keyPresses.contains(Input.UP)) currentPlayer.setYVelocity(-currentPlayer.getSpeed());
-            else if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());
-            else currentPlayer.setYVelocity(0);
+        updatePlayer(this.currentPlayer, keyPresses, this.gameSessionData);
+    }
 
-            if (keyPresses.contains(Input.LEFT)) currentPlayer.setXVelocity(-currentPlayer.getSpeed());
-            else if (keyPresses.contains(Input.RIGHT)) currentPlayer.setXVelocity(currentPlayer.getSpeed());
-            else currentPlayer.setXVelocity(0);
+    public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
+        if (keyPresses.contains(Input.CHARGE)) {
+
+            player.setVelocity(0, 0);
+            long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
+
+            if(player.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()
+                    && timeSpentCharging % 60 == 0) {
+                if (player.getState() != ObjectState.CHARGING) {
+                    player.setTimeStartedCharging(gameData.getTicksElapsed());
+                    player.setState(ObjectState.CHARGING);
+                }
+                player.incrementChargeLevel();
+            }
+        } else if (player.getState() == ObjectState.CHARGING) {
+            System.out.println("DASH!");
+            player.setState(ObjectState.DASHING);
+            player.setTimeStartedCharging(0);
+        } else {
+            if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
+            else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
+            else player.setYVelocity(0);
+
+            if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
+            else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
+            else player.setXVelocity(0);
         }
     }
 }
