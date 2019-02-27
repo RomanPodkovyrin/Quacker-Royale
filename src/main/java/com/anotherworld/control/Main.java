@@ -55,7 +55,7 @@ public class Main {
         try {
             View view = new View((int)(mode.width() * 0.8), (int)(mode.height() * 0.8));
 
-            new GameSessionController(view, settings, null);
+            new GameSessionController(view, settings, new NetworkController());
 
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);
@@ -207,7 +207,7 @@ public class Main {
 
 
     public void startSinglePlayer() {
-        startTheGame(4,3,4);
+        startTheGame(4,3,6);
     }
 
     public static boolean sfxSetting(boolean on) {

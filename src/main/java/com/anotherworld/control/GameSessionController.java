@@ -104,7 +104,7 @@ public class GameSessionController {
         while (viewThread.isAlive()) {
 
             // if client check if there are game objects to update
-//            network.clientControl();
+            network.clientControl();
 
 
             // Get time before computation
@@ -149,7 +149,7 @@ public class GameSessionController {
             framesDropped = 0;
 
             // send game object to client
-//            network.hostControl();
+            network.hostControl();
 
         }
         
@@ -159,7 +159,10 @@ public class GameSessionController {
 
 
     private void shutDownSequence() {
+
         logger.debug("Initialising Shut down sequence");
+        // TODO if network game then close down the connection
+
         //stop the music
         AudioControl.stopBackgroundMusic();
         logger.trace("Music stopped");
@@ -169,15 +172,6 @@ public class GameSessionController {
         //if a client has disconnected should we just give control to the ai ?
     }
 
-    private void networking() {
-
-        // if client
-        //check if got any new packages
-        // implements queue from which it updates the current game state
-
-        // if server
-        // check for the key pressed and update the appropriate player object
-    }
 
     private void render() {
         ArrayList<PlayerData> players = new ArrayList<>();

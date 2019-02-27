@@ -1,16 +1,11 @@
 package com.anotherworld.network;
 
-import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.logic.Wall;
-import com.anotherworld.model.movable.Ball;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.tools.datapool.GameSessionData;
-import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.*;
 import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class NetworkController {
@@ -20,17 +15,40 @@ public class NetworkController {
 
     private GameSettings settings;
 
-    public NetworkController(GameClient client, GameSettings settigs) {
-        this.client = client;
-        this.settings = settigs;
+    private ArrayList<PlayerData> allPlayers;
+    private ArrayList<BallData> balls;
+    private PlatformData platform;
+    private WallData wall;
+    private GameSessionData gameSessionData;
 
+    public NetworkController() {
+
+    }
+
+    public NetworkController(GameClient client, GameSettings settings) {
+        this.client = client;
+        this.settings = settings;
     }
 
     public NetworkController(Server server, GameSettings settings) {
         this.server = server;
         this.settings = settings;
+    }
+
+    private void setUpGameSettion(GameSettings settings) {
+    ArrayList<PlayerData> temp = new ArrayList<>();
+    temp.addAll(settings.getPlayers());
+    temp.add(settings.getCurrentPlayer());
+
+    allPlayers = temp;
+    balls = settings.getBalls();
+    platform = settings.getPlatform().get(0);
+    wall = settings.getWall().get(0);
+    gameSessionData = settings.getGameSession();
+
 
     }
+
 
     public boolean isClient() {
         return client!=null;
@@ -58,7 +76,7 @@ public class NetworkController {
 
 
 
-            // TODO implement client side of the network
+            // TODO send the key presses to host
 
             // send the given key presses to the host
             ArrayList<Input> keyPresses = keyListener.getKeyPresses();
@@ -82,14 +100,57 @@ public class NetworkController {
                 }
             }
 
+
+
+
+
+
+            //TODO check if there are any new objects to update
+            // gets all the objects send from host and updates the current reference
+            ArrayList<PlayerData> playerUpdate = null;
+            ArrayList<BallData> ballUpdate =null;
+            PlatformData platformUpdate = null;
+            WallData wallUpdate = null;
+            GameSessionData sessionUpdate = null;
+
+            // update Players
+            for (PlayerData data: playerUpdate) {
+                for (PlayerData player: allPlayers) {
+                    if (data.getObjectID().equals(player.getObjectID())) {
+                        player.copyObject(data);
+                    }
+
+                }
+            }
+
+            // update balls
+            // TODO need ball ids
+            for (BallData data: ballUpdate) {
+                for(BallData ball: balls) {
+                    if (data.getObjectID().equals(ball.getObjectID())) {
+                        ball.copyObject(data);
+                    }
+                }
+            }
+            // update platform
+            platform.copyObject(platformUpdate);
+
+            // update wall
+            wall.copyObject(wallUpdate);
+
+            // update session
+            gameSessionData.copyObject(sessionUpdate);
+
+
+
         }
-        //TODO check if there are any new objects to update
-        // gets all the objects send from host and updates the current reference
+
+
     }
 
     public void hostControl() {
         if (isServer()) {
-            // TODO implement host game state sender
+            // TODO send the states of of the game to clients
             // Regardless of the situation send all the game object to clients
 
 
@@ -97,6 +158,10 @@ public class NetworkController {
             // Get all the button pressed from clients and update game objects accordingly
 
             // Should i be done before sending the objects ?
+
+
+
+            // TODO get the button presses from the client
 
         }
     }
