@@ -2,12 +2,11 @@ package com.anotherworld.network;
 
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.*;
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import com.anotherworld.tools.input.Input;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,13 +29,11 @@ public class Server extends Thread {
     private PlatformData platform;
     private WallData wall;
     private GameSessionData gamesession;
-
+    private ArrayList<Pair<ArrayList<Input>, String>> inputAndIP = new ArrayList<>();
 
     public Server(int IPs, GameSettings settings) throws SocketException, UnknownHostException {
         HostPlayer = settings.getCurrentPlayer();
-
         networkPlayers = settings.getPlayers();
-
         balls = settings.getBalls();
         platform = settings.getPlatform().get(0);
         wall = settings.getWall().get(0);
@@ -66,7 +63,6 @@ public class Server extends Thread {
             e.printStackTrace();
         }
         try {
-//            sendObjectToClients(HostPlayer);
             logger.trace("Sending all the players");
             ArrayList<PlayerData> temp = new ArrayList<>();
             temp.addAll(networkPlayers);
@@ -85,9 +81,14 @@ public class Server extends Thread {
         }
         while(serverIsRunning){
             DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
-            String keyPresses = getFromClient(packet);
-            System.out.println(keyPresses);
+            try {
+                inputAndIP = getKeyPressesFromClient(packet);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
+        }
 
         socket.close();
     }
@@ -125,7 +126,6 @@ public class Server extends Thread {
         ObjectOutputStream os = new ObjectOutputStream(outputStream);
         os.writeObject(object);
         byte[] data = outputStream.toByteArray();
-//        logger.trace("Number of players: " + IPs.size());
         for(int i = 0; i < numberOfPlayers; i++) {
             logger.trace("i " + i + " Ips.get(i) " + IPs.get(i) + " " );
             InetAddress playerIP = InetAddress.getByName(IPs.get(i));
@@ -143,6 +143,26 @@ public class Server extends Thread {
         }
         String received = new String(packet.getData(), 0, packet.getLength());
         return received;
+    }
+
+    public ArrayList<Pair<ArrayList<Input>, String>> getKeyPressesFromClient(DatagramPacket packet) throws IOException, ClassNotFoundException {
+        byte data[] = packet.getData();
+        ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
+        Object object = objectInputStream.readObject();
+        ArrayList<Input> received = new ArrayList<>();
+        received = (ArrayList<Input>) object;
+        String ipFromWhereReceived = packet.getAddress().toString().substring(1);
+        String id = ipToID.get(ipFromWhereReceived);
+        logger.trace("Key press has been received from " + id);
+        ArrayList<Pair<ArrayList<Input>, String>> returnValue = new ArrayList<>();
+        //returnValue.add(received, id);
+        logger.trace("Return value of a key press is null for now. Need to fix it");
+        return returnValue;
+    }
+
+    public ArrayList<Pair<ArrayList<Input>, String>> getInputAndIP(){
+        return inputAndIP;
     }
 
 

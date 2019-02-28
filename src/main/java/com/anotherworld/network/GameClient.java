@@ -1,10 +1,11 @@
 package com.anotherworld.network;
 
 import com.anotherworld.tools.datapool.*;
+import com.anotherworld.tools.input.Input;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -19,6 +20,7 @@ public class GameClient extends Thread{
     private WallData wallData = null;
     private PlayerData clientPlayer = null;
     private String myID;
+    private static Logger logger = LogManager.getLogger(GameClient.class);
 
     public GameClient(String serverIP) throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
@@ -49,6 +51,21 @@ public class GameClient extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendKeyPresses(ArrayList<Input> input) throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ObjectOutputStream os = new ObjectOutputStream(outputStream);
+        os.writeObject(input);
+        byte[] data = outputStream.toByteArray();
+        DatagramPacket packet
+                = new DatagramPacket(data, data.length, address, port);
+        try {
+            socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        logger.trace("Key press has been send to the server");
     }
 
     public void waitForGameToStart(){
