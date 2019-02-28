@@ -207,7 +207,7 @@ public class GameSession {
         } else if (player.getState() == ObjectState.CHARGING) {
             System.out.println("DASH!");
             player.setState(ObjectState.DASHING);
-            Physics.charge(player);
+            //Physics.charge(player);
             player.setTimeStartedCharging(0);
         } else {
             if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
