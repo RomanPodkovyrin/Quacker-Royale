@@ -73,6 +73,7 @@ public class GameClient extends Thread{
             e.printStackTrace();
         }
         String received = new String(packet.getData(), 0, packet.getLength());
+        myID = received;
         System.out.println("My id is:" + received);
     }
 
@@ -128,11 +129,15 @@ public class GameClient extends Thread{
     }
 
     public PlayerData getClientPlayer(){
-        for (int i = 0; i < playerData.size(); i ++ ) {
-            if (playerData.get(i).getObjectID().equals(myID)) {
-                clientPlayer = playerData.get(i);
+        if (playerData != null) {
+            for (int i = 0; i < playerData.size(); i++) {
+                if (playerData.get(i).getObjectID().equals(myID)) {
+                    clientPlayer = playerData.get(i);
+                    return  clientPlayer;
+                }
             }
         }
+
         return this.clientPlayer;
     }
 

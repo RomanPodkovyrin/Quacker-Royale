@@ -19,6 +19,7 @@ import static com.anotherworld.tools.maths.Maths.getRandom;
 
 /**
  * This class allows view to call the functions to change individual settings and prepare the game.
+ * Also translates persistent settings stored in properties file into the game.
  *
  * @author Roman, Alfi
  */
@@ -35,6 +36,7 @@ public class GameSettings {
     private static float defaultPlayerSpeed;
     private float defaultPlayerRadius;
     private static int defaultPlayerHealth;
+    private static int defaultPlayerMaxCharge;
 
     // Settings regarding the ball defaults
     private static int defaultBallMaxTimer;
@@ -70,28 +72,31 @@ public class GameSettings {
     public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
                         ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSession) {
         this.currentPlayer = currentPlayer;
+        logger.info("GameSettings current player: " + currentPlayer);
         this.players = players;
+        logger.info("GameSettings players: " + players);
         this.ai = ai;
+        logger.info("GameSettings ai: " + ai);
         this.balls = balls;
+        logger.info("GameSettings balls: " + balls);
         this.platforms = platforms;
+        logger.info("GameSettings platform: " + platforms);
         this.walls = walls;
+        logger.info("GameSettings wall: " + walls);
         this.gameSession = gameSession;
+        logger.info("GameSettings session: " + gameSession);
+        loadAllGameValues();
 
     }
-
-
-    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
-
-        this.numberOfPlayers = numberOfPlayers;
-        this.numberofAIPlayers = numberOfAIPlayers;
-        this.numberOfBall = numberOfBalls;
+    public  void loadAllGameValues() {
 
         try {
             PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
 
-            this.defaultPlayerSpeed  = Float.parseFloat(propertyFileLogic.getValue("PLAYER_SPEED"));
+            this.defaultPlayerSpeed = Float.parseFloat(propertyFileLogic.getValue("PLAYER_SPEED"));
             this.defaultPlayerHealth = Integer.parseInt(propertyFileLogic.getValue("PLAYER_HEALTH"));
             this.defaultPlayerRadius = Float.parseFloat(propertyFileLogic.getValue("PLAYER_RADIUS"));
+            this.defaultPlayerMaxCharge = Integer.parseInt(propertyFileLogic.getValue("PLAYER_MAX_CHARGE"));
 
             this.defaultBallMaxTimer = Integer.parseInt(propertyFileLogic.getValue("BALL_MAX_TIMER"));
             this.defaultBallTimerDecrement = Integer.parseInt(propertyFileLogic.getValue("BALL_TIMER_DEC"));
@@ -108,6 +113,16 @@ public class GameSettings {
             e.printStackTrace();
         }
 
+    }
+
+
+    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
+
+        this.numberOfPlayers = numberOfPlayers;
+        this.numberofAIPlayers = numberOfAIPlayers;
+        this.numberOfBall = numberOfBalls;
+
+        loadAllGameValues();
         createGameFiles();
     }
 
@@ -363,9 +378,7 @@ public class GameSettings {
         return currentPlayer;
     }
 
-    public static float getDefaultPlayerSpeed() { return defaultPlayerSpeed; }
-
-    public static int getDefaultPlayerHealth() { return defaultPlayerHealth; }
+    public static int getDefaultPlayerMaxCharge() { return defaultPlayerMaxCharge; }
 
     public static int getBallMaxTimer() { return defaultBallMaxTimer; }
 
