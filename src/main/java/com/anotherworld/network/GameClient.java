@@ -1,6 +1,7 @@
 package com.anotherworld.network;
 
 import com.anotherworld.tools.datapool.*;
+import com.anotherworld.tools.input.Input;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -44,6 +45,18 @@ public class GameClient extends Thread{
         byte[] data = msg.getBytes();
         DatagramPacket packet
                 = new DatagramPacket(data, data.length, address, port);
+        try {
+            socket.send(packet);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendKeyPresses(ArrayList<Input> input){
+        Enum<?> en = input.get(0);
+        byte[] inputData = en.name().getBytes();
+        DatagramPacket packet
+                = new DatagramPacket(inputData, inputData.length, address, port);
         try {
             socket.send(packet);
         } catch (IOException e) {
