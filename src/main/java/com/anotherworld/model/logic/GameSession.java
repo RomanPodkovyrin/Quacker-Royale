@@ -101,7 +101,7 @@ public class GameSession {
                     } else player.damage(ball.getDamage());
 
                     Physics.collided(ball, player);
-                    System.out.println(player.getCharacterID() + " collide with ball");
+                    logger.trace(player.getCharacterID() + " collide with ball");
                 }
             }
 
