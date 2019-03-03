@@ -192,7 +192,7 @@ public class GameSession {
      */
     public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {
-
+            
             player.setVelocity(0, 0);
             long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
@@ -202,14 +202,31 @@ public class GameSession {
                     player.setTimeStartedCharging(gameData.getTicksElapsed());
                     player.setState(ObjectState.CHARGING);
                 }
+                
                 player.incrementChargeLevel();
             }
         } else if (player.getState() == ObjectState.CHARGING) {
+            if (keyPresses.contains(Input.UP)) player.setAngle(0);
+            else if (keyPresses.contains(Input.DOWN)) player.setAngle(180);
+            else player.setAngle(0);;
+
+            if (keyPresses.contains(Input.LEFT)) player.setAngle(270);
+            else if (keyPresses.contains(Input.RIGHT)) player.setAngle(90);
+            else player.setAngle(0);
             System.out.println("DASH!");
             player.setState(ObjectState.DASHING);
-            //Physics.charge(player);
+            Physics.charge(player);
             player.setTimeStartedCharging(0);
-        } else {
+        } 
+        else if (player.getState().equals(ObjectState.DASHING)) {
+            if(player.getChargeLevel()>0)
+                Physics.charge(player);
+            else{
+                player.setAngle(0);
+                player.setState(ObjectState.IDLE);
+            }
+        }
+            else {
             if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
             else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
             else player.setYVelocity(0);

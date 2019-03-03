@@ -188,13 +188,13 @@ public class Physics {
 
     public static ArrayList<Matrix> calculateCollision(AbstractMovable objectA,
             AbstractMovable objectB) {
-        Matrix pointA = objectA.getCoordinates();
-        Matrix pointB = objectB.getCoordinates();
+        Matrix pointA = new Matrix(objectA.getXCoordinate(), objectA.getYCoordinate());
+        Matrix pointB = new Matrix(objectB.getXCoordinate(), objectB.getYCoordinate());
         double angleBetweenCircles = Math.atan2(pointB.getY() - pointA.getY(),
                 pointB.getX() - pointA.getX());
 
-        float radiusA = objectA.getRadius()*1.2f;
-        float radiusB = objectB.getRadius()*1.2f;
+        float radiusA = objectA.getRadius()*1.05f;
+        float radiusB = objectB.getRadius()*1.05f;
 
         Matrix midpointBetweenCircles = new Matrix(
                 (pointA.getX() + pointB.getX()) / 2,
@@ -258,19 +258,29 @@ public class Physics {
      */
     public static void collided(AbstractMovable objectA, AbstractMovable objectB) {
 
+        ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
+        Matrix safe = newCoordinate.get(0);
+        objectA.setCoordinates(safe.getX(), safe.getY());
+        safe = newCoordinate.get(1);
+        objectB.setCoordinates(safe.getX(), safe.getY());
+        
+        
         Matrix coordA = objectA.getCoordinates();
         Matrix coordB = objectB.getCoordinates();
         Matrix angleFinding = coordA.sub(coordB);
         float angle = MatrixMath.vectorAngle(angleFinding);
+        float angleA = (float) (angle * Math.PI / 180);
 
         if (objectA instanceof Ball) {
-            objectA.setVelocity((float) (objectA.getSpeed() * Math.cos(angle)),
-                    (float) (objectA.getSpeed() * Math.sin(angle)));
+            objectA.setVelocity(
+                    (float) (objectA.getSpeed() * Math.cos(angleA)),
+                    (float) (objectA.getSpeed() * Math.sin(angleA)));
             objectA.setAngle(angle);
 
             if (objectB instanceof Ball) {
                 angleFinding = coordB.sub(coordA);
                 angle = MatrixMath.vectorAngle(angleFinding);
+                angleA = (float) (angle * Math.PI / 180);
                 objectB.setVelocity(
                         (float) (objectA.getSpeed() * Math.cos(angle)),
                         (float) (objectA.getSpeed() * Math.sin(angle)));
@@ -278,11 +288,6 @@ public class Physics {
             }
 
         }
-        ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
-        Matrix safe = newCoordinate.get(0);
-        objectA.setCoordinates(safe.getX(), safe.getY());
-        safe = newCoordinate.get(1);
-        objectB.setCoordinates(safe.getX(), safe.getY());
         logger.debug("Completed collision event between "
                 + (objectA instanceof Ball ? "Ball" : "Player "
                         + ((Player) objectA).getCharacterID())
@@ -303,13 +308,14 @@ public class Physics {
                 (float) (fallingSpeed * Math.cos(angle)));
     }
 
-//     public static void charge(Player player) {
-//     int charge = player.getChargeLevel();
-//     float speedIncreases = 1 + (1 / 5 * charge);
-//     float speed = player.getSpeed() * speedIncreases;
-//     float angle = player.getAngle();
-//     player.setVelocity((float) (speed * Math.sin(angle)),
-//     (float) (speed * Math.cos(angle)));
-//     player.setChargeLevel(charge > 0 ? charge - 1 : charge);
-//     }
+    public static void charge(Player player) {
+        int charge = player.getChargeLevel();
+        float speedIncreases = 1 + ((1 / 5 * charge));
+        float speed = 5 * speedIncreases;
+        float angle = (float) (player.getAngle() * Math.PI / 180);
+
+        player.setVelocity((float) (speed * Math.sin(angle)),
+                (float) (speed * Math.cos(angle)));
+        player.setChargeLevel(charge - 1);
+    }
 }
