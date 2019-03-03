@@ -145,7 +145,7 @@ public class Server extends Thread {
         return received;
     }
 
-    public ArrayList<Pair<ArrayList<Input>, String>> getKeyPressesFromClient(DatagramPacket packet) throws IOException, ClassNotFoundException {
+    private ArrayList<Pair<ArrayList<Input>, String>> getKeyPressesFromClient(DatagramPacket packet) throws IOException, ClassNotFoundException {
         byte data[] = packet.getData();
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
@@ -156,7 +156,7 @@ public class Server extends Thread {
         String id = ipToID.get(ipFromWhereReceived);
         logger.trace("Key press has been received from " + id);
         ArrayList<Pair<ArrayList<Input>, String>> returnValue = new ArrayList<>();
-        //returnValue.add(received, id);
+        returnValue.add( new Pair<>(received, id));
         logger.trace("Return value of a key press is null for now. Need to fix it");
         return returnValue;
     }

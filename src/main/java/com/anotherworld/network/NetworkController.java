@@ -1,11 +1,16 @@
 package com.anotherworld.network;
 
+import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.model.movable.Player;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.*;
 import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -94,29 +99,17 @@ public class NetworkController {
     /**
      * The Network control for the client.
      */
-    public void clientControl() {
+    public void clientControl(KeyListener keyListener) {
 
         if (isClient()) {
             // send the given key presses to the host
             ArrayList<Input> keyPresses = keyListener.getKeyPresses();
-            if (keyPresses.contains(Input.CHARGE)) {
-                //TODO: Implement charge action.
-            } else {
-                if (keyPresses.contains(Input.UP)) {
-                    //
-                } else if (keyPresses.contains(Input.DOWN)) {
-                    //
-                } else {
-                    //
-                }
 
-                if (keyPresses.contains(Input.LEFT)) {
-
-                } else if (keyPresses.contains(Input.RIGHT)) {
-                    //
-                } else {
-                    //
-                }
+           // send key presses to host
+            try {
+                client.sendKeyPresses(keyPresses);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
 
@@ -170,6 +163,28 @@ public class NetworkController {
 
         if (isServer()) {
             // TODO get the button presses from the client
+
+//            GameSession.updatePlayer();
+            ArrayList<Pair<ArrayList<Input>,String>> keyPress = server.getInputAndIP();
+            for (Pair<ArrayList<Input>, String> input: keyPress) {
+
+                ArrayList<Input> in = input.getKey();
+                String id = input.getValue();
+
+                for (PlayerData player: allPlayers) {
+
+                    if (player.getObjectID().equals(id)) {
+                        if (in.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
+                        else if (in.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
+                        else player.setYVelocity(0);
+
+                        if (in.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
+                        else if (in.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
+                        else player.setXVelocity(0);
+                    }
+                }
+
+            }
 
 
 
