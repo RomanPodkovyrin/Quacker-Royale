@@ -104,7 +104,7 @@ public class GameSessionController {
         while (viewThread.isAlive()) {
 
             // if client check if there are game objects to update
-            network.clientControl();
+            network.clientControl(keyListener);
 
 
             // Get time before computation
