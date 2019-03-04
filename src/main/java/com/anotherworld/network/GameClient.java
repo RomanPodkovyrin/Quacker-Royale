@@ -58,6 +58,7 @@ public class GameClient extends Thread{
         ObjectOutputStream os = new ObjectOutputStream(outputStream);
         os.writeObject(input);
         byte[] data = outputStream.toByteArray();
+        
         DatagramPacket packet
                 = new DatagramPacket(data, data.length, address, port);
         try {
@@ -150,16 +151,13 @@ public class GameClient extends Thread{
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        GameClient client = new GameClient("10.42.0.1");
+        GameClient client = new GameClient("192.168.137.222");
+        client.start();
         int counter=0;
         while(true){
-            counter++;
-            client.sendDataToServer( "hello from anton "+counter);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            ArrayList<Input> keyPresses = new ArrayList<>();
+            keyPresses.add(Input.LEFT);
+            client.sendKeyPresses(keyPresses);
         }
     }
 }
