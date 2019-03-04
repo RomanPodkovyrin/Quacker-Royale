@@ -2,14 +2,14 @@ package com.anotherworld.network;
 
 import com.anotherworld.tools.datapool.*;
 import com.anotherworld.tools.input.Input;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class GameClient extends Thread{
+
+public class GameClient extends Thread {
     private DatagramSocket socket;
     private InetAddress address;
     private int port = 4445;
@@ -31,8 +31,8 @@ public class GameClient extends Thread{
         waitForGameToStart();
     }
 
-    public void run(){
-        while(!stopClient){
+    public void run() {
+        while(!stopClient) {
             try {
                 getObjectFromServer();
             } catch (IOException e) {
@@ -75,7 +75,7 @@ public class GameClient extends Thread{
         logger.trace("Key press has been send to the server");
     }
 
-    public void waitForGameToStart(){
+    public void waitForGameToStart() {
         byte[] data = new byte[16];
         DatagramPacket packet = new DatagramPacket(data, data.length);
         try {
@@ -88,58 +88,62 @@ public class GameClient extends Thread{
         System.out.println("My id is:" + received);
     }
 
-    public void getObjectFromServer() throws IOException, ClassNotFoundException {
+    public void getObjectFromServer() throws ClassNotFoundException, IOException {
         byte incomingData[] = new byte[1024];
         DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
-        socket.receive(incomingPacket);
+        try {
+            socket.receive(incomingPacket);
+        } catch (IOException e) {
+            logger.error("Client socket has been closed.");
+        }
         byte data[] = incomingPacket.getData();
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
         Object object = objectInputStream.readObject();
-        if(object instanceof ArrayList<?>) {
+        if (object instanceof ArrayList<?>) {
             System.out.println("ArrayList has been received");
             System.out.println(" array : " + object);
             ArrayList<?> ballOrPlayer = ((ArrayList<?>)object);
-            if(ballOrPlayer.get(0) instanceof PlayerData){
+            if (ballOrPlayer.get(0) instanceof PlayerData) {
                 playerData = (ArrayList<PlayerData>) ballOrPlayer;
                 System.out.println("Player data object has been received");
-            } else if(ballOrPlayer.get(0) instanceof BallData){
+            } else if (ballOrPlayer.get(0) instanceof BallData) {
                 ballData = (ArrayList<BallData>) ballOrPlayer;
                 System.out.println("Ball object received.");
             }
-        } else if(object instanceof GameSessionData){
+        } else if (object instanceof GameSessionData) {
             gameSessionData = (GameSessionData) object;
             System.out.println("GameSessionData object has been received");
-        } else if(object instanceof PlatformData){
+        } else if (object instanceof PlatformData) {
             platformData = (PlatformData) object;
             System.out.println("PlatformData object has been received");
-        } else if(object instanceof WallData){
+        } else if (object instanceof WallData) {
             wallData = (WallData) object;
             System.out.println("WallData object has been received");
         }
     }
 
-    public ArrayList<BallData> getBallData(){
+    public ArrayList<BallData> getBallData() {
         return this.ballData;
     }
 
-    public ArrayList<PlayerData> getPlayerData(){
+    public ArrayList<PlayerData> getPlayerData() {
         return this.playerData;
     }
 
-    public GameSessionData getGameSessionData(){
+    public GameSessionData getGameSessionData() {
         return this.gameSessionData;
     }
 
-    public PlatformData getPlatformData(){
+    public PlatformData getPlatformData() {
         return this.platformData;
     }
 
-    public WallData getWallData(){
+    public WallData getWallData() {
         return this.wallData;
     }
 
-    public PlayerData getClientPlayer(){
+    public PlayerData getClientPlayer() {
         if (playerData != null) {
             for (int i = 0; i < playerData.size(); i++) {
                 if (playerData.get(i).getObjectID().equals(myID)) {
@@ -159,8 +163,8 @@ public class GameClient extends Thread{
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         GameClient client = new GameClient("192.168.137.222");
         client.start();
-        int counter=0;
-        while(true){
+        int counter = 0;
+        while (true) {
             ArrayList<Input> keyPresses = new ArrayList<>();
             keyPresses.add(Input.LEFT);
             client.sendKeyPresses(keyPresses);
