@@ -5,6 +5,7 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.PropertyReader;
 
@@ -188,13 +189,15 @@ public class Physics {
 
     public static ArrayList<Matrix> calculateCollision(AbstractMovable objectA,
             AbstractMovable objectB) {
-        Matrix pointA = new Matrix(objectA.getXCoordinate(), objectA.getYCoordinate());
-        Matrix pointB = new Matrix(objectB.getXCoordinate(), objectB.getYCoordinate());
+        Matrix pointA = new Matrix(objectA.getXCoordinate(),
+                objectA.getYCoordinate());
+        Matrix pointB = new Matrix(objectB.getXCoordinate(),
+                objectB.getYCoordinate());
         double angleBetweenCircles = Math.atan2(pointB.getY() - pointA.getY(),
                 pointB.getX() - pointA.getX());
 
-        float radiusA = objectA.getRadius()*1.05f;
-        float radiusB = objectB.getRadius()*1.05f;
+        float radiusA = objectA.getRadius() * 1.1f;
+        float radiusB = objectB.getRadius() * 1.1f;
 
         Matrix midpointBetweenCircles = new Matrix(
                 (pointA.getX() + pointB.getX()) / 2,
@@ -263,30 +266,38 @@ public class Physics {
         objectA.setCoordinates(safe.getX(), safe.getY());
         safe = newCoordinate.get(1);
         objectB.setCoordinates(safe.getX(), safe.getY());
-        
-        
+
         Matrix coordA = objectA.getCoordinates();
         Matrix coordB = objectB.getCoordinates();
-        Matrix angleFinding = coordA.sub(coordB);
-        float angle = MatrixMath.vectorAngle(angleFinding);
-        float angleA = (float) (angle * Math.PI / 180);
-
+        Matrix n = coordA.sub(coordB);
+        n.normalizeThis();
+        // TODO: vector point A-B and vector point B-A.
+        // The vector point A-B applies to B, and B-A applies to A.
+        // Angle: a.XVelo/
+        float newVeloA = MatrixMath.innerProduct(objectA.getVelocity(), n);
+        float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), n);
+        float optimisedP = (float) Math.min((2.0 * (newVeloA - newVeloB)) / 2,
+                0);
         if (objectA instanceof Ball) {
-            objectA.setVelocity(
-                    (float) (objectA.getSpeed() * Math.cos(angleA)),
-                    (float) (objectA.getSpeed() * Math.sin(angleA)));
-            objectA.setAngle(angle);
+
+            objectA.setVelocity(objectA.getXVelocity()
+                    - (optimisedP * n.getX()), objectA.getYVelocity()
+                    - (optimisedP * n.getY()));
 
             if (objectB instanceof Ball) {
-                angleFinding = coordB.sub(coordA);
-                angle = MatrixMath.vectorAngle(angleFinding);
-                angleA = (float) (angle * Math.PI / 180);
                 objectB.setVelocity(
-                        (float) (objectA.getSpeed() * Math.cos(angle)),
-                        (float) (objectA.getSpeed() * Math.sin(angle)));
-                objectB.setAngle(angle);
+                        objectB.getXVelocity() + (optimisedP * n.getX()),
+                        objectB.getYVelocity() + (optimisedP * n.getY()));
             }
 
+        }
+        if (objectA instanceof Player) {
+            if (((Player) objectA).getState().equals(ObjectState.DASHING)) {
+                if (objectB instanceof Player) {
+                    objectB.setCoordinates(objectB.getXCoordinate(),
+                            objectB.getYCoordinate());
+                }
+            }
         }
         logger.debug("Completed collision event between "
                 + (objectA instanceof Ball ? "Ball" : "Player "
@@ -311,11 +322,9 @@ public class Physics {
     public static void charge(Player player) {
         int charge = player.getChargeLevel();
         float speedIncreases = 1 + ((1 / 5 * charge));
-        float speed = 5 * speedIncreases;
         float angle = (float) (player.getAngle() * Math.PI / 180);
 
-        player.setVelocity((float) (speed * Math.sin(angle)),
-                (float) (speed * Math.cos(angle)));
+        player.setVelocity((float) (Math.sin(angle)), (float) (Math.cos(angle)));
         player.setChargeLevel(charge - 1);
     }
 }
