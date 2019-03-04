@@ -192,7 +192,7 @@ public class GameSession {
      */
     public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {
-            
+            //TODO: Fix utterly broken dash.
             player.setVelocity(0, 0);
             long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
@@ -213,7 +213,6 @@ public class GameSession {
             if (keyPresses.contains(Input.LEFT)) player.setAngle(270);
             else if (keyPresses.contains(Input.RIGHT)) player.setAngle(90);
             else player.setAngle(0);
-            System.out.println("DASH!");
             player.setState(ObjectState.DASHING);
             Physics.charge(player);
             player.setTimeStartedCharging(0);
@@ -235,5 +234,15 @@ public class GameSession {
             else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
             else player.setXVelocity(0);
         }
+    }
+
+    public static void updatePlayer(Player player, ArrayList<Input> keyPresses) {
+        if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
+        else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
+        else player.setYVelocity(0);
+
+        if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
+        else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
+        else player.setXVelocity(0);
     }
 }
