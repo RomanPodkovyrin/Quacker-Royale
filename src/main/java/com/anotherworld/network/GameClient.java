@@ -21,6 +21,7 @@ public class GameClient extends Thread{
     private PlayerData clientPlayer = null;
     private String myID;
     private static Logger logger = LogManager.getLogger(GameClient.class);
+    private boolean stopClient = false;
 
     public GameClient(String serverIP) throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
@@ -31,7 +32,7 @@ public class GameClient extends Thread{
     }
 
     public void run(){
-        while(true){
+        while(!stopClient){
             try {
                 getObjectFromServer();
             } catch (IOException e) {
@@ -40,6 +41,11 @@ public class GameClient extends Thread{
                 e.printStackTrace();
             }
         }
+    }
+
+    public void stopClient() {
+        stopClient = true;
+        socket.close();
     }
 
     public void sendDataToServer(String msg) {

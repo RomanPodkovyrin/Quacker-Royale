@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.anotherworld.tools.input.Input;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,6 +93,11 @@ public class Server extends Thread {
             }
         }
 
+//        socket.close();
+    }
+
+    public void stopServer() {
+        serverIsRunning = false;
         socket.close();
     }
 
@@ -158,14 +164,26 @@ public class Server extends Thread {
         String ipFromWhereReceived = packet.getAddress().toString().substring(1);
         String id = ipToID.get(ipFromWhereReceived);
         logger.trace("Key press has been received from " + id);
-        ArrayList<Pair<ArrayList<Input>, String>> returnValue = new ArrayList<>();
+
+
+        for (int i = 0; i < inputAndIP.size(); i++) {
+            Pair<ArrayList<Input>, String> playerCommand = inputAndIP.get(i);
+
+            if (playerCommand.getValue().equals(id)) {
+                playerCommand.getKey().addAll(received);
+                inputAndIP.set(i,new Pair<>(playerCommand.getKey(),id));
+                return inputAndIP;
+            }
+        }
+        ArrayList<Pair<ArrayList<Input>, String>> returnValue = new ArrayList<>(inputAndIP);
         returnValue.add( new Pair<>(received, id));
-        logger.trace("Return value of a key press is null for now. Need to fix it");
         return returnValue;
     }
 
     public ArrayList<Pair<ArrayList<Input>, String>> getInputAndIP(){
-        return inputAndIP;
+        ArrayList<Pair<ArrayList<Input>, String>> temp = new ArrayList<>(inputAndIP);
+        inputAndIP.clear();
+        return temp;
     }
 
 
