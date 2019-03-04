@@ -157,6 +157,14 @@ public class NetworkController {
 
     }
 
+    public void stopNetworking() {
+        if (isServer()) {
+            server.stopServer();
+        } else if (isClient()) {
+            client.stopClient();
+        }
+    }
+
     /**
      * Network control for the server.
      */

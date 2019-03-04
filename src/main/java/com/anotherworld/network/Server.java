@@ -93,6 +93,11 @@ public class Server extends Thread {
             }
         }
 
+//        socket.close();
+    }
+
+    public void stopServer() {
+        serverIsRunning = false;
         socket.close();
     }
 

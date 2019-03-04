@@ -168,6 +168,9 @@ public class GameSessionController {
         logger.trace("Music stopped");
         AudioControl.stopSoundEffects();
         logger.trace("Stopped SoundEffects");
+
+        network.stopNetworking();
+        logger.trace("Stopped networking");
         //send out the message saying that either host or client have disconnected
         //if a client has disconnected should we just give control to the ai ?
     }
