@@ -6,6 +6,7 @@ import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.AbstractMovable;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.PropertyReader;
 
 import java.io.IOException;
@@ -49,8 +50,8 @@ public class Physics {
      *            the object to move
      */
     public static void move(AbstractMovable object) {
-        float newXCoordinate = object.getXCoordinate() + object.getXVelocity();
-        float newYCoordinate = object.getYCoordinate() + object.getYVelocity();
+        float newXCoordinate = object.getXCoordinate() + object.getXVelocity() * object.getSpeed();
+        float newYCoordinate = object.getYCoordinate() + object.getYVelocity() * object.getSpeed();
         object.setCoordinates(newXCoordinate, newYCoordinate);
         logger.debug((object instanceof Player ? "Player "
                 + ((Player) object).getCharacterID() : "Ball ")
@@ -60,9 +61,9 @@ public class Physics {
     /**
      * To check collision of the objects.
      *
-     * @param a
+     * @param objectA
      *            the first object to check
-     * @param b
+     * @param objectB
      *            the second object to check
      */
     public static boolean checkCollision(AbstractMovable objectA,
@@ -312,10 +313,7 @@ public class Physics {
         int charge = player.getChargeLevel();
         float speedIncreases = 1 + ((1 / 5 * charge));
         float speed = 5 * speedIncreases;
-        float angle = (float) (player.getAngle() * Math.PI / 180);
 
-        player.setVelocity((float) (speed * Math.sin(angle)),
-                (float) (speed * Math.cos(angle)));
-        player.setChargeLevel(charge - 1);
+        player.setSpeed(speed);
     }
 }
