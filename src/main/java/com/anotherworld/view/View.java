@@ -142,6 +142,13 @@ public class View implements Runnable {
             throw new RuntimeException("Couldn't start any rendering program");
         }
         
+        int error = glGetError();
+        
+        while (error != GL_NO_ERROR) {
+            logger.error("Initialise GL error " + error);
+            error = glGetError();
+        }
+        
         while (!glfwWindowShouldClose(window)) {
 
             glClear(GL_COLOR_BUFFER_BIT);
@@ -160,10 +167,10 @@ public class View implements Runnable {
 
             glFlush();
             
-            int error = glGetError();
+            error = glGetError();
             
             while (error != GL_NO_ERROR) {
-                logger.error("GL error " + error);
+                logger.error("Display GL error " + error);
                 error = glGetError();
             }
 

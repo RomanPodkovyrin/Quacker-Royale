@@ -84,5 +84,10 @@ public abstract class Programme {
      * Resets to the last matrix pushed onto the stack or the identity if there are none left.
      */
     public abstract void popMatrix();
+
+    /**
+     * Should draw an object in the future but for now just sets the uniform matrix.
+     */
+    public abstract void draw();
     
 }

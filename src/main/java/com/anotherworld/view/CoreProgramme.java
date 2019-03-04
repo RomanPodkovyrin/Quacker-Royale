@@ -1,12 +1,18 @@
 package com.anotherworld.view;
 
-import static org.lwjgl.opengl.GL46.*; 
+import static org.lwjgl.opengl.GL46.*;
+
+import com.anotherworld.view.data.Matrix2d; 
 
 import java.io.IOException;
+import java.nio.FloatBuffer;
 import java.util.Optional;
+import java.util.Stack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import org.lwjgl.BufferUtils;
 
 /**
  * The core rendering engine compatible with most systems.
@@ -16,6 +22,8 @@ import org.apache.logging.log4j.Logger;
 public class CoreProgramme extends Programme {
 
     private static Logger logger = LogManager.getLogger();
+    
+    private Stack<Matrix2d> matrixStack;
     
     private int programmeId;
     private Optional<Integer> uniformId;
@@ -30,6 +38,7 @@ public class CoreProgramme extends Programme {
     public CoreProgramme() throws ProgrammeUnavailableException {
         init();
         uniformId = Optional.empty();
+        matrixStack = new Stack<>();
         try {
             textureMap = new TextureMap("res/images/alien.png");
         } catch (IOException ex) {
@@ -43,8 +52,8 @@ public class CoreProgramme extends Programme {
         
         try {
 
-            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Texture.vs", GL_VERTEX_SHADER);
-            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Texture.frag", GL_FRAGMENT_SHADER);
+            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Test.vs", GL_VERTEX_SHADER);
+            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Test.frag", GL_FRAGMENT_SHADER);
             
         } catch (IOException e) {
             logger.warn("Couldn't load shader");
@@ -90,13 +99,13 @@ public class CoreProgramme extends Programme {
     
     private void setUpUniform() {
         uniformId = Optional.of(glGetUniformLocation(programmeId, "tex"));
-        glProgramUniform1i(programmeId, uniformId.get(), 0);
+        glUniform1i(uniformId.get(), 0);
     }
     
     @Override
     public void use() {
-        glEnable(GL_TEXTURE_2D);
         glUseProgram(programmeId);
+        //glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureMap.getId());
         setUpUniform();
     }
@@ -105,12 +114,12 @@ public class CoreProgramme extends Programme {
     public void close() {
         glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
-        glDisable(GL_TEXTURE_2D);
     }
     
     @Override
     public void destroy() {
         this.close();
+        textureMap.destroy();
         vertexShader.destroy();
         fragShader.destroy();
         glDeleteProgram(programmeId);
@@ -125,35 +134,80 @@ public class CoreProgramme extends Programme {
     public boolean supportsVertArrayObj() {
         return true;
     }
-
-    @Override
-    public void loadIdentity() {
-        glLoadIdentity();
+    
+    private Matrix2d getIdentity() {
+        return Matrix2d.genIdentity(4);
+    }
+    
+    private Matrix2d getTranslation(float x, float y, float z) {
+        return Matrix2d.homTranslate3d(x, y, z);
+    }
+    
+    private Matrix2d getScale(float x, float y, float z) {
+        return Matrix2d.homScale3d(x, y, z);
+    }
+    
+    private Matrix2d getRotation(float theta) {
+        return Matrix2d.homRotate3d(theta);
+    }
+    
+    private Matrix2d getCurrentMatrix() {
+        if (matrixStack.isEmpty()) {
+            return getIdentity();
+        }
+        return matrixStack.peek();
+    }
+    
+    private void multiplyCurrent(Matrix2d b) {
+        Matrix2d currentMatrix = getCurrentMatrix();
+        if (!matrixStack.isEmpty()) {
+            matrixStack.pop();
+        }
+        matrixStack.push(currentMatrix.mult(b));
     }
 
     @Override
     public void pushMatrix() {
-        glPushMatrix();
+        matrixStack.push(getCurrentMatrix());
+    }
+
+    @Override
+    public void loadIdentity() {
+        matrixStack.clear();
     }
 
     @Override
     public void translatef(float x, float y, float z) {
-        glTranslatef(x, y, z);
+        multiplyCurrent(getTranslation(x, y, z));
     }
 
     @Override
     public void scalef(float x, float y, float z) {
-        glScalef(x, y, z);
+        multiplyCurrent(getScale(x, y, z));
     }
 
     @Override
     public void rotatef(float angle, float x, float y, float z) {
-        glRotatef(angle, x, y, z);
+        assert (y == 0);
+        assert (z == 0);
+        multiplyCurrent(getRotation(angle));
     }
 
     @Override
     public void popMatrix() {
-        glPopMatrix();
+        if (!matrixStack.isEmpty()) {
+            matrixStack.pop();
+        }
+    }
+
+    @Override
+    public void draw() {
+        FloatBuffer temp = BufferUtils.createFloatBuffer(16);
+        float[] matrix = getCurrentMatrix().getPoints();
+        temp.put(matrix);
+        temp.flip();
+        int uniformId = glGetUniformLocation(programmeId, "Transformation");
+        glUniformMatrix4fv(uniformId, false, temp);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.anotherworld.view;
 
+import static org.lwjgl.opengl.GL46.*;
 import static org.lwjgl.opengl.GL46.GL_NEAREST;
 import static org.lwjgl.opengl.GL46.GL_REPEAT;
 import static org.lwjgl.opengl.GL46.GL_RGBA;
@@ -66,16 +67,20 @@ public class TextureMap {
         
         glBindTexture(GL_TEXTURE_2D, id);
         
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this.getWidth(), this.getHeight(), 0, this.getEncoding(), GL_UNSIGNED_BYTE, this.getPixels());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this.getWidth(), this.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, this.getPixels());
         
         glBindTexture(GL_TEXTURE_2D, 0);
         
         return id;
+    }
+    
+    public void destroy() {
+        glDeleteTextures(GL_TEXTURE_2D);
     }
 
     /**
@@ -115,7 +120,7 @@ public class TextureMap {
      * @return the pixels
      */
     public ByteBuffer getPixels() {
-        pixels.flip();
+        pixels.position(0);
         pixels.limit(pixels.capacity());
         return pixels;
     }

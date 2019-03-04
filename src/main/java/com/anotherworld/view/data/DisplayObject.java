@@ -71,9 +71,9 @@ public abstract class DisplayObject {
         FloatBuffer f = displayObject.getFloatBuffer();
         glBufferData(GL_ARRAY_BUFFER, f, GL_STATIC_DRAW);
         
-        glEnableVertexAttribArray(0);
-        
         glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
+        
+        glEnableVertexAttribArray(0);
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
@@ -82,9 +82,19 @@ public abstract class DisplayObject {
         FloatBuffer g = displayObject.getColourBuffer();
         glBufferData(GL_ARRAY_BUFFER, g, GL_STATIC_DRAW);
         
+        glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+        
         glEnableVertexAttribArray(1);
         
-        glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        displayObject.textureId = glGenBuffers();
+        glBindBuffer(GL_ARRAY_BUFFER, displayObject.textureId);
+        glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
+        
+        glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
+        
+        glEnableVertexAttribArray(2);
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
@@ -119,22 +129,27 @@ public abstract class DisplayObject {
     /**
      * Draws the object using the stored points.
      */
-    public void draw() {
+    public void draw(Programme programme) {
         logger.trace("Buffer vaoID " + vaoId + " " + (glIsVertexArray(vaoId) ? "exists" : "wasn't found"));
         logger.trace("Buffer vertices " + verticesId + " " + (glIsBuffer(verticesId) ? "exists" : "wasn't found"));
         logger.trace("Buffer edges " + edgesId + " " + (glIsBuffer(edgesId) ? "exists" : "wasn't found"));
         
         if (this.shouldDraw()) {
+            
+            programme.draw();
+            
             glBindVertexArray(vaoId);
             glEnableVertexAttribArray(0);
             glEnableVertexAttribArray(1);
+            glEnableVertexAttribArray(2);
     
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgesId);
             
             glDrawElements(this.getDisplayType(), this.points.getN(), GL_UNSIGNED_INT, 0);
     
             glDisableClientState(GL_VERTEX_ARRAY);
-    
+
+            glDisableVertexAttribArray(2);
             glDisableVertexAttribArray(1);
             glDisableVertexAttribArray(0);
             glBindVertexArray(0);
@@ -179,11 +194,34 @@ public abstract class DisplayObject {
         return b;
     }
     
+    private float getXScale() {
+        return getScale(0);
+    }
+    
+    private float getYScale() {
+        return getScale(0);
+    }
+    
+    private float getScale(int axis) {
+        float min = points.getValue(axis, 0);
+        float max = points.getValue(axis, 0);
+        for (int j = 1; j < points.getN(); j++) {
+            if (points.getValue(axis, j) < min) {
+                min = points.getValue(axis, j);
+            } else if (points.getValue(axis, j) > max) {
+                max = points.getValue(axis, j);
+            }
+        }
+        return max - min;
+    }
+    
     private FloatBuffer getTextureBuffer() {
         FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
-        for (int i = 0; i < points.getN(); i++) {
-            b.put((float)Math.random());
-            b.put((float)Math.random());
+        float xScale = getXScale();
+        float yScale = getYScale();
+        for (int j = 0; j < points.getN(); j++) {
+            b.put((points.getValue(0, j) / xScale) + 0.5f);
+            b.put(-(points.getValue(1, j) / yScale) + 0.5f);
         }
         b.flip();
         return b;

@@ -62,7 +62,7 @@ public class GraphicsDisplay {
         for (int i = 0; i < objects.size(); i++) {
             programme.pushMatrix();
             objects.get(i).transform(programme);
-            objects.get(i).draw();
+            objects.get(i).draw(programme);
             programme.popMatrix();
         }
         programme.popMatrix();

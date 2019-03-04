@@ -1,8 +1,5 @@
 package com.anotherworld.view.data;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 /**
  * Stores an array of points that define an object.
  * @author Jake Stewart
@@ -20,7 +17,6 @@ public class Points2d {
      * @param n The number of points
      * @throws MatrixSizeException When m or n are less than 0
      */
-    @SuppressWarnings("unchecked")
     public Points2d(int m, int n) {
         if (m < 0 || n < 0) {
             throw new IndexOutOfBoundsException("Size must be non negative");
@@ -154,6 +150,7 @@ public class Points2d {
      * @return The points of the circle
      */
     protected static final Points2d genCircle(float r) {
+        r = 0.5f;
         Points2d points = new Points2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
