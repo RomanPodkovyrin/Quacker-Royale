@@ -192,47 +192,46 @@ public class GameSession {
      */
     public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {
-            //TODO: Fix utterly broken dash.
-            player.setVelocity(0, 0);
+            //TODO: Fix clunky dash.
+            player.setSpeed(0);
             long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
-            if(player.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()
+            if (player.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()
                     && timeSpentCharging % 60 == 0) {
-                if (player.getState() != ObjectState.CHARGING) {
+
+                if (!player.isCharging()) {
                     player.setTimeStartedCharging(gameData.getTicksElapsed());
                     player.setState(ObjectState.CHARGING);
                 }
-                
+
                 player.incrementChargeLevel();
             }
-        } else if (player.getState() == ObjectState.CHARGING) {
-            if (keyPresses.contains(Input.UP)) player.setAngle(0);
-            else if (keyPresses.contains(Input.DOWN)) player.setAngle(180);
-            else player.setAngle(0);;
-
-            if (keyPresses.contains(Input.LEFT)) player.setAngle(270);
-            else if (keyPresses.contains(Input.RIGHT)) player.setAngle(90);
-            else player.setAngle(0);
-            player.setState(ObjectState.DASHING);
-            Physics.charge(player);
-            player.setTimeStartedCharging(0);
-        } 
-        else if (player.getState().equals(ObjectState.DASHING)) {
-            if(player.getChargeLevel()>0)
-                Physics.charge(player);
-            else{
-                player.setAngle(0);
-                player.setState(ObjectState.IDLE);
-            }
         }
-            else {
-            if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
-            else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
-            else player.setYVelocity(0);
+        else {
 
-            if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
-            else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
-            else player.setXVelocity(0);
+            if (!player.isDashing()) {
+                if (keyPresses.contains(Input.UP)) player.setYVelocity(-1);
+                else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(1);
+                else player.setYVelocity(0);
+
+                if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-1);
+                else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(1);
+                else player.setXVelocity(0);
+            } else {
+                long timeSpentDashing = gameData.getTicksElapsed() - player.getTimeStartedCharging();
+
+                if(timeSpentDashing >= 10) {
+                    player.setSpeed(GameSettings.getDefaultPlayerSpeed());
+                    player.setState(ObjectState.IDLE);
+                    player.setVelocity(0,0);
+                }
+            }
+
+            if (player.isCharging()) {
+                Physics.charge(player);
+                player.setTimeStartedCharging(gameData.getTicksElapsed());
+                player.setState(ObjectState.DASHING);
+            }
         }
     }
 

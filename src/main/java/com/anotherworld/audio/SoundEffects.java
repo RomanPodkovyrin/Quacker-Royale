@@ -96,7 +96,7 @@ public class SoundEffects implements Runnable{
         line.open(audioFormat);
         line.start();
         numberOfBytesRead = 0;
-        abData = new byte[254000];
+        abData = new byte[2540000];
         while (numberOfBytesRead != -1)
         {
             numberOfBytesRead = audioInputStream.read(abData, 0, abData.length);

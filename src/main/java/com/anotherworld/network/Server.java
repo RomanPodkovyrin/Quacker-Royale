@@ -153,8 +153,12 @@ public class Server extends Thread {
         return received;
     }
 
-    private ArrayList<Pair<ArrayList<Input>, String>> getKeyPressesFromClient(DatagramPacket packet) throws IOException, ClassNotFoundException {
-        socket.receive(packet);
+    private ArrayList<Pair<ArrayList<Input>, String>> getKeyPressesFromClient(DatagramPacket packet) throws ClassNotFoundException, IOException {
+        try {
+            socket.receive(packet);
+        } catch (IOException e) {
+            logger.error("Server socket has been closed");
+        }
         byte data[] = packet.getData();
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
