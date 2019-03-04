@@ -32,6 +32,7 @@ public class NetworkController {
     private WallData wall;
     private GameSessionData gameSessionData;
     private static Logger logger = LogManager.getLogger(NetworkController.class);
+    private int hostSendRate = 0;
 
     /**
      * Created when playing a single player game.
@@ -175,13 +176,15 @@ public class NetworkController {
                 for (PlayerData player: allPlayers) {
 
                     if (player.getObjectID().equals(id)) {
-                        if (in.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
-                        else if (in.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
-                        else player.setYVelocity(0);
+//                        if (in.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
+//                        else if (in.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
+//                        else player.setYVelocity(0);
+//
+//                        if (in.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
+//                        else if (in.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
+//                        else player.setXVelocity(0);
 
-                        if (in.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
-                        else if (in.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
-                        else player.setXVelocity(0);
+                        GameSession.updatePlayer(player,in);
                     }
                 }
 
@@ -189,41 +192,47 @@ public class NetworkController {
 
 
 
-            // TODO send the states of of the game to clients
-            logger.trace("Sending all the players");
-            try {
-                server.sendObjectToClients(allPlayers);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            if (hostSendRate == 0) {
+                logger.trace("Sending all the players");
+                try {
+                    server.sendObjectToClients(allPlayers);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-            logger.trace("Sending all balls");
-            try {
-                server.sendObjectToClients(balls);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                logger.trace("Sending all balls");
+                try {
+                    server.sendObjectToClients(balls);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-            logger.trace("Sending the platform");
-            try {
-                server.sendObjectToClients(platform);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                logger.trace("Sending the platform");
+                try {
+                    server.sendObjectToClients(platform);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-            logger.trace("Sending the Wall");
-            try {
-                server.sendObjectToClients(wall);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            logger.trace("Sending the game session");
-            try {
-                server.sendObjectToClients(gameSessionData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                logger.trace("Sending the Wall");
+                try {
+                    server.sendObjectToClients(wall);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                logger.trace("Sending the game session");
+                try {
+                    server.sendObjectToClients(gameSessionData);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
+
+            } else if (hostSendRate == 1) {
+                hostSendRate = 0;
+            } else {
+                hostSendRate ++;
+            }
         }
     }
 }
