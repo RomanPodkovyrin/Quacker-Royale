@@ -55,7 +55,6 @@ public class SoundEffects implements Runnable{
     public void run()
     {
         while(running) {
-//            System.out.println("Still alive sound effect");
             try{
                 Thread.sleep(0);
             } catch (InterruptedException e) {
@@ -96,7 +95,7 @@ public class SoundEffects implements Runnable{
         line.open(audioFormat);
         line.start();
         numberOfBytesRead = 0;
-        abData = new byte[2540000];
+        abData = new byte[254];
         while (numberOfBytesRead != -1)
         {
             numberOfBytesRead = audioInputStream.read(abData, 0, abData.length);
@@ -105,6 +104,7 @@ public class SoundEffects implements Runnable{
                 line.write(abData, 0, numberOfBytesRead);
             }
         }
+        audioInputStream.close();
     }
 
     public void ballCollidedWithWall() {
@@ -122,7 +122,11 @@ public class SoundEffects implements Runnable{
         SoundEffects sound = new SoundEffects();
         while(true){
             Scanner sc = new Scanner(System.in);
-            int i = sc.nextInt();
+            //int i = sc.nextInt();
+            int i =4;
+            System.out.println(Thread.activeCount());
+            sound.ballCollidedWithWall();
+            sound.playerCollidedWithBall();
             if(i == 1){
                 sound.ballCollidedWithWall();
                 System.out.println("BAll");
