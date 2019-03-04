@@ -1,8 +1,8 @@
 package com.anotherworld.view;
 
-import static org.lwjgl.opengl.GL46.*;
+import static org.lwjgl.opengl.GL46.GL_CLAMP_TO_EDGE;
+import static org.lwjgl.opengl.GL46.GL_LINEAR;
 import static org.lwjgl.opengl.GL46.GL_NEAREST;
-import static org.lwjgl.opengl.GL46.GL_REPEAT;
 import static org.lwjgl.opengl.GL46.GL_RGBA;
 import static org.lwjgl.opengl.GL46.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL46.GL_TEXTURE_MAG_FILTER;
@@ -11,6 +11,7 @@ import static org.lwjgl.opengl.GL46.GL_TEXTURE_WRAP_S;
 import static org.lwjgl.opengl.GL46.GL_TEXTURE_WRAP_T;
 import static org.lwjgl.opengl.GL46.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL46.glBindTexture;
+import static org.lwjgl.opengl.GL46.glDeleteTextures;
 import static org.lwjgl.opengl.GL46.glGenTextures;
 import static org.lwjgl.opengl.GL46.glTexImage2D;
 import static org.lwjgl.opengl.GL46.glTexParameteri;
@@ -67,12 +68,12 @@ public class TextureMap {
         
         glBindTexture(GL_TEXTURE_2D, id);
         
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this.getWidth(), this.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, this.getPixels());
+        glTexImage2D(GL_TEXTURE_2D, 0, this.getEncoding(), this.getWidth(), this.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, this.getPixels());
         
         glBindTexture(GL_TEXTURE_2D, 0);
         

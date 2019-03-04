@@ -1,9 +1,13 @@
 package com.anotherworld.view;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glGetError;
-import static org.lwjgl.opengl.GL46.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.opengl.GL46.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL46.GL_NO_ERROR;
+import static org.lwjgl.opengl.GL46.glClear;
+import static org.lwjgl.opengl.GL46.glFlush;
+import static org.lwjgl.opengl.GL46.glGetError;
+
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListener;
@@ -20,7 +24,6 @@ import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -120,7 +123,7 @@ public class View implements Runnable {
         
         if (window == null) {
             logger.fatal("Unable to create game window");
-            glfwTerminate();
+            attemptDestroy();
             throw new RuntimeException("Couldn't create glfw window");
         }
 
@@ -139,6 +142,7 @@ public class View implements Runnable {
             programme = new CoreProgramme();
         } catch (ProgrammeUnavailableException e) {
             logger.fatal("Couldn't start any rendering engines");
+            attemptDestroy();
             throw new RuntimeException("Couldn't start any rendering program");
         }
         
@@ -181,6 +185,18 @@ public class View implements Runnable {
             glfwPollEvents();
 
         }
+        attemptDestroy(programme);
+    }
+    
+    private void attemptDestroy() {
+        logger.info("Closing window");
+        if (currentScene != null) {
+            currentScene.destoryObjects();
+        }
+        glfwTerminate();
+    }
+    
+    private void attemptDestroy(Programme programme) {
         logger.info("Closing window");
         currentScene.destoryObjects();
         programme.destroy();

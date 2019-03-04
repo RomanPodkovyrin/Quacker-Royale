@@ -2,12 +2,9 @@ package com.anotherworld.view;
 
 import static org.lwjgl.opengl.GL46.*;
 
-import com.anotherworld.view.data.Matrix2d; 
-
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.Optional;
-import java.util.Stack;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,8 +20,6 @@ public class CoreProgramme extends Programme {
 
     private static Logger logger = LogManager.getLogger();
     
-    private Stack<Matrix2d> matrixStack;
-    
     private int programmeId;
     private Optional<Integer> uniformId;
     private TextureMap textureMap;
@@ -38,7 +33,6 @@ public class CoreProgramme extends Programme {
     public CoreProgramme() throws ProgrammeUnavailableException {
         init();
         uniformId = Optional.empty();
-        matrixStack = new Stack<>();
         try {
             textureMap = new TextureMap("res/images/alien.png");
         } catch (IOException ex) {
@@ -131,76 +125,6 @@ public class CoreProgramme extends Programme {
     }
 
     @Override
-    public boolean supportsVertArrayObj() {
-        return true;
-    }
-    
-    private Matrix2d getIdentity() {
-        return Matrix2d.genIdentity(4);
-    }
-    
-    private Matrix2d getTranslation(float x, float y, float z) {
-        return Matrix2d.homTranslate3d(x, y, z);
-    }
-    
-    private Matrix2d getScale(float x, float y, float z) {
-        return Matrix2d.homScale3d(x, y, z);
-    }
-    
-    private Matrix2d getRotation(float theta) {
-        return Matrix2d.homRotate3d(theta);
-    }
-    
-    private Matrix2d getCurrentMatrix() {
-        if (matrixStack.isEmpty()) {
-            return getIdentity();
-        }
-        return matrixStack.peek();
-    }
-    
-    private void multiplyCurrent(Matrix2d b) {
-        Matrix2d currentMatrix = getCurrentMatrix();
-        if (!matrixStack.isEmpty()) {
-            matrixStack.pop();
-        }
-        matrixStack.push(currentMatrix.mult(b));
-    }
-
-    @Override
-    public void pushMatrix() {
-        matrixStack.push(getCurrentMatrix());
-    }
-
-    @Override
-    public void loadIdentity() {
-        matrixStack.clear();
-    }
-
-    @Override
-    public void translatef(float x, float y, float z) {
-        multiplyCurrent(getTranslation(x, y, z));
-    }
-
-    @Override
-    public void scalef(float x, float y, float z) {
-        multiplyCurrent(getScale(x, y, z));
-    }
-
-    @Override
-    public void rotatef(float angle, float x, float y, float z) {
-        assert (y == 0);
-        assert (z == 0);
-        multiplyCurrent(getRotation(angle));
-    }
-
-    @Override
-    public void popMatrix() {
-        if (!matrixStack.isEmpty()) {
-            matrixStack.pop();
-        }
-    }
-
-    @Override
     public void draw() {
         FloatBuffer temp = BufferUtils.createFloatBuffer(16);
         float[] matrix = getCurrentMatrix().getPoints();
@@ -208,6 +132,11 @@ public class CoreProgramme extends Programme {
         temp.flip();
         int uniformId = glGetUniformLocation(programmeId, "Transformation");
         glUniformMatrix4fv(uniformId, false, temp);
+    }
+
+    @Override
+    public boolean supportsVertArrayObj() {
+        return true;
     }
 
 }

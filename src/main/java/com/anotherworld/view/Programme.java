@@ -1,6 +1,9 @@
 package com.anotherworld.view;
 
+import com.anotherworld.view.data.Matrix2d;
 import com.anotherworld.view.graphics.Camera;
+
+import java.util.Stack;
 
 /**
  * Stores information about how the game will be rendered and changes opengl options to use it.
@@ -8,6 +11,12 @@ import com.anotherworld.view.graphics.Camera;
  *
  */
 public abstract class Programme {
+    
+    private Stack<Matrix2d> matrixStack;
+    
+    public Programme() {
+        matrixStack = new Stack<>();
+    }
 
     /**
      * Switch to use this programme for rendering.
@@ -45,15 +54,55 @@ public abstract class Programme {
         this.translatef(-camera.getX(), -camera.getY(), 0);
     }
 
+    private Matrix2d getIdentity() {
+        return Matrix2d.genIdentity(4);
+    }
+    
+    private Matrix2d getTranslation(float x, float y, float z) {
+        return Matrix2d.homTranslate3d(x, y, z);
+    }
+    
+    private Matrix2d getScale(float x, float y, float z) {
+        return Matrix2d.homScale3d(x, y, z);
+    }
+    
+    private Matrix2d getRotation(float theta) {
+        return Matrix2d.homRotate3d(theta);
+    }
+    
+    private void multiplyCurrent(Matrix2d b) {
+        Matrix2d currentMatrix = getCurrentMatrix();
+        if (!matrixStack.isEmpty()) {
+            matrixStack.pop();
+        }
+        matrixStack.push(currentMatrix.mult(b));
+    }
+    
     /**
-     * Resets the current matrix transformations.
+     * Returns the current matrix on the stack or the identity if the stack is empty.
+     * @return The current matrix
      */
-    public abstract void loadIdentity();
+    public Matrix2d getCurrentMatrix() {
+        if (matrixStack.isEmpty()) {
+            return getIdentity();
+        }
+        return matrixStack.peek();
+    }
 
     /**
      * Save the current matrix to the stack.
      */
-    public abstract void pushMatrix();
+    public void pushMatrix() {
+        matrixStack.push(getCurrentMatrix());
+    }
+
+
+    /**
+     * Resets the current matrix transformations.
+     */
+    public void loadIdentity() {
+        matrixStack.clear();
+    }
 
     /**
      * Translates the current matrix in the x y and z axis.
@@ -61,7 +110,9 @@ public abstract class Programme {
      * @param y the y translation
      * @param z the z translation
      */
-    public abstract void translatef(float x, float y, float z);
+    public void translatef(float x, float y, float z) {
+        multiplyCurrent(getTranslation(x, y, z));
+    }
 
     /**
      * Scales the current matrix in the x y and z axis.
@@ -69,7 +120,9 @@ public abstract class Programme {
      * @param y the y scale
      * @param z the z scale
      */
-    public abstract void scalef(float x, float y, float z);
+    public void scalef(float x, float y, float z) {
+        multiplyCurrent(getScale(x, y, z));
+    }
 
     /**
      * Rotates the current matrix around the line x y z by the angle.
@@ -78,12 +131,21 @@ public abstract class Programme {
      * @param y the y component of the line
      * @param z the z component of the line
      */
-    public abstract void rotatef(float angle, float x, float y, float z);
+    public void rotatef(float angle, float x, float y, float z) {
+        assert (y == 0);
+        assert (z == 0);
+        multiplyCurrent(getRotation(angle));
+    }
+
 
     /**
      * Resets to the last matrix pushed onto the stack or the identity if there are none left.
      */
-    public abstract void popMatrix();
+    public void popMatrix() {
+        if (!matrixStack.isEmpty()) {
+            matrixStack.pop();
+        }
+    }
 
     /**
      * Should draw an object in the future but for now just sets the uniform matrix.
