@@ -235,8 +235,8 @@ public class NetworkController {
                     e.printStackTrace();
                 }
 
-
-            } else if (hostSendRate == 1) {
+                hostSendRate ++;
+            } else if (hostSendRate == 10) {
                 hostSendRate = 0;
             } else {
                 hostSendRate ++;
