@@ -176,13 +176,15 @@ public class NetworkController {
                 for (PlayerData player: allPlayers) {
 
                     if (player.getObjectID().equals(id)) {
-                        if (in.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
-                        else if (in.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
-                        else player.setYVelocity(0);
+//                        if (in.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
+//                        else if (in.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
+//                        else player.setYVelocity(0);
+//
+//                        if (in.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
+//                        else if (in.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
+//                        else player.setXVelocity(0);
 
-                        if (in.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
-                        else if (in.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
-                        else player.setXVelocity(0);
+                        GameSession.updatePlayer(player,in);
                     }
                 }
 
