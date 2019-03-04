@@ -4,6 +4,8 @@ import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.network.GameClient;
+import com.anotherworld.network.Server;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.*;
 import org.apache.logging.log4j.LogManager;
@@ -17,8 +19,9 @@ import static com.anotherworld.tools.maths.Maths.getRandom;
 
 /**
  * This class allows view to call the functions to change individual settings and prepare the game.
+ * Also translates persistent settings stored in properties file into the game.
  *
- * @author Roman
+ * @author Roman, Alfi
  */
 public class GameSettings {
 
@@ -33,6 +36,7 @@ public class GameSettings {
     private static float defaultPlayerSpeed;
     private float defaultPlayerRadius;
     private static int defaultPlayerHealth;
+    private static int defaultPlayerMaxCharge;
 
     // Settings regarding the ball defaults
     private static int defaultBallMaxTimer;
@@ -62,31 +66,37 @@ public class GameSettings {
 
     private static PropertyReader gamesession;
 
+    private Server server = null;
+    private GameClient client = null;
+
     public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
                         ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSession) {
         this.currentPlayer = currentPlayer;
+        logger.info("GameSettings current player: " + currentPlayer);
         this.players = players;
+        logger.info("GameSettings players: " + players);
         this.ai = ai;
+        logger.info("GameSettings ai: " + ai);
         this.balls = balls;
+        logger.info("GameSettings balls: " + balls);
         this.platforms = platforms;
+        logger.info("GameSettings platform: " + platforms);
         this.walls = walls;
+        logger.info("GameSettings wall: " + walls);
         this.gameSession = gameSession;
+        logger.info("GameSettings session: " + gameSession);
+        loadAllGameValues();
 
     }
-
-
-    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
-
-        this.numberOfPlayers = numberOfPlayers;
-        this.numberofAIPlayers = numberOfAIPlayers;
-        this.numberOfBall = numberOfBalls;
+    public  void loadAllGameValues() {
 
         try {
             PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
 
-            this.defaultPlayerSpeed  = Float.parseFloat(propertyFileLogic.getValue("PLAYER_SPEED"));
+            this.defaultPlayerSpeed = Float.parseFloat(propertyFileLogic.getValue("PLAYER_SPEED"));
             this.defaultPlayerHealth = Integer.parseInt(propertyFileLogic.getValue("PLAYER_HEALTH"));
             this.defaultPlayerRadius = Float.parseFloat(propertyFileLogic.getValue("PLAYER_RADIUS"));
+            this.defaultPlayerMaxCharge = Integer.parseInt(propertyFileLogic.getValue("PLAYER_MAX_CHARGE"));
 
             this.defaultBallMaxTimer = Integer.parseInt(propertyFileLogic.getValue("BALL_MAX_TIMER"));
             this.defaultBallTimerDecrement = Integer.parseInt(propertyFileLogic.getValue("BALL_TIMER_DEC"));
@@ -104,6 +114,50 @@ public class GameSettings {
         }
 
     }
+
+
+    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
+
+        this.numberOfPlayers = numberOfPlayers;
+        this.numberofAIPlayers = numberOfAIPlayers;
+        this.numberOfBall = numberOfBalls;
+
+        loadAllGameValues();
+        createGameFiles();
+    }
+
+    public static Logger getLogger() {
+        return logger;
+    }
+
+    public static void setLogger(Logger logger) {
+        GameSettings.logger = logger;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
+    public GameClient getClient() {
+        return client;
+    }
+
+    public void setClient(GameClient client) {
+        this.client = client;
+    }
+
+    public boolean isServer() {
+        return server!=null;
+    }
+
+    public  boolean isClient() {
+        return  client!=null;
+    }
+
 
     public static boolean toggleOnOff(String setting){
         boolean settingState = false;
@@ -214,7 +268,7 @@ public class GameSettings {
 
             // set random location with random direction
             // probably towards the middle
-            BallData newBall = new BallData(false,newBallXCoordinate,newBallYCoordinate,ObjectState.IDLE,ballSpeed,ballRadius);
+            BallData newBall = new BallData("ball " + i ,false,newBallXCoordinate,newBallYCoordinate,ObjectState.IDLE,ballSpeed,ballRadius);
             balls.add(newBall);
         }
 
@@ -276,7 +330,6 @@ public class GameSettings {
     }
 
     public GameSession createSession() {
-        createGameFiles();
         // TODO give the gameSessionData into gameSession
         return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0),gameSession);
     }
@@ -325,9 +378,7 @@ public class GameSettings {
         return currentPlayer;
     }
 
-    public static float getDefaultPlayerSpeed() { return defaultPlayerSpeed; }
-
-    public static int getDefaultPlayerHealth() { return defaultPlayerHealth; }
+    public static int getDefaultPlayerMaxCharge() { return defaultPlayerMaxCharge; }
 
     public static int getBallMaxTimer() { return defaultBallMaxTimer; }
 

@@ -18,6 +18,12 @@ public class GameSessionData implements Serializable {
         this.ticksElapsed    = 0;
     }
 
+    public void copyObject(GameSessionData data) {
+        this.ticksElapsed = data.ticksElapsed;
+        this.timeToNextStage = data.timeToNextStage;
+        this.timeLeft = data.timeLeft;
+    }
+
     public long getTimeLeft() {
         return timeLeft;
     }

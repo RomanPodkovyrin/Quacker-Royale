@@ -6,16 +6,18 @@ public class Player extends AbstractMovable {
     private boolean aiEnabled;
 
     PlayerData playerData;
+    long timeStartedCharging;
 
     public Player(PlayerData playerData, boolean aiEnabled) {
         super(playerData);
         this.playerData = playerData;
+        this.timeStartedCharging = 0;
     }
 
-    public String getCharacterID() { return playerData.getCharacterID(); }
+    public String getCharacterID() { return playerData.getObjectID(); }
 
     public void setCharacterID(String characterID) {
-        playerData.setCharacterID(characterID);
+        playerData.setObjectID(characterID);
     }
 
     public int getHealth() { return playerData.getHealth(); }
@@ -24,7 +26,15 @@ public class Player extends AbstractMovable {
         playerData.setHealth(health);
     }
 
-    public boolean isAIEnabled() { return aiEnabled; }
+    public int getChargeLevel() { return playerData.getChargeLevel(); }
+
+    public void setChargeLevel(int chargeLevel) { playerData.setChargeLevel(chargeLevel); }
+
+    public long getTimeStartedCharging() { return timeStartedCharging; }
+
+    public void setTimeStartedCharging(long time) { timeStartedCharging = time; }
+
+    public void incrementChargeLevel() { this.setChargeLevel(this.getChargeLevel() + 1); }
 
     public boolean isDead() { return playerData.getState() == ObjectState.DEAD; }
 

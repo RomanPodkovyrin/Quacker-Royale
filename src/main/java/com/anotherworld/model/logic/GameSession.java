@@ -101,6 +101,7 @@ public class GameSession {
                     } else player.damage(ball.getDamage());
 
                     Physics.collided(ball, player);
+                    logger.trace(player.getCharacterID() + " collide with ball");
                 }
             }
 
@@ -143,7 +144,6 @@ public class GameSession {
     public void update(){
 
         ai.action();
-        collisionCheck();
 
         for (Player player : allPlayers) {
             Physics.move(player);
@@ -164,14 +164,17 @@ public class GameSession {
             }
         }
 
+
+        collisionCheck();
+        // Handling the time-based elements of the game
+
         gameSessionData.incrementTicksElapsed();
         logger.debug("ticksElapsed: " + gameSessionData.getTicksElapsed());
 
-        if (gameSessionData.getTicksElapsed() % 60 == 0) {
-            if(gameSessionData.getTimeLeft() > 0) gameSessionData.decrementTimeLeft();
-            System.out.println("timeLeft: " + gameSessionData.getTimeLeft());
-            System.out.println(gameSessionData.getTimeToNextStage()*(platform.getStage()-1));
+        if (gameSessionData.getTicksElapsed() % 60 == 0 && gameSessionData.getTimeLeft() > 0) {
+            gameSessionData.decrementTimeLeft();
         }
+
         if (gameSessionData.getTimeLeft() < gameSessionData.getTimeToNextStage()*(platform.getStage()-1)){
             platform.nextStage();
             wall.nextStage();
@@ -179,22 +182,67 @@ public class GameSession {
 
     }
 
+    public void updatePlayer(ArrayList<Input> keyPresses) {
+        updatePlayer(this.currentPlayer, keyPresses, this.gameSessionData);
+    }
+
     /**
      * Updates the current player's velocity based on the given list of inputs.
      * @param keyPresses
      */
-    public void updatePlayer(ArrayList<Input> keyPresses) {
-        // TODO think about the way to control network players
+    public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {
-            //TODO: Implement charge action.
-        } else {
-            if (keyPresses.contains(Input.UP)) currentPlayer.setYVelocity(-currentPlayer.getSpeed());
-            else if (keyPresses.contains(Input.DOWN)) currentPlayer.setYVelocity(currentPlayer.getSpeed());
-            else currentPlayer.setYVelocity(0);
+            //TODO: Fix utterly broken dash.
+            player.setVelocity(0, 0);
+            long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
-            if (keyPresses.contains(Input.LEFT)) currentPlayer.setXVelocity(-currentPlayer.getSpeed());
-            else if (keyPresses.contains(Input.RIGHT)) currentPlayer.setXVelocity(currentPlayer.getSpeed());
-            else currentPlayer.setXVelocity(0);
+            if(player.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()
+                    && timeSpentCharging % 60 == 0) {
+                if (player.getState() != ObjectState.CHARGING) {
+                    player.setTimeStartedCharging(gameData.getTicksElapsed());
+                    player.setState(ObjectState.CHARGING);
+                }
+                
+                player.incrementChargeLevel();
+            }
+        } else if (player.getState() == ObjectState.CHARGING) {
+            if (keyPresses.contains(Input.UP)) player.setAngle(0);
+            else if (keyPresses.contains(Input.DOWN)) player.setAngle(180);
+            else player.setAngle(0);;
+
+            if (keyPresses.contains(Input.LEFT)) player.setAngle(270);
+            else if (keyPresses.contains(Input.RIGHT)) player.setAngle(90);
+            else player.setAngle(0);
+            player.setState(ObjectState.DASHING);
+            Physics.charge(player);
+            player.setTimeStartedCharging(0);
+        } 
+        else if (player.getState().equals(ObjectState.DASHING)) {
+            if(player.getChargeLevel()>0)
+                Physics.charge(player);
+            else{
+                player.setAngle(0);
+                player.setState(ObjectState.IDLE);
+            }
         }
+            else {
+            if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
+            else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
+            else player.setYVelocity(0);
+
+            if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
+            else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
+            else player.setXVelocity(0);
+        }
+    }
+
+    public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses) {
+        if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
+        else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
+        else player.setYVelocity(0);
+
+        if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
+        else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
+        else player.setXVelocity(0);
     }
 }

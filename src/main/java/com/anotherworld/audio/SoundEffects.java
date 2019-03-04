@@ -55,6 +55,7 @@ public class SoundEffects implements Runnable{
     public void run()
     {
         while(running) {
+//            System.out.println("Still alive sound effect");
             try{
                 Thread.sleep(0);
             } catch (InterruptedException e) {
@@ -77,6 +78,8 @@ public class SoundEffects implements Runnable{
                 }
             }
         }
+
+
     }
 
     private void createLine(File filename) throws IOException, LineUnavailableException {
@@ -132,6 +135,8 @@ public class SoundEffects implements Runnable{
     }
 
     public void stopSoundEffects() {
+        effect.stop();
+        line.close();
         running = false;
     }
 

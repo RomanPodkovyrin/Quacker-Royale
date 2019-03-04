@@ -4,11 +4,16 @@ import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
 
+/**
+ * Checks if there is a neutral ball on the map.
+ *
+ * @author roman
+ */
 public class NeutralBallCheck extends Job {
     private static Logger logger = LogManager.getLogger(NeutralBallCheck.class);
 

@@ -7,14 +7,10 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import javafx.util.Pair;
-import jdk.nashorn.internal.scripts.JO;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.system.CallbackI;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * This class sets up all the jobs for AIs and takes care of running AI when told to do so.
@@ -33,12 +29,6 @@ public class AI {
 
     private int tick = 0;
 
-    private Matrix aiVector;
-    private Matrix aiPosition;
-
-    private Job repeatJob = new RepeatSuccess((new WalkAbout()));
-
-
     /**
      * Used to set up the AI handler.
      *
@@ -52,17 +42,19 @@ public class AI {
         this.balls = balls;
         this.platform = platform;
 
+        // Gives all AIs their individual jobs
         for (Player ai : ais) {
+            // Gives the AI representation of other players(AIs and human players)
             aiPlayers.add(new Pair<>(ai, removePlayer(allPlayers,ai)));
 
             // Setting up domination and peace combined list
-            ArrayList<Job> dominationAndPleace = new ArrayList<>();
-            dominationAndPleace.add( new Selector(getDomination()));
-            dominationAndPleace.add( new SequenceSuccess(getPeace()));
+            ArrayList<Job> dominationAndPeace = new ArrayList<>();
+            dominationAndPeace.add(new Selector(getDomination()));
+            dominationAndPeace.add(new SequenceSuccess(getPeace()));
 
             // Setting up the extra check if the given action can be done to avoid the ball
             ArrayList<Job> extra = new ArrayList<>();
-            extra.add(new SequenceSuccess(dominationAndPleace));
+            extra.add(new SequenceSuccess(dominationAndPeace));
             extra.add(new CheckIfSaveToGo());
 
 
@@ -71,26 +63,34 @@ public class AI {
             routines.add(new SequenceSuccess(getSurvival()));
             routines.add(new Sequence(extra));
 
-            Job tempj = new Repeat(new SequenceSuccess(routines));
-            jobs.add(tempj);
-            tempj.start();
+            Job job = new Repeat(new SequenceSuccess(routines));
+            jobs.add(job);
+            job.start();
 
         }
-
-        repeatJob.start();
         logger.debug("AI initialisation is done");
     }
 
+    /**
+     * Sets up the jobs which keep AI alive.
+     *
+     * @return ArrayList of survival jobs
+     */
     private ArrayList<Job> getSurvival() {
         // Set up of the survival instincts
         ArrayList<Job> survival = new ArrayList<>();
         survival.add(new AvoidEdge());
-        survival.add(new AvoidBall());
         survival.add(new AvoidNeutralPlayer());
+        survival.add(new AvoidBall());
         //survival.add(new AvoidPlayerCharge);
         return survival;
     }
 
+    /**
+     * Sets up the jobs which make AI aggressive towards other players.
+     *
+     * @return ArrayList of domination jobs
+     */
     private ArrayList<Job> getDomination() {
         // Set up of the domination skills
         ArrayList<Job> domination = new ArrayList<>();
@@ -100,11 +100,15 @@ public class AI {
         ballAim.add(new NeutralBallCheck());
         ballAim.add(new AimBall());
 
-//        domination.add(new SequenceSuccess(ballAim));
-        // TODO chase the player gets the ai stuck
+        //domination.add(new SequenceSuccess(ballAim));
         return  domination;
     }
 
+    /**
+     * Sets up the jobs which makes AI do peaceful jobs.
+     *
+     * @return ArrayList of peace jobs
+     */
     private ArrayList<Job> getPeace() {
         // Setting up peace
         ArrayList<Job> peace = new ArrayList<>();
@@ -140,7 +144,7 @@ public class AI {
         logger.info("AI action called.");
 
         //TODO make then work in the order, not all at the same tick
-        //TODO make a black board so that ai can chose characters which are not take and balls
+        //TODO make a black board so that ai can chose characters and balls which are not targeted by other ai
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
                 Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
@@ -154,8 +158,8 @@ public class AI {
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
                 }
             }
-//            tick = tick + 1;
-        } else if (tick == 10) {
+        //tick = tick + 1;
+        } else if (tick == 3) {
             tick = 0;
         } else {
             tick = tick + 1;

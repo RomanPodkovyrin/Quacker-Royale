@@ -1,6 +1,5 @@
 package com.anotherworld.model.ai.behaviour.player;
 
-import com.anotherworld.model.ai.AIDataPool;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;
@@ -8,10 +7,11 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
+
 
 public class CheckIfSaveToGo extends Job {
 
@@ -20,7 +20,7 @@ public class CheckIfSaveToGo extends Job {
     private ArrayList<Ball> possibleDangerBalls = new ArrayList<>();
     private ArrayList<Ball> dangerBalls = new ArrayList<>();
     private ArrayList<Ball> imminentDangerBalls = new ArrayList<>();
-    private Matrix aiPosition ;
+    private Matrix aiPosition;
 
     //The allowed safe distance between the ball and the player
     private float safeDistance = 2;
@@ -68,7 +68,7 @@ public class CheckIfSaveToGo extends Job {
             succeed();
             logger.trace("All good no bad balls");
         } else {
-            Matrix newAiLocation = new Matrix(ai.getXCoordinate() + ai.getXVelocity() ,ai.getYCoordinate() + ai.getYVelocity() );
+            Matrix newAiLocation = new Matrix(ai.getXCoordinate() + ai.getXVelocity(),ai.getYCoordinate() + ai.getYVelocity());
             Ball firstBall = imminentDangerBalls.get(0);
 
             Matrix neigbhour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),aiPosition);
@@ -119,7 +119,6 @@ public class CheckIfSaveToGo extends Job {
         logger.trace("Possibly Dangerous Balls: " + possibleDangerBalls.size());
         logger.trace("Dangerous Balls: " + dangerBalls.size());
         logger.trace("Imminently Dangerous Balls: " + imminentDangerBalls.size());
-        AIDataPool.setBalls(possibleDangerBalls,dangerBalls,imminentDangerBalls);
 
     }
 

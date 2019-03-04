@@ -9,12 +9,11 @@ public class BallData extends MovableData implements BallDisplayData, Serializab
 
     private boolean dangerous;
     private int timer;
-    private int damage = 5; // TODO: Create damage in the constructor.
+    private int damage = 2; // TODO: Create damage in the constructor.
 
-    public BallData(boolean dangerous,
-                    float xCoordinate, float yCoordinate,
+    public BallData(String objectID, boolean dangerous, float xCoordinate, float yCoordinate,
                     ObjectState state, float speed, float radius) {
-        super(xCoordinate, yCoordinate, state, speed, radius);
+        super(objectID, xCoordinate, yCoordinate, state, speed, radius);
         this.dangerous = dangerous;
         this.timer = 0;
     }

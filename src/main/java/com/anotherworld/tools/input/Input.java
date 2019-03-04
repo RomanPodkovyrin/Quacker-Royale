@@ -1,5 +1,7 @@
 package com.anotherworld.tools.input;
 
-public enum Input {
+import java.io.Serializable;
+
+public enum Input implements Serializable {
     UP, DOWN, LEFT, RIGHT, CHARGE
 }

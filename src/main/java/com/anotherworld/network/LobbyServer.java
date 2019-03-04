@@ -48,10 +48,10 @@ public class LobbyServer extends Thread{
             System.out.println(ip);
     }
 
-    public void getPlayersIP() throws IOException {
+    private void getPlayersIP() throws IOException {
         Socket lobbySocket = TCPsocket.accept();
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
-        System.out.println("Received from: " + lobbySocket.getInetAddress().getHostAddress());
+        System.out.println("Received from: " + lobbySocket.getInetAddress().getHostAddress() + " on port " + lobbySocket.getPort());
         clientSockets.add(lobbySocket.getOutputStream());
         playersIPAddresses.add(lobbySocket.getInetAddress().getHostAddress());
         countPlayers();
@@ -62,6 +62,7 @@ public class LobbyServer extends Thread{
         for(int i = 0; i< clientSockets.size(); i++){
             DataOutputStream out = new DataOutputStream(clientSockets.get(i));
             out.writeUTF(String.valueOf(i));
+            clientSockets.get(i).close();
         }
     }
 
@@ -69,6 +70,14 @@ public class LobbyServer extends Thread{
         currentPlayersAmount++;
         if(currentPlayersAmount == playersAmount)
             allPlayersJoined = true;
+    }
+
+    public boolean isReady(){
+        return allPlayersJoined;
+    }
+
+    public ArrayList<String> getIPs(){
+        return playersIPAddresses;
     }
 
     public static void main(String arg[]) throws Exception {

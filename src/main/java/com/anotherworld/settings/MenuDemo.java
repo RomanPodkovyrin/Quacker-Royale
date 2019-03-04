@@ -196,6 +196,9 @@ public class MenuDemo extends Application {
         buttonConnect.setBackground(new Background(new BackgroundFill(Color
                 .rgb(9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
         buttonConnect.setFont(font);
+        buttonConnect.setOnAction(e ->{
+            control.connect(ipAndPort.getText());
+        });
 
         Button backToMulti = new Button("Go back");
         backToMulti.setMinWidth(width * 0.5);
@@ -246,7 +249,12 @@ public class MenuDemo extends Application {
         Scene scene5 = new Scene(borderPane5, screenSize.getWidth(),
                 screenSize.getHeight(), Color.BLACK);
 
-        buttonHost.setOnAction(e -> window.setScene(scene5));
+        buttonHost.setOnAction(e -> {
+            control.host();
+            window.setScene(scene5);
+
+
+        });
 
         window.setScene(scene1);
         window.setTitle("application");
