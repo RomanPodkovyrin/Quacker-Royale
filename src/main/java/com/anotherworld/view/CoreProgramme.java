@@ -52,8 +52,8 @@ public class CoreProgramme extends Programme {
         
         try {
 
-            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Test.vs", GL_VERTEX_SHADER);
-            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Test.frag", GL_FRAGMENT_SHADER);
+            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/core/vertex.glsl", GL_VERTEX_SHADER);
+            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/core/frag.glsl", GL_FRAGMENT_SHADER);
             
         } catch (IOException e) {
             logger.warn("Couldn't load shader");

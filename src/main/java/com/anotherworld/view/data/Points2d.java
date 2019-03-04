@@ -150,7 +150,6 @@ public class Points2d {
      * @return The points of the circle
      */
     protected static final Points2d genCircle(float r) {
-        r = 0.5f;
         Points2d points = new Points2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
