@@ -84,7 +84,7 @@ public class Main {
         logger.info("User starting the server");
 
         // number of network players
-        int numberOfPlayers = 2;
+        int numberOfPlayers = 1;
         int numberOfBalls = 3;
 
         logger.trace("Multiplayer lobby is created and started");
@@ -221,7 +221,7 @@ public class Main {
     }
 
     public void startSinglePlayer() {
-        GameSettings settings = new GameSettings(4,3,5);
+        GameSettings settings = new GameSettings(4,3,200);
         startTheGame(settings, new NetworkController());
     }
 
