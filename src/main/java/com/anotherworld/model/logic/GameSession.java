@@ -236,7 +236,7 @@ public class GameSession {
         }
     }
 
-    public static void updatePlayer(Player player, ArrayList<Input> keyPresses) {
+    public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses) {
         if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
         else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
         else player.setYVelocity(0);
