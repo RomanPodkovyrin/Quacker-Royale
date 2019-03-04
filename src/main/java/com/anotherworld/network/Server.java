@@ -1,5 +1,6 @@
 package com.anotherworld.network;
 
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.*;
 import javafx.util.Pair;
@@ -9,6 +10,7 @@ import com.anotherworld.tools.input.Input;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class Server extends Thread {
@@ -39,7 +41,7 @@ public class Server extends Thread {
         wall = settings.getWall().get(0);
         gamesession =settings.getGameSession();
         socket = new DatagramSocket(port);
-        dataReceived = new byte[32];
+        dataReceived = new byte[10000];
         this.numberOfPlayers = IPs;
         this.clientsPorts = new ArrayList<Integer>();
         this.IPs = new ArrayList<String>();
@@ -146,6 +148,7 @@ public class Server extends Thread {
     }
 
     private ArrayList<Pair<ArrayList<Input>, String>> getKeyPressesFromClient(DatagramPacket packet) throws IOException, ClassNotFoundException {
+        socket.receive(packet);
         byte data[] = packet.getData();
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
@@ -169,6 +172,13 @@ public class Server extends Thread {
     public static void main(String[] args) throws SocketException, UnknownHostException {
         ArrayList<String> ips = new ArrayList<String>();
         ips.add("localhost");
-//        new Server(ips).start();
+        new Server(1, new GameSettings(
+                new PlayerData("h",2,1,1, ObjectState.IDLE,1,2),
+                new ArrayList<>(Arrays.asList(new PlayerData("h",2,1,1, ObjectState.IDLE,1,2))),
+                null,
+                new ArrayList<>(Arrays.asList(new BallData("h",true,1,1, ObjectState.IDLE,1,2))),
+                new ArrayList<>(Arrays.asList(new PlatformData(2,2))),
+                new ArrayList<>(Arrays.asList(new WallData(2,2))),
+                null)).start();
     }
 }

@@ -166,6 +166,7 @@ public class NetworkController {
 
 //            GameSession.updatePlayer();
             ArrayList<Pair<ArrayList<Input>,String>> keyPress = server.getInputAndIP();
+
             for (Pair<ArrayList<Input>, String> input: keyPress) {
 
                 ArrayList<Input> in = input.getKey();
