@@ -236,7 +236,7 @@ public class NetworkController {
                 }
 
                 hostSendRate ++;
-            } else if (hostSendRate == 10) {
+            } else if (hostSendRate == 2) {
                 hostSendRate = 0;
             } else {
                 hostSendRate ++;
