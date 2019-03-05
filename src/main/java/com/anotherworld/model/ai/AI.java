@@ -141,7 +141,7 @@ public class AI {
      * on the current state of the game session.
      */
     public void action() {
-        logger.info("AI action called.");
+        logger.debug("AI action called.");
 
         //TODO make then work in the order, not all at the same tick
         //TODO make a black board so that ai can chose characters and balls which are not targeted by other ai
@@ -150,10 +150,10 @@ public class AI {
                 Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
                 if (pair.getKey().getState() == ObjectState.DEAD) {
 
-                    logger.info(pair.getKey().getCharacterID() + " is dead");
+                    logger.debug(pair.getKey().getCharacterID() + " is dead");
                     pair.getKey().setVelocity(0,0);
                 } else {
-                    logger.info(pair.getKey().getCharacterID() + " Starting AI");
+                    logger.debug(pair.getKey().getCharacterID() + " Starting AI");
 
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
                 }

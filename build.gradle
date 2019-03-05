@@ -16,6 +16,10 @@ plugins {
     id 'checkstyle'
 }
 
+checkstyle {
+    toolVersion '8.18';
+}
+
 // Sets the use of java 8
 sourceCompatibility = '8'
 targetCompatibility = '8'

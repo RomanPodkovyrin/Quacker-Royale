@@ -54,7 +54,7 @@ public class AvoidEdge extends Job {
 //            ai.setXVelocity(-ai.getXVelocity());
             ai.setVelocity(toCenter.getX(),toCenter.getY());
             fail();
-            logger.info("Moving to in direction " + ai.getVelocity());
+            logger.trace("Moving to in direction " + ai.getVelocity());
             return;
 
 
@@ -66,7 +66,7 @@ public class AvoidEdge extends Job {
 //            ai.setXVelocity(-ai.getXVelocity());
             ai.setVelocity(toCenter.getX(),toCenter.getY());
             fail();
-            logger.info("Moving to in direction" + ai.getVelocity());
+            logger.trace("Moving to in direction" + ai.getVelocity());
             return;
         }
         logger.trace("Finishing AvoidEdge with success: no edges to avoid");

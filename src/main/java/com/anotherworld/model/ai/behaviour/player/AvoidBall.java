@@ -97,8 +97,8 @@ public class AvoidBall extends Job {
         ai.setXVelocity((-vector.getX() / Math.abs(vector.getX())) * ai.getSpeed());
         ai.setYVelocity((-vector.getY() / Math.abs(vector.getY())) * ai.getSpeed());
 
-        logger.info("Avoiding Ball at location " + ballPosition);
-        logger.info("Walking at Vector " + ai.getVelocity());
+        logger.trace("Avoiding Ball at location " + ballPosition);
+        logger.trace("Walking at Vector " + ai.getVelocity());
 
     }
 
@@ -172,7 +172,7 @@ public class AvoidBall extends Job {
             float ballRate = MatrixMath.distanceAB(ball.getCoordinates(),neighbour) / ball.getSpeed();
             float aiRate = MatrixMath.distanceAB(ai.getCoordinates(),neighbour) / ai.getSpeed();
             if (ballRate < aiRate) {
-                logger.info("Too far away safe");
+                logger.debug("Too far away safe");
                 tooFar = false;
             }
 

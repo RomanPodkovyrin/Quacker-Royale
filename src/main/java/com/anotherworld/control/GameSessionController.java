@@ -160,7 +160,7 @@ public class GameSessionController {
 
     private void shutDownSequence() {
 
-        logger.debug("Initialising Shut down sequence");
+        logger.info("Initialising Shut down sequence");
         // TODO if network game then close down the connection
 
         //stop the music

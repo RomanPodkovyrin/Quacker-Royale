@@ -36,7 +36,7 @@ public class AvoidNeutralPlayer extends Job {
             if (!player.isDead()) {
                 if (MatrixMath.distanceAB(player.getCoordinates(), ai.getCoordinates()) <= player.getRadius() + ai.getRadius() + 0.5) {
                     fail();
-                    logger.info("Avoiding player " + player.getCharacterID());
+                    logger.debug("Avoiding player " + player.getCharacterID());
                     Matrix vector = MatrixMath.pointsVector(player.getCoordinates(),ai.getCoordinates());
                     Line line = new Line(player.getCoordinates(), vector);
                     Matrix orthogonal = line.getOrthogonalVector();
