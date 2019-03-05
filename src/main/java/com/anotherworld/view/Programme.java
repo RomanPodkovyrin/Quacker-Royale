@@ -1,5 +1,6 @@
 package com.anotherworld.view;
 
+import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.Matrix2d;
 import com.anotherworld.view.graphics.Camera;
 
@@ -148,9 +149,15 @@ public abstract class Programme {
     }
 
     /**
-     * Should draw an object in the future but for now just sets the uniform matrix.
-     * @param isTextured 
+     * Draws an object.
+     * @param object The display object to draw
      */
-    public abstract void draw(boolean isTextured);
+    public abstract void draw(DisplayObject object);
+
+    public abstract void initialiseDisplayObject(DisplayObject displayObject);
+
+    public abstract void deleteObject(DisplayObject displayObject);
+
+    public abstract void updateObjectColour(DisplayObject displayObject);
     
 }

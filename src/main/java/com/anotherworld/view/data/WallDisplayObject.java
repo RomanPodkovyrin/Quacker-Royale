@@ -17,21 +17,24 @@ public class WallDisplayObject extends DisplayObject {
     private final float maxWidth;
     
     private final float maxHeight;
+    
+    private final Programme programme;
 
     /**
      * Creates a display object to display the wall.
      * @param displayData The wall to display
      */
-    public WallDisplayObject(WallData displayData) {
-        super(Points2d.genWall(displayData.getWidth(), displayData.getHeight(), 1), GL_TRIANGLE_STRIP, false, 0f, 0.6f, 1f);
+    public WallDisplayObject(Programme programme, WallData displayData) {
+        super(programme, Points2d.genWall(displayData.getWidth(), displayData.getHeight(), 1), GL_TRIANGLE_STRIP, false, 0f, 0.6f, 1f);
         this.displayData = displayData;
         this.maxWidth = displayData.getWidth();
         this.maxHeight = displayData.getHeight();
+        this.programme = programme;
     }
     
     @Override
-    public void transform(Programme programme) {
-        super.transform(programme);
+    public void transform() {
+        super.transform();
         
         programme.scalef(displayData.getWidth() / maxWidth, displayData.getHeight() / maxHeight, 1f);
         

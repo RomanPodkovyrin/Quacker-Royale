@@ -61,8 +61,8 @@ public class GraphicsDisplay {
         programme.transform(camera);
         for (int i = 0; i < objects.size(); i++) {
             programme.pushMatrix();
-            objects.get(i).transform(programme);
-            objects.get(i).draw(programme);
+            objects.get(i).transform();
+            objects.get(i).draw();
             programme.popMatrix();
         }
         programme.popMatrix();
