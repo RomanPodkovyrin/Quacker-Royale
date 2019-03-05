@@ -7,10 +7,11 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
+
 
 public class ChasePlayer extends Job {
 
@@ -19,6 +20,7 @@ public class ChasePlayer extends Job {
     public  ChasePlayer() {
         super();
     }
+
     @Override
     public void reset() {
         start();
@@ -36,7 +38,7 @@ public class ChasePlayer extends Job {
         players = sortObject(players);
 
         logger.debug("Starting ChasePlayer Job");
-        for (Player player: players){
+        for (Player player: players) {
             if (isRunning()) {
                 logger.debug("Chasing the Player");
                 Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), player.getCoordinates());

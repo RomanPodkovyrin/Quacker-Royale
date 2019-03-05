@@ -1,10 +1,18 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.network.*;
+import com.anotherworld.network.GameClient;
+import com.anotherworld.network.LobbyClient;
+import com.anotherworld.network.LobbyServer;
+import com.anotherworld.network.NetworkController;
+import com.anotherworld.network.Server;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
-import com.anotherworld.tools.datapool.*;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import java.io.IOException;
@@ -23,11 +31,15 @@ import org.lwjgl.glfw.GLFWVidMode;
  */
 public class Main {
     private MenuDemo view;
-    private GameLobby lobby;
     private ArrayList<String> playersIPaddresses = new ArrayList<>();
     private static Logger logger = LogManager.getLogger(Main.class);
     private boolean runTheHostGame = false;
 
+    /**
+     * The main should only be used for testing.
+     *
+     * @param args - command name arguments are not used
+     */
     public static void main(String []args) {
         Main main = new Main();
         GameSettings settings = new GameSettings(2,0,3);
@@ -221,7 +233,7 @@ public class Main {
     }
 
     public void startSinglePlayer() {
-        GameSettings settings = new GameSettings(4,3,200);
+        GameSettings settings = new GameSettings(4,3,6);
         startTheGame(settings, new NetworkController());
     }
 

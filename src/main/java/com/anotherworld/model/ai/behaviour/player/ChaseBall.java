@@ -7,10 +7,11 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
+
 
 /**
  * Job class which makes the player chase the neutral ball.
@@ -23,6 +24,7 @@ public class ChaseBall extends Job {
     public  ChaseBall() {
         super();
     }
+
     @Override
     public void reset() {
         start();
@@ -40,7 +42,7 @@ public class ChaseBall extends Job {
         sortObject(balls);
 
         logger.debug("Starting ChaseBall Job");
-        for (Ball ball: balls){
+        for (Ball ball: balls) {
             if (!ball.isDangerous() & isRunning() & platform.isOnPlatform(ball.getCoordinates())) {
                 logger.debug("Chasing the Ball at " + ball.getCoordinates());
                 Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
