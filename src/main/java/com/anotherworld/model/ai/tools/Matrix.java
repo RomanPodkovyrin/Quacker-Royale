@@ -69,7 +69,7 @@ public class Matrix implements Serializable {
     }
 
     /**
-     * Normalizes the vector by modifying the current one
+     * Normalizes the vector by modifying the current one.
      */
     public void normalizeThis() {
 

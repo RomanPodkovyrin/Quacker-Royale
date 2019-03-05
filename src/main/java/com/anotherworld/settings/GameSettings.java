@@ -378,6 +378,8 @@ public class GameSettings {
         return currentPlayer;
     }
 
+    public static float getDefaultPlayerSpeed() { return defaultPlayerSpeed; }
+
     public static int getDefaultPlayerMaxCharge() { return defaultPlayerMaxCharge; }
 
     public static int getBallMaxTimer() { return defaultBallMaxTimer; }

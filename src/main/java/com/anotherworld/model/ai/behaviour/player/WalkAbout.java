@@ -90,8 +90,8 @@ public class WalkAbout extends Job {
      */
     private void move() {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
-//        ai.setXVelocity(vector.getX() / Math.abs(vector.getX()) * ai.getSpeed());
-//        ai.setYVelocity(vector.getY() / Math.abs(vector.getY()) * ai.getSpeed());
+        //ai.setXVelocity(vector.getX() / Math.abs(vector.getX()) * ai.getSpeed());
+        //ai.setYVelocity(vector.getY() / Math.abs(vector.getY()) * ai.getSpeed());
         vector.normalizeThis();
         ai.setXVelocity(vector.getX() * ai.getSpeed());
         ai.setYVelocity(vector.getY() * ai.getSpeed());

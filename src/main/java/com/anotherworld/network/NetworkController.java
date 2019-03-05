@@ -4,7 +4,11 @@ import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.tools.datapool.*;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
 import java.io.IOException;
@@ -106,7 +110,7 @@ public class NetworkController {
             // send the given key presses to the host
             ArrayList<Input> keyPresses = keyListener.getKeyPresses();
 
-           // send key presses to host
+            // send key presses to host
             try {
                 client.sendKeyPresses(keyPresses);
             } catch (IOException e) {
@@ -158,6 +162,17 @@ public class NetworkController {
     }
 
     /**
+     * Stops all the threads for game networking.
+     */
+    public void stopNetworking() {
+        if (isServer()) {
+            server.stopServer();
+        } else if (isClient()) {
+            client.stopClient();
+        }
+    }
+
+    /**
      * Network control for the server.
      */
     public void hostControl() {
@@ -165,7 +180,7 @@ public class NetworkController {
         if (isServer()) {
             // TODO get the button presses from the client
 
-//            GameSession.updatePlayer();
+            //GameSession.updatePlayer();
             ArrayList<Pair<ArrayList<Input>,String>> keyPress = server.getInputAndIP();
 
             for (Pair<ArrayList<Input>, String> input: keyPress) {
@@ -227,11 +242,11 @@ public class NetworkController {
                     e.printStackTrace();
                 }
 
-
-            } else if (hostSendRate == 1) {
+                hostSendRate++;
+            } else if (hostSendRate == 2) {
                 hostSendRate = 0;
             } else {
-                hostSendRate ++;
+                hostSendRate++;
             }
         }
     }

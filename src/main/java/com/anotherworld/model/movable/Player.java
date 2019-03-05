@@ -36,7 +36,11 @@ public class Player extends AbstractMovable {
 
     public void incrementChargeLevel() { this.setChargeLevel(this.getChargeLevel() + 1); }
 
-    public boolean isDead() { return playerData.getState() == ObjectState.DEAD; }
+    public boolean isDead()     { return playerData.getState().equals(ObjectState.DEAD); }
+
+    public boolean isCharging() { return playerData.getState().equals(ObjectState.CHARGING); }
+
+    public boolean isDashing()  { return playerData.getState().equals(ObjectState.DASHING);}
 
     public void damage(int damageDealt) {
         playerData.setHealth(playerData.getHealth() - damageDealt);

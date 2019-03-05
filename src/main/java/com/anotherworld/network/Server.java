@@ -37,6 +37,7 @@ public class Server extends Thread {
     public Server(int IPs, GameSettings settings) throws SocketException, UnknownHostException {
         HostPlayer = settings.getCurrentPlayer();
         networkPlayers = settings.getPlayers();
+        // TODO should we also have ai in the multiplayer
         balls = settings.getBalls();
         platform = settings.getPlatform().get(0);
         wall = settings.getWall().get(0);
@@ -93,6 +94,11 @@ public class Server extends Thread {
             }
         }
 
+//        socket.close();
+    }
+
+    public void stopServer() {
+        serverIsRunning = false;
         socket.close();
     }
 
@@ -148,8 +154,12 @@ public class Server extends Thread {
         return received;
     }
 
-    private ArrayList<Pair<ArrayList<Input>, String>> getKeyPressesFromClient(DatagramPacket packet) throws IOException, ClassNotFoundException {
-        socket.receive(packet);
+    private ArrayList<Pair<ArrayList<Input>, String>> getKeyPressesFromClient(DatagramPacket packet) throws ClassNotFoundException, IOException {
+        try {
+            socket.receive(packet);
+        } catch (IOException e) {
+            logger.error("Server socket has been closed");
+        }
         byte data[] = packet.getData();
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);

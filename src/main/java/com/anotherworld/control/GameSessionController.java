@@ -23,6 +23,9 @@ import org.lwjgl.glfw.*;
  * @author Alfi S
  */
 public class GameSessionController {
+
+    private static Logger logger = LogManager.getLogger(GameSessionController.class);
+
     // Game Loop variables
 
     // FPS here means the number of game logic computation as second
@@ -33,7 +36,7 @@ public class GameSessionController {
     // the time between frames
     private final static int    FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
 
-    private static Logger logger = LogManager.getLogger(GameSessionController.class);
+
 
     private GameSession session;
     private GameSettings settings;
@@ -43,9 +46,13 @@ public class GameSessionController {
     private NetworkController network;
 
 
-
-
-    //TODO make a constructor for the real main (Main.java)
+    /**
+     *
+     * @param view - The view for the current game
+     * @param settings - GameSettings which represents the current game
+     * @param network - Networking for the current game
+     * @throws KeyListenerNotFoundException
+     */
     public GameSessionController(View view, GameSettings settings, NetworkController network) throws KeyListenerNotFoundException {
 
         this.settings = settings;
@@ -76,7 +83,7 @@ public class GameSessionController {
 
         this.network = network;
 
-        if (network!=null) {
+        if (network != null) {
             network.setKeyListener(keyListener);
         }
 
@@ -168,6 +175,9 @@ public class GameSessionController {
         logger.trace("Music stopped");
         AudioControl.stopSoundEffects();
         logger.trace("Stopped SoundEffects");
+
+        network.stopNetworking();
+        logger.trace("Stopped networking");
         //send out the message saying that either host or client have disconnected
         //if a client has disconnected should we just give control to the ai ?
     }
