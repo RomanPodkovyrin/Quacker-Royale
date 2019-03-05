@@ -51,8 +51,10 @@ public class Physics {
      *            the object to move
      */
     public static void move(AbstractMovable object) {
-        float newXCoordinate = object.getXCoordinate() + object.getXVelocity() * object.getSpeed();
-        float newYCoordinate = object.getYCoordinate() + object.getYVelocity() * object.getSpeed();
+        float newXCoordinate = object.getXCoordinate() + object.getXVelocity()
+                * object.getSpeed();
+        float newYCoordinate = object.getYCoordinate() + object.getYVelocity()
+                * object.getSpeed();
         object.setCoordinates(newXCoordinate, newYCoordinate);
         logger.debug((object instanceof Player ? "Player "
                 + ((Player) object).getCharacterID() : "Ball ")
@@ -262,12 +264,6 @@ public class Physics {
      */
     public static void collided(AbstractMovable objectA, AbstractMovable objectB) {
 
-        ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
-        Matrix safe = newCoordinate.get(0);
-        objectA.setCoordinates(safe.getX(), safe.getY());
-        safe = newCoordinate.get(1);
-        objectB.setCoordinates(safe.getX(), safe.getY());
-
         Matrix coordA = objectA.getCoordinates();
         Matrix coordB = objectB.getCoordinates();
         Matrix n = coordA.sub(coordB);
@@ -292,13 +288,39 @@ public class Physics {
             }
 
         }
+        ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
+        Matrix safe;
+        boolean specialCase = false;
         if (objectA instanceof Player) {
             if (((Player) objectA).getState().equals(ObjectState.DASHING)) {
-                if (objectB instanceof Player) {
-                    objectB.setCoordinates(objectB.getXCoordinate(),
-                            objectB.getYCoordinate());
+                {
+                    objectB.setVelocity(objectB.getXVelocity()
+                            + (optimisedP * n.getX()), objectB.getYVelocity()
+                            + (optimisedP * n.getY()));
+
+                    safe = newCoordinate.get(1);
+                    objectB.setCoordinates(safe.getX(), safe.getY());
+                    specialCase = true;
                 }
             }
+        } else if (objectB instanceof Player) {
+            if (((Player) objectB).getState().equals(ObjectState.DASHING)) {
+                {
+                    objectA.setVelocity(objectA.getXVelocity()
+                            + (optimisedP * n.getX()), objectA.getYVelocity()
+                            + (optimisedP * n.getY()));
+
+                    safe = newCoordinate.get(0);
+                    objectA.setCoordinates(safe.getX(), safe.getY());
+                    specialCase = true;
+                }
+            }
+        }
+        if (!specialCase) {
+            safe = newCoordinate.get(0);
+            objectA.setCoordinates(safe.getX(), safe.getY());
+            safe = newCoordinate.get(1);
+            objectB.setCoordinates(safe.getX(), safe.getY());
         }
         logger.debug("Completed collision event between "
                 + (objectA instanceof Ball ? "Ball" : "Player "
