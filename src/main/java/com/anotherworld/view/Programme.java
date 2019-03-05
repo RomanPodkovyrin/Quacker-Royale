@@ -149,7 +149,8 @@ public abstract class Programme {
 
     /**
      * Should draw an object in the future but for now just sets the uniform matrix.
+     * @param isTextured 
      */
-    public abstract void draw();
+    public abstract void draw(boolean isTextured);
     
 }

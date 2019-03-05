@@ -18,7 +18,7 @@ public class BallDisplayObject extends DisplayObject {
      * @param displayData The ball to display
      */
     public BallDisplayObject(BallDisplayData displayData) {
-        super(Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
+        super(Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN, true);
         this.displayData = displayData;
     }
     

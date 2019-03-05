@@ -30,7 +30,7 @@ public class PlayerDisplayObject extends DisplayObject {
      * @param displayData The player to display
      */
     public PlayerDisplayObject(PlayerDisplayData displayData) {
-        super(Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
+        super(Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN, false);
         this.displayData = displayData;
         this.lastXLocation = displayData.getXCoordinate();
         this.lastYLocation = displayData.getYCoordinate();

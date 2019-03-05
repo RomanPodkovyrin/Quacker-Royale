@@ -21,7 +21,6 @@ public class CoreProgramme extends Programme {
     private static Logger logger = LogManager.getLogger();
     
     private int programmeId;
-    private Optional<Integer> uniformId;
     private TextureMap textureMap;
     private Shader vertexShader;
     private Shader fragShader;
@@ -32,7 +31,6 @@ public class CoreProgramme extends Programme {
      */
     public CoreProgramme() throws ProgrammeUnavailableException {
         init();
-        uniformId = Optional.empty();
         try {
             textureMap = new TextureMap("res/images/alien.png");
         } catch (IOException ex) {
@@ -46,8 +44,8 @@ public class CoreProgramme extends Programme {
         
         try {
 
-            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/core/vertex.glsl", GL_VERTEX_SHADER);
-            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/core/frag.glsl", GL_FRAGMENT_SHADER);
+            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/texture/vertex.glsl", GL_VERTEX_SHADER);
+            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/texture/frag.glsl", GL_FRAGMENT_SHADER);
             
         } catch (IOException e) {
             logger.warn("Couldn't load shader");
@@ -91,17 +89,12 @@ public class CoreProgramme extends Programme {
         logger.debug("Loading texture map");
     }
     
-    private void setUpUniform() {
-        uniformId = Optional.of(glGetUniformLocation(programmeId, "tex"));
-        glUniform1i(uniformId.get(), 0);
-    }
-    
     @Override
     public void use() {
         glUseProgram(programmeId);
         //glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, textureMap.getId());
-        setUpUniform();
+        glUniform1i(glGetUniformLocation(programmeId, "tex"), 0);
     }
 
     @Override
@@ -125,13 +118,13 @@ public class CoreProgramme extends Programme {
     }
 
     @Override
-    public void draw() {
+    public void draw(boolean isTextured) {
         FloatBuffer temp = BufferUtils.createFloatBuffer(16);
         float[] matrix = getCurrentMatrix().getPoints();
         temp.put(matrix);
         temp.flip();
-        int uniformId = glGetUniformLocation(programmeId, "Transformation");
-        glUniformMatrix4fv(uniformId, false, temp);
+        glUniformMatrix4fv(glGetUniformLocation(programmeId, "Transformation"), false, temp);
+        glUniform1i(glGetUniformLocation(programmeId, "hasTex"), isTextured ? 1 : 0);
     }
 
     @Override

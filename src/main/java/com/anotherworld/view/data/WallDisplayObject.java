@@ -23,7 +23,7 @@ public class WallDisplayObject extends DisplayObject {
      * @param displayData The wall to display
      */
     public WallDisplayObject(WallData displayData) {
-        super(Points2d.genWall(displayData.getWidth(), displayData.getHeight(), 1), GL_TRIANGLE_STRIP, 0f, 0.6f, 1f);
+        super(Points2d.genWall(displayData.getWidth(), displayData.getHeight(), 1), GL_TRIANGLE_STRIP, false, 0f, 0.6f, 1f);
         this.displayData = displayData;
         this.maxWidth = displayData.getWidth();
         this.maxHeight = displayData.getHeight();

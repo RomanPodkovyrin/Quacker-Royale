@@ -24,6 +24,8 @@ public abstract class DisplayObject {
     
     private final int displayType;
     
+    private final boolean isTextured;
+    
     private int verticesId;
 
     private int edgesId;
@@ -40,21 +42,23 @@ public abstract class DisplayObject {
     
     private float b;
 
-    public DisplayObject(Points2d points, int displayType) {
-        this(points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
+    public DisplayObject(Points2d points, int displayType, boolean isTextured) {
+        this(points, displayType, isTextured, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
     
     /**
      * Creates a display object from the given points.
      * @param points The points to display the object
      * @param displayType The way the points should be displayed
+     * @param isTextured If the object has a texture mapped to it
      * @param r How red the object is 0 to 1
      * @param g How green the object is 0 to 1
      * @param b How blue the object is 0 to 1
      */
-    public DisplayObject(Points2d points, int displayType, float r, float g, float b) {
+    public DisplayObject(Points2d points, int displayType, boolean isTextured, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
+        this.isTextured = isTextured;
         this.r = r;
         this.g = g;
         this.b = b;
@@ -136,7 +140,7 @@ public abstract class DisplayObject {
         
         if (this.shouldDraw()) {
             
-            programme.draw();
+            programme.draw(isTextured);
             
             glBindVertexArray(vaoId);
             glEnableVertexAttribArray(0);
@@ -268,6 +272,10 @@ public abstract class DisplayObject {
      */
     public float getB() {
         return b;
+    }
+    
+    public boolean hasTexture() {
+        return isTextured;
     }
     
     /**

@@ -19,7 +19,7 @@ public class HealthBarDisplayObject extends DisplayObject {
      * @param displayData The player to display
      */
     public HealthBarDisplayObject(PlayerDisplayData displayData) {
-        super(Points2d.genRectangle(displayData.getRadius() * 2, 0.75f), GL_TRIANGLE_FAN, 1f, 0f, 0f);
+        super(Points2d.genRectangle(displayData.getRadius() * 2, 0.75f), GL_TRIANGLE_FAN, false, 1f, 0f, 0f);
         this.displayData = displayData;
     }
     
