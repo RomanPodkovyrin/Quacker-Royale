@@ -1,9 +1,13 @@
 package com.anotherworld.view;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.glGetError;
-import static org.lwjgl.opengl.GL46.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.opengl.GL46.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL46.GL_NO_ERROR;
+import static org.lwjgl.opengl.GL46.glClear;
+import static org.lwjgl.opengl.GL46.glFlush;
+import static org.lwjgl.opengl.GL46.glGetError;
+
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListener;
@@ -11,6 +15,7 @@ import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.BallDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.HealthBarDisplayObject;
 import com.anotherworld.view.data.PlayerDisplayData;
 import com.anotherworld.view.data.PlayerDisplayObject;
 import com.anotherworld.view.data.RectangleDisplayData;
@@ -19,7 +24,6 @@ import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -119,7 +123,7 @@ public class View implements Runnable {
         
         if (window == null) {
             logger.fatal("Unable to create game window");
-            glfwTerminate();
+            attemptDestroy();
             throw new RuntimeException("Couldn't create glfw window");
         }
 
@@ -133,61 +137,27 @@ public class View implements Runnable {
 
         currentScene = new GameScene();
         
-        //THERE NEED FOR SIGNIFICANT EDITING
-        
-        logger.info("Creating shaders");
-
-        Shader vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Core.vs", GL_VERTEX_SHADER);
-        Shader fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/Core.frag", GL_FRAGMENT_SHADER);
-        
-        int vertexShaderId;
-        int fragShaderId;
+        Programme programme;
         try {
-            fragShaderId = fragShader.createShader();
-            vertexShaderId = vertexShader.createShader();
-        } catch (IOException e) {
-            logger.fatal("Couldn't load shader");
-            throw new RuntimeException("Shaders couldn't be initialised");
+            programme = new CoreProgramme();
+        } catch (ProgrammeUnavailableException e) {
+            logger.fatal("Couldn't start any rendering engines");
+            attemptDestroy();
+            throw new RuntimeException("Couldn't start any rendering program");
         }
         
-        int programme = glCreateProgram();
+        int error = glGetError();
         
-        if (vertexShaderId == 0 || fragShaderId == 0 || programme == 0) {
-            logger.fatal("One of the shaders wasn't initialised");
-            throw new RuntimeException("Shaders couldn't be initialised");
+        while (error != GL_NO_ERROR) {
+            logger.error("Initialise GL error " + error);
+            error = glGetError();
         }
-        
-        if (glGetShaderi(vertexShaderId, GL_COMPILE_STATUS) == 0) {
-            logger.fatal("Vertex shader could't be complied");
-            logger.fatal("Vertex shader log: " + glGetShaderInfoLog(vertexShaderId));
-            throw new RuntimeException("Vertex shader wasn't complied");
-        }
-        
-        if (glGetShaderi(fragShaderId, GL_COMPILE_STATUS) == 0) {
-            logger.fatal("Fragment shader could't be complied");
-            logger.fatal("Fragment shader log: " + glGetShaderInfoLog(fragShaderId));
-            throw new RuntimeException("Fragment shader wasn't complied");
-        }
-        
-        glAttachShader(programme, vertexShaderId);
-        glAttachShader(programme, fragShaderId);
-        
-        glBindAttribLocation(programme, 0, "position");
-        glBindAttribLocation(programme, 1, "colour");
-        
-        glLinkProgram(programme);
-        
-        logger.debug("Fragment shader id " + fragShaderId);
-        logger.debug("Vertex shader id " + vertexShaderId);
-        logger.debug("Programme shader id " + programme);
-        
-        logger.info("Programme info: " + glGetProgramInfoLog(programme));
         
         while (!glfwWindowShouldClose(window)) {
 
             glClear(GL_COLOR_BUFFER_BIT);
             
-            glUseProgram(programme);
+            programme.use();
             
             synchronized (eventQueue) {
                 while (!eventQueue.isEmpty()) {
@@ -195,16 +165,16 @@ public class View implements Runnable {
                 }
             }
             
-            glLoadIdentity();
+            programme.loadIdentity();
             
-            currentScene.draw(width, height);
+            currentScene.draw(width, height, programme);
 
             glFlush();
             
-            int error = glGetError();
+            error = glGetError();
             
             while (error != GL_NO_ERROR) {
-                logger.error("GL error " + error);
+                logger.error("Display GL error " + error);
                 error = glGetError();
             }
 
@@ -215,11 +185,21 @@ public class View implements Runnable {
             glfwPollEvents();
 
         }
+        attemptDestroy(programme);
+    }
+    
+    private void attemptDestroy() {
+        logger.info("Closing window");
+        if (currentScene != null) {
+            currentScene.destoryObjects();
+        }
+        glfwTerminate();
+    }
+    
+    private void attemptDestroy(Programme programme) {
         logger.info("Closing window");
         currentScene.destoryObjects();
-        glDeleteProgram(programme);
-        glDeleteShader(vertexShaderId);
-        glDeleteShader(fragShaderId);
+        programme.destroy();
         glfwTerminate();
     }
     
@@ -235,6 +215,7 @@ public class View implements Runnable {
             }
             for (int i = 0; i < updateEvent.getPlayerObjects().size(); i++) {
                 disObj.add(new PlayerDisplayObject(updateEvent.getPlayerObjects().get(i)));
+                disObj.add(new HealthBarDisplayObject(updateEvent.getPlayerObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
                 disObj.add(new BallDisplayObject(updateEvent.getBallObjects().get(i)));

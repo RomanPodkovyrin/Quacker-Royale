@@ -1,7 +1,14 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
+import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
 
+import com.anotherworld.view.Programme;
+
+/**
+ * Manages displaying a ball object.
+ * @author Jake Stewart
+ *
+ */
 public class BallDisplayObject extends DisplayObject {
 
     private final BallDisplayData displayData;
@@ -11,13 +18,13 @@ public class BallDisplayObject extends DisplayObject {
      * @param displayData The ball to display
      */
     public BallDisplayObject(BallDisplayData displayData) {
-        super(DisplayObject.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
+        super(Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
         this.displayData = displayData;
     }
     
     @Override
-    public void transform() {
-        super.transform();
+    public void transform(Programme programme) {
+        super.transform(programme);
         if (displayData.isDangerous()) {
             super.setColour(1, 0, 0);
         } else {

@@ -82,7 +82,7 @@ public class CheckIfSaveToGo extends Job {
             Matrix newLocationNeigbhour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),newAiLocation);
             if (MatrixMath.distanceAB(newAiLocation,newLocationNeigbhour) <= ai.getRadius() + firstBall.getRadius() + safeDistance + 2) {
                 ai.setVelocity(0,0);
-                logger.info("AI stopped danger ahead");
+                logger.trace("AI stopped danger ahead");
                 fail();
                 return;
             }

@@ -1,32 +1,34 @@
 package com.anotherworld.view.graphics;
 
-import static org.lwjgl.opengl.GL46.*;
-
+/**
+ * Stores the information that defines where the camera is looking.
+ * @author Jake Stewart
+ *
+ */
 public interface Camera {
 
-    public static void transform(Camera camera) {
-        
-        glScalef(2 / camera.getWidth(), -2 / camera.getHeight(), 1);
-        
-        glTranslatef(-camera.getX(), -camera.getY(), 0);
-        
-        /*Matrix2d modifier;
-
-        modifier = (Matrix2d.homTranslation2d(-1f, 1f));
-
-        modifier = modifier.mult(Matrix2d.homScale2d(1f, -1f));
-
-        modifier = modifier.mult(Matrix2d.homScale2d(2 / camera.getWidth(), 2 / camera.getHeight()));
-
-        modifier = modifier.mult(Matrix2d.homTranslation2d(-camera.getX(), -camera.getY()));*/
-    }
-
+    /**
+     * The Camera's x location in the world coordinate frame.
+     * @return the x location
+     */
     public float getX();
 
+    /**
+     * The Camera's y location in the world coordinate frame.
+     * @return the y location
+     */
     public float getY();
 
+    /**
+     * The Camera's width in the world coordinate frame.
+     * @return the width
+     */
     public float getWidth();
 
+    /**
+     * The Camera's height in the world coordinate frame.
+     * @return the height
+     */
     public float getHeight();
 
 }
