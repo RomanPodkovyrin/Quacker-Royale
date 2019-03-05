@@ -7,16 +7,17 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
+
 
 /**
  * This Job aims to ball towards players.
- *
- * success - aiming
+ *<p>success - aiming
  * fail - too far away or nothing to aim
+ * </p>
  */
 public class AimBall extends Job {
 
@@ -30,37 +31,25 @@ public class AimBall extends Job {
     /**
      * - left side
      * + right side
-     * relative to the vector
+     * relative to the vector.
      *
      * @param vectorCheck
      * @param line
      * @param degree
      * @return
      */
-    public boolean onTheSide(Matrix vectorCheck, Matrix line, float degree) {
+    private boolean onTheSide(Matrix vectorCheck, Matrix line, float degree) {
         float lineDegree = MatrixMath.vectorAngle(line);
         float checkDegree = MatrixMath.vectorAngle(vectorCheck);
-        if (withingTheRange(checkDegree,(lineDegree - 180) % 360, lineDegree)) {
-            return true;
-        }
-        return false;
+        return withingTheRange(checkDegree, (lineDegree - 180) % 360, lineDegree);
     }
 
     public boolean withingTheRange(float check, float from, float to) {
         if (from < to) {
-            if (check < to & check > from) {
-                return true;
-            }
-            return false;
+            return check < to & check > from;
         } else if (from > to) {
-            if (check < to | check > from) {
-                return true;
-            }
-            return false;
-        } else if (from == to & to == check) {
-            return true;
-        }
-        return false;
+            return check < to | check > from;
+        } else return from == to & to == check;
 
     }
 
@@ -129,9 +118,9 @@ public class AimBall extends Job {
 
         float hypotenuse = targetPlayer.getRadius() + targetBall.getRadius();
 
-        float angle1 = ( MatrixMath.vectorAngle(MatrixMath.pointsVector(neighbour,ai.getCoordinates())) - MatrixMath.vectorAngle(fromNeighbourToPlayer) ) % 360;
-        float angle2 = ( MatrixMath.vectorAngle(MatrixMath.pointsVector(ai.getCoordinates(),neighbour)) - MatrixMath.vectorAngle(fromNeighbourToPlayer) ) % 360;
-        float angle =angle1;
+        float angle1 = (MatrixMath.vectorAngle(MatrixMath.pointsVector(neighbour,ai.getCoordinates())) - MatrixMath.vectorAngle(fromNeighbourToPlayer)) % 360;
+        float angle2 = (MatrixMath.vectorAngle(MatrixMath.pointsVector(ai.getCoordinates(),neighbour)) - MatrixMath.vectorAngle(fromNeighbourToPlayer)) % 360;
+        float angle = angle1;
         System.out.println(angle);
         float adjacent = (float ) (hypotenuse * Math.cos(angle));
         float opposite = (float ) (hypotenuse * Math.sin(angle));
@@ -144,8 +133,8 @@ public class AimBall extends Job {
         Matrix targetLocation = newLocationOnRoute.add(normalizedD);
         Matrix walk = MatrixMath.pointsVector(ai.getCoordinates(),targetLocation);
 
-        float ballRate = Math.abs(MatrixMath.magnitude(MatrixMath.pointsVector(targetBall.getCoordinates(),walk)) )/ targetBall.getSpeed();
-        float aiRate = Math.abs(MatrixMath.magnitude(MatrixMath.pointsVector(ai.getCoordinates(),neighbour)) )/ ai.getSpeed();
+        float ballRate = Math.abs(MatrixMath.magnitude(MatrixMath.pointsVector(targetBall.getCoordinates(),walk))) / targetBall.getSpeed();
+        float aiRate = Math.abs(MatrixMath.magnitude(MatrixMath.pointsVector(ai.getCoordinates(),neighbour))) / ai.getSpeed();
         if (ballRate < aiRate) {
             succeed();
             logger.info("Too far away won't get there on time");
