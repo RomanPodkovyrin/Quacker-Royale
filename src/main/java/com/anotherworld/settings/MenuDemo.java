@@ -93,7 +93,6 @@ public class MenuDemo extends Application {
         backToMenu.setMinHeight(height * 0.1);
         backToMenu.setBackground(new Background(new BackgroundFill(Color.rgb(9,
                 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-        ;
         backToMenu.setOnAction(e -> window.setScene(scene1));
         backToMenu.setFont(font);
         Button musicButton = new Button("Music: On");
@@ -164,7 +163,6 @@ public class MenuDemo extends Application {
         backToMenu2.setMinHeight(height * 0.1);
         backToMenu2.setBackground(new Background(new BackgroundFill(Color.rgb(
                 9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-        ;
         backToMenu2.setOnAction(e -> window.setScene(scene1));
         backToMenu2.setFont(font);
 
@@ -205,7 +203,6 @@ public class MenuDemo extends Application {
         backToMulti.setMinHeight(height * 0.1);
         backToMulti.setBackground(new Background(new BackgroundFill(Color.rgb(
                 9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-        ;
         backToMulti.setOnAction(e -> window.setScene(scene3));
         backToMulti.setFont(font);
 
@@ -232,7 +229,6 @@ public class MenuDemo extends Application {
         backToMulti2.setMinHeight(height * 0.1);
         backToMulti2.setBackground(new Background(new BackgroundFill(Color.rgb(
                 9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
-        ;
         backToMulti2.setOnAction(e -> window.setScene(scene3));
         backToMulti2.setFont(font);
 
@@ -261,7 +257,7 @@ public class MenuDemo extends Application {
         window.show();
     }
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         control = new Main();
         // launch the application
         launch(args);

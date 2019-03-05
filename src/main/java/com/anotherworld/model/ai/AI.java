@@ -1,8 +1,21 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.behaviour.*;
-import com.anotherworld.model.ai.behaviour.player.*;
-import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.behaviour.Inverter;
+import com.anotherworld.model.ai.behaviour.Job;
+import com.anotherworld.model.ai.behaviour.Repeat;
+import com.anotherworld.model.ai.behaviour.Selector;
+import com.anotherworld.model.ai.behaviour.Sequence;
+import com.anotherworld.model.ai.behaviour.SequenceSuccess;
+import com.anotherworld.model.ai.behaviour.player.AimBall;
+import com.anotherworld.model.ai.behaviour.player.AvoidBall;
+import com.anotherworld.model.ai.behaviour.player.AvoidEdge;
+import com.anotherworld.model.ai.behaviour.player.AvoidNeutralPlayer;
+import com.anotherworld.model.ai.behaviour.player.ChaseBall;
+import com.anotherworld.model.ai.behaviour.player.ChasePlayer;
+import com.anotherworld.model.ai.behaviour.player.CheckIfSaveToGo;
+import com.anotherworld.model.ai.behaviour.player.NeutralBallCheck;
+import com.anotherworld.model.ai.behaviour.player.WalkAbout;
+
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
