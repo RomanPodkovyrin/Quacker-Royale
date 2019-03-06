@@ -3,8 +3,13 @@ package com.anotherworld.view;
 import static org.lwjgl.opengl.GL46.glBegin;
 import static org.lwjgl.opengl.GL46.glColor4f;
 import static org.lwjgl.opengl.GL46.glEnd;
+import static org.lwjgl.opengl.GL46.glLoadIdentity;
+import static org.lwjgl.opengl.GL46.glPopMatrix;
+import static org.lwjgl.opengl.GL46.glPushMatrix;
+import static org.lwjgl.opengl.GL46.glRotatef;
+import static org.lwjgl.opengl.GL46.glScalef;
+import static org.lwjgl.opengl.GL46.glTranslatef;
 import static org.lwjgl.opengl.GL46.glVertex4f;
-import static org.lwjgl.opengl.GL46.*;
 
 import com.anotherworld.view.data.DisplayObject;
 
