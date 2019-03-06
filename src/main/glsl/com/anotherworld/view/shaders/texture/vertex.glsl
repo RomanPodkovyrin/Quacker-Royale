@@ -9,7 +9,7 @@ out vec4 ourColour;
 out vec2 texCoord;
 
 void main() {
-    gl_Position = /*gl_ModelViewProjectionMatrix */ Transformation * position;
+    gl_Position = Transformation * position;
     ourColour = colour;
     texCoord = texture;
 }

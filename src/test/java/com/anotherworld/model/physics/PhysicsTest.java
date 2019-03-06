@@ -85,7 +85,7 @@ public class PhysicsTest {
         assertEquals(false, Physics.checkCollision(aball, bball));
     }
 
-    /*@Test
+    @Test
     public void updateAttributesWhenCollisionHappened() {
         Physics.setUp();
         BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);

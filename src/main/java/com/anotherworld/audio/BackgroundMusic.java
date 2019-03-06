@@ -1,8 +1,6 @@
 package com.anotherworld.audio;
 
 import com.anotherworld.control.GameSessionController;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,9 +8,11 @@ import java.util.Scanner;
 
 import javax.sound.sampled.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public class BackgroundMusic implements Runnable
-{
+
+public class BackgroundMusic implements Runnable {
     private String fileLocation = "./res/audio/background_music.wav";
     private SourceDataLine line;
     private FloatControl volume;
@@ -27,20 +27,18 @@ public class BackgroundMusic implements Runnable
 
     private static Logger logger = LogManager.getLogger(BackgroundMusic.class);
 
-    public BackgroundMusic(){
+    public BackgroundMusic() {
         soundFile = new File(fileLocation);
     }
 
-    public void playBackgroundMusic()
-    {
+    public void playBackgroundMusic() {
         music = new Thread(this);
         music.start();
     }
 
-    public void run()
-    {
-        while(running) {
-//            System.out.println("Still alive background");
+    public void run() {
+        while (running) {
+            //System.out.println("Still alive background");
             try {
                 createLine();
             } catch (IOException e) {
@@ -71,63 +69,62 @@ public class BackgroundMusic implements Runnable
         line.start();
         numberOfBytesRead = 0;
         abData = new byte[2540000];
-        while (numberOfBytesRead != -1)
-        {
+        while (numberOfBytesRead != -1) {
             numberOfBytesRead = audioInputStream.read(abData, 0, abData.length);
-            if (numberOfBytesRead >= 0)
-            {
+            if (numberOfBytesRead >= 0) {
                 line.write(abData, 0, numberOfBytesRead);
             }
         }
+        audioInputStream.close();
         line.drain();
         line.close();
     }
 
-    private void muteSound(){
-        if( line.isControlSupported( FloatControl.Type.MASTER_GAIN)) {
+    private void muteSound() {
+        if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMinimum());
-        } else{
+        } else {
             volume = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
             volume.setValue(volume.getMinimum());
         }
     }
 
-    private void unMuteSound(){
-        if( line.isControlSupported( FloatControl.Type.MASTER_GAIN)) {
+    private void unMuteSound() {
+        if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMaximum());
-        } else{
+        } else {
             volume = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
             volume.setValue(volume.getMaximum());
         }
 
     }
 
-    public void terminateMusic(){
+    public void terminateMusic() {
         //TODO those 3 lines prevent linux from shutting down the thread
-//        line.stop();
-//        line.drain();
+        //line.stop();
+        //line.drain();
         music.stop();
         line.close();
         running = false;
-//        music.interrupt();
-//        System.exit(0);
+        //music.interrupt();
+        //System.exit(0);
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         BackgroundMusic ba = new BackgroundMusic();
         ba.playBackgroundMusic();
         while (true) {
             Scanner sc = new Scanner(System.in);
             int input = sc.nextInt();
-            if(input == 1){
+            if (input == 1) {
                 ba.muteSound();
-            }
-            else if(input == 2)
+            } else if (input == 2) {
                 ba.unMuteSound();
-            else if(input == 3)
+            } else if (input == 3) {
                 ba.terminateMusic();
+            }
         }
     }
 }
