@@ -142,9 +142,14 @@ public class View implements Runnable {
         try {
             programme = new TexturedProgramme();
         } catch (ProgrammeUnavailableException e) {
-            logger.fatal("Couldn't start any rendering engines");
-            attemptDestroy();
-            throw new RuntimeException("Couldn't start any rendering program");
+            logger.warn("Couldn't start Textured programme renderer");
+            try {
+                programme = new LegacyProgramme();
+            } catch (ProgrammeUnavailableException eDash) {
+                logger.fatal("Couldn't start any rendering engines");
+                attemptDestroy();
+                throw new RuntimeException("Couldn't start any rendering program");
+            }
         }
         
         int error = glGetError();
