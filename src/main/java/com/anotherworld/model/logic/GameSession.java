@@ -196,15 +196,14 @@ public class GameSession {
             player.setSpeed(0);
             long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
-            if (player.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()
-                    && timeSpentCharging % 60 == 0) {
+            if (player.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()) {
 
                 if (!player.isCharging()) {
                     player.setTimeStartedCharging(gameData.getTicksElapsed());
                     player.setState(ObjectState.CHARGING);
                 }
 
-                player.incrementChargeLevel();
+                if (timeSpentCharging % 60 == 0) player.incrementChargeLevel();
             }
         }
         else {
@@ -223,6 +222,7 @@ public class GameSession {
                 if(timeSpentDashing >= 10) {
                     player.setSpeed(GameSettings.getDefaultPlayerSpeed());
                     player.setState(ObjectState.IDLE);
+                    player.setChargeLevel(1);
                     player.setVelocity(0,0);
                 }
             }
