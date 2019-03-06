@@ -116,6 +116,7 @@ public class AI {
 
 //        domination.add(new SequenceSuccess(ballAim));
         return  domination;
+
     }
 
     /**
