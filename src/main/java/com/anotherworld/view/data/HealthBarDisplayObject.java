@@ -14,18 +14,21 @@ public class HealthBarDisplayObject extends DisplayObject {
 
     private final PlayerDisplayData displayData;
     
+    private final Programme programme;
+    
     /**
      * Creates a display object to display a player.
      * @param displayData The player to display
      */
-    public HealthBarDisplayObject(PlayerDisplayData displayData) {
-        super(Points2d.genRectangle(displayData.getRadius() * 2, 0.75f), GL_TRIANGLE_FAN, 1f, 0f, 0f);
+    public HealthBarDisplayObject(Programme programme, PlayerDisplayData displayData) {
+        super(programme, Points2d.genRectangle(displayData.getRadius() * 2, 0.75f), GL_TRIANGLE_FAN, false, 1f, 0f, 0f);
         this.displayData = displayData;
+        this.programme = programme;
     }
     
     @Override
-    public void transform(Programme programme) {
-        super.transform(programme);
+    public void transform() {
+        super.transform();
         
         float healthCo = (float)displayData.getHealth() / (float)displayData.getMaxHealth();
         

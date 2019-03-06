@@ -19,23 +19,25 @@ public class PlayerDisplayObject extends DisplayObject {
     private float lastYLocation;
     private static final float MAX_X_SCALE = 1f;
     private static final float MAX_X_DIFF = 5f;
+    private final Programme programme;
     private float maxR;
     private float maxG;
     private float maxB;
     
-    private Optional<Long> startedFalling;
+    private Optional<Long> timeStartedFalling;
     
     /**
      * Creates a display object to display a player.
      * @param displayData The player to display
      */
-    public PlayerDisplayObject(PlayerDisplayData displayData) {
-        super(Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
+    public PlayerDisplayObject(Programme programme, PlayerDisplayData displayData) {
+        super(programme, Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN, false);
         this.displayData = displayData;
         this.lastXLocation = displayData.getXCoordinate();
         this.lastYLocation = displayData.getYCoordinate();
         this.setColours();
-        this.startedFalling = Optional.empty();
+        this.timeStartedFalling = Optional.empty();
+        this.programme = programme;
     }
     
     private void setColours() {
@@ -45,12 +47,6 @@ public class PlayerDisplayObject extends DisplayObject {
         
         float randomCo = (float)(0.5f + Math.random() * 0.5f);
         
-        float max = randomCo * Math.max(Math.max(maxR, maxG), maxB);
-
-        //maxR = maxR / max;
-        //maxG = maxG / max;
-        //maxB = maxB / max;
-        
         this.setColour(maxR, maxG, maxB);
     }
     
@@ -59,18 +55,18 @@ public class PlayerDisplayObject extends DisplayObject {
     }
     
     @Override
-    public void transform(Programme programme) {
-        super.transform(programme);
+    public void transform() {
+        super.transform();
         
         //float healthCo = (float)displayData.getHealth() / (float)displayData.getMaxHealth();
         
         //this.setColour(healthCo * maxR, healthCo * maxG, healthCo * maxB);
         
         if (displayData.getState() == ObjectState.DEAD) {
-            if (!startedFalling.isPresent()) {
-                startedFalling = Optional.of(System.currentTimeMillis());
+            if (!timeStartedFalling.isPresent()) {
+                timeStartedFalling = Optional.of(System.currentTimeMillis());
             }
-            float timeFalling = System.currentTimeMillis() - startedFalling.get();
+            float timeFalling = System.currentTimeMillis() - timeStartedFalling.get();
             timeFalling = timeFalling / 1000;
             float fallingRatio = 1 / (1 + timeFalling * timeFalling * 4.8f);
             programme.scalef(fallingRatio, fallingRatio, 1);

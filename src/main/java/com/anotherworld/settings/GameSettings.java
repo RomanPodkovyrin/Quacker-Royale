@@ -194,7 +194,7 @@ public class GameSettings {
 
         for (int i = 0; i < numberOfBalls; i++) {
 
-            int side = (int)(Math.random() * 4) + 1;
+            int side = (int)Math.floor(Math.random() * 4);
             float xMin = platform.getxSize() + platform.getXCoordinate();
             float xMax = platform.getxSize() + platform.getXCoordinate();
 
@@ -228,7 +228,7 @@ public class GameSettings {
                     yMax = platform.getYCoordinate() - platform.getySize() ;//- ballRadius;
                     yMin = wall.getYCoordinate() - wall.getySize() + ballRadius;
                     break;
-                case 4: // Lower side
+                case 3: // Lower side
                     logger.trace("down");
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;

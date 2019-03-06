@@ -1,7 +1,5 @@
 package com.anotherworld.view.graphics;
 
-import static org.lwjgl.opengl.GL46.*;
-
 import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
 
@@ -61,8 +59,8 @@ public class GraphicsDisplay {
         programme.transform(camera);
         for (int i = 0; i < objects.size(); i++) {
             programme.pushMatrix();
-            objects.get(i).transform(programme);
-            objects.get(i).draw(programme);
+            objects.get(i).transform();
+            objects.get(i).draw();
             programme.popMatrix();
         }
         programme.popMatrix();
@@ -85,7 +83,7 @@ public class GraphicsDisplay {
     }
 
     /**
-     * Deletes the opengl buffers it has bound.
+     * Deletes the programme buffers it has bound.
      */
     public void destroyObjects() {
         for (DisplayObject d : objects) {

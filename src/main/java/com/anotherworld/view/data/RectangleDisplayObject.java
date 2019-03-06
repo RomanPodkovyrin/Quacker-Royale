@@ -17,20 +17,23 @@ public class RectangleDisplayObject extends DisplayObject {
     
     private final float maxHeight;
     
+    private final Programme programme;
+    
     /**
      * Creates a display object to display a rectangle.
      * @param displayData The rectangle to display
      */
-    public RectangleDisplayObject(RectangleDisplayData displayData) {
-        super(Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), GL_TRIANGLE_FAN, 0.6f, 0.4f, 0f);
+    public RectangleDisplayObject(Programme programme, RectangleDisplayData displayData) {
+        super(programme, Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), GL_TRIANGLE_FAN, false, 0.6f, 0.4f, 0f);
         this.displayData = displayData;
         this.maxWidth = displayData.getWidth();
         this.maxHeight = displayData.getHeight();
+        this.programme = programme;
     }
     
     @Override
-    public void transform(Programme programme) {
-        super.transform(programme);
+    public void transform() {
+        super.transform();
         
         programme.scalef(displayData.getWidth() / maxWidth, displayData.getHeight() / maxHeight, 1f);
         

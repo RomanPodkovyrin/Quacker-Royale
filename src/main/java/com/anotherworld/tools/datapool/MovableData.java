@@ -52,7 +52,6 @@ public abstract class MovableData implements DisplayData, Serializable {
     public void setCoordinates(float x, float y) {
 
         coordinates = new Matrix(x, y);
-        this.angle = MatrixMath.vectorAngle(coordinates);
     }
 
     /**
@@ -68,7 +67,7 @@ public abstract class MovableData implements DisplayData, Serializable {
      * @param newXCoordinate the new x-coordinate to set.
      */
     public void setXCoordinate(float newXCoordinate) {
-        setCoordinates(newXCoordinate,coordinates.getY());
+        this.setCoordinates(newXCoordinate,coordinates.getY());
     }
 
     /**
@@ -84,7 +83,7 @@ public abstract class MovableData implements DisplayData, Serializable {
      * @param newYCoordinate the new y-coordinate to set.
      */
     public void setYCoordinate(float newYCoordinate) {
-        setCoordinates(coordinates.getX(),newYCoordinate);
+        this.setCoordinates(coordinates.getX(),newYCoordinate);
     }
 
     /**
@@ -95,6 +94,7 @@ public abstract class MovableData implements DisplayData, Serializable {
      */
     public void setVelocity(float x, float y) {
         velocity = new Matrix(x, y);
+        this.angle = MatrixMath.vectorAngle(velocity);
     }
 
     public Matrix getVelocity() {
@@ -106,7 +106,7 @@ public abstract class MovableData implements DisplayData, Serializable {
     }
 
     public void setXVelocity(float newXVelocity) {
-        velocity = new Matrix(newXVelocity, velocity.getY());
+        this.setVelocity(newXVelocity, velocity.getY());
     }
 
     public float getYVelocity() {
@@ -114,7 +114,7 @@ public abstract class MovableData implements DisplayData, Serializable {
     }
 
     public void setYVelocity(float newYVelocity) {
-        velocity = new Matrix(velocity.getX(), newYVelocity);
+        this.setVelocity(velocity.getX(), newYVelocity);
     }
 
     public float getAngle() { return angle; }

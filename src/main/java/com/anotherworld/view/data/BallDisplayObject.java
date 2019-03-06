@@ -17,14 +17,14 @@ public class BallDisplayObject extends DisplayObject {
      * Creates a display object to display a ball.
      * @param displayData The ball to display
      */
-    public BallDisplayObject(BallDisplayData displayData) {
-        super(Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
+    public BallDisplayObject(Programme programme, BallDisplayData displayData) {
+        super(programme, Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN, true);
         this.displayData = displayData;
     }
     
     @Override
-    public void transform(Programme programme) {
-        super.transform(programme);
+    public void transform() {
+        super.transform();
         if (displayData.isDangerous()) {
             super.setColour(1, 0, 0);
         } else {
