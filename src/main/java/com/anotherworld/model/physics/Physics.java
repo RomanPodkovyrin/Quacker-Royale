@@ -344,9 +344,9 @@ public class Physics {
 
     public static void charge(Player player) {
         int charge = player.getChargeLevel();
-        float speedIncreases = 1 + ((1 / 5 * charge));
+        float speedIncreases = 1 + (charge);
 
-        float speed = 5 * speedIncreases;
+        float speed = GameSettings.getDefaultPlayerSpeed() * speedIncreases;
 
         player.setSpeed(speed);
     }
