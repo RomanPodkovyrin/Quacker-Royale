@@ -11,6 +11,7 @@ import com.anotherworld.tools.datapool.PlatformData;
  */
 public class Platform {
 
+    private static final float SIZE_DECREASE = 0.1f;
     private PlatformData platformData;
 
     public Platform(PlatformData platformData){
@@ -26,8 +27,10 @@ public class Platform {
     public float getYSize() { return platformData.getySize(); }
     public void setYSize(float ySize) { platformData.setySize(ySize); }
 
-    public float getXShrink() { return platformData.getxShrink(); }
+    public float getXTargetSize() { return platformData.getxTargetSize(); }
+    public float getYTargetSize() { return platformData.getyTargetSize(); }
 
+    public float getXShrink() { return platformData.getxShrink(); }
     public float getYShrink() { return platformData.getyShrink(); }
 
     public int getStage() { return platformData.getStage(); }
@@ -39,11 +42,18 @@ public class Platform {
         int stage = getStage();
         if (stage > 0) {
             platformData.setStage(stage - 1);
-            this.setXSize(getXSize() - getXShrink());
-            this.setYSize(getYSize() - getYShrink());
+            platformData.setxTargetSize(getXSize() - getXShrink());
+            platformData.setyTargetSize(getYSize() - getYShrink());
         }
     }
 
+    public void shrink() {
+        if (getXSize() > getXTargetSize() &&
+            getYSize() > getYTargetSize()) {
+            setXSize(getXSize() - SIZE_DECREASE);
+            setYSize(getYSize() - SIZE_DECREASE);
+        }
+    }
     /**
      * checks whether the the given coordinates are on the platform.
      * @param x the x coordinate
