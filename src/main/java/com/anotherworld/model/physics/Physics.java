@@ -275,16 +275,21 @@ public class Physics {
         float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), n);
         float optimisedP = (float) Math.min((2.0 * (newVeloA - newVeloB)) / 2,
                 0);
+
+        Matrix veloA = new Matrix(objectA.getXVelocity()
+                - (optimisedP * n.getX()), objectA.getYVelocity()
+                - (optimisedP * n.getY()));
+        veloA.normalizeThis();
+        Matrix veloB = new Matrix(objectB.getXVelocity()
+                + (optimisedP * n.getX()), objectB.getYVelocity()
+                + (optimisedP * n.getY()));
+        veloB.normalizeThis();
         if (objectA instanceof Ball) {
 
-            objectA.setVelocity(objectA.getXVelocity()
-                    - (optimisedP * n.getX()), objectA.getYVelocity()
-                    - (optimisedP * n.getY()));
+            objectA.setVelocity(veloA.getX(), veloA.getY());
 
             if (objectB instanceof Ball) {
-                objectB.setVelocity(
-                        objectB.getXVelocity() + (optimisedP * n.getX()),
-                        objectB.getYVelocity() + (optimisedP * n.getY()));
+                objectB.setVelocity(veloB.getX(), veloB.getY());
             }
 
         }
@@ -294,9 +299,7 @@ public class Physics {
         if (objectA instanceof Player) {
             if (((Player) objectA).getState().equals(ObjectState.DASHING)) {
                 {
-                    objectB.setVelocity(objectB.getXVelocity()
-                            + (optimisedP * n.getX()), objectB.getYVelocity()
-                            + (optimisedP * n.getY()));
+                    objectB.setVelocity(veloB.getX(), veloB.getY());
 
                     safe = newCoordinate.get(1);
                     objectB.setCoordinates(safe.getX(), safe.getY());
@@ -306,9 +309,7 @@ public class Physics {
         } else if (objectB instanceof Player) {
             if (((Player) objectB).getState().equals(ObjectState.DASHING)) {
                 {
-                    objectA.setVelocity(objectA.getXVelocity()
-                            + (optimisedP * n.getX()), objectA.getYVelocity()
-                            + (optimisedP * n.getY()));
+                    objectA.setVelocity(veloA.getX(), veloA.getY());
 
                     safe = newCoordinate.get(0);
                     objectA.setCoordinates(safe.getX(), safe.getY());
