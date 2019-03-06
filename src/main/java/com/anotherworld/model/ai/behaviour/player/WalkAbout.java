@@ -81,7 +81,7 @@ public class WalkAbout extends Job {
         } else if (isRunning()) {
             move();
             fail();
-            logger.info("Still walking to the coordinate");
+            logger.trace("Still walking to the coordinate");
         }
     }
 
@@ -90,14 +90,14 @@ public class WalkAbout extends Job {
      */
     private void move() {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
-//        ai.setXVelocity(vector.getX() / Math.abs(vector.getX()) * ai.getSpeed());
-//        ai.setYVelocity(vector.getY() / Math.abs(vector.getY()) * ai.getSpeed());
+        //ai.setXVelocity(vector.getX() / Math.abs(vector.getX()) * ai.getSpeed());
+        //ai.setYVelocity(vector.getY() / Math.abs(vector.getY()) * ai.getSpeed());
         vector.normalizeThis();
         ai.setXVelocity(vector.getX() * ai.getSpeed());
         ai.setYVelocity(vector.getY() * ai.getSpeed());
-        logger.info("Walking about: Moving to " + destination);
+        logger.trace("Walking about: Moving to " + destination);
         if (!platform.isOnPlatform(destination)) {
-            logger.info("destination no longer on the platform");
+            logger.trace("destination no longer on the platform");
             succeed();
             newDestination = true;
         }

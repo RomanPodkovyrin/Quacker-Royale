@@ -1,14 +1,13 @@
 package com.anotherworld.view.graphics;
 
-import static org.lwjgl.opengl.GL45.*;
+import static org.lwjgl.opengl.GL46.glViewport;
 
-import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.Programme;
 
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.GL45;
 
 /**
  * Creates and manages a view state like view game or main menu.
@@ -30,7 +29,7 @@ public class Scene {
      * @param width The width of the window in pixels
      * @param height The height of the window in pixels
      */
-    public void draw(int width, int height) {
+    public void draw(int width, int height, Programme programme) {
         logger.debug("Drawing Scene");
         for (int i = 0; i < displays.size(); i++) {
             logger.trace("Drawing scene: " + i);
@@ -40,7 +39,7 @@ public class Scene {
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
             glViewport(x, y, w, h);
-            display.draw();
+            display.draw(programme);
         }
     }
     
@@ -67,6 +66,9 @@ public class Scene {
         return Math.min(intScale - intValue, Math.max(0, (int)Math.round((floatScale / 2f) * ((float)intScale))));
     }
 
+    /**
+     * Destroys the opengl buffers of for for the display objects in all of the scenes displays.
+     */
     public void destoryObjects() {
         for (GraphicsDisplay d : displays) {
             d.destroyObjects();

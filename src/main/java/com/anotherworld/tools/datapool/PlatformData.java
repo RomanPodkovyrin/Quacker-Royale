@@ -14,8 +14,6 @@ public class PlatformData implements RectangleDisplayData, Serializable {
 
     private float xSize = 60;
     private float ySize = 30;
-    private float width = xSize * 2;
-    private float height = ySize * 2;
 
     private float xCoordinate = 80;
     private float yCoordinate = 45;
@@ -29,8 +27,6 @@ public class PlatformData implements RectangleDisplayData, Serializable {
         this.stage = data.getStage();
         this.xSize = data.getxSize();
         this.ySize = data.getySize();
-        this.width = data.getWidth();
-        this.height = data.getHeight();
         this.xCoordinate = data.getXCoordinate();
         this.yCoordinate = data.getYCoordinate();
     }
@@ -73,19 +69,19 @@ public class PlatformData implements RectangleDisplayData, Serializable {
     }
 
     public float getWidth() {
-        return width;
+        return xSize * 2;
     }
 
     public void setWidth(float width) {
-        this.width = width;
+        this.xSize = width / 2;
     }
 
     public float getHeight() {
-        return height;
+        return ySize * 2;
     }
 
     public void setHeight(float height) {
-        this.height = height;
+        this.ySize = height / 2;
     }
 
     public float getXCoordinate() {

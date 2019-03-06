@@ -37,6 +37,7 @@ public class Server extends Thread {
     public Server(int IPs, GameSettings settings) throws SocketException, UnknownHostException {
         HostPlayer = settings.getCurrentPlayer();
         networkPlayers = settings.getPlayers();
+        // TODO should we also have ai in the multiplayer
         balls = settings.getBalls();
         platform = settings.getPlatform().get(0);
         wall = settings.getWall().get(0);

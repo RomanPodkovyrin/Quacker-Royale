@@ -19,10 +19,7 @@ public class BlackBoard {
      * @return
      */
     public static boolean isPlayerTargeted(String targetPlayer, String ai) {
-        if (targetedPlayers.containsKey(targetPlayer) | targetedPlayers.get(targetPlayer).equals(ai)) {
-            return false;
-        }
-        return true;
+        return !(targetedPlayers.containsKey(targetPlayer) | targetedPlayers.get(targetPlayer).equals(ai));
     }
 
     public static void targetThePlayer(String targetPlayer, String ai) {

@@ -50,23 +50,22 @@ public class AvoidEdge extends Job {
         if (Math.abs(vectorFromPlatformCenter.getX()) >= platform.getXSize() - distanceFromEdge) {
             logger.trace("AI too close to the x edge " + distanceFromEdge + " " + (platform.getXSize() - distanceFromEdge));
 
-//            ai.setYVelocity(-ai.getYVelocity());
-//            ai.setXVelocity(-ai.getXVelocity());
+            //ai.setYVelocity(-ai.getYVelocity());
+            //ai.setXVelocity(-ai.getXVelocity());
             ai.setVelocity(toCenter.getX(),toCenter.getY());
             fail();
-            logger.info("Moving to in direction " + ai.getVelocity());
+            logger.trace("Moving to in direction " + ai.getVelocity());
             return;
 
 
         // Checks if the AI is near the vertical edge
         } else if (Math.abs(vectorFromPlatformCenter.getY()) >= platform.getYSize() - distanceFromEdge) {
             logger.trace("AI too close to the y edge " + vectorFromPlatformCenter + " " + (platform.getYSize() - distanceFromEdge));
-
-//            ai.setYVelocity(-ai.getYVelocity());
-//            ai.setXVelocity(-ai.getXVelocity());
+            //ai.setYVelocity(-ai.getYVelocity());
+            //ai.setXVelocity(-ai.getXVelocity());
             ai.setVelocity(toCenter.getX(),toCenter.getY());
             fail();
-            logger.info("Moving to in direction" + ai.getVelocity());
+            logger.trace("Moving to in direction" + ai.getVelocity());
             return;
         }
         logger.trace("Finishing AvoidEdge with success: no edges to avoid");
@@ -79,10 +78,7 @@ public class AvoidEdge extends Job {
     private boolean isPointing(Matrix directions, int angle) {
         float aiAngle = MatrixMath.vectorAngle(directions);
 
-        if (((angle - 90) % 360) > aiAngle | ((angle + 90) % 360) < aiAngle) {
-            return true;
-        }
-        return false;
+        return ((angle - 90) % 360) > aiAngle | ((angle + 90) % 360) < aiAngle;
     }
 
 }
