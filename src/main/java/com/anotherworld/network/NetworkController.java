@@ -243,7 +243,7 @@ public class NetworkController {
                 }
 
                 hostSendRate++;
-            } else if (hostSendRate == 2) {
+            } else if (hostSendRate == 3) {
                 hostSendRate = 0;
             } else {
                 hostSendRate++;

@@ -176,7 +176,12 @@ public class Server extends Thread {
 
             if (playerCommand.getValue().equals(id)) {
                 playerCommand.getKey().addAll(received);
-                inputAndIP.set(i,new Pair<>(playerCommand.getKey(),id));
+                ArrayList<Input> temp = playerCommand.getKey();
+//                inputAndIP.set(i,new Pair<>(temp,id));
+
+                // testing
+                inputAndIP.clear();
+                inputAndIP.add(new Pair<>(received,id));
                 return inputAndIP;
             }
         }
