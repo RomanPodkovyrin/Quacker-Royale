@@ -107,14 +107,14 @@ public class AI {
     private ArrayList<Job> getDomination() {
         // Set up of the domination skills
         ArrayList<Job> domination = new ArrayList<>();
-        domination.add(new Inverter(new ChaseBall()));
+//        domination.add(new Inverter(new ChaseBall()));
 //        domination.add((new ChasePlayer()));
 
         ArrayList<Job> ballAim = new ArrayList<>();
         ballAim.add(new NeutralBallCheck());
         ballAim.add(new AimBall());
 
-//        domination.add(new SequenceSuccess(ballAim));
+        domination.add(new SequenceSuccess(ballAim));
         return  domination;
 
     }

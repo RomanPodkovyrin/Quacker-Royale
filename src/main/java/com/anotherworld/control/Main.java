@@ -42,7 +42,7 @@ public class Main {
      */
     public static void main(String []args) {
         Main main = new Main();
-        GameSettings settings = new GameSettings(2,0,3);
+        GameSettings settings = new GameSettings(2,1,1);
         main.startTheGame(settings, new NetworkController());
         MenuDemo viewMenu = new MenuDemo();
 
