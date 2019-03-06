@@ -26,7 +26,7 @@ public class GameClient extends Thread {
     public GameClient(String serverIP) throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
         address = InetAddress.getByName(serverIP);
-        System.out.println("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
+        logger.trace("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
         sendDataToServer("set up connection message");
         waitForGameToStart();
     }
@@ -85,7 +85,7 @@ public class GameClient extends Thread {
         }
         String received = new String(packet.getData(), 0, packet.getLength());
         myID = received;
-        System.out.println("My id is:" + received);
+        logger.trace("My id is:" + received);
     }
 
     public void getObjectFromServer() throws ClassNotFoundException, IOException {
@@ -101,25 +101,24 @@ public class GameClient extends Thread {
         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
         Object object = objectInputStream.readObject();
         if (object instanceof ArrayList<?>) {
-            System.out.println("ArrayList has been received");
-            System.out.println(" array : " + object);
+            logger.trace("ArrayList has been received");
             ArrayList<?> ballOrPlayer = ((ArrayList<?>)object);
             if (ballOrPlayer.get(0) instanceof PlayerData) {
                 playerData = (ArrayList<PlayerData>) ballOrPlayer;
-                System.out.println("Player data object has been received");
+                logger.trace("Player data object has been received");
             } else if (ballOrPlayer.get(0) instanceof BallData) {
                 ballData = (ArrayList<BallData>) ballOrPlayer;
-                System.out.println("Ball object received.");
+                logger.trace("Ball object received.");
             }
         } else if (object instanceof GameSessionData) {
             gameSessionData = (GameSessionData) object;
-            System.out.println("GameSessionData object has been received");
+            logger.trace("GameSessionData object has been received");
         } else if (object instanceof PlatformData) {
             platformData = (PlatformData) object;
-            System.out.println("PlatformData object has been received");
+            logger.trace("PlatformData object has been received");
         } else if (object instanceof WallData) {
             wallData = (WallData) object;
-            System.out.println("WallData object has been received");
+            logger.trace("WallData object has been received");
         }
     }
 
