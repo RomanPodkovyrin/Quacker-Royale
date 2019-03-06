@@ -1,8 +1,8 @@
 package com.anotherworld.view;
 
-import com.anotherworld.view.data.DisplayObject;
-
 import static org.lwjgl.opengl.GL46.*;
+
+import com.anotherworld.view.data.DisplayObject;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -33,7 +33,7 @@ public class TexturedProgramme extends Programme {
     public TexturedProgramme() throws ProgrammeUnavailableException {
         init();
         try {
-            textureMap = new TextureMap("res/images/alien.png");
+            textureMap = new TextureMap("res/images/NeutralBall/NeutralBall0.png");
         } catch (IOException ex) {
             logger.catching(ex);
             throw new ProgrammeUnavailableException("Couldn't load texture map");
