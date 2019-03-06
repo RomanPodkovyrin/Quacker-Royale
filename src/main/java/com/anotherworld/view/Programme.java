@@ -1,12 +1,13 @@
 package com.anotherworld.view;
 
+import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.Matrix2d;
 import com.anotherworld.view.graphics.Camera;
 
 import java.util.Stack;
 
 /**
- * Stores information about how the game will be rendered and changes opengl options to use it.
+ * Stores information about how the game will be rendered, changes opengl options to use it and renders all of the game.
  * @author Jake Stewart
  *
  */
@@ -14,7 +15,7 @@ public abstract class Programme {
     
     private Stack<Matrix2d> matrixStack;
     
-    public Programme() {
+    public Programme() throws ProgrammeUnavailableException {
         matrixStack = new Stack<>();
     }
 
@@ -54,22 +55,49 @@ public abstract class Programme {
         this.translatef(-camera.getX(), -camera.getY(), 0);
     }
 
+    /**
+     * Returns a 4 by 4 identity matrix.
+     * @return the matrix
+     */
     private Matrix2d getIdentity() {
         return Matrix2d.genIdentity(4);
     }
     
+    /**
+     * Returns a 4 by 4 translation matrix.
+     * @param x the x translation
+     * @param y the y translation
+     * @param z the z translation
+     * @return the translation matrix
+     */
     private Matrix2d getTranslation(float x, float y, float z) {
         return Matrix2d.homTranslate3d(x, y, z);
     }
     
+    /**
+     * Returns a 4 by 4 scale matrix.
+     * @param x the x scale
+     * @param y the y scale
+     * @param z the z scale
+     * @return the scale matrix
+     */
     private Matrix2d getScale(float x, float y, float z) {
         return Matrix2d.homScale3d(x, y, z);
     }
     
+    /**
+     * Returns a matrix of theta degrees around the z axis.
+     * @param theta the angle
+     * @return the rotation matrix
+     */
     private Matrix2d getRotation(float theta) {
         return Matrix2d.homRotate3d(theta);
     }
     
+    /**
+     * Translates the current matrix on the stack.
+     * @param b the translation matrix
+     */
     private void multiplyCurrent(Matrix2d b) {
         Matrix2d currentMatrix = getCurrentMatrix();
         if (!matrixStack.isEmpty()) {
@@ -148,8 +176,27 @@ public abstract class Programme {
     }
 
     /**
-     * Should draw an object in the future but for now just sets the uniform matrix.
+     * Draws an object.
+     * @param object The display object to draw
      */
-    public abstract void draw();
+    public abstract void draw(DisplayObject object);
+
+    /**
+     * Creates the programme buffers for the display object.
+     * @param displayObject the object to initialise for
+     */
+    public abstract void initialiseDisplayObject(DisplayObject displayObject);
+
+    /**
+     * Deletes the programme buffers for the display object.
+     * @param displayObject the object to delete the buffers for
+     */
+    public abstract void deleteObject(DisplayObject displayObject);
+
+    /**
+     * Updates the colour of the display object.
+     * @param displayObject the object to update
+     */
+    public abstract void updateObjectColour(DisplayObject displayObject);
     
 }

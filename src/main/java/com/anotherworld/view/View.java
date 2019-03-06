@@ -59,6 +59,8 @@ public class View implements Runnable {
     private int width;
     
     private Queue<ViewEvent> eventQueue;
+    
+    private Programme programme;
 
     /**
      * Creates the View object initialising it's values.
@@ -137,13 +139,17 @@ public class View implements Runnable {
 
         currentScene = new GameScene();
         
-        Programme programme;
         try {
-            programme = new CoreProgramme();
+            programme = new TexturedProgramme();
         } catch (ProgrammeUnavailableException e) {
-            logger.fatal("Couldn't start any rendering engines");
-            attemptDestroy();
-            throw new RuntimeException("Couldn't start any rendering program");
+            logger.warn("Couldn't start Textured programme renderer");
+            try {
+                programme = new LegacyProgramme();
+            } catch (ProgrammeUnavailableException eDash) {
+                logger.fatal("Couldn't start any rendering engines");
+                attemptDestroy();
+                throw new RuntimeException("Couldn't start any rendering program");
+            }
         }
         
         int error = glGetError();
@@ -208,17 +214,17 @@ public class View implements Runnable {
             ArrayList<DisplayObject> disObj = new ArrayList<>();
             UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects)event);
             for (int i = 0; i < updateEvent.getRectangleObjects().size(); i++) {
-                disObj.add(new RectangleDisplayObject(updateEvent.getRectangleObjects().get(i)));
+                disObj.add(new RectangleDisplayObject(programme, updateEvent.getRectangleObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getWallObjects().size(); i++) {
-                disObj.add(new WallDisplayObject(updateEvent.getWallObjects().get(i)));
+                disObj.add(new WallDisplayObject(programme, updateEvent.getWallObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getPlayerObjects().size(); i++) {
-                disObj.add(new PlayerDisplayObject(updateEvent.getPlayerObjects().get(i)));
-                disObj.add(new HealthBarDisplayObject(updateEvent.getPlayerObjects().get(i)));
+                disObj.add(new PlayerDisplayObject(programme, updateEvent.getPlayerObjects().get(i)));
+                disObj.add(new HealthBarDisplayObject(programme, updateEvent.getPlayerObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
-                disObj.add(new BallDisplayObject(updateEvent.getBallObjects().get(i)));
+                disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
             }
             ((GameScene)currentScene).updateGameObjects(disObj);
         }

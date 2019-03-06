@@ -14,10 +14,16 @@ plugins {
     id 'application'
     id 'eclipse'
     id 'checkstyle'
+    id 'jacoco'
 }
 
 checkstyle {
-    toolVersion '8.18';
+    toolVersion '8.18'
+}
+
+jacoco {
+    toolVersion '0.8.2'
+    reportsDir = file("$buildDir/reports/jacoco")
 }
 
 // Sets the use of java 8

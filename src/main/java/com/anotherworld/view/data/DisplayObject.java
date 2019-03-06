@@ -1,7 +1,5 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL46.*;
-
 import com.anotherworld.view.Programme;
 
 import java.nio.FloatBuffer;
@@ -24,6 +22,10 @@ public abstract class DisplayObject {
     
     private final int displayType;
     
+    private final boolean isTextured;
+    
+    private final Programme programme;
+    
     private int verticesId;
 
     private int edgesId;
@@ -40,129 +42,63 @@ public abstract class DisplayObject {
     
     private float b;
 
-    public DisplayObject(Points2d points, int displayType) {
-        this(points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
+    public DisplayObject(Programme programme, Points2d points, int displayType, boolean isTextured) {
+        this(programme, points, displayType, isTextured, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
     
     /**
      * Creates a display object from the given points.
      * @param points The points to display the object
      * @param displayType The way the points should be displayed
+     * @param isTextured If the object has a texture mapped to it
      * @param r How red the object is 0 to 1
      * @param g How green the object is 0 to 1
      * @param b How blue the object is 0 to 1
      */
-    public DisplayObject(Points2d points, int displayType, float r, float g, float b) {
+    public DisplayObject(Programme programme, Points2d points, int displayType, boolean isTextured, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
+        this.isTextured = isTextured;
         this.r = r;
         this.g = g;
         this.b = b;
-        createOpenglObjects(this);
-    }
-    
-    private static void createOpenglObjects(DisplayObject displayObject) {
-        
-        displayObject.vaoId = glGenVertexArrays();
-        glBindVertexArray(displayObject.vaoId);
-        
-        displayObject.verticesId = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, displayObject.verticesId);
-        FloatBuffer f = displayObject.getFloatBuffer();
-        glBufferData(GL_ARRAY_BUFFER, f, GL_STATIC_DRAW);
-        
-        glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
-        
-        glEnableVertexAttribArray(0);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        displayObject.colourId = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, displayObject.colourId);
-        FloatBuffer g = displayObject.getColourBuffer();
-        glBufferData(GL_ARRAY_BUFFER, g, GL_STATIC_DRAW);
-        
-        glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
-        
-        glEnableVertexAttribArray(1);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        displayObject.textureId = glGenBuffers();
-        glBindBuffer(GL_ARRAY_BUFFER, displayObject.textureId);
-        glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
-        
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
-        
-        glEnableVertexAttribArray(2);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        glBindVertexArray(0);
-        
-        displayObject.edgesId = glGenBuffers();
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.edgesId);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        
-        
+        this.programme = programme;
+        programme.initialiseDisplayObject(this);
     }
     
     /**
      * Cleans opengl of the object's representation.
      */
     public void destroyObject() {
-        logger.debug("Destroying object containing vaoId " + vaoId + ", vertices " + verticesId + ", edges " + edgesId);
-        glDeleteBuffers(verticesId);
-        glDeleteBuffers(edgesId);
-        glDeleteBuffers(vaoId);
+        programme.deleteObject(this);
     }
     
     /**
      * Returns the display mode needed to correctly display the object's points.
      * @return The opengl display mode
      */
-    private int getDisplayType() {
+    public int getDisplayType() {
         return displayType;
     }
     
     /**
      * Draws the object using the stored points.
      */
-    public void draw(Programme programme) {
-        logger.trace("Buffer vaoID " + vaoId + " " + (glIsVertexArray(vaoId) ? "exists" : "wasn't found"));
-        logger.trace("Buffer vertices " + verticesId + " " + (glIsBuffer(verticesId) ? "exists" : "wasn't found"));
-        logger.trace("Buffer edges " + edgesId + " " + (glIsBuffer(edgesId) ? "exists" : "wasn't found"));
+    public void draw() {
         
         if (this.shouldDraw()) {
             
-            programme.draw();
-            
-            glBindVertexArray(vaoId);
-            glEnableVertexAttribArray(0);
-            glEnableVertexAttribArray(1);
-            glEnableVertexAttribArray(2);
-    
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, edgesId);
-            
-            glDrawElements(this.getDisplayType(), this.points.getN(), GL_UNSIGNED_INT, 0);
-    
-            glDisableClientState(GL_VERTEX_ARRAY);
-
-            glDisableVertexAttribArray(2);
-            glDisableVertexAttribArray(1);
-            glDisableVertexAttribArray(0);
-            glBindVertexArray(0);
+            programme.draw(this);
         }
         
     }
     
-    public void transform(Programme programme) {
+    public void transform() {
         programme.translatef(this.getX(), this.getY(), 0);
         programme.rotatef(-this.getTheta(), 0, 0, 1);
     }
     
-    private FloatBuffer getFloatBuffer() {
+    public FloatBuffer getFloatBuffer() {
         FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
         for (Float f : points.getPoints()) {
             b.put(f);
@@ -171,7 +107,7 @@ public abstract class DisplayObject {
         return b;
     }
     
-    private FloatBuffer getColourBuffer() {
+    public FloatBuffer getColourBuffer() {
         FloatBuffer buff = BufferUtils.createFloatBuffer(points.getPoints().length);
         for (int i = 0; i < points.getN(); i++) {
             buff.put(this.r);
@@ -183,13 +119,11 @@ public abstract class DisplayObject {
         return buff;
     }
     
-    private IntBuffer getIndexBuffer() {
+    public IntBuffer getIndexBuffer() {
         IntBuffer b = BufferUtils.createIntBuffer(points.getN());
-        int[] bs = new int[points.getN()];
         for (int i = 0; i < points.getN(); i++) {
-            bs[i] = i;
+            b.put(i);
         }
-        b.put(bs);
         b.flip();
         return b;
     }
@@ -199,7 +133,7 @@ public abstract class DisplayObject {
     }
     
     private float getYScale() {
-        return getScale(0);
+        return getScale(1);
     }
     
     private float getScale(int axis) {
@@ -215,7 +149,7 @@ public abstract class DisplayObject {
         return max - min;
     }
     
-    private FloatBuffer getTextureBuffer() {
+    public FloatBuffer getTextureBuffer() {
         FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
         float xScale = getXScale();
         float yScale = getYScale();
@@ -232,10 +166,7 @@ public abstract class DisplayObject {
             this.r = r;
             this.g = g;
             this.b = b;
-            glBindBuffer(GL_ARRAY_BUFFER, this.colourId);
-            FloatBuffer f = this.getColourBuffer();
-            glBufferData(GL_ARRAY_BUFFER, f, GL_DYNAMIC_DRAW);
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            programme.updateObjectColour(this);
         }
     }
     
@@ -244,6 +175,46 @@ public abstract class DisplayObject {
             return true;
         }
         return false;
+    }
+    
+    public void setVertexArrayObjectID(int id) {
+        this.vaoId = id;
+    }
+    
+    public int getVertexArrayObjectID() {
+        return this.vaoId;
+    }
+    
+    public void setVerticesID(int id) {
+        this.verticesId = id;
+    }
+    
+    public int getVerticesID() {
+        return this.verticesId;
+    }
+    
+    public void setEdgesID(int id) {
+        this.edgesId = id;
+    }
+    
+    public int getEdgesID() {
+        return this.edgesId;
+    }
+    
+    public void setColourID(int id) {
+        this.colourId = id;
+    }
+    
+    public int getColourID() {
+        return this.colourId;
+    }
+    
+    public void setTextureID(int id) {
+        this.textureId = id;
+    }
+    
+    public int getTextureID() {
+        return this.textureId;
     }
     
     /**
@@ -268,6 +239,10 @@ public abstract class DisplayObject {
      */
     public float getB() {
         return b;
+    }
+    
+    public boolean hasTexture() {
+        return isTextured;
     }
     
     /**
@@ -299,5 +274,9 @@ public abstract class DisplayObject {
      * @return if the camera should track the object
      */
     public abstract boolean shouldCameraFollow();
+
+    public int getNumberOfPoints() {
+        return this.points.getN();
+    }
     
 }

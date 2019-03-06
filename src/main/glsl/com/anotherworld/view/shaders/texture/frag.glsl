@@ -7,6 +7,12 @@ in vec2 texCoord;
 
 uniform sampler2D tex;
 
+uniform bool hasTex;
+
 void main() {
-    FragColour = texture(tex, texCoord);
+    if (hasTex) {
+        FragColour = ourColour * texture(tex, texCoord);
+    } else {
+        FragColour = ourColour;
+    }
 }
