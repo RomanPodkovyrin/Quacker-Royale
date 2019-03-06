@@ -180,6 +180,9 @@ public class GameSession {
             wall.nextStage();
         }
 
+        platform.shrink();
+        wall.shrink();
+
     }
 
     public void updatePlayer(ArrayList<Input> keyPresses) {
