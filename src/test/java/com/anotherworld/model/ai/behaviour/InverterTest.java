@@ -10,23 +10,24 @@ public class InverterTest {
     @Test
     public void inverterTest() {
 
-        JobTest job = new JobTest();
-        job.succeed();
 
-        Inverter invertedJob = new Inverter(job);
+        // Tests if inverts the success
+        JobSuccessTest jobSuccess = new JobSuccessTest();
+        Inverter invertedJob = new Inverter(jobSuccess);
         invertedJob.start();
         invertedJob.act(null,null,null,null);
         assertTrue(invertedJob.isFailure());
 
-        job.fail();
-        invertedJob = new Inverter(job);
+        // Tests if inverts the fail
+        JobFailTest jobFail = new JobFailTest();
+        invertedJob = new Inverter(jobFail);
         invertedJob.start();
         invertedJob.act(null,null,null,null);
         assertTrue(invertedJob.isSuccess());
 
-
-        job.start();
-        invertedJob = new Inverter(job);
+        // Tests if keeps the job running
+        JobRunningTest jobrunning = new JobRunningTest();
+        invertedJob = new Inverter(jobrunning);
         invertedJob.start();
         invertedJob.act(null,null,null,null);
         assertTrue(invertedJob.isRunning());

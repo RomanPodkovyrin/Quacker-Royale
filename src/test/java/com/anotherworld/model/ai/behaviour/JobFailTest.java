@@ -6,7 +6,7 @@ import com.anotherworld.model.movable.Player;
 
 import java.util.ArrayList;
 
-public class JobTest extends Job {
+public class JobFailTest extends Job {
     @Override
     public void reset() {
 
@@ -14,6 +14,6 @@ public class JobTest extends Job {
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
-
+        fail();
     }
 }
