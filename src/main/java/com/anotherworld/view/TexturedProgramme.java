@@ -3,9 +3,11 @@ package com.anotherworld.view;
 import static org.lwjgl.opengl.GL46.*;
 
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.TexturedDisplayObjectBuffers;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +28,8 @@ public class TexturedProgramme extends Programme {
     private Shader vertexShader;
     private Shader fragShader;
     
+    private ArrayList<TexturedDisplayObjectBuffers> bufferObjects;
+    
     /**
      * Creates the core programme that should be compatible with most systems.
      * @throws ProgrammeUnavailableException If the programme isn't compatible with the system or wasn't found
@@ -38,6 +42,7 @@ public class TexturedProgramme extends Programme {
             logger.catching(ex);
             throw new ProgrammeUnavailableException("Couldn't load texture map");
         }
+        bufferObjects = new ArrayList<>();
     }
     
     private void init() throws ProgrammeUnavailableException {
@@ -91,13 +96,15 @@ public class TexturedProgramme extends Programme {
     }
     
     @Override
-    public void initialiseDisplayObject(DisplayObject displayObject) {
+    public int initialiseDisplayObject(DisplayObject displayObject) {
         
-        displayObject.setVertexArrayObjectID(glGenVertexArrays());
-        glBindVertexArray(displayObject.getVertexArrayObjectID());
+        TexturedDisplayObjectBuffers bufferObject = new TexturedDisplayObjectBuffers();
         
-        displayObject.setVerticesID(glGenBuffers());
-        glBindBuffer(GL_ARRAY_BUFFER, displayObject.getVerticesID());
+        bufferObject.setVertexArrayObjectId(glGenVertexArrays());
+        glBindVertexArray(bufferObject.getVertexArrayObjectId());
+        
+        bufferObject.setVerticesId(glGenBuffers());
+        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getVerticesId());
         glBufferData(GL_ARRAY_BUFFER, displayObject.getFloatBuffer(), GL_STATIC_DRAW);
         
         glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
@@ -106,8 +113,8 @@ public class TexturedProgramme extends Programme {
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        displayObject.setColourID(glGenBuffers());
-        glBindBuffer(GL_ARRAY_BUFFER, displayObject.getColourID());
+        bufferObject.setColourId(glGenBuffers());
+        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
         glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
         
         glVertexAttribPointer(1, 4, GL_FLOAT, false, 0, 0);
@@ -116,22 +123,29 @@ public class TexturedProgramme extends Programme {
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        displayObject.setTextureID(glGenBuffers());
-        glBindBuffer(GL_ARRAY_BUFFER, displayObject.getTextureID());
-        glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
-        
-        glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
-        
-        glEnableVertexAttribArray(2);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        if (displayObject.hasTexture()) {
+            bufferObject.setTextureId(glGenBuffers());
+            glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getTextureId().get());
+            glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
+            
+            glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
+            
+            glEnableVertexAttribArray(2);
+            
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
         
         glBindVertexArray(0);
         
-        displayObject.setEdgesID(glGenBuffers());
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, displayObject.getEdgesID());
+        bufferObject.setEdgesId(glGenBuffers());
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.getEdgesId());
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        
+        bufferObjects.add(bufferObject);
+        
+        return bufferObjects.size() - 1;
+        
     }
     
     @Override
@@ -162,29 +176,26 @@ public class TexturedProgramme extends Programme {
     }
 
     @Override
-    public void draw(DisplayObject object) {
-        if (object.shouldDraw()) {
+    public void draw(DisplayObject displayObject) {
+        if (displayObject.shouldDraw()) {
             FloatBuffer temp = BufferUtils.createFloatBuffer(16);
             float[] matrix = getCurrentMatrix().getPoints();
             temp.put(matrix);
             temp.flip();
             glUniformMatrix4fv(glGetUniformLocation(programmeId, "Transformation"), false, temp);
-            glUniform1i(glGetUniformLocation(programmeId, "hasTex"), object.hasTexture() ? 1 : 0);
+            glUniform1i(glGetUniformLocation(programmeId, "hasTex"), displayObject.hasTexture() ? 1 : 0);
             
-            logger.trace("VAO " + object.getVertexArrayObjectID() + (glIsVertexArray(object.getVertexArrayObjectID()) ? " Exists" : " Doesn't exist"));
-            logger.trace("Vertices buffer " + object.getVerticesID() + (glIsBuffer(object.getVerticesID()) ? " Exists" : " Doesn't exist"));
+            TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
             
-            glBindVertexArray(object.getVertexArrayObjectID());
+            glBindVertexArray(bufferObject.getVertexArrayObjectId());
             glEnableVertexAttribArray(0);
             glEnableVertexAttribArray(1);
             glEnableVertexAttribArray(2);
     
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, object.getEdgesID());
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.getEdgesId());
             
-            glDrawElements(object.getDisplayType(), object.getNumberOfPoints(), GL_UNSIGNED_INT, 0);
-    
-            //glDisableClientState(GL_VERTEX_ARRAY);
-
+            glDrawElements(displayObject.getDisplayType(), displayObject.getNumberOfPoints(), GL_UNSIGNED_INT, 0);
+            
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     
             glDisableVertexAttribArray(2);
@@ -201,16 +212,22 @@ public class TexturedProgramme extends Programme {
 
     @Override
     public void deleteObject(DisplayObject displayObject) {
-        glDeleteBuffers(displayObject.getVerticesID());
-        glDeleteBuffers(displayObject.getEdgesID());
-        glDeleteBuffers(displayObject.getColourID());
-        glDeleteBuffers(displayObject.getTextureID());
-        glDeleteBuffers(displayObject.getVertexArrayObjectID());
+        TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
+        
+        glDeleteBuffers(bufferObject.getVerticesId());
+        glDeleteBuffers(bufferObject.getEdgesId());
+        glDeleteBuffers(bufferObject.getColourId());
+        if (bufferObject.getTextureId().isPresent()) {
+            glDeleteBuffers(bufferObject.getTextureId().get());
+        }
+        glDeleteBuffers(bufferObject.getVertexArrayObjectId());
     }
 
     @Override
     public void updateObjectColour(DisplayObject displayObject) {
-        glBindBuffer(GL_ARRAY_BUFFER, displayObject.getColourID());
+        TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
+        
+        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
         glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }

@@ -85,7 +85,8 @@ public class LegacyProgramme extends Programme {
     }
 
     @Override
-    public void initialiseDisplayObject(DisplayObject displayObject) {
+    public int initialiseDisplayObject(DisplayObject displayObject) {
+        return 0;
     }
 
     @Override

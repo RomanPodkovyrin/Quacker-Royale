@@ -26,15 +26,7 @@ public abstract class DisplayObject {
     
     private final Programme programme;
     
-    private int verticesId;
-
-    private int edgesId;
-
-    private int vaoId;
-    
-    private int colourId;
-    
-    private int textureId;
+    private final int programmeObjectId;
     
     private float r;
     
@@ -63,7 +55,7 @@ public abstract class DisplayObject {
         this.g = g;
         this.b = b;
         this.programme = programme;
-        programme.initialiseDisplayObject(this);
+        programmeObjectId = programme.initialiseDisplayObject(this);
     }
     
     /**
@@ -177,44 +169,8 @@ public abstract class DisplayObject {
         return false;
     }
     
-    public void setVertexArrayObjectID(int id) {
-        this.vaoId = id;
-    }
-    
-    public int getVertexArrayObjectID() {
-        return this.vaoId;
-    }
-    
-    public void setVerticesID(int id) {
-        this.verticesId = id;
-    }
-    
-    public int getVerticesID() {
-        return this.verticesId;
-    }
-    
-    public void setEdgesID(int id) {
-        this.edgesId = id;
-    }
-    
-    public int getEdgesID() {
-        return this.edgesId;
-    }
-    
-    public void setColourID(int id) {
-        this.colourId = id;
-    }
-    
-    public int getColourID() {
-        return this.colourId;
-    }
-    
-    public void setTextureID(int id) {
-        this.textureId = id;
-    }
-    
-    public int getTextureID() {
-        return this.textureId;
+    public int getProgrammeObjectId() {
+        return programmeObjectId;
     }
     
     /**
