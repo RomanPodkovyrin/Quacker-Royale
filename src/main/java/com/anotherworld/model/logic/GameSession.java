@@ -92,13 +92,15 @@ public class GameSession {
 
                 if(Physics.checkCollision(ball, player)) {
 
-                    AudioControl.playerCollidedWithBall();
 
                     if (!ball.isDangerous()){
                         ball.setDangerous(true);
                         ball.setTimer(GameSettings.getBallMaxTimer());
                         ball.setSpeed(ball.getSpeed() * 2);
-                    } else player.damage(ball.getDamage());
+                    } else {
+                        player.damage(ball.getDamage());
+                        AudioControl.playerCollidedWithBall();
+                    }
 
                     Physics.collided(ball, player);
                     logger.trace(player.getCharacterID() + " collide with ball");
@@ -179,6 +181,9 @@ public class GameSession {
             platform.nextStage();
             wall.nextStage();
         }
+
+        platform.shrink();
+        wall.shrink();
 
     }
 

@@ -9,6 +9,7 @@ import com.anotherworld.tools.datapool.WallData;
  */
 public class Wall {
 
+    private static final float SIZE_DECREASE = 0.1f;
     private WallData wallData;
 
     public Wall(WallData wallData) {
@@ -24,8 +25,10 @@ public class Wall {
     public float getYSize() { return wallData.getySize(); }
     public void setYSize(float ySize) { wallData.setySize(ySize); }
 
-    public float getXShrink() { return wallData.getxShrink(); }
+    public float getXTargetSize() { return wallData.getxTargetSize(); }
+    public float getYTargetSize() { return wallData.getyTargetSize(); }
 
+    public float getXShrink() { return wallData.getxShrink(); }
     public float getYShrink() { return wallData.getyShrink(); }
 
     public int getStage() { return wallData.getStage(); }
@@ -37,8 +40,15 @@ public class Wall {
         int stage = getStage();
         if (stage > 0) {
             wallData.setStage(stage - 1);
-            this.setXSize(getXSize() - getXShrink());
-            this.setYSize(getYSize() - getYShrink());
+            wallData.setxTargetSize(getXSize() - getXShrink());
+            wallData.setyTargetSize(getYSize() - getYShrink());
+        }
+    }
+
+    public void shrink() {
+        if (getXSize() > getXTargetSize() && getYSize() > getYTargetSize()) {
+            setXSize(getXSize() - SIZE_DECREASE);
+            setYSize(getYSize() - SIZE_DECREASE);
         }
     }
 
