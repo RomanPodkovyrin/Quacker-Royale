@@ -90,7 +90,7 @@ public class View implements Runnable {
         } catch (InterruptedException e) {
             logger.catching(e);
         }
-        throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
+        throw new KeyListenerNotFoundException("Timeout of 10 seconds, check if window was initialized");
     }
     
     /**
@@ -141,11 +141,13 @@ public class View implements Runnable {
         
         try {
             programme = new TexturedProgramme();
-        } catch (ProgrammeUnavailableException e) {
+        } catch (ProgrammeUnavailableException e1) {
+            logger.catching(e1);
             logger.warn("Couldn't start Textured programme renderer");
             try {
                 programme = new LegacyProgramme();
-            } catch (ProgrammeUnavailableException eDash) {
+            } catch (ProgrammeUnavailableException e2) {
+                logger.catching(e2);
                 logger.fatal("Couldn't start any rendering engines");
                 attemptDestroy();
                 throw new RuntimeException("Couldn't start any rendering program");

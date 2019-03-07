@@ -65,6 +65,13 @@ public class Matrix2dTest {
         a.add(b);
     }
 
+    @Test(expected = MatrixSizeException.class)
+    public void sum_MissMatch2_Fails() {
+        Matrix2d a = new Matrix2d(7, 16);
+        Matrix2d b = new Matrix2d(7, 15);
+        b.add(a);
+    }
+
     @Test
     public void sub_SubFromSelf_IsCalculated() {
         Matrix2d a = new Matrix2d(14, 3);
@@ -105,6 +112,13 @@ public class Matrix2dTest {
         Matrix2d a = new Matrix2d(20, 11);
         Matrix2d b = new Matrix2d(20, 10);
         a.sub(b);
+    }
+
+    @Test(expected = MatrixSizeException.class)
+    public void sub_MissMatch_Fails2() {
+        Matrix2d a = new Matrix2d(21, 10);
+        Matrix2d b = new Matrix2d(20, 10);
+        b.sub(a);
     }
     
     @Test

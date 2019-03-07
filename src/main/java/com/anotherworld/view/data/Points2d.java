@@ -21,7 +21,6 @@ public class Points2d {
         if (m < 0 || n < 0) {
             throw new IndexOutOfBoundsException("Size must be non negative");
         }
-        //value = (T[])Array.newInstance(type, m * n);
         value = new float[m * n];
         this.m = m;
         this.n = n;
