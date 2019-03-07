@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.Ball;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.model.physics.Physics;
 import com.anotherworld.tools.datapool.BallData;
@@ -21,7 +22,6 @@ public class PhysicsTest {
     
     @Test
     public void theCoordinateOfAnobjectShouldUpdate() {
-        Physics.setUp();
         BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
         Ball aball = new Ball(a);
         Matrix coord = aball.getCoordinates();
@@ -31,19 +31,19 @@ public class PhysicsTest {
 
         aball.setXVelocity(0.5f);
         Physics.move(aball);
-        float xCoord = aball.getXVelocity() + coord.getX();
+        float xCoord = (aball.getXVelocity()*aball.getSpeed()) + coord.getX();
         // assert statements
         assertEquals(xCoord, aball.getXCoordinate(), 0.0f);
         aball.setVelocity(0.0f, 0.5f);
         float yCoord = aball.getYCoordinate();
         Physics.move(aball);
-        yCoord += aball.getYVelocity();
+        yCoord += (aball.getYVelocity()*aball.getSpeed());
         assertEquals(yCoord, aball.getYCoordinate(), 0.0f);
 
         aball.setVelocity(-0.5f, -0.5f);
         Physics.move(aball);
-        xCoord += aball.getXVelocity();
-        yCoord += aball.getYVelocity();
+        xCoord += aball.getXVelocity()*aball.getSpeed();
+        yCoord += aball.getYVelocity()*aball.getSpeed();
         assertEquals(xCoord, aball.getXCoordinate(), 0.0f);
         assertEquals(yCoord, aball.getYCoordinate(), 0.0f);
     }
@@ -58,28 +58,29 @@ public class PhysicsTest {
         aball.setXVelocity(xVelocity);
         WallData wallb = new WallData(45.0f, 45.0f);
         Wall wall = new Wall(wallb);
-        float northBound = wall.getYCoordinate() + wall.getYSize() / 2;
+        float northBound = wall.getYCoordinate() - wall.getYSize();
         aball.setCoordinates(aball.getXCoordinate(), northBound);
         Physics.bouncedWall(aball, wall);
         float expected = northBound + aball.getRadius();
-        yVelocity *= -1;
+        yVelocity = Math.abs(yVelocity);
         assertEquals(expected, aball.getYCoordinate(), 0.0f);
         assertEquals(yVelocity, aball.getYVelocity(), 0.0f);
-        float eastBound = wall.getXCoordinate() + wall.getXSize() / 2;
+        float eastBound = wall.getXCoordinate() - wall.getXSize();
         aball.setCoordinates(eastBound, aball.getYCoordinate());
         Physics.bouncedWall(aball, wall);
-        expected = eastBound - aball.getRadius();
-        xVelocity *= -1;
+        expected = eastBound;
+        xVelocity = Math.abs(xVelocity);
         assertEquals(expected, aball.getXCoordinate(), 0.0f);
         assertEquals(xVelocity, aball.getXVelocity(), 0.0f);
     }
 
     @Test
     public void collisionShouldHappen() {
-        Physics.setUp();
         BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
+        BallData b = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
+        
         Ball aball = new Ball(a);
-        Ball bball = new Ball(a);
+        Ball bball = new Ball(b);
         assertEquals(true, Physics.checkCollision(aball, bball));
         bball.setCoordinates(0, 0);
         assertEquals(false, Physics.checkCollision(aball, bball));
@@ -87,14 +88,15 @@ public class PhysicsTest {
 
     @Test
     public void updateAttributesWhenCollisionHappened() {
-        Physics.setUp();
-        BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
+        BallData a = new BallData("bob", false, 91.1f, 52.3f, ObjectState.MOVING , 12.1f, 3.0f);
         Ball aball = new Ball(a);
-        PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f, null, 12.1f,
+        PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f, ObjectState.IDLE, 12.1f,
                 3.0f);
         Player player = new Player(b, false);
         Physics.collided(aball, player);
         b.setCoordinates(aball.getXCoordinate(), aball.getYCoordinate());
         Physics.collided(aball, player);
     }
+    //TODO:
+    
 }
