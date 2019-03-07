@@ -5,8 +5,6 @@ import com.anotherworld.tools.input.Input;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -99,11 +97,9 @@ public class GameClient extends Thread {
             logger.error("Client socket has been closed.");
         }
         byte data[] = incomingPacket.getData();
-        //ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
-        //ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
-        InputStream byteInputStream = new ByteArrayInputStream(data);
-        GZIPInputStream objectInputStream = new GZIPInputStream(byteInputStream);
-        Object object = objectInputStream.read();
+        ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
+        Object object = objectInputStream.readObject();
         if (object instanceof ArrayList<?>) {
             logger.trace("ArrayList has been received");
             ArrayList<?> ballOrPlayer = ((ArrayList<?>)object);
