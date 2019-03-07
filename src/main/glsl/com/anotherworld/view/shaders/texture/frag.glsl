@@ -11,7 +11,7 @@ uniform bool hasTex;
 
 void main() {
     if (hasTex) {
-        FragColour = ourColour * texture(tex, texCoord);
+        FragColour = /*ourColour **/ texture(tex, texCoord);
     } else {
         FragColour = ourColour;
     }

@@ -185,7 +185,7 @@ public abstract class Programme {
      * Creates the programme buffers for the display object.
      * @param displayObject the object to initialise for
      */
-    public abstract void initialiseDisplayObject(DisplayObject displayObject);
+    public abstract int initialiseDisplayObject(DisplayObject displayObject);
 
     /**
      * Deletes the programme buffers for the display object.
