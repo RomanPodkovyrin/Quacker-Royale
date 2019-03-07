@@ -13,6 +13,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.zip.GZIPOutputStream;
 
 public class Server extends Thread {
     private static Logger logger = LogManager.getLogger(Server.class);
@@ -132,7 +133,11 @@ public class Server extends Thread {
 
     public void sendObjectToClients(Object object) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ObjectOutputStream os = new ObjectOutputStream(outputStream);
+        //GZIPOutputStream os = new GZIPOutputStream(outputStream);
+        ObjectOutputStream os = new ObjectOutputStream(new GZIPOutputStream(outputStream));
+        //ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        //ObjectOutputStream os = new ObjectOutputStream(outputStream);
+
         os.writeObject(object);
         byte[] data = outputStream.toByteArray();
         for(int i = 0; i < numberOfPlayers; i++) {
