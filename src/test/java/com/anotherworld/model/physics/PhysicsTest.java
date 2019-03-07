@@ -68,7 +68,7 @@ public class PhysicsTest {
         float eastBound = wall.getXCoordinate() - wall.getXSize();
         aball.setCoordinates(eastBound, aball.getYCoordinate());
         Physics.bouncedWall(aball, wall);
-        expected = eastBound;
+        expected = eastBound+aball.getRadius();
         xVelocity = Math.abs(xVelocity);
         assertEquals(expected, aball.getXCoordinate(), 0.0f);
         assertEquals(xVelocity, aball.getXVelocity(), 0.0f);

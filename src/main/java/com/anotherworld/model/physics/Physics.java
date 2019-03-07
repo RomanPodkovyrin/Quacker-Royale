@@ -146,12 +146,12 @@ public class Physics {
             bounced = true;
         }
         if (northEast.getX() > northEastWall.getX()) {
-            ball.setCoordinates(northEast.getX() - circleR, circleY);
+            ball.setCoordinates(northEastWall.getX() - circleR, circleY);
             ball.setXVelocity(-Math.abs(ball.getXVelocity()));
             logger.debug("The ball is bouncing on the East of Wall");
             bounced = true;
         } else if (southWest.getX() < southWestWall.getX()) {
-            ball.setCoordinates(southWest.getX() + circleR, circleY);
+            ball.setCoordinates(southWestWall.getX() + circleR, circleY);
             ball.setXVelocity(Math.abs(ball.getXVelocity()));
             logger.debug("The ball is bouncing on the West of Wall");
             bounced = true;
