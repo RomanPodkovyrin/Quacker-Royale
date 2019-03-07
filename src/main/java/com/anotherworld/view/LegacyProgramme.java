@@ -75,7 +75,7 @@ public class LegacyProgramme extends Programme {
 
     @Override
     public void draw(DisplayObject object) {
-        FloatBuffer points = object.getFloatBuffer();
+        FloatBuffer points = object.getVertexBuffer();
         glColor4f(object.getR(), object.getG(), object.getB(), 1f);
         glBegin(object.getDisplayType());
         while (points.hasRemaining()) {

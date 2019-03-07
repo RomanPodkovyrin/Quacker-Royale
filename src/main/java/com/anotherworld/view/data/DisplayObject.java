@@ -90,7 +90,8 @@ public abstract class DisplayObject {
         programme.rotatef(-this.getTheta(), 0, 0, 1);
     }
     
-    public FloatBuffer getFloatBuffer() {
+    
+    public FloatBuffer getVertexBuffer() {
         FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
         for (Float f : points.getPoints()) {
             b.put(f);
@@ -111,7 +112,7 @@ public abstract class DisplayObject {
         return buff;
     }
     
-    public IntBuffer getIndexBuffer() {
+    public IntBuffer getEdgeBuffer() {
         IntBuffer b = BufferUtils.createIntBuffer(points.getN());
         for (int i = 0; i < points.getN(); i++) {
             b.put(i);

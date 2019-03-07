@@ -1,6 +1,6 @@
-# Another world
+# Anotherworld
 
-## Exexution
+## Execution
 
 To run the game type './gradlew run' into your console.
 

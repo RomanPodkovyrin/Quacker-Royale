@@ -37,7 +37,7 @@ public class TexturedProgramme extends Programme {
     public TexturedProgramme() throws ProgrammeUnavailableException {
         init();
         try {
-            textureMap = new TextureMap("res/images/NeutralBall/NeutralBall0.png");
+            textureMap = new TextureMap("res/images/NeutoralBall/NeutralBall0.png");
         } catch (IOException ex) {
             logger.catching(ex);
             throw new ProgrammeUnavailableException("Couldn't load texture map");
@@ -105,7 +105,7 @@ public class TexturedProgramme extends Programme {
         
         bufferObject.setVerticesId(glGenBuffers());
         glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getVerticesId());
-        glBufferData(GL_ARRAY_BUFFER, displayObject.getFloatBuffer(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, displayObject.getVertexBuffer(), GL_STATIC_DRAW);
         
         glVertexAttribPointer(0, 4, GL_FLOAT, false, 0, 0);
         
@@ -139,7 +139,7 @@ public class TexturedProgramme extends Programme {
         
         bufferObject.setEdgesId(glGenBuffers());
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.getEdgesId());
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getIndexBuffer(), GL_STATIC_DRAW);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getEdgeBuffer(), GL_STATIC_DRAW);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         
         bufferObjects.add(bufferObject);
@@ -150,6 +150,8 @@ public class TexturedProgramme extends Programme {
     
     @Override
     public void use() {
+        glEnable(GL_ALPHA_TEST);
+        glAlphaFunc(GL_GREATER, 0);
         glUseProgram(programmeId);
         glBindTexture(GL_TEXTURE_2D, textureMap.getId());
         glUniform1i(glGetUniformLocation(programmeId, "tex"), 0);
