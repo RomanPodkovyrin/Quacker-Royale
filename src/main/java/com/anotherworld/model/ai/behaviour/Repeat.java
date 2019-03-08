@@ -66,7 +66,7 @@ public class Repeat extends Job {
         }
 
         if (job.isFailure() | job.isSuccess()) {
-            if (times == 0) {
+            if (times == 1) {
                 logger.debug("Finishing Repeat Job with success");
                 succeed();
                 return;
