@@ -25,7 +25,7 @@ public class PlayerBehaviourTest {
         // Create platform
         platform = new Platform(new PlatformData(80,45));
 
-        platform.setXSize(75);
+        platform.setXSize(70);
 
         platform.setYSize(50);
 
@@ -141,21 +141,67 @@ public class PlayerBehaviourTest {
         ball.setVelocity(1,0);
         ball.setCoordinates(50,45);
         job = new AvoidBall();
-        System.out.println(currentAI.getVelocity());
         job.act(currentAI,otherPlayers,balls,platform);
-        System.out.println(currentAI.getVelocity());
         assertTrue(!(currentAI.getXVelocity() == 0 & currentAI.getYVelocity() ==0)  );
     }
 
 
     @Test
     public void avoidEdgeTest() {
+        float delta = 0.00001f;
 
+
+        // Moves away from bottom edge
         AvoidEdge job = new AvoidEdge();
+        currentAI.setCoordinates(80,94);
+        currentAI.setVelocity(0,0);
         job.act(currentAI,otherPlayers,balls,platform);
 
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertEquals(-1,currentAI.getYVelocity(),delta);
 
 
+        // Moves away from top edge
+        job = new AvoidEdge();
+        currentAI.setCoordinates(80,-4);
+        currentAI.setVelocity(0,0);
+        job.act(currentAI,otherPlayers,balls,platform);
+
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertEquals(1,currentAI.getYVelocity(),delta);
+
+        // Moves away from left edge
+        job = new AvoidEdge();
+        currentAI.setCoordinates(11,45);
+        currentAI.setVelocity(0,0);
+        job.act(currentAI,otherPlayers,balls,platform);
+
+        assertEquals(1,currentAI.getXVelocity(),delta);
+        assertEquals(0,currentAI.getYVelocity(),delta);
+
+        // Moves away from right edge
+        job = new AvoidEdge();
+        currentAI.setCoordinates(149,45);
+        currentAI.setVelocity(0,0);
+        job.act(currentAI,otherPlayers,balls,platform);
+
+        assertEquals(-1,currentAI.getXVelocity(),delta);
+        assertEquals(0,currentAI.getYVelocity(),delta);
+
+        // does not move
+        job = new AvoidEdge();
+        currentAI.setCoordinates(80,45);
+        currentAI.setVelocity(0,0);
+        job.act(currentAI,otherPlayers,balls,platform);
+
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertEquals(0,currentAI.getYVelocity(),delta);
+    }
+
+    @Test
+    public void chaseBallTest() {
+        ChaseBall job = new ChaseBall();
+        job.act(currentAI,otherPlayers,balls,platform);
     }
 
 }
