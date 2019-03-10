@@ -89,19 +89,18 @@ public class Physics {
                 + ((!isOverlapping) ? "not" : "") + " colliding");
         return isOverlapping;
     }
-    
-    public static boolean checkCollision(Player objectA,
-            Player objectB) {
+
+    public static boolean checkCollision(Player objectA, Player objectB) {
         float xDistance = (objectA.getXCoordinate() + objectA.getXVelocity())
-                - (objectB.getXCoordinate() );
+                - (objectB.getXCoordinate());
         float yDistance = (objectA.getYCoordinate() + objectA.getYVelocity())
-                - (objectB.getYCoordinate() );
+                - (objectB.getYCoordinate());
 
         float sumOfRadii = objectA.getRadius() + objectB.getRadius();
         float distanceSquared = xDistance * xDistance + yDistance * yDistance;
 
         boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
-        logger.debug("Player "+objectA.getCharacterID());
+        logger.debug("Player " + objectA.getCharacterID());
         return isOverlapping;
     }
 
@@ -165,9 +164,9 @@ public class Physics {
      * overlapping after collision happened.
      * 
      * @param objectA
-     *              An object which is collided.
+     *            An object which is collided.
      * @param objectB
-     *              An object which is collided.
+     *            An object which is collided.
      */
     public static ArrayList<Matrix> calculateCollision(AbstractMovable objectA,
             AbstractMovable objectB) {
@@ -204,9 +203,10 @@ public class Physics {
     }
 
     /**
-     * Apply collision on an abstractMovables, and check for their instance.
-     * If objectA is ball, change the velocity of it, if objectB is ball, change the velocity of it.
-     * If one of the object is player and he is dashing, repel the opponent Object and setVelocity on it.
+     * Apply collision on an abstractMovables, and check for their instance. If
+     * objectA is ball, change the velocity of it, if objectB is ball, change
+     * the velocity of it. If one of the object is player and he is dashing,
+     * repel the opponent Object and setVelocity on it.
      * 
      * @param objectA
      *            the first object in the collision
@@ -219,7 +219,7 @@ public class Physics {
         Matrix coordB = objectB.getCoordinates();
         Matrix n = coordA.sub(coordB);
         n.normalizeThis();
-        
+
         float newVeloA = MatrixMath.innerProduct(objectA.getVelocity(), n);
         float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), n);
         float optimisedP = (float) Math.min((2.0 * (newVeloA - newVeloB)) / 2,
@@ -250,7 +250,8 @@ public class Physics {
         if (objectA instanceof Player) {
             if (((Player) objectA).getState().equals(ObjectState.DASHING)) {
                 {
-                    objectB.setVelocity(objectA.getXVelocity(), objectA.getYVelocity());
+                    objectB.setVelocity(objectA.getXVelocity(),
+                            objectA.getYVelocity());
                     objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
                     safe = newCoordinate.get(1);
                     objectB.setCoordinates(safe.getX(), safe.getY());
@@ -260,7 +261,8 @@ public class Physics {
         } else if (objectB instanceof Player) {
             if (((Player) objectB).getState().equals(ObjectState.DASHING)) {
                 {
-                    objectA.setVelocity(objectB.getXVelocity(), objectB.getYVelocity());
+                    objectA.setVelocity(objectB.getXVelocity(),
+                            objectB.getYVelocity());
                     objectA.setAngle((float) MatrixMath.vectorAngle(veloA));
                     safe = newCoordinate.get(0);
                     objectA.setCoordinates(safe.getX(), safe.getY());
@@ -288,8 +290,8 @@ public class Physics {
      * defaultPlayerSpeed by the amplifying value. Finally, set speed of the
      * player by the result of the multiplication.
      * 
-     * @param player 
-     *             The player who is charging himself for dashing.
+     * @param player
+     *            The player who is charging himself for dashing.
      */
     public static void charge(Player player) {
         int charge = player.getChargeLevel();

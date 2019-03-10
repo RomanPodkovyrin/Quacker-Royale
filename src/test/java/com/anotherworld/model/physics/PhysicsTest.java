@@ -97,6 +97,7 @@ public class PhysicsTest {
         b.setCoordinates(aball.getXCoordinate(), aball.getYCoordinate());
         Physics.collided(aball, player);
     }
+    
     //TODO:
     
 }
