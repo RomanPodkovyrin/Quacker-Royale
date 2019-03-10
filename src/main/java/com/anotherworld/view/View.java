@@ -1,11 +1,11 @@
 package com.anotherworld.view;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL46.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL46.GL_NO_ERROR;
-import static org.lwjgl.opengl.GL46.glClear;
-import static org.lwjgl.opengl.GL46.glFlush;
-import static org.lwjgl.opengl.GL46.glGetError;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glFlush;
+import static org.lwjgl.opengl.GL11.glGetError;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.Platform;
 
@@ -160,7 +161,7 @@ public class View implements Runnable {
             logger.error("Initialise GL error " + error);
             error = glGetError();
         }
-        
+
         while (!glfwWindowShouldClose(window)) {
 
             glClear(GL_COLOR_BUFFER_BIT);
