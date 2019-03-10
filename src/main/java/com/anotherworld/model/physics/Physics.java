@@ -90,6 +90,20 @@ public class Physics {
         return isOverlapping;
     }
 
+    public static boolean checkCollision(Player objectA, Player objectB) {
+        float xDistance = (objectA.getXCoordinate() + objectA.getXVelocity())
+                - (objectB.getXCoordinate());
+        float yDistance = (objectA.getYCoordinate() + objectA.getYVelocity())
+                - (objectB.getYCoordinate());
+
+        float sumOfRadii = objectA.getRadius() + objectB.getRadius();
+        float distanceSquared = xDistance * xDistance + yDistance * yDistance;
+
+        boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
+        logger.debug("Player " + objectA.getCharacterID());
+        return isOverlapping;
+    }
+
     /**
      * Check if the ball is colliding on the wall: If Y of the ball is colliding
      * Y of the wall (check if the value of north of the ball is lesser than
@@ -97,15 +111,15 @@ public class Physics {
      * is greater than value of south of the wall) If X of the ball is colliding
      * X of the wall.
      * 
-     * @param a
+     * @param ball
      *            the ball to check for collisions
      * @param wall
      *            the wall to check for collisions
      */
-    public static boolean bouncedWall(Ball a, Wall wall) {
-        float circleR = a.getRadius();
-        float circleX = a.getXCoordinate();
-        float circleY = a.getYCoordinate();
+    public static boolean bouncedWall(Ball ball, Wall wall) {
+        float circleR = ball.getRadius();
+        float circleX = ball.getXCoordinate();
+        float circleY = ball.getYCoordinate();
         float xSize = wall.getXSize();
         float ySize = wall.getYSize();
         boolean bounced = false;
@@ -120,24 +134,24 @@ public class Physics {
         Matrix southWestWall = new Matrix((wall.getXCoordinate() - xSize),
                 (wall.getYCoordinate() + ySize));
         if (northEast.getY() < (northEastWall.getY())) {
-            a.setCoordinates(circleX, northEastWall.getY() + circleR);
-            a.setYVelocity(Math.abs(a.getYVelocity()));
+            ball.setCoordinates(circleX, northEastWall.getY() + circleR);
+            ball.setYVelocity(Math.abs(ball.getYVelocity()));
             logger.debug("The ball is bouncing on the North of Wall");
             bounced = true;
         } else if (southWest.getY() > southWestWall.getY()) {
-            a.setCoordinates(circleX, southWestWall.getY() - circleR);
-            a.setYVelocity(-Math.abs(a.getYVelocity()));
+            ball.setCoordinates(circleX, southWestWall.getY() - circleR);
+            ball.setYVelocity(-Math.abs(ball.getYVelocity()));
             logger.debug("The ball is bouncing on the South of Wall");
             bounced = true;
         }
         if (northEast.getX() > northEastWall.getX()) {
-            a.setCoordinates(northEast.getX() - circleR, circleY);
-            a.setXVelocity(-Math.abs(a.getXVelocity()));
+            ball.setCoordinates(northEastWall.getX() - circleR, circleY);
+            ball.setXVelocity(-Math.abs(ball.getXVelocity()));
             logger.debug("The ball is bouncing on the East of Wall");
             bounced = true;
         } else if (southWest.getX() < southWestWall.getX()) {
-            a.setCoordinates(southWest.getX() + circleR, circleY);
-            a.setXVelocity(Math.abs(a.getXVelocity()));
+            ball.setCoordinates(southWestWall.getX() + circleR, circleY);
+            ball.setXVelocity(Math.abs(ball.getXVelocity()));
             logger.debug("The ball is bouncing on the West of Wall");
             bounced = true;
         }
@@ -145,51 +159,15 @@ public class Physics {
         return bounced;
     }
 
-    //
-
     /**
-     * To make the object move
-     *
-     * @param a
-     *            the object to apply friction to
+     * To calculate safe coordinates between objectA and objectB to prevent
+     * overlapping after collision happened.
+     * 
+     * @param objectA
+     *            An object which is collided.
+     * @param objectB
+     *            An object which is collided.
      */
-    public static void applyFriction(AbstractMovable a) {
-        float speed = a.getSpeed() * friction;
-        if (speed < 0.5f) {
-            speed = 0.0f;
-            logger.debug("The object reached the minimum possible speed: Stopping now");
-        }
-        a.setSpeed(speed);
-        logger.debug("The object has reduced its speed");
-    }
-
-    /**
-     * To make the object accelerate
-     *
-     * @param a
-     *            the object to apply acceleration to.
-     */
-    public static void accelerate(AbstractMovable a) {
-        float speed = a.getSpeed() + rate;
-        if (speed > 3.0f) {
-            speed = 3.0f;
-            logger.debug("The object has reached its maximum speed.");
-        }
-        a.setSpeed(speed);
-        logger.debug("Object's speed is modified");
-    }
-
-    public static float overLapping(AbstractMovable a, AbstractMovable b) {
-        Matrix aCoord = a.getCoordinates();
-        Matrix bCoord = b.getCoordinates();
-        float reference = a.getRadius() + b.getRadius();
-        float difference = MatrixMath.distanceAB(aCoord, bCoord) - reference;
-        if (difference > 0) {
-            return Math.abs(difference / reference);
-        } else
-            return 0;
-    }
-
     public static ArrayList<Matrix> calculateCollision(AbstractMovable objectA,
             AbstractMovable objectB) {
         Matrix pointA = new Matrix(objectA.getXCoordinate(),
@@ -225,37 +203,10 @@ public class Physics {
     }
 
     /**
-     * To apply force to the object (reduce out strength or increase force)
-     * 
-     * @param a
-     *            the object to which the force is applied
-     * @param velocity
-     *            the force matrix
-     */
-    public static void forceApplying(AbstractMovable a, Matrix velocity) {
-        float xVelocity = a.getXVelocity() + velocity.getY();
-        float yVelocity = a.getYVelocity() + velocity.getX();
-        if (Math.abs(xVelocity) > 2.0) {
-            xVelocity = 2.0f;
-        }
-        if (Math.abs(yVelocity) > 2.0) {
-            yVelocity = 2.0f;
-        }
-        float angle = (float) Math.toDegrees(Math.atan2(xVelocity, yVelocity));
-        if (angle < 0) {
-            angle += 360;
-        }
-        float speed = (float) Math.sqrt(xVelocity * xVelocity + yVelocity
-                * yVelocity);
-        a.setAngle(angle);
-        a.setSpeed(speed);
-        a.setXVelocity(xVelocity);
-        a.setYVelocity(yVelocity);
-        logger.debug("Applied forced to the original velocity of the object.");
-    }
-
-    /**
-     * Apply collision on an abstractMovables, and check for their instance.
+     * Apply collision on an abstractMovables, and check for their instance. If
+     * objectA is ball, change the velocity of it, if objectB is ball, change
+     * the velocity of it. If one of the object is player and he is dashing,
+     * repel the opponent Object and setVelocity on it.
      * 
      * @param objectA
      *            the first object in the collision
@@ -268,9 +219,7 @@ public class Physics {
         Matrix coordB = objectB.getCoordinates();
         Matrix n = coordA.sub(coordB);
         n.normalizeThis();
-        // TODO: vector point A-B and vector point B-A.
-        // The vector point A-B applies to B, and B-A applies to A.
-        // Angle: a.XVelo/
+
         float newVeloA = MatrixMath.innerProduct(objectA.getVelocity(), n);
         float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), n);
         float optimisedP = (float) Math.min((2.0 * (newVeloA - newVeloB)) / 2,
@@ -287,9 +236,11 @@ public class Physics {
         if (objectA instanceof Ball) {
 
             objectA.setVelocity(veloA.getX(), veloA.getY());
+            objectA.setAngle((float) MatrixMath.vectorAngle(veloA));
 
             if (objectB instanceof Ball) {
                 objectB.setVelocity(veloB.getX(), veloB.getY());
+                objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
             }
 
         }
@@ -299,8 +250,9 @@ public class Physics {
         if (objectA instanceof Player) {
             if (((Player) objectA).getState().equals(ObjectState.DASHING)) {
                 {
-                    objectB.setVelocity(veloB.getX(), veloB.getY());
-
+                    objectB.setVelocity(objectA.getXVelocity(),
+                            objectA.getYVelocity());
+                    objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
                     safe = newCoordinate.get(1);
                     objectB.setCoordinates(safe.getX(), safe.getY());
                     specialCase = true;
@@ -309,8 +261,9 @@ public class Physics {
         } else if (objectB instanceof Player) {
             if (((Player) objectB).getState().equals(ObjectState.DASHING)) {
                 {
-                    objectA.setVelocity(veloA.getX(), veloA.getY());
-
+                    objectA.setVelocity(objectB.getXVelocity(),
+                            objectB.getYVelocity());
+                    objectA.setAngle((float) MatrixMath.vectorAngle(veloA));
                     safe = newCoordinate.get(0);
                     objectA.setCoordinates(safe.getX(), safe.getY());
                     specialCase = true;
@@ -332,17 +285,14 @@ public class Physics {
     }
 
     /**
-     * This method allows player to have a slow speed to the current direction
-     * which looks like it is falling off the edge.
+     * This method allows player to increase his speed depends on the internal
+     * value of himself (charge level) And it add into 1 and multiply the
+     * defaultPlayerSpeed by the amplifying value. Finally, set speed of the
+     * player by the result of the multiplication.
      * 
      * @param player
+     *            The player who is charging himself for dashing.
      */
-    public static void falling(Player player) {
-        float angle = player.getAngle();
-        player.setVelocity((float) (fallingSpeed * Math.sin(angle)),
-                (float) (fallingSpeed * Math.cos(angle)));
-    }
-
     public static void charge(Player player) {
         int charge = player.getChargeLevel();
         float speedIncreases = 1 + (charge);

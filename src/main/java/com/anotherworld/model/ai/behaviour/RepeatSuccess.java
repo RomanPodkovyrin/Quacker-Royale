@@ -60,11 +60,15 @@ public class RepeatSuccess extends Job {
 
         logger.debug("Starting RepeatSuccess Job");
 
+        if (job.isRunning()) {
+            job.act(ai, players, balls, platform);
+        }
+
         if (job.isFailure()) {
             fail();
             logger.debug("Finishing RepeatSuccess Job with fail");
         } else if (job.isSuccess()) {
-            if (times == 0) {
+            if (times == 1) {
                 succeed();
                 logger.debug("Finishing RepeatSuccess Job with success");
                 return;
@@ -74,9 +78,8 @@ public class RepeatSuccess extends Job {
                 job.start();
             }
         }
-        if (job.isRunning()) {
-            job.act(ai, players, balls, platform);
-        }
+
+
 
     }
 
