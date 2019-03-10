@@ -45,5 +45,15 @@ public class Static2dCamera implements Camera {
     public float getHeight() {
         return height;
     }
+    
+    @Override
+    public float getDepth() {
+        return 10;
+    }
+
+    @Override
+    public float getZ() {
+        return 0;
+    }
 
 }

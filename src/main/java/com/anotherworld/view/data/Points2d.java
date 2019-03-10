@@ -160,5 +160,31 @@ public class Points2d {
         }
         return points;
     }
+
+    public Points2d crossProduct(Points2d b) {
+        if (!(this.getM() == 3 && this.getN() == 1 && b.getM() == 3 && b.getN() == 1)) {
+            throw new IndexOutOfBoundsException("Cannot compute cross product");
+        }
+        Points2d result = new Points2d(3, 1);
+        result.setValue(0, 0, this.getValue(1, 0) * b.getValue(2, 0) - this.getValue(2, 0) * b.getValue(1, 0));
+        result.setValue(1, 0, this.getValue(2, 0) * b.getValue(0, 0) - this.getValue(0, 0) * b.getValue(2, 0));
+        result.setValue(2, 0, this.getValue(0, 0) * b.getValue(1, 0) - this.getValue(1, 0) * b.getValue(0, 0));
+        return result;
+    }
+    
+    public Points2d normalise() {
+        float sum = 0f;
+        for (int i = 0; i < this.value.length; i++) {
+            sum += this.value[i] * this.value[i];
+        }
+        sum = (float)Math.sqrt(sum);
+        Points2d result = new Points2d(this.getM(), this.getN());
+        if (sum != 0) {
+            for (int i = 0; i < result.value.length; i++) {
+                result.value[i] = this.value[i] / sum;
+            }
+        }
+        return result;
+    }
     
 }

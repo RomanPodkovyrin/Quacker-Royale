@@ -99,5 +99,15 @@ public class PlayerFollow2dCamera implements Camera {
     public float getHeight() {
         return height;
     }
+    
+    @Override
+    public float getDepth() {
+        return 1;
+    }
+
+    @Override
+    public float getZ() {
+        return 0;
+    }
 
 }
