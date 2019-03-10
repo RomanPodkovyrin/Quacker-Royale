@@ -291,7 +291,7 @@ public class Physics {
      * player by the result of the multiplication.
      * 
      * @param player
-     *            The player who is charging himself for dashing.
+     *            The player who is about to dash.
      */
     public static void charge(Player player) {
         int charge = player.getChargeLevel();

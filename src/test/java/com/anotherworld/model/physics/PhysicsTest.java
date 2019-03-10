@@ -8,6 +8,7 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.model.physics.Physics;
+import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
@@ -112,6 +113,23 @@ public class PhysicsTest {
         Physics.collided(aball, player);
         b.setCoordinates(aball.getXCoordinate(), aball.getYCoordinate());
         Physics.collided(aball, player);
+    }
+    @Test
+    public void playerShouldIncreaseshisSpeedWhenChargeApplies() {
+        PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f,
+                ObjectState.IDLE, 0f, 3.0f);
+        Player steve = new Player(b, false);
+        steve.setChargeLevel(3);
+        Physics.charge(steve);
+        float expectedSpeed = GameSettings.getDefaultPlayerSpeed()*(1+3);
+        assertEquals(expectedSpeed, steve.getSpeed(),0.0f);
+        assertEquals(3,steve.getChargeLevel(),0);
+    }
+    
+    @Test
+    public void MovingCoordinationOfPlayersToSafeCoordinates(){
+        BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
+        Ball aball = new Ball(a);
     }
 
     // TODO:
