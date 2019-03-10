@@ -28,10 +28,17 @@ public class GameClient extends Thread {
         address = InetAddress.getByName(serverIP);
         logger.trace("Client ip: " + Inet4Address.getLocalHost().getHostAddress());
         sendDataToServer("set up connection message");
-        waitForGameToStart();
     }
 
     public void run() {
+        try {
+            getObjectFromServer();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        waitForGameToStart();
         while(!stopClient) {
             try {
                 getObjectFromServer();
