@@ -213,41 +213,49 @@ public class PlayerBehaviourTest {
         assertEquals(0,currentAI.getYVelocity(),delta);
 
 
-        // Should chase ball upwards
+        // Should chase ball right
         ball.setDangerous(false);
-        ball.setCoordinates(80,10);
-        job = new ChaseBall();
-        job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
-        assertEquals(0,currentAI.getXVelocity(),delta);
-        assertEquals(-1,currentAI.getYVelocity(),delta);
-
-        // Should chase ball downwards
-        ball.setDangerous(false);
-        ball.setCoordinates(80,100);
-        job = new ChaseBall();
-        job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
-        assertEquals(0,currentAI.getXVelocity(),delta);
-        assertEquals(1,currentAI.getYVelocity(),delta);
-
-        // Should chase ball to left
-        ball.setDangerous(false);
-        ball.setCoordinates(10,45);
+        ball.setCoordinates(75,10);
+        ball.setVelocity(0,1);
+        currentAI.setVelocity(0,0);
         job = new ChaseBall();
         job.start();
         job.act(currentAI,otherPlayers,balls,platform);
         assertEquals(-1,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
 
-        // Should chase ball to right
+        // Should chase ball left
         ball.setDangerous(false);
-        ball.setCoordinates(100,45);
+        ball.setCoordinates(85,10);
+        ball.setVelocity(0,1);
+        currentAI.setVelocity(0,0);
         job = new ChaseBall();
         job.start();
         job.act(currentAI,otherPlayers,balls,platform);
         assertEquals(1,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
+
+        // Should chase ball to bottom
+        ball.setDangerous(false);
+        ball.setCoordinates(10,50);
+        ball.setVelocity(1,0);
+        currentAI.setVelocity(0,0);
+        job = new ChaseBall();
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertEquals(1,currentAI.getYVelocity(),delta);
+
+        // Should chase ball to top
+        ball.setDangerous(false);
+        ball.setCoordinates(10,40);
+        ball.setVelocity(1,0);
+        currentAI.setVelocity(0,0);
+        job = new ChaseBall();
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertEquals(-1,currentAI.getYVelocity(),delta);
     }
 
 }

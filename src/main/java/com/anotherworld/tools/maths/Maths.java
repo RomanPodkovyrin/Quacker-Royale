@@ -26,6 +26,7 @@ public class Maths {
     public static float floatDivision(float a,float b ) {
         if (b == 0f) {
             b = 0.1f;
+//            return  b;
         }
 
         return a / b;

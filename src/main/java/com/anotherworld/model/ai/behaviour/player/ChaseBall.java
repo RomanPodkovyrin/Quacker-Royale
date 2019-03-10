@@ -48,19 +48,14 @@ public class ChaseBall extends Job {
             if (!ball.isDangerous() & isRunning() & platform.isOnPlatform(ball.getCoordinates())) {
                 logger.debug("Chasing the Ball at " + ball.getCoordinates());
                 Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
-                System.out.println(neighbour);
 
                 Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), neighbour);
                 if (MatrixMath.distanceAB(ai.getCoordinates(),neighbour) <= ball.getRadius() + ai.getRadius()) {
                     succeed();
                     return;
                 }
-                System.out.println(vector);
-
                 if (vector.getX() != 0) {
                     ai.setXVelocity(Maths.floatDivision(vector.getX() , Math.abs(vector.getX())) * ai.getSpeed());
-                    System.out.println(ai.getVelocity());
-
                 }
                 if (vector.getY() != 0) {
                     ai.setYVelocity(Maths.floatDivision(vector.getY() , Math.abs(vector.getY())) * ai.getSpeed());

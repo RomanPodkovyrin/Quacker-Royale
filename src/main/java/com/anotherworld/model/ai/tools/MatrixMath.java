@@ -92,7 +92,6 @@ public class MatrixMath {
     public static Matrix nearestNeighbour(Line line, Matrix point) {
 
         Matrix normVector = line.getOrthogonalVector();
-        System.out.println("Orthogonal " + dist(line,point));
 
         return point.add((normVector.div(MatrixMath.magnitude(normVector))).mult(dist(line,point)));
     }
