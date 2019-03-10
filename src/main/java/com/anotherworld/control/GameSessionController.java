@@ -4,20 +4,15 @@ import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.*;
-
 /**
  * Controller object that connects the View and the Model of the game.
  * @author Alfi S
@@ -108,7 +103,7 @@ public class GameSessionController {
 
 
 
-        while (viewThread.isAlive()) {
+        while (viewThread.isAlive() && session.isRunning()) {
 
             // if client check if there are game objects to update
             network.clientControl(keyListener);
@@ -159,7 +154,7 @@ public class GameSessionController {
             network.hostControl();
 
         }
-        
+
         shutDownSequence();
     }
 
