@@ -83,6 +83,7 @@ public class Server extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        checkIfClientsHaveReceivedInitialObjects();
         while(serverIsRunning){
             DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
             try {
@@ -188,6 +189,13 @@ public class Server extends Thread {
         ArrayList<Pair<ArrayList<Input>, String>> returnValue = new ArrayList<>(inputAndIP);
         returnValue.add( new Pair<>(received, id));
         return returnValue;
+    }
+
+    public void checkIfClientsHaveReceivedInitialObjects(){
+        for(int i = 0; i< numberOfPlayers; i++) {
+            DatagramPacket lastConfirmationPacket = new DatagramPacket(this.dataReceived, this.dataReceived.length);
+            getFromClient(lastConfirmationPacket);
+        }
     }
 
     public ArrayList<Pair<ArrayList<Input>, String>> getInputAndIP(){
