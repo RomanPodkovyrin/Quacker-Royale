@@ -1,5 +1,7 @@
 package com.anotherworld.model.ai.tools;
 
+import com.anotherworld.tools.maths.Maths;
+
 /**
  * This class contains mathematical manipulations between Line and Matrix.
  *
@@ -42,7 +44,7 @@ public class MatrixMath {
         float top =  -((line.getA() * point.getX()) + (line.getB() * point.getY()) - line.getD());
         float bottom = magnitude(line.getOrthogonalVector());
 
-        float d = top / bottom;
+        float d = Maths.floatDivision(top , bottom);
 
         return d;
     }

@@ -10,6 +10,7 @@ import com.anotherworld.model.movable.Player;
 
 import java.util.ArrayList;
 
+import com.anotherworld.tools.maths.Maths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -93,9 +94,15 @@ public class AvoidBall extends Job {
         // Vector from AI to the closes point
         Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
 
+        // Check if vectors are zero
+        if((Math.abs(vector.getY() - 0f) < 0.00000001f) & (Math.abs(vector.getX() - 0f) < 0.00000001f)) {
+            Line ballLine = new Line(ballPosition,ballDirection);
+            vector = ballLine.getOrthogonalVector();
+        }
+
         // - reverses the vectors, so ai goes in the opposite direction of the Ball
-        ai.setXVelocity((-vector.getX() / Math.abs(vector.getX())) * ai.getSpeed());
-        ai.setYVelocity((-vector.getY() / Math.abs(vector.getY())) * ai.getSpeed());
+        ai.setXVelocity((Maths.floatDivision(-vector.getX() , Math.abs(vector.getX()))) * ai.getSpeed());
+        ai.setYVelocity((Maths.floatDivision(-vector.getY() , Math.abs(vector.getY()))) * ai.getSpeed());
 
         logger.trace("Avoiding Ball at location " + ballPosition);
         logger.trace("Walking at Vector " + ai.getVelocity());
