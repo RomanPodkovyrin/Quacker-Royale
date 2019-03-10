@@ -9,7 +9,7 @@ import com.anotherworld.tools.datapool.WallData;
  */
 public class Wall {
 
-    private static final float SIZE_DECREASE = 0.1f;
+    private static final float SIZE_DECREASE = 0.08f;
     private WallData wallData;
 
     public Wall(WallData wallData) {
