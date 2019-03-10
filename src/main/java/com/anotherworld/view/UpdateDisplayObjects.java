@@ -2,7 +2,6 @@ package com.anotherworld.view;
 
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.view.data.BallDisplayData;
-import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.PlayerDisplayData;
 import com.anotherworld.view.data.RectangleDisplayData;
 
@@ -30,21 +29,33 @@ class UpdateDisplayObjects implements ViewEvent {
     }
 
     /**
-     * Returns the new objects for the view.
+     * Returns the new player objects for the view.
      * @return the new objects
      */
     public ArrayList<? extends PlayerDisplayData> getPlayerObjects() {
         return playerObjects;
     }
 
+    /**
+     * Returns the new ball objects for the view.
+     * @return the new objects
+     */
     public ArrayList<? extends BallDisplayData> getBallObjects() {
         return ballObjects;
     }
 
+    /**
+     * Returns the new rectangle objects for the view.
+     * @return the new objects
+     */
     public ArrayList<? extends RectangleDisplayData> getRectangleObjects() {
         return rectangleObjects;
     }
 
+    /**
+     * Returns the new wall objects for the view.
+     * @return the new objects
+     */
     public ArrayList<? extends WallData> getWallObjects() {
         return wallObjects;
     }

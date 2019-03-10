@@ -1,7 +1,6 @@
 package com.anotherworld.model.logic;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.audio.SoundEffects;
 import com.anotherworld.model.ai.AI;
 import com.anotherworld.model.movable.*;
 import com.anotherworld.model.physics.Physics;
@@ -24,62 +23,73 @@ public class GameSession {
     private static Logger logger = LogManager.getLogger(GameSession.class);
 
     private Player currentPlayer;
-    private ArrayList<Player> players;
-    private ArrayList<Player> ais;
     private ArrayList<Player> allPlayers;
+    private ArrayList<Player> livingPlayers;
 
     private AI ai;
     private ArrayList<Ball> balls;
+
     private Platform platform;
     private Wall wall;
-    private GameSessionData gameSessionData;
+
+    private GameSessionData gameData;
 
     public GameSession(PlayerData currentPlayer,
                        ArrayList<PlayerData> players, ArrayList<PlayerData> ais, ArrayList<BallData> balls,
                        PlatformData platform, WallData wall,
                        GameSessionData gameSessionData) {
 
-        this.gameSessionData = gameSessionData;
+        this.gameData = gameSessionData;
         this.currentPlayer = new Player(currentPlayer, false);
-
-        this.players = new ArrayList<>();
-        for(PlayerData data : players) this.players.add(new Player(data, false));
-
-        this.ais = new ArrayList<>();
-        for(PlayerData data : ais) this.ais.add(new Player(data, true));
-
         this.allPlayers = new ArrayList<>();
-        this.allPlayers.addAll(this.ais);
-        this.allPlayers.addAll(this.players);
+
         this.allPlayers.add(this.currentPlayer);
+        ArrayList<Player> aiPlayers = new ArrayList<>();
+        for(PlayerData data : players) allPlayers.add(new Player(data, false));
+        for(PlayerData data : ais) {
+            aiPlayers.add(new Player(data, true));
+        }
+        this.allPlayers.addAll(aiPlayers);
+
+        this.livingPlayers = new ArrayList<>();
+        this.livingPlayers.addAll(allPlayers);
 
         this.balls = new ArrayList<>();
         for(BallData data : balls) {
             Ball newBall = new Ball(data);
-            newBall.setVelocity(1* newBall.getSpeed(), newBall.getSpeed());
+            newBall.setVelocity(newBall.getSpeed(), newBall.getSpeed());
             this.balls.add(newBall);
         }
 
         this.platform = new Platform(platform);
         this.wall = new Wall(wall);
 
-        this.ai = new AI(this.ais, this.allPlayers, this.balls, this.platform);
+        this.ai = new AI(aiPlayers, this.allPlayers, this.balls, this.platform);
 
         Physics.setUp();
     }
 
+    public boolean isRunning() {
+        return livingPlayers.size() > 1;
+    }
+
     /**
-     * Function that checks and applies all the collisions within the game.
-     * First checks each ball for a collisions with:
-     *      (i)   a wall.
-     *      (ii)  a player.
-     *      (iii) another ball.
-     * Then checks a player for collisions with:
-     *      (i)   another player.
-     *      (ii)  outside of the platform.
+     * Updates all ball positions and states, and calculates positions.
      */
-    private void collisionCheck() {
+    private void updateAllBalls() {
         for(Ball ball : this.balls) {
+
+            // Move the ball
+            Physics.move(ball);
+
+            // Handle the danger state of the balls.
+            if (ball.isDangerous()) {
+                ball.reduceTimer(GameSettings.getBallTimerDecrement());
+                if (ball.getTimer() <= 0) {
+                    ball.setDangerous(false);
+                    ball.setSpeed(GameSettings.getDefaultBallSpeed());
+                }
+            }
 
             // Check if a ball has collided with the wall.
             if (Physics.bouncedWall(ball, this.wall)) {
@@ -92,7 +102,6 @@ public class GameSession {
 
                 if(Physics.checkCollision(ball, player)) {
 
-
                     if (!ball.isDangerous()){
                         ball.setDangerous(true);
                         ball.setTimer(GameSettings.getBallMaxTimer());
@@ -103,7 +112,7 @@ public class GameSession {
                     }
 
                     Physics.collided(ball, player);
-                    logger.trace(player.getCharacterID() + " collide with ball");
+                    logger.info(player.getCharacterID() + " collided with ball");
                 }
             }
 
@@ -115,26 +124,45 @@ public class GameSession {
             }
         }
 
-        for (Player playerA : this.allPlayers) {
 
-            if (playerA.isDead()) continue;
+    }
 
-            // Check if a player has collided with another player.
-            for (Player playerB : this.allPlayers) {
+    /**
+     * Updates all player positions and calculates player collisions.
+     */
+    private void updateAllPlayers() {
 
-                if (playerB.isDead()) continue;
-                
-                if(!playerA.equals(playerB)
-                        && Physics.checkCollision(playerA, playerB)) {
-                    Physics.collided(playerA, playerB);
+        for (Player player : allPlayers) {
 
+            Physics.move(player);
+
+            if (!player.isDead()) {
+
+                if (player.getHealth() <= 0) {
+                    player.kill();
+                    gameData.getRankings().addFirst(player.getCharacterID());
+                    livingPlayers.remove(player);
+                    logger.info(player.getCharacterID() + " was killed.");
                 }
-            }
 
-            // Kill the player if they fall off the edge of the platform
-            if(!platform.isOnPlatform(playerA)) {
-                playerA.kill();
-                logger.debug(playerA.getCharacterID() + " fell off");
+                // Check if a player has collided with another player.
+                for (Player playerB : this.allPlayers) {
+
+                    if (playerB.isDead()) continue;
+
+                    if(!player.equals(playerB)
+                            && Physics.checkCollision(player, playerB)) {
+                        Physics.collided(player, playerB);
+                    }
+                }
+
+                // Kill the player if they fall off the edge of the platform
+                if(!platform.isOnPlatform(player)) {
+                    player.kill();
+                    gameData.getRankings().addFirst(player.getCharacterID());
+                    livingPlayers.remove(player);
+                    logger.info(player.getCharacterID() + " fell off");
+                }
             }
         }
     }
@@ -146,38 +174,23 @@ public class GameSession {
     public void update(){
 
         ai.action();
+        updateAllPlayers();
+        updateAllBalls();
 
-        for (Player player : allPlayers) {
-            Physics.move(player);
-            if (player.getHealth() <= 0) player.kill();
+        if(!isRunning()) {
+            gameData.getRankings().addFirst(livingPlayers.get(0).getCharacterID());
+            System.out.println(gameData.getRankings().toString());
         }
 
-        // Move all the balls based on velocity and decrement their timers.
-        for (Ball ball: balls) {
-            Physics.move(ball);
-
-            // Handle the danger state of the balls.
-            if (ball.isDangerous()) {
-                ball.reduceTimer(GameSettings.getBallTimerDecrement());
-                if (ball.getTimer() <= 0) {
-                    ball.setDangerous(false);
-                    ball.setSpeed(GameSettings.getDefaultBallSpeed());
-                }
-            }
-        }
-
-
-        collisionCheck();
         // Handling the time-based elements of the game
+        gameData.incrementTicksElapsed();
+        logger.debug("ticksElapsed: " + gameData.getTicksElapsed());
 
-        gameSessionData.incrementTicksElapsed();
-        logger.debug("ticksElapsed: " + gameSessionData.getTicksElapsed());
-
-        if (gameSessionData.getTicksElapsed() % 60 == 0 && gameSessionData.getTimeLeft() > 0) {
-            gameSessionData.decrementTimeLeft();
+        if (gameData.getTicksElapsed() % 60 == 0 && gameData.getTimeLeft() > 0) {
+            gameData.decrementTimeLeft();
         }
 
-        if (gameSessionData.getTimeLeft() < gameSessionData.getTimeToNextStage()*(platform.getStage()-1)){
+        if (gameData.getTimeLeft() < gameData.getTimeToNextStage() * (platform.getStage() - 1)) {
             platform.nextStage();
             wall.nextStage();
         }
@@ -188,12 +201,14 @@ public class GameSession {
     }
 
     public void updatePlayer(ArrayList<Input> keyPresses) {
-        updatePlayer(this.currentPlayer, keyPresses, this.gameSessionData);
+        updatePlayer(this.currentPlayer, keyPresses, this.gameData);
     }
 
     /**
      * Updates the current player's velocity based on the given list of inputs.
+     * @param player
      * @param keyPresses
+     * @param gameData
      */
     public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {

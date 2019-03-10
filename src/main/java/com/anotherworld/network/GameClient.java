@@ -160,7 +160,8 @@ public class GameClient extends Thread {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        GameClient client = new GameClient("192.168.137.222");
+        //GameClient client = new GameClient("192.168.137.222");
+        GameClient client = new GameClient("localhost");
         client.start();
         int counter = 0;
         while (true) {
