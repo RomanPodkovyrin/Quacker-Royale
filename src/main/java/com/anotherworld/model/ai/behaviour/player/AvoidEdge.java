@@ -8,6 +8,8 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 import java.util.Random;
+
+import com.anotherworld.tools.maths.Maths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,10 +46,10 @@ public class AvoidEdge extends Job {
 
         Matrix vectorFromPlatformCenter = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
         Matrix toCenter = MatrixMath.pointsVector(ai.getCoordinates(),platformCoordinates);
-        toCenter = new Matrix((toCenter.getX() / Math.abs(toCenter.getX())) * ai.getSpeed(),(toCenter.getY() / Math.abs(toCenter.getY())) * ai.getSpeed());
+        toCenter = new Matrix(Maths.floatDivision(toCenter.getX() , Math.abs(toCenter.getX())) * ai.getSpeed(),Maths.floatDivision(toCenter.getY() , Math.abs(toCenter.getY())) * ai.getSpeed());
 
         // Checks if the AI is near the horizontal edge
-        if (Math.abs(vectorFromPlatformCenter.getX()) >= platform.getXSize() - distanceFromEdge) {
+       if (Math.abs(vectorFromPlatformCenter.getX()) >= platform.getXSize() - distanceFromEdge) {
             logger.trace("AI too close to the x edge " + distanceFromEdge + " " + (platform.getXSize() - distanceFromEdge));
 
             //ai.setYVelocity(-ai.getYVelocity());

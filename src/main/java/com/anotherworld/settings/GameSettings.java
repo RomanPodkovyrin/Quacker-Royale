@@ -279,10 +279,10 @@ public class GameSettings {
         WallData wall = new WallData(80,45);
 
         wall.setxSize(defaultWallXSize);
-        wall.setWidth(wall.getxSize() * 2);
+//        wall.setWidth(wall.getxSize() * 2);
 
         wall.setySize(defaultWallYSize);
-        wall.setHeight(wall.getySize() * 2);
+//        wall.setHeight(wall.getySize() * 2);
         walls.add(wall);
     }
 
