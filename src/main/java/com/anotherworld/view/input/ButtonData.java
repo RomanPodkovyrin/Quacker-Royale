@@ -11,13 +11,15 @@ public class ButtonData implements RectangleDisplayData {
     private ObjectState objectState;
     private float width;
     private float height;
+    private String text;
     
-    public ButtonData(float x, float y, float angle, float width, float height) {
+    public ButtonData(float x, float y, float angle, float width, float height, String text) {
         this.x = x;
         this.y = y;
         this.angle = angle;
         this.width = width;
         this.height = height;
+        this.text = text;
     }
     
     @Override
@@ -48,6 +50,10 @@ public class ButtonData implements RectangleDisplayData {
     @Override
     public float getHeight() {
         return height;
+    }
+    
+    public String getText() {
+        return text;
     }
 
 }
