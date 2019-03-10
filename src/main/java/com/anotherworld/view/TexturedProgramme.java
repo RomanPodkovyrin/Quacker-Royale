@@ -37,7 +37,7 @@ public class TexturedProgramme extends Programme {
     public TexturedProgramme() throws ProgrammeUnavailableException {
         init();
         try {
-            textureMap = new TextureMap("res/images/NeutoralBall/NeutralBall0.png");
+            textureMap = new TextureMap("res/images/NeutralBall/NeutralBall0.png");
         } catch (IOException ex) {
             logger.catching(ex);
             throw new ProgrammeUnavailableException("Couldn't load texture map");
