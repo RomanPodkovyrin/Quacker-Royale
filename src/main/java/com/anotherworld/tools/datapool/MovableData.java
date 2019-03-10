@@ -1,11 +1,16 @@
 package com.anotherworld.tools.datapool;
 
 import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.DisplayData;
 
-public abstract class MovableData implements DisplayData {
+import java.io.Serializable;
 
+public abstract class MovableData implements DisplayData, Serializable {
+
+
+    private String objectID;
     private Matrix coordinates;
     private Matrix velocity;
     private ObjectState state;
@@ -13,14 +18,24 @@ public abstract class MovableData implements DisplayData {
     private float speed;
     private float radius;
 
-    public MovableData(float xCoordinate, float yCoordinate, ObjectState state,
+    public MovableData(String objectID, float xCoordinate, float yCoordinate, ObjectState state,
                        float speed, float radius) {
+        this.objectID = objectID;
         this.setCoordinates(xCoordinate, yCoordinate);
         this.setVelocity(0,0);
         this.angle = 0;
         this.speed = speed;
         this.radius = radius;
         this.state = state;
+    }
+
+    public void copyObject(MovableData data) {
+        this.coordinates = data.getCoordinates();
+        this.velocity = data.getVelocity();
+        this.state = data.getState();
+        this.angle = data.getAngle();
+        this.speed = data.getSpeed();
+        this.radius = data.getRadius();
     }
 
     /**
@@ -35,6 +50,7 @@ public abstract class MovableData implements DisplayData {
      * @param y the new y-cooridnate to set
      */
     public void setCoordinates(float x, float y) {
+
         coordinates = new Matrix(x, y);
     }
 
@@ -51,7 +67,7 @@ public abstract class MovableData implements DisplayData {
      * @param newXCoordinate the new x-coordinate to set.
      */
     public void setXCoordinate(float newXCoordinate) {
-        coordinates = new Matrix(newXCoordinate, coordinates.getY());
+        this.setCoordinates(newXCoordinate,coordinates.getY());
     }
 
     /**
@@ -67,7 +83,7 @@ public abstract class MovableData implements DisplayData {
      * @param newYCoordinate the new y-coordinate to set.
      */
     public void setYCoordinate(float newYCoordinate) {
-        coordinates = new Matrix(coordinates.getX(), newYCoordinate);
+        this.setCoordinates(coordinates.getX(),newYCoordinate);
     }
 
     /**
@@ -78,6 +94,7 @@ public abstract class MovableData implements DisplayData {
      */
     public void setVelocity(float x, float y) {
         velocity = new Matrix(x, y);
+        this.angle = MatrixMath.vectorAngle(velocity);
     }
 
     public Matrix getVelocity() {
@@ -89,7 +106,7 @@ public abstract class MovableData implements DisplayData {
     }
 
     public void setXVelocity(float newXVelocity) {
-        velocity = new Matrix(newXVelocity, velocity.getY());
+        this.setVelocity(newXVelocity, velocity.getY());
     }
 
     public float getYVelocity() {
@@ -97,7 +114,7 @@ public abstract class MovableData implements DisplayData {
     }
 
     public void setYVelocity(float newYVelocity) {
-        velocity = new Matrix(velocity.getX(), newYVelocity);
+        this.setVelocity(velocity.getX(), newYVelocity);
     }
 
     public float getAngle() { return angle; }
@@ -115,5 +132,10 @@ public abstract class MovableData implements DisplayData {
     public float getRadius() { return radius; }
 
     public void setRadius(float radius) { this.radius = radius; }
+
+    public String getObjectID() { return objectID; }
+
+    public void setObjectID(String objectID) { this.objectID = objectID; }
+
 
 }

@@ -1,21 +1,12 @@
 package com.anotherworld.view.graphics;
 
-import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.opengl.GL46.glViewport;
 
-import static org.lwjgl.opengl.GL11.glBegin;
-import static org.lwjgl.opengl.GL11.glColor3f;
-import static org.lwjgl.opengl.GL11.glEnd;
-import static org.lwjgl.opengl.GL11.glVertex2f;
-import static org.lwjgl.opengl.GL11.glViewport;
-
-import java.nio.DoubleBuffer;
+import com.anotherworld.view.Programme;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.BufferUtils;
-
-import com.anotherworld.view.data.DisplayObject;
 
 /**
  * Creates and manages a view state like view game or main menu.
@@ -28,10 +19,7 @@ public class Scene {
     
     protected ArrayList<GraphicsDisplay> displays;
     
-    private boolean lockMouse;
-    
-    public Scene(boolean lockMouse) {
-        this.lockMouse = lockMouse;
+    public Scene() {
         displays = new ArrayList<>();
     }
     
@@ -39,14 +27,13 @@ public class Scene {
      * Draws the current scene to the window.
      * @param width The width of the window in pixels
      * @param height The height of the window in pixels
+     * @param programme The display programme to use
      */
-    public void draw(int width, int height, long window) {
+    public void draw(int width, int height, Programme programme) {
         logger.debug("Drawing Scene");
         
-        DoubleBuffer cursorX = BufferUtils.createDoubleBuffer(1);
-        DoubleBuffer cursorY = BufferUtils.createDoubleBuffer(1);
-        
-        glfwGetCursorPos(window, cursorX, cursorY);
+        //TODO do this
+        programme.getCursorPosition();
         
         for (int i = 0; i < displays.size(); i++) {
             logger.trace("Drawing scene: " + i);
@@ -56,27 +43,8 @@ public class Scene {
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
             glViewport(x, y, w, h);
-            ArrayList<DisplayObject> toDraw = display.draw();
-            logger.trace("Drawing " + toDraw.size() + " objects");
-            for (int j = 0; j < toDraw.size(); j++) {
-                drawObject(toDraw.get(j));
-            }
-            
+            display.draw(programme);
         }
-    }
-
-    /**
-     * Draws an object to the screen.
-     * @param a The object to draw
-     */
-    private void drawObject(DisplayObject obj) {
-        glBegin(obj.getDisplayType());
-        glColor3f(obj.getColourR(), obj.getColourG(), obj.getColourB());
-        for (int j = 0; j < obj.getPoints().getN(); j++) {
-            glVertex2f(obj.getPoints().getValue(0, j) / obj.getPoints().getValue(2, j),
-                    obj.getPoints().getValue(1, j) / obj.getPoints().getValue(2, j));
-        }
-        glEnd();
     }
     
     /**
@@ -100,6 +68,15 @@ public class Scene {
     private int convertScale(float floatScale, int intScale, int intValue) {
         logger.trace("Converting scale " + floatScale);
         return Math.min(intScale - intValue, Math.max(0, (int)Math.round((floatScale / 2f) * ((float)intScale))));
+    }
+
+    /**
+     * Destroys the opengl buffers of for for the display objects in all of the scenes displays.
+     */
+    public void destoryObjects() {
+        for (GraphicsDisplay d : displays) {
+            d.destroyObjects();
+        }
     }
     
 }

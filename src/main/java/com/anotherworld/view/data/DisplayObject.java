@@ -1,155 +1,239 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_FAN;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLE_STRIP;
+import com.anotherworld.view.Programme;
 
-import com.anotherworld.tools.datapool.WallData;
-import com.anotherworld.view.graphics.Matrix2d;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
-public class DisplayObject {
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.BufferUtils;
 
-    protected final DisplayData displayData;
+/**
+ * Stores and displays information about an object to display to the screen which can be made of multiple shapes.
+ * @author Jake Stewart
+ *
+ */
+public abstract class DisplayObject {
+
+    private static Logger logger = LogManager.getLogger(DisplayObject.class);
     
-    private final Matrix2d points;
-    private Matrix2d tempPoints;
+    private final Points2d points;
     
     private final int displayType;
+    
+    private final boolean isTextured;
+    
+    private final Programme programme;
+    
+    private final int programmeObjectId;
+    
+    private float r;
+    
+    private float g;
+    
+    private float b;
 
-    private float rColour;
-    private float gColour;
-    private float bColour;
-    
-    public DisplayObject(BallDisplayData displayData) {
-        this.displayData = displayData;
-        points = genCircle(displayData.getRadius());
-        displayType = GL_TRIANGLE_FAN;
-        setColours();
-    }
-
-    public DisplayObject(RectangleDisplayData displayData) {
-        this.displayData = displayData;
-        points = genRectangle(displayData.getWidth(), displayData.getHeight());
-        displayType = GL_TRIANGLE_FAN;
-        setColours();
-    }
-
-    public DisplayObject(PlayerDisplayData displayData) {
-        this.displayData = displayData;
-        points = genCircle(displayData.getRadius());
-        displayType = GL_TRIANGLE_FAN;
-        setColours();
+    public DisplayObject(Programme programme, Points2d points, int displayType, boolean isTextured) {
+        this(programme, points, displayType, isTextured, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
     
-    public DisplayObject(WallData displayData) {
-        this.displayData = displayData;
-        this.points = genWall(displayData.getWidth(), displayData.getHeight(), 1);
-        this.displayType = GL_TRIANGLE_STRIP;
-        setColours();
-    }
-
-    private final void setColours() {
-        rColour = (float)Math.random();
-        gColour = (float)Math.random();
-        bColour = (float)Math.random();
-    }
-    
-    private static final Matrix2d genWall(float w, float h, float t) {
-        Matrix2d points = new Matrix2d(3, 10);
-        points.setValue(0, 0, -w / 2 - t);
-        points.setValue(1, 0, h / 2 + t);
-        points.setValue(0, 1, -w / 2);
-        points.setValue(1, 1, h / 2);
-        points.setValue(0, 2, w / 2 + t);
-        points.setValue(1, 2, h / 2 + t);
-        points.setValue(0, 3, w / 2);
-        points.setValue(1, 3, h / 2);
-        points.setValue(0, 4, w / 2 + t);
-        points.setValue(1, 4, -h / 2 - t);
-        points.setValue(0, 5, w / 2);
-        points.setValue(1, 5, -h / 2);
-        points.setValue(0, 6, -w / 2 - t);
-        points.setValue(1, 6, -h / 2 - t);
-        points.setValue(0, 7, -w / 2);
-        points.setValue(1, 7, -h / 2);
-        points.setValue(0, 8, -w / 2 - t);
-        points.setValue(1, 8, h / 2 + t);
-        points.setValue(0, 9, -w / 2);
-        points.setValue(1, 9, h / 2);
-        for (int j = 0; j < 10; j++) {
-            points.setValue(2, j, 1f);
-        }
-        return points;
+    /**
+     * Creates a display object from the given points.
+     * @param points The points to display the object
+     * @param displayType The way the points should be displayed
+     * @param isTextured If the object has a texture mapped to it
+     * @param r How red the object is 0 to 1
+     * @param g How green the object is 0 to 1
+     * @param b How blue the object is 0 to 1
+     */
+    public DisplayObject(Programme programme, Points2d points, int displayType, boolean isTextured, float r, float g, float b) {
+        this.points = points;
+        this.displayType = displayType;
+        this.isTextured = isTextured;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+        this.programme = programme;
+        programmeObjectId = programme.initialiseDisplayObject(this);
     }
     
-    private static final Matrix2d genRectangle(float w, float h) {
-        Matrix2d points = new Matrix2d(3, 4);
-        points.setValue(0, 0, -w / 2);
-        points.setValue(1, 0, h / 2);
-        points.setValue(0, 1, w / 2);
-        points.setValue(1, 1, h / 2);
-        points.setValue(0, 2, w / 2);
-        points.setValue(1, 2, -h / 2);
-        points.setValue(0, 3, -w / 2);
-        points.setValue(1, 3, -h / 2);
-        
-        for (int j = 0; j < 4; j++) {
-            points.setValue(2, j, 1f);
-        }
-        
-        return points;
+    /**
+     * Cleans opengl of the object's representation.
+     */
+    public void destroyObject() {
+        programme.deleteObject(this);
     }
     
-    private static final Matrix2d genCircle(float r) {
-        Matrix2d points = new Matrix2d(3, 38);
-        points.setValue(0, 0, 0f);
-        points.setValue(1, 0, 0f);
-        points.setValue(2, 0, 1f);
-        for (int i = 0; i <= 36; i += 1) {
-            points.setValue(0, i + 1, r * (float)(Math.sin(((double)i / 18) * Math.PI)));
-            points.setValue(1, i + 1, r * (float)(Math.cos(((double)i / 18) * Math.PI)));
-            points.setValue(2, i + 1, 1f);
-        }
-        return points;
-    }
-    
-    public void transform(Matrix2d b) {
-        tempPoints = b.mult(tempPoints);
-    }
-    
-    public void clearTransformations() {
-        tempPoints = points;
-    }
-    
+    /**
+     * Returns the display mode needed to correctly display the object's points.
+     * @return The opengl display mode
+     */
     public int getDisplayType() {
         return displayType;
     }
     
-    public float getTheta() {
-        return displayData.getAngle();
+    /**
+     * Draws the object using the stored points.
+     */
+    public void draw() {
+        
+        if (this.shouldDraw()) {
+            
+            programme.draw(this);
+        }
+        
     }
     
-    public float getX() {
-        return displayData.getXCoordinate();
+    public void transform() {
+        programme.translatef(this.getX(), this.getY(), 0);
+        programme.rotatef(-this.getTheta(), 0, 0, 1);
     }
     
-    public float getY() {
-        return displayData.getYCoordinate();
+    
+    public FloatBuffer getVertexBuffer() {
+        FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
+        for (Float f : points.getPoints()) {
+            b.put(f);
+        }
+        b.flip();
+        return b;
     }
     
-    public float getColourR() {
-        return rColour;
+    public FloatBuffer getColourBuffer() {
+        FloatBuffer buff = BufferUtils.createFloatBuffer(points.getPoints().length);
+        for (int i = 0; i < points.getN(); i++) {
+            buff.put(this.r);
+            buff.put(this.g);
+            buff.put(this.b);
+            buff.put(1f);
+        }
+        buff.flip();
+        return buff;
     }
     
-    public float getColourG() {
-        return gColour;
+    public IntBuffer getEdgeBuffer() {
+        IntBuffer b = BufferUtils.createIntBuffer(points.getN());
+        for (int i = 0; i < points.getN(); i++) {
+            b.put(i);
+        }
+        b.flip();
+        return b;
     }
     
-    public float getColourB() {
-        return bColour;
+    private float getXScale() {
+        return getScale(0);
     }
     
-    public Matrix2d getPoints() {
-        return tempPoints;
+    private float getYScale() {
+        return getScale(1);
+    }
+    
+    private float getScale(int axis) {
+        float min = points.getValue(axis, 0);
+        float max = points.getValue(axis, 0);
+        for (int j = 1; j < points.getN(); j++) {
+            if (points.getValue(axis, j) < min) {
+                min = points.getValue(axis, j);
+            } else if (points.getValue(axis, j) > max) {
+                max = points.getValue(axis, j);
+            }
+        }
+        return max - min;
+    }
+    
+    public FloatBuffer getTextureBuffer() {
+        FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
+        float xScale = getXScale();
+        float yScale = getYScale();
+        for (int j = 0; j < points.getN(); j++) {
+            b.put((points.getValue(0, j) / xScale) + 0.5f);
+            b.put(-(points.getValue(1, j) / yScale) + 0.5f);
+        }
+        b.flip();
+        return b;
+    }
+    
+    protected void setColour(float r, float g, float b) {
+        if (floatNotEq(this.r, r) || floatNotEq(this.g, g) || floatNotEq(this.b, b)) {
+            this.r = r;
+            this.g = g;
+            this.b = b;
+            programme.updateObjectColour(this);
+        }
+    }
+    
+    private boolean floatNotEq(float a, float b) {
+        if (a != b) {
+            return true;
+        }
+        return false;
+    }
+    
+    public int getProgrammeObjectId() {
+        return programmeObjectId;
+    }
+    
+    /**
+     * Returns how red the object is.
+     * @return how red the object is
+     */
+    public float getR() {
+        return r;
+    }
+
+    /**
+     * Returns how green the object is.
+     * @return how green the object is
+     */
+    public float getG() {
+        return g;
+    }
+
+    /**
+     * Returns how blue the object is.
+     * @return how blue the object is
+     */
+    public float getB() {
+        return b;
+    }
+    
+    public boolean hasTexture() {
+        return isTextured;
+    }
+    
+    /**
+     * Returns the angle of the object in degrees.
+     * @return the angle of the object
+     */
+    public abstract float getTheta();
+    
+    /**
+     * Returns the x position of the object.
+     * @return the x position
+     */
+    public abstract float getX();
+    
+    /**
+     * Returns the y position of the object.
+     * @return the y position
+     */
+    public abstract float getY();
+    
+    /**
+     * Returns true if the object should be drawn.
+     * @return if the object should be drawn
+     */
+    public abstract boolean shouldDraw();
+    
+    /**
+     * Returns true if the camera should track the object.
+     * @return if the camera should track the object
+     */
+    public abstract boolean shouldCameraFollow();
+
+    public int getNumberOfPoints() {
+        return this.points.getN();
     }
     
 }

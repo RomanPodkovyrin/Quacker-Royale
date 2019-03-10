@@ -1,24 +1,28 @@
 package com.anotherworld.view.input;
 
-import com.anotherworld.view.graphics.Matrix2d;
+import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.RectangleDisplayData;
+import com.anotherworld.view.data.RectangleDisplayObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Button extends DisplayObject implements Clickable {
+public class Button extends RectangleDisplayObject implements Clickable {
     
     private boolean pressed;
     private boolean hover;
     
+    private final ButtonData buttonData;
+    
     private List<ButtonListener> listeners;
     
-    public Button(ButtonData buttonData) {
-        super((RectangleDisplayData)buttonData);
+    public Button(Programme programme, ButtonData buttonData) {
+        super(programme, buttonData);
         this.pressed = false;
         this.hover = true;
         this.listeners = new ArrayList<>();
+        this.buttonData = buttonData;
     }
 
     @Override
@@ -58,12 +62,12 @@ public class Button extends DisplayObject implements Clickable {
     
     @Override
     public float getHeight() {
-        return ((ButtonData)this.displayData).getHeight();
+        return this.buttonData.getHeight();
     }
     
     @Override
     public float getWidth() {
-        return ((ButtonData)this.displayData).getWidth();
+        return this.buttonData.getWidth();
     }
     
 }

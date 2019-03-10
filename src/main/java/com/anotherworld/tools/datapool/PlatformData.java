@@ -3,20 +3,41 @@ package com.anotherworld.tools.datapool;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
 
-public class PlatformData implements RectangleDisplayData {
+import java.io.Serializable;
 
-    private int stage = 1;
+public class PlatformData implements RectangleDisplayData, Serializable {
+
+    private int stage = 3;
+
     private static final int MAXSTAGE = 4;
+
     private static final float xShrink = 10;
-    private static final float yShrink = 20;
+    private static final float yShrink = 10;
 
     private float xSize = 60;
     private float ySize = 30;
-    private float width = xSize * 2;
-    private float height = ySize * 2;
 
-    private float xCoordinate = 80;
-    private float yCoordinate = 45;
+    private float xTargetSize;
+    private float yTargetSize;
+
+    private float xCoordinate;
+    private float yCoordinate;
+
+    public PlatformData(float x, float y) {
+        this.xCoordinate = x;
+        this.yCoordinate = y;
+        this.xTargetSize = xSize;
+        this.yTargetSize = ySize;
+    }
+
+    public void copyObject(PlatformData data) {
+        this.stage = data.getStage();
+        this.xSize = data.getxSize();
+        this.ySize = data.getySize();
+        this.xCoordinate = data.getXCoordinate();
+        this.yCoordinate = data.getYCoordinate();
+    }
+
 
     public int getStage() {
         return stage;
@@ -54,20 +75,28 @@ public class PlatformData implements RectangleDisplayData {
         this.ySize = ySize;
     }
 
+    public float getxTargetSize() { return xTargetSize; }
+
+    public void setxTargetSize(float xTargetSize) { this.xTargetSize = xTargetSize; }
+
+    public float getyTargetSize() { return yTargetSize; }
+
+    public void setyTargetSize(float yTargetSize) { this.yTargetSize = yTargetSize; }
+
     public float getWidth() {
-        return width;
+        return xSize * 2;
     }
 
     public void setWidth(float width) {
-        this.width = width;
+        this.xSize = width / 2;
     }
 
     public float getHeight() {
-        return height;
+        return ySize * 2;
     }
 
     public void setHeight(float height) {
-        this.height = height;
+        this.ySize = height / 2;
     }
 
     public float getXCoordinate() {

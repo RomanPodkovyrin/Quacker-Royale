@@ -5,6 +5,9 @@ production/anotherworld/render/
 .classpath
 .project
 bin/
+/res/config/test.properties
+*.DS_Store
+*.log
 
 /.gradle/
 /build/

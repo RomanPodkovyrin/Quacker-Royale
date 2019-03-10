@@ -1,16 +1,26 @@
 package com.anotherworld.view;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.opengl.GL46.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL46.GL_NO_ERROR;
+import static org.lwjgl.opengl.GL46.glClear;
+import static org.lwjgl.opengl.GL46.glFlush;
+import static org.lwjgl.opengl.GL46.glGetError;
+
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.data.BallDisplayData;
+import com.anotherworld.view.data.BallDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.HealthBarDisplayObject;
 import com.anotherworld.view.data.PlayerDisplayData;
+import com.anotherworld.view.data.PlayerDisplayObject;
 import com.anotherworld.view.data.RectangleDisplayData;
+import com.anotherworld.view.data.RectangleDisplayObject;
+import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
 
@@ -23,6 +33,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
+import org.lwjgl.system.Configuration;
+import org.lwjgl.system.Platform;
 
 
 /**
@@ -47,16 +59,21 @@ public class View implements Runnable {
     private int width;
     
     private Queue<ViewEvent> eventQueue;
+    
+    private Programme programme;
 
     /**
      * Creates the View object initialising it's values.
+     * @param width The screen width
+     * @param height The screen height
      */
-    public View() {
+    public View(int width, int height) {
         logger.info("Creating view");
-        height = 630;
-        width = 1120;
+        this.height = height;
+        this.width = width;
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
+        logger.info("Running view");
     }
 
     /**
@@ -73,32 +90,29 @@ public class View implements Runnable {
         } catch (InterruptedException e) {
             logger.catching(e);
         }
-        throw new KeyListenerNotFoundException("Timeout of 10 seconds, was window initialized");
+        throw new KeyListenerNotFoundException("Timeout of 10 seconds, check if window was initialized");
     }
 
+    /**
+     * Stages new objects to be used for the game display.
+     * @param playerObjects The new player objects.
+     * @param ballObjects The new ball objects.
+     * @param rectangleObjects The new platform objects.
+     * @param wallObjects The new wall objects.
+     */
     public void updateGameObjects(ArrayList<? extends PlayerDisplayData> playerObjects, ArrayList<? extends BallDisplayData> ballObjects,
             ArrayList<? extends RectangleDisplayData> rectangleObjects, ArrayList<? extends WallData> wallObjects) {
-        ArrayList<DisplayObject> disObj = new ArrayList<>();
-        for (int i = 0; i < rectangleObjects.size(); i++) {
-            disObj.add(new DisplayObject(rectangleObjects.get(i)));
-        }
-        for (int i = 0; i < wallObjects.size(); i++) {
-            disObj.add(new DisplayObject(wallObjects.get(i)));
-        }
-        for (int i = 0; i < playerObjects.size(); i++) {
-            disObj.add(new DisplayObject(playerObjects.get(i)));
-        }
-        for (int i = 0; i < ballObjects.size(); i++) {
-            disObj.add(new DisplayObject(ballObjects.get(i)));
-        }
         synchronized (eventQueue) {
-            eventQueue.add(new UpdateDisplayObjects(disObj));
+            eventQueue.add(new UpdateDisplayObjects(playerObjects, ballObjects, rectangleObjects, wallObjects));
         }
     }
 
     @Override
     public void run() {
-        logger.info("Running view");
+        if (Platform.get() == Platform.MACOSX) {
+            java.awt.Toolkit.getDefaultToolkit();
+            Configuration.GLFW_CHECK_THREAD0.set(false);
+        }
         if (!glfwInit()) {
             logger.fatal("Unable to initialise glfw");
             throw new IllegalStateException("Couldn't initialise glfw");
@@ -107,35 +121,70 @@ public class View implements Runnable {
         logger.debug("Creating window");
         window = glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL);
 
+        glfwSetWindowPos(window, width / 8, height / 8);
+        
         if (window == null) {
             logger.fatal("Unable to create game window");
-            glfwTerminate();
+            attemptDestroy();
             throw new RuntimeException("Couldn't create glfw window");
         }
 
         glfwMakeContextCurrent(window);
 
         GL.createCapabilities();
-
+        
         keyListener = new KeyListener(window);
         
         keyListenerLatch.countDown();
-
-        currentScene = new GameScene(true);
-
+        currentScene = new GameScene();
+        
+        try {
+            programme = new TexturedProgramme(window);
+        } catch (ProgrammeUnavailableException e1) {
+            logger.catching(e1);
+            logger.warn("Couldn't start Textured programme renderer");
+            try {
+                programme = new LegacyProgramme(window);
+            } catch (ProgrammeUnavailableException e2) {
+                logger.catching(e2);
+                logger.fatal("Couldn't start any rendering engines");
+                attemptDestroy();
+                throw new RuntimeException("Couldn't start any rendering program");
+            }
+        }
+        
+        int error = glGetError();
+        
+        while (error != GL_NO_ERROR) {
+            logger.error("Initialise GL error " + error);
+            error = glGetError();
+        }
+        
+        
         while (!glfwWindowShouldClose(window)) {
 
             glClear(GL_COLOR_BUFFER_BIT);
+            
+            programme.use();
             
             synchronized (eventQueue) {
                 while (!eventQueue.isEmpty()) {
                     completeEvent(eventQueue.poll());
                 }
             }
-
-            currentScene.draw(width, height, window);
+            
+            programme.loadIdentity();
+            
+            currentScene.draw(width, height, programme);
 
             glFlush();
+            
+            error = glGetError();
+            
+            while (error != GL_NO_ERROR) {
+                logger.error("Display GL error " + error);
+                error = glGetError();
+            }
 
             glfwSwapBuffers(window);
 
@@ -144,13 +193,42 @@ public class View implements Runnable {
             glfwPollEvents();
 
         }
+        attemptDestroy(programme);
+    }
+    
+    private void attemptDestroy() {
         logger.info("Closing window");
+        if (currentScene != null) {
+            currentScene.destoryObjects();
+        }
+        glfwTerminate();
+    }
+    
+    private void attemptDestroy(Programme programme) {
+        logger.info("Closing window");
+        currentScene.destoryObjects();
+        programme.destroy();
         glfwTerminate();
     }
     
     private void completeEvent(ViewEvent event) {
         if (event.getClass().equals(UpdateDisplayObjects.class) && currentScene.getClass().equals(GameScene.class)) {
-            ((GameScene)currentScene).updateGameObjects(((UpdateDisplayObjects)event).getObjects());
+            ArrayList<DisplayObject> disObj = new ArrayList<>();
+            UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects)event);
+            for (int i = 0; i < updateEvent.getRectangleObjects().size(); i++) {
+                disObj.add(new RectangleDisplayObject(programme, updateEvent.getRectangleObjects().get(i)));
+            }
+            for (int i = 0; i < updateEvent.getWallObjects().size(); i++) {
+                disObj.add(new WallDisplayObject(programme, updateEvent.getWallObjects().get(i)));
+            }
+            for (int i = 0; i < updateEvent.getPlayerObjects().size(); i++) {
+                disObj.add(new PlayerDisplayObject(programme, updateEvent.getPlayerObjects().get(i)));
+                disObj.add(new HealthBarDisplayObject(programme, updateEvent.getPlayerObjects().get(i)));
+            }
+            for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
+                disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
+            }
+            ((GameScene)currentScene).updateGameObjects(disObj);
         }
     }
 

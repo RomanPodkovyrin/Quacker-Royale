@@ -3,57 +3,67 @@ package com.anotherworld.model.ai.behaviour;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.util.Queue;
+
 
 /**
- * Executes the given jobs in order until one of then fails.
+ * Executes the given jobs in order until no more jobs left.
  * @author Roman
  */
 public class Sequence extends Job {
 
-    private Queue<Job> jobs;
-    private Queue<Job> originalJobs;
-    private Job currentJob;
+    private static Logger logger = LogManager.getLogger(Sequence.class);
+
+
+    private ArrayList<Job> jobs;
 
     /**
      * Initialise the Sequence Job.
      *
      * @param jobs The Queue of jobs to be executed
      */
-    public Sequence(Queue<Job> jobs) {
+    public Sequence(ArrayList<Job> jobs) {
         this.jobs = jobs;
-        this.originalJobs = jobs;
-        if (jobs.isEmpty()) {
-            succeed();
-            return;
-        }
-        this.currentJob = jobs.poll();
     }
 
     @Override
     public void reset() {
-        this.jobs = originalJobs;
-        this.currentJob = jobs.poll();
 
     }
 
     @Override
-    public void act(Player ai, Player[] players, Ball[] balls, Platform platform) {
+    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+
+        logger.trace("Starting Sequence Job");
 
         if (jobs.isEmpty()) {
             succeed();
-            return;
-        } else if (currentJob.isSuccess()) {
-            currentJob = jobs.poll();
-        } else if (currentJob.isFailure()) {
-            fail();
+            logger.trace("Finishing Sequence Job with success: No jobs");
             return;
         }
 
-        if (currentJob.isRunning()) {
-            currentJob.act(ai,players,balls,platform);
+        for (Job currentJob: jobs) {
+            currentJob.start();
+
+            if (currentJob.isRunning()) {
+                logger.trace("Running current Job");
+                currentJob.act(ai,players,balls,platform);
+            }
+
+            if (currentJob.isSuccess() | currentJob.isFailure()) {
+                logger.trace("Getting next job");
+            }
         }
+
+        succeed();
+        logger.trace("Finishing SequenceSuccess Job with success: All jobs succeeded");
+        return;
+
+
+
 
 
     }
@@ -61,6 +71,5 @@ public class Sequence extends Job {
     @Override
     public void start() {
         super.start();
-        this.currentJob.start();
     }
 }

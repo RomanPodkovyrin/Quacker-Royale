@@ -9,11 +9,19 @@ public class Ball extends AbstractMovable {
     public Ball(BallData ballData){
         super(ballData);
         this.ballData = ballData;
-        ballData.setDangerous(false);
     }
+
+    public int getDamage() { return ballData.getDamage(); }
 
     public boolean isDangerous() { return ballData.isDangerous(); }
     public void setDangerous(boolean dangerous) { ballData.setDangerous(dangerous); }
+
+    public int getTimer() { return ballData.getTimer(); }
+    public void setTimer(int time) { ballData.setTimer(time); }
+
+    public void reduceTimer(int amount) {
+        ballData.setTimer(ballData.getTimer() - amount);
+    }
 
     public String toString() {
         return "Location: x "+ getXCoordinate() + " y " + getYCoordinate();

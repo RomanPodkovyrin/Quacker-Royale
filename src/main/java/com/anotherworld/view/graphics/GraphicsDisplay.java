@@ -1,5 +1,6 @@
 package com.anotherworld.view.graphics;
 
+import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
@@ -21,8 +22,10 @@ public class GraphicsDisplay {
     private final float height;
     private final float width;
     
-    protected ArrayList<DisplayObject> objects;
+    private Camera camera;
     
+    protected ArrayList<DisplayObject> objects;
+
     /**
      * Creates a new Graphics display (Uses normalised device coordinates).
      * @param x The x position
@@ -31,7 +34,7 @@ public class GraphicsDisplay {
      * @param width The display width
      * @throws IncoherentGraphicsDisplay If the display would go outside of the window
      */
-    public GraphicsDisplay(float x, float y, float height, float width) {
+    public GraphicsDisplay(float x, float y, float height, float width, Camera camera) {
         if (!(-1f <= x && x <= 1f
                 && -1f <= y && y <= 1f
                 && 0f <= height && height <= 2f
@@ -44,28 +47,27 @@ public class GraphicsDisplay {
         this.y = y;
         this.height = height;
         this.width = width;
+        this.camera = camera;
         objects = new ArrayList<>();
     }
 
     /**
-     * Returns an array list of matrices containing the objects to be drawn.
-     * @return The list of matrices
+     * Returns draws the objects it contains to the screen.
      */
-    public ArrayList<DisplayObject> draw() {
+    public void draw(Programme programme) {
+        programme.pushMatrix();
+        this.transform(programme);
         for (int i = 0; i < objects.size(); i++) {
-            objects.get(i).clearTransformations();
-            transformObject(objects.get(i));
+            programme.pushMatrix();
+            objects.get(i).transform();
+            objects.get(i).draw();
+            programme.popMatrix();
         }
-        return objects;
+        programme.popMatrix();
     }
     
-    private void transformObject(DisplayObject obj) {
-        Matrix2d modifier = Matrix2d.homTranslation2d(obj.getX(), obj.getY());
-
-        modifier = modifier.mult(Matrix2d.homRotation2d(obj.getTheta()));
-
-        obj.transform(modifier);
-
+    public void transform(Programme programme) {
+        programme.transform(camera);
     }
     
     public float getX() {
@@ -82,6 +84,15 @@ public class GraphicsDisplay {
     
     public float getWidth() {
         return width;
+    }
+
+    /**
+     * Deletes the programme buffers it has bound.
+     */
+    public void destroyObjects() {
+        for (DisplayObject d : objects) {
+            d.destroyObject();
+        }
     }
     
 }

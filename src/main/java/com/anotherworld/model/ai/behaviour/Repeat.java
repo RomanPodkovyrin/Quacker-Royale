@@ -3,19 +3,27 @@ package com.anotherworld.model.ai.behaviour;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import java.util.ArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 
 /**
- * Repeats the Job infinite amount of times or the number that is specified.
+ * Repeats the Job infinite amount of times or the number that is specified. Does not care if fails or succeeds.
  * @author Roman
  */
 public class Repeat extends Job {
+
+    private static Logger logger = LogManager.getLogger(Repeat.class);
+
     private final Job job;
     private int times;
     private int originalTimes;
 
 
     /**
-     * Initialise the Repeat Class.
+     * Initialise the RepeatSuccess Class.
      *
      * @param job The job to be repeated infinite amount of times
      */
@@ -27,7 +35,7 @@ public class Repeat extends Job {
     }
 
     /**
-     * Initialise the Repeat Class.
+     * Initialise the RepeatSuccess Class.
      *
      * @param job The job to be repeated
      * @param times The number of time to repeat the job
@@ -49,11 +57,17 @@ public class Repeat extends Job {
     }
 
     @Override
-    public void act(Player ai, Player[] players, Ball[] balls, Platform platform) {
-        if (job.isFailure()) {
-            fail();
-        } else if (job.isSuccess()) {
-            if (times == 0) {
+    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+
+        logger.trace("Starting Repeat Job");
+
+        if (job.isRunning()) {
+            job.act(ai, players, balls, platform);
+        }
+
+        if (job.isFailure() | job.isSuccess()) {
+            if (times == 1) {
+                logger.debug("Finishing Repeat Job with success");
                 succeed();
                 return;
             } else {
@@ -62,9 +76,9 @@ public class Repeat extends Job {
                 job.start();
             }
         }
-        if (job.isRunning()) {
-            job.act(ai, players, balls, platform);
-        }
+        logger.debug("Repeat the job again");
+
+
 
     }
 

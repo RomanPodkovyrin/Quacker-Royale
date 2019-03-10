@@ -14,6 +14,16 @@ plugins {
     id 'application'
     id 'eclipse'
     id 'checkstyle'
+    id 'jacoco'
+}
+
+checkstyle {
+    toolVersion '8.18'
+}
+
+jacoco {
+    toolVersion '0.8.2'
+    reportsDir = file("$buildDir/reports/jacoco")
 }
 
 // Sets the use of java 8
@@ -27,6 +37,9 @@ sourceSets {
             srcDir 'src/main/java' // Adds the main programme code
         }
         resources {
+            srcDir 'res/images'
+        }
+        resources {
             srcDir 'res/config'
         }
     }
@@ -38,7 +51,11 @@ sourceSets {
 }
 
 // Declares the location of the main method
-mainClassName = 'com.anotherworld.control.GameSessionController'
+mainClassName = 'com.anotherworld.settings.MenuDemo'
+
+run {
+    args += '-xStartOnFirstThread'
+}
 
 // In this section you declare where to find the dependencies of your project
 repositories {
@@ -94,7 +111,25 @@ dependencies {
     // TestNG is also supported by the Gradle Test task. Just change the
     // testCompile dependency to testCompile 'org.testng:testng:6.8.1' and add
     // 'test.useTestNG()' to your build script.
-    testImplementation 'junit:junit:4.12'
+    testImplementation('junit:junit:4.12') {
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    }
+    testImplementation 'org.hamcrest:hamcrest-all:1.3'
+}
+
+task testReport { //Tasks to build and run project in right order
+    dependsOn 'clean'
+    dependsOn 'jacocoTestReport'
+    dependsOn 'checkstyleMain'
+    dependsOn 'checkstyleTest'
+    dependsOn 'javadoc'
+    dependsOn 'test'
+    tasks.findByName('test').mustRunAfter 'checkstyleTest'
+    tasks.findByName('test').mustRunAfter 'javadoc'
+    tasks.findByName('jacocoTestReport').mustRunAfter 'test'
+    tasks.findByName('checkstyleMain').mustRunAfter 'clean'
+    tasks.findByName('checkstyleTest').mustRunAfter 'checkstyleMain'
+    tasks.findByName('javadoc').mustRunAfter 'clean'
 }
 
 task cleanBuildRun { //Tasks to build and run project in right order
