@@ -313,8 +313,49 @@ public class PlayerBehaviourTest {
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
 
+    }
+
+    @Test
+    public void avoidNeutralPlayerTest() {
+        float delta = 0.00001f;
+
+        // Too close move away
+        Player player = otherPlayers.get(0);
+        AvoidNeutralPlayer job = new AvoidNeutralPlayer();
+        player.setCoordinates(80,45);
+        player.setVelocity(1,0);
+        currentAI.setCoordinates(82,45);
+        currentAI.setVelocity(-1,0);
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertTrue(currentAI.getYVelocity() == 1 | currentAI.getYVelocity() == -1);
+
+         // Too far way keep going
+        player = otherPlayers.get(0);
+        job = new AvoidNeutralPlayer();
+        player.setCoordinates(80,45);
+        player.setVelocity(1,0);
+        currentAI.setCoordinates(83,45);
+        currentAI.setVelocity(-1,0);
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(-1,currentAI.getXVelocity(),delta);
+        assertEquals(0, currentAI.getYVelocity(),delta);
 
 
+        // Player is dead no one to avoid
+        player = otherPlayers.get(0);
+        job = new AvoidNeutralPlayer();
+        player.setCoordinates(80,45);
+        player.setVelocity(1,0);
+        player.setState(ObjectState.DEAD);
+        currentAI.setCoordinates(82,45);
+        currentAI.setVelocity(-1,0);
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(-1,currentAI.getXVelocity(),delta);
+        assertEquals(0, currentAI.getYVelocity(),delta);
     }
 
 
