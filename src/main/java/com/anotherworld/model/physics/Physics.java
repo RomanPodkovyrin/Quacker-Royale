@@ -204,10 +204,12 @@ public class Physics {
         Matrix coordA = objectA.getCoordinates();
         Matrix coordB = objectB.getCoordinates();
         Matrix n = coordA.sub(coordB);
+        Matrix m = coordB.sub(coordA);
         n.normalizeThis();
-
+        m.normalizeThis();
+        
         float newVeloA = MatrixMath.innerProduct(objectA.getVelocity(), n);
-        float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), n);
+        float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), m);
         float optimisedP = (float) Math.min((2.0 * (newVeloA - newVeloB)) / 2,
                 0);
 
@@ -216,8 +218,8 @@ public class Physics {
                 - (optimisedP * n.getY()));
         veloA.normalizeThis();
         Matrix veloB = new Matrix(objectB.getXVelocity()
-                + (optimisedP * n.getX()), objectB.getYVelocity()
-                + (optimisedP * n.getY()));
+                + (optimisedP * m.getX()), objectB.getYVelocity()
+                + (optimisedP * m.getY()));
         veloB.normalizeThis();
         if (objectA instanceof Ball) {
 
