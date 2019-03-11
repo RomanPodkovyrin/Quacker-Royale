@@ -163,6 +163,7 @@ public class GameSession {
                 // Kill the player if they fall off the edge of the platform
                 if(!platform.isOnPlatform(player)) {
                     player.kill();
+                    player.setDeadByFalling(true);
                     gameData.getRankings().addFirst(player.getCharacterID());
                     livingPlayers.remove(player);
                     logger.info(player.getCharacterID() + " fell off");
