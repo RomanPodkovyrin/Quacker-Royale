@@ -6,12 +6,10 @@ public class Player extends AbstractMovable {
     private boolean aiEnabled;
 
     PlayerData playerData;
-    long timeStartedCharging;
 
     public Player(PlayerData playerData, boolean aiEnabled) {
         super(playerData);
         this.playerData = playerData;
-        this.timeStartedCharging = 0;
     }
 
     public String getCharacterID() { return playerData.getObjectID(); }
@@ -30,11 +28,20 @@ public class Player extends AbstractMovable {
 
     public void setChargeLevel(int chargeLevel) { playerData.setChargeLevel(chargeLevel); }
 
-    public long getTimeStartedCharging() { return timeStartedCharging; }
+    public long getTimeStartedCharging() { return playerData.getTimeStartedCharging(); }
 
-    public void setTimeStartedCharging(long time) { timeStartedCharging = time; }
+    public void setTimeStartedCharging(long timeStartedCharging) { playerData.setTimeStartedCharging(timeStartedCharging); }
 
     public void incrementChargeLevel() { this.setChargeLevel(this.getChargeLevel() + 1); }
+
+    public int getStunTimer() { return playerData.getStunTimer(); }
+
+    public void setStunTimer(int stunTimer) { playerData.setStunTimer(stunTimer); }
+
+    public void decrementStunTimer() {
+        if (this.getStunTimer() > 0)
+            this.setStunTimer(this.getStunTimer() - 1);
+    }
 
     public boolean isDead()     { return playerData.getState().equals(ObjectState.DEAD); }
 
