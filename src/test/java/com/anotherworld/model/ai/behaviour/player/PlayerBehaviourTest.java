@@ -258,4 +258,64 @@ public class PlayerBehaviourTest {
         assertEquals(-1,currentAI.getYVelocity(),delta);
     }
 
+    @Test
+    public void saveToGoTest() {
+        float delta = 0.00001f;
+
+        // Stays stationary because ball is neutral
+        Ball ball = balls.get(0);
+        ball.setDangerous(false);
+        ball.setVelocity(1,0);
+        ball.setCoordinates(10,45);
+        currentAI.setVelocity(0,1);
+        currentAI.setCoordinates(80,45);
+        CheckIfSaveToGo job = new CheckIfSaveToGo();
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertEquals(1,currentAI.getYVelocity(),delta);
+
+        // needs to move out
+        ball.setDangerous(true);
+        ball.setVelocity(1,0);
+        ball.setCoordinates(10,41);
+        currentAI.setVelocity(0,1);
+        currentAI.setCoordinates(80,45);
+        job = new CheckIfSaveToGo();
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertEquals(1,currentAI.getYVelocity(),delta);
+
+
+        // Save to move
+        ball.setDangerous(true);
+        ball.setVelocity(1,0);
+        ball.setCoordinates(10,37);
+        currentAI.setVelocity(0,1);
+        currentAI.setCoordinates(80,45);
+        job = new CheckIfSaveToGo();
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertEquals(1,currentAI.getYVelocity(),delta);
+
+
+        // danger need to stop
+        ball.setDangerous(true);
+        ball.setVelocity(1,0);
+        ball.setCoordinates(10,37);
+        currentAI.setVelocity(0,-1);
+        currentAI.setCoordinates(80,45);
+        job = new CheckIfSaveToGo();
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(0,currentAI.getXVelocity(),delta);
+        assertEquals(0,currentAI.getYVelocity(),delta);
+
+
+
+    }
+
+
 }
