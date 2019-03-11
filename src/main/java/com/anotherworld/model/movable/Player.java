@@ -45,6 +45,10 @@ public class Player extends AbstractMovable {
 
     public boolean isDead()     { return playerData.getState().equals(ObjectState.DEAD); }
 
+    public boolean isDeadByFalling() { return playerData.isDeadByFalling(); }
+
+    public void setDeadByFalling(boolean deadByFalling) { playerData.setDeadByFalling(deadByFalling);}
+
     public boolean isCharging() { return playerData.getState().equals(ObjectState.CHARGING); }
 
     public boolean isDashing()  { return playerData.getState().equals(ObjectState.DASHING);}

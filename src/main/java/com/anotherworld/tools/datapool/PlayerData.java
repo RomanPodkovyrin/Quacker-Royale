@@ -22,6 +22,8 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
     private long timeStartedCharging;
     private int stunTimer;
 
+    private boolean deadByFalling;
+
     public PlayerData(String objectID, int health,
                       float xCoordinate, float yCoordinate,
                       ObjectState state, float speed, float radius) {
@@ -31,11 +33,13 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
         this.chargeLevel = 0;
         this.timeStartedCharging = 0;
         this.stunTimer = 0;
+        this.deadByFalling = false;
     }
 
     public void copyObject(PlayerData data) {
         this.health = data.getHealth();
 //        this.maxHealth = data.getMaxHealth();
+        this.deadByFalling = data.deadByFalling;
         super.copyObject(data);
     }
 
@@ -54,5 +58,7 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
 
     public int getStunTimer() { return this.stunTimer; }
     public void setStunTimer(int stunTimer) { this.stunTimer = stunTimer; }
-    
+
+    public boolean isDeadByFalling() { return this.deadByFalling; }
+    public void setDeadByFalling(boolean deadByFalling) { this.deadByFalling = deadByFalling; }
 }
