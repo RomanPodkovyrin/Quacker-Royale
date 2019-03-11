@@ -1,10 +1,12 @@
 package com.anotherworld.model.ai.behaviour.player;
 
+import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.*;
+import jdk.nashorn.internal.scripts.JO;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -356,6 +358,33 @@ public class PlayerBehaviourTest {
         job.act(currentAI,otherPlayers,balls,platform);
         assertEquals(-1,currentAI.getXVelocity(),delta);
         assertEquals(0, currentAI.getYVelocity(),delta);
+    }
+
+    @Test
+    public void neutralBallCheckTest() {
+        Ball ball = balls.get(0);
+        ball.setDangerous(false);
+        NeutralBallCheck job = new NeutralBallCheck();
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(Job.JobState.SUCCESS, job.getState());
+
+        ball.setDangerous(true);
+        job = new NeutralBallCheck();
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertEquals(Job.JobState.FAILURE, job.getState());
+
+    }
+
+    @Test
+    public void walkAboutTest(){
+        WalkAbout job = new WalkAbout();
+        currentAI.setCoordinates(80,45);
+        currentAI.setVelocity(0,0);
+        job.start();
+        job.act(currentAI,otherPlayers,balls,platform);
+        assertTrue(currentAI.getYVelocity() != 0 | currentAI.getXVelocity() != 0);
     }
 
 
