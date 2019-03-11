@@ -52,8 +52,9 @@ public abstract class Programme {
      * @param camera The camera to use for display
      */
     public void transform(Camera camera) {
+        this.translatef(0, -1, 0);
         this.cameraProjectionf(camera.getDepth());
-        this.scalef(-2 / camera.getWidth(), -2 / camera.getHeight(), 1);
+        this.scalef(1, -4, 1);
         this.cameraRotation(camera);
         this.translatef(-camera.getX(), -camera.getY(), -camera.getZ());
     }
@@ -75,6 +76,7 @@ public abstract class Programme {
     private void cameraProjectionf(float depth) {
         Matrix2d projection = this.getIdentity();
         projection.setValue(3, 2, 1 / depth);
+        projection.setValue(2, 2, 0);
         this.multiplyCurrent(projection);
     }
 

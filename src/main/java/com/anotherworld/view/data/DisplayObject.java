@@ -18,7 +18,8 @@ public abstract class DisplayObject {
 
     private static Logger logger = LogManager.getLogger(DisplayObject.class);
     
-    private final Points2d points;
+    //TODO change this back
+    public final Points2d points;
     
     private final int displayType;
     
@@ -86,8 +87,8 @@ public abstract class DisplayObject {
     }
     
     public void transform() {
-        programme.translatef(this.getX(), this.getY(), 0);
-        programme.rotatef(-this.getTheta(), 0, 0, 1);
+        programme.translatef(this.getX(), this.getY(), this.getZ());
+        //programme.rotatef(-this.getTheta(), 0, 0, 1);
     }
     
     
@@ -219,6 +220,10 @@ public abstract class DisplayObject {
      * @return the y position
      */
     public abstract float getY();
+    
+    public float getZ() {
+        return 0;
+    }
     
     /**
      * Returns true if the object should be drawn.

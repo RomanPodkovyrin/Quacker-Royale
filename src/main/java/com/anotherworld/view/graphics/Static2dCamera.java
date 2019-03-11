@@ -33,7 +33,7 @@ public class Static2dCamera implements Camera {
 
     @Override
     public float getY() {
-        return y;
+        return 135;
     }
 
     @Override
@@ -48,12 +48,12 @@ public class Static2dCamera implements Camera {
     
     @Override
     public float getDepth() {
-        return 10;
+        return 1;
     }
 
     @Override
     public float getZ() {
-        return 0;
+        return -45;
     }
 
 }
