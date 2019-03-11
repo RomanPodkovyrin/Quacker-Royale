@@ -38,7 +38,6 @@ public class BackgroundMusic implements Runnable {
 
     public void run() {
         while (running) {
-            //System.out.println("Still alive background");
             try {
                 createLine();
             } catch (IOException e) {
@@ -62,7 +61,6 @@ public class BackgroundMusic implements Runnable {
         }
         audioFormat = audioInputStream.getFormat();
         information = new DataLine.Info(SourceDataLine.class, audioFormat);
-
         line = (SourceDataLine) AudioSystem.getLine(information);
         line.open(audioFormat);
         unMuteSound();
