@@ -71,10 +71,10 @@ public class Physics {
      */
     public static boolean checkCollision(AbstractMovable objectA,
             AbstractMovable objectB) {
-        float xDistance = (objectA.getXCoordinate() + objectA.getXVelocity())
-                - (objectB.getXCoordinate() + objectB.getXVelocity());
-        float yDistance = (objectA.getYCoordinate() + objectA.getYVelocity())
-                - (objectB.getYCoordinate() + objectB.getYVelocity());
+        float xDistance = (objectA.getXCoordinate() 
+                - objectB.getXCoordinate() );
+        float yDistance = (objectA.getYCoordinate() 
+                - objectB.getYCoordinate() );
 
         float sumOfRadii = objectA.getRadius() + objectB.getRadius();
         float distanceSquared = xDistance * xDistance + yDistance * yDistance;
@@ -156,15 +156,15 @@ public class Physics {
      */
     public static ArrayList<Matrix> calculateCollision(AbstractMovable objectA,
             AbstractMovable objectB) {
-        Matrix pointA = new Matrix(objectA.getXCoordinate(),
-                objectA.getYCoordinate());
-        Matrix pointB = new Matrix(objectB.getXCoordinate(),
-                objectB.getYCoordinate());
+        Matrix pointA = new Matrix(objectA.getXCoordinate()+ (objectA.getXVelocity()*objectA.getSpeed()),
+                objectA.getYCoordinate()+ (objectA.getYVelocity()*objectA.getSpeed()));
+        Matrix pointB = new Matrix(objectB.getXCoordinate()+ (objectB.getXVelocity()*objectB.getSpeed()),
+                objectB.getYCoordinate()+ (objectB.getYVelocity()*objectB.getSpeed()));
         double angleBetweenCircles = Math.atan2(pointB.getY() - pointA.getY(),
                 pointB.getX() - pointA.getX());
 
-        float radiusA = objectA.getRadius() * 1.1f;
-        float radiusB = objectB.getRadius() * 1.1f;
+        float radiusA = objectA.getRadius() ;
+        float radiusB = objectB.getRadius() ;
 
         Matrix midpointBetweenCircles = new Matrix(
                 (pointA.getX() + pointB.getX()) / 2,
