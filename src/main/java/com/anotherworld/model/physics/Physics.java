@@ -204,12 +204,10 @@ public class Physics {
         Matrix coordA = objectA.getCoordinates();
         Matrix coordB = objectB.getCoordinates();
         Matrix n = coordA.sub(coordB);
-        Matrix m = coordB.sub(coordA);
         n.normalizeThis();
-        m.normalizeThis();
         
         float newVeloA = MatrixMath.innerProduct(objectA.getVelocity(), n);
-        float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), m);
+        float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), n);
         float optimisedP = (float) Math.min((2.0 * (newVeloA - newVeloB)) / 2,
                 0);
 
@@ -218,8 +216,8 @@ public class Physics {
                 - (optimisedP * n.getY()));
         veloA.normalizeThis();
         Matrix veloB = new Matrix(objectB.getXVelocity()
-                + (optimisedP * m.getX()), objectB.getYVelocity()
-                + (optimisedP * m.getY()));
+                + (optimisedP * n.getX()), objectB.getYVelocity()
+                + (optimisedP * n.getY()));
         veloB.normalizeThis();
         if (objectA instanceof Ball) {
 
@@ -234,27 +232,29 @@ public class Physics {
         }
         ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
         Matrix safe;
-        boolean specialCase = false;
+        boolean specialCase = true;
         if (objectA instanceof Player) {
             if (((Player) objectA).getState().equals(ObjectState.DASHING)) {
-                {
-                    objectB.setVelocity(objectA.getXVelocity(),
-                            objectA.getYVelocity());
+                { 
+                    objectB.setVelocity(veloB.getX(),
+                            veloB.getY());
                     objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
                     safe = newCoordinate.get(1);
                     objectB.setCoordinates(safe.getX(), safe.getY());
-                    specialCase = true;
+                    if(objectB instanceof Ball)
+                    specialCase = false;
                 }
             }
         } else if (objectB instanceof Player) {
             if (((Player) objectB).getState().equals(ObjectState.DASHING)) {
                 {
-                    objectA.setVelocity(objectB.getXVelocity(),
-                            objectB.getYVelocity());
+                    objectA.setVelocity(veloA.getX(),
+                            veloA.getY());
                     objectA.setAngle((float) MatrixMath.vectorAngle(veloA));
                     safe = newCoordinate.get(0);
                     objectA.setCoordinates(safe.getX(), safe.getY());
-                    specialCase = true;
+                    if(objectA instanceof Ball)
+                    specialCase = false;
                 }
             }
         }
