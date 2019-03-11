@@ -8,12 +8,18 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.anotherworld.tools.input.Input;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+/**
+ * This class allows one player to host the game,
+ * so it received all the key presses from the client players
+ * and sends them the objects of the game
+ *
+ * @author Antons Lebedjko
+ */
 public class Server extends Thread {
     private static Logger logger = LogManager.getLogger(Server.class);
     private DatagramSocket socket;
@@ -34,6 +40,12 @@ public class Server extends Thread {
     private GameSessionData gamesession;
     private ArrayList<Pair<ArrayList<Input>, String>> inputAndIP = new ArrayList<>();
 
+    /**
+     * Used to set up a connection with the clients
+     *
+     * @param IPs ip addresses of all the client players
+     * @param settings game settings
+     */
     public Server(int IPs, GameSettings settings) throws SocketException, UnknownHostException {
         HostPlayer = settings.getCurrentPlayer();
         networkPlayers = settings.getPlayers();
@@ -50,6 +62,11 @@ public class Server extends Thread {
         logger.info("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
     }
 
+    /**
+     * A run method for the thread which first of all gets all the ports of the clients,
+     * sends clients ids, sends the initial objects of the game and after starts to receive
+     * all the key presses which clients send while they are playing
+     */
     public void run() {
         serverIsRunning = true;
         //get the ports of all the players before while starts
@@ -80,11 +97,11 @@ public class Server extends Thread {
         }
     }
 
-    public void stopServer() {
-        serverIsRunning = false;
-        socket.close();
-    }
-
+    /**
+     * Used to send data to all clients which re connected to the host
+     *
+     * @param dataToSend the data to be send to all clients
+     */
     public void sendStringToClient(byte[] dataToSend) throws UnknownHostException {
         for(int i = 0; i < numberOfPlayers; i++) {
             InetAddress playerIP = InetAddress.getByName(IPs.get(i));
@@ -98,6 +115,9 @@ public class Server extends Thread {
         }
     }
 
+    /**
+     * Used to send the player id of each client
+     */
     public void sendPlayerID() throws UnknownHostException {
         for(int i = 0; i < numberOfPlayers; i++) {
             byte[] dataToSend = networkPlayers.get(i).getObjectID().getBytes();
@@ -113,6 +133,11 @@ public class Server extends Thread {
         }
     }
 
+    /**
+     * Used to send any game object to all clients
+     *
+     * @param object any game object
+     */
     public void sendObjectToClients(Object object) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(outputStream);
@@ -127,6 +152,11 @@ public class Server extends Thread {
         networkPlayers.get(0).getObjectID();
     }
 
+    /**
+     * Used to receive a string from the client
+     *
+     * @param packet incoming packet from the client
+     */
     public String getFromClient(DatagramPacket packet){
         try {
             socket.receive(packet);
@@ -137,6 +167,12 @@ public class Server extends Thread {
         return received;
     }
 
+    /**
+     * Used to receive the key presses from the client
+     *
+     * @param packet incoming packet with the key presses
+     * @return the key presses with the player id from where they have came
+     */
     private ArrayList<Pair<ArrayList<Input>, String>> getKeyPressesFromClient(DatagramPacket packet) throws ClassNotFoundException, IOException {
         try {
             socket.receive(packet);
@@ -152,8 +188,6 @@ public class Server extends Thread {
         String ipFromWhereReceived = packet.getAddress().toString().substring(1);
         String id = ipToID.get(ipFromWhereReceived);
         logger.trace("Key press has been received from " + id);
-
-
         for (int i = 0; i < inputAndIP.size(); i++) {
             Pair<ArrayList<Input>, String> playerCommand = inputAndIP.get(i);
             if (playerCommand.getValue().equals(id)) {
@@ -164,11 +198,14 @@ public class Server extends Thread {
                 return inputAndIP;
             }
         }
-        ArrayList<Pair<ArrayList<Input>, String>> returnValue = new ArrayList<>(inputAndIP);
-        returnValue.add( new Pair<>(received, id));
-        return returnValue;
+        ArrayList<Pair<ArrayList<Input>, String>> keyPressesWithClientId = new ArrayList<>(inputAndIP);
+        keyPressesWithClientId.add( new Pair<>(received, id));
+        return keyPressesWithClientId;
     }
 
+    /**
+     * Checks if clients have received initial objects, so if they are ready to start playing
+     */
     public void checkIfClientsHaveReceivedInitialObjects(){
         for(int i = 0; i< numberOfPlayers; i++) {
             DatagramPacket lastConfirmationPacket = new DatagramPacket(this.dataReceived, this.dataReceived.length);
@@ -176,6 +213,9 @@ public class Server extends Thread {
         }
     }
 
+    /**
+     * Used to send all initial objects of the game to all clients
+     */
     public void sendInitialObjectsToClients(){
         try {
             logger.trace("Sending all the players");
@@ -196,12 +236,24 @@ public class Server extends Thread {
         }
     }
 
+    /**
+     * Used to clear the keyPresses and client IP variable
+     *
+     * @return the keyPresses and client IP
+     */
     public ArrayList<Pair<ArrayList<Input>, String>> getInputAndIP(){
         ArrayList<Pair<ArrayList<Input>, String>> temp = new ArrayList<>(inputAndIP);
         inputAndIP.clear();
         return temp;
     }
 
+    /**
+     * Stops the communication with all clients and closes the socket
+     */
+    public void stopServer() {
+        serverIsRunning = false;
+        socket.close();
+    }
 
     public static void main(String[] args) throws SocketException, UnknownHostException {
         ArrayList<String> ips = new ArrayList<String>();
