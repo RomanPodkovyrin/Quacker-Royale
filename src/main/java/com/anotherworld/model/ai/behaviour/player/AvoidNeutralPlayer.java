@@ -8,6 +8,8 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
+
+import com.anotherworld.tools.maths.Maths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -41,8 +43,8 @@ public class AvoidNeutralPlayer extends Job {
                     Line line = new Line(player.getCoordinates(), vector);
                     Matrix orthogonal = line.getOrthogonalVector();
 
-                    ai.setXVelocity((orthogonal.getX() / Math.abs(orthogonal.getX())) * ai.getSpeed());
-                    ai.setYVelocity((orthogonal.getY() / Math.abs(orthogonal.getY())) * ai.getSpeed());
+                    ai.setXVelocity(Maths.floatDivision(orthogonal.getX() , Math.abs(orthogonal.getX())) * ai.getSpeed());
+                    ai.setYVelocity(Maths.floatDivision(orthogonal.getY() , Math.abs(orthogonal.getY())) * ai.getSpeed());
                     return;
                 }
             }
