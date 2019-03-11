@@ -111,6 +111,9 @@ public class GameSession {
                         AudioControl.playerCollidedWithBall();
                     }
 
+                    player.setStunTimer(5); //TODO: Magic number.
+                    player.setVelocity(0,0);
+
                     Physics.collided(ball, player);
                     logger.info(player.getCharacterID() + " collided with ball");
                 }
@@ -131,6 +134,9 @@ public class GameSession {
     private void updateAllPlayers() {
 
         for (Player player : allPlayers) {
+
+            player.decrementStunTimer();
+            if (player.getStunTimer() > 0) continue;
 
             Physics.move(player);
 
@@ -211,6 +217,7 @@ public class GameSession {
     public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {
             //TODO: Fix clunky dash.
+            player.setVelocity(0,0);
             player.setSpeed(0);
             long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 

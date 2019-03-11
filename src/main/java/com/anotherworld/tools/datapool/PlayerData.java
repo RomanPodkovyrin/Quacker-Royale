@@ -19,6 +19,9 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
 
     private int chargeLevel;
 
+    private long timeStartedCharging;
+    private int stunTimer;
+
     public PlayerData(String objectID, int health,
                       float xCoordinate, float yCoordinate,
                       ObjectState state, float speed, float radius) {
@@ -26,6 +29,8 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
         this.health = health;
         this.maxHealth = health;
         this.chargeLevel = 0;
+        this.timeStartedCharging = 0;
+        this.stunTimer = 0;
     }
 
     public void copyObject(PlayerData data) {
@@ -43,5 +48,11 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
 
     public int getChargeLevel() { return this.chargeLevel; }
     public void setChargeLevel(int chargeLevel) { this.chargeLevel = chargeLevel; }
+
+    public long getTimeStartedCharging() { return this.timeStartedCharging; }
+    public void setTimeStartedCharging(long timeStartedCharging) { this.timeStartedCharging = timeStartedCharging; }
+
+    public int getStunTimer() { return this.stunTimer; }
+    public void setStunTimer(int stunTimer) { this.stunTimer = stunTimer; }
     
 }

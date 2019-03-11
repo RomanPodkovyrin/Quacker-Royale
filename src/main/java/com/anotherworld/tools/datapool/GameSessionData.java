@@ -9,7 +9,7 @@ import java.util.LinkedList;
  */
 public class GameSessionData implements Serializable {
 
-    private long ticksElapsed;
+    private int ticksElapsed;
     private long timeToNextStage;
     private long timeLeft;
     private LinkedList<String> rankings;
@@ -36,9 +36,9 @@ public class GameSessionData implements Serializable {
         this.timeLeft = timeLeft;
     }
 
-    public long getTicksElapsed() { return ticksElapsed; }
+    public int getTicksElapsed() { return ticksElapsed; }
 
-    public void setTicksElapsed(long ticksElapsed) { this.ticksElapsed = ticksElapsed; }
+    public void setTicksElapsed(int ticksElapsed) { this.ticksElapsed = ticksElapsed; }
 
     public long getTimeToNextStage() { return timeToNextStage; }
 
