@@ -66,23 +66,7 @@ public class Server extends Thread {
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-        try {
-            logger.trace("Sending all the players");
-            ArrayList<PlayerData> temp = new ArrayList<>();
-            temp.addAll(networkPlayers);
-            temp.add(HostPlayer);
-            sendObjectToClients(temp);
-            logger.trace("Sending all balls");
-            sendObjectToClients(balls);
-            logger.trace("Sending the platform");
-            sendObjectToClients(platform);
-            logger.trace("Sending the Wall");
-            sendObjectToClients(wall);
-            logger.trace("Sending the game session");
-            sendObjectToClients(gamesession);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sendInitialObjectsToClients();
         checkIfClientsHaveReceivedInitialObjects();
         while(serverIsRunning){
             DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
@@ -94,8 +78,6 @@ public class Server extends Thread {
                 e.printStackTrace();
             }
         }
-
-//        socket.close();
     }
 
     public void stopServer() {
@@ -174,13 +156,9 @@ public class Server extends Thread {
 
         for (int i = 0; i < inputAndIP.size(); i++) {
             Pair<ArrayList<Input>, String> playerCommand = inputAndIP.get(i);
-
             if (playerCommand.getValue().equals(id)) {
                 playerCommand.getKey().addAll(received);
                 ArrayList<Input> temp = playerCommand.getKey();
-//                inputAndIP.set(i,new Pair<>(temp,id));
-
-                // testing
                 inputAndIP.clear();
                 inputAndIP.add(new Pair<>(received,id));
                 return inputAndIP;
@@ -195,6 +173,26 @@ public class Server extends Thread {
         for(int i = 0; i< numberOfPlayers; i++) {
             DatagramPacket lastConfirmationPacket = new DatagramPacket(this.dataReceived, this.dataReceived.length);
             getFromClient(lastConfirmationPacket);
+        }
+    }
+
+    public void sendInitialObjectsToClients(){
+        try {
+            logger.trace("Sending all the players");
+            ArrayList<PlayerData> temp = new ArrayList<>();
+            temp.addAll(networkPlayers);
+            temp.add(HostPlayer);
+            sendObjectToClients(temp);
+            logger.trace("Sending all balls");
+            sendObjectToClients(balls);
+            logger.trace("Sending the platform");
+            sendObjectToClients(platform);
+            logger.trace("Sending the Wall");
+            sendObjectToClients(wall);
+            logger.trace("Sending the game session");
+            sendObjectToClients(gamesession);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
