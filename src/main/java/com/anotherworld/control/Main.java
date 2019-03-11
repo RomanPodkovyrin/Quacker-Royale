@@ -24,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.system.Platform;
 
 /**
  * This class helps to set up the appropriate settings to either start a single player game or a multiplayer.
@@ -69,14 +70,17 @@ public class Main {
      */
     private void startTheGame(GameSettings settings, NetworkController network) {
 
-        GLFW.glfwInit();
-        GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-
         try {
             // Starts the render
+            View view;
             logger.trace("Render is initialised");
-            View view = new View((int)(mode.width() * 0.8), (int)(mode.height() * 0.8));
-
+            if (Platform.get() == Platform.MACOSX) {
+                view = new View(1920, 1080);
+            } else {
+                GLFW.glfwInit();
+                GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
+                view = new View((int)(mode.width() * 0.8), (int)(mode.height() * 0.8));
+            }
             // Starts the game itself
             logger.trace("The game session started");
             new GameSessionController(view, settings, network);
@@ -96,7 +100,7 @@ public class Main {
         logger.info("User starting the server");
 
         // number of network players
-        int numberOfPlayers = 3;
+        int numberOfPlayers = 2;
         int numberOfBalls = 3;
 
         logger.trace("Multiplayer lobby is created and started");

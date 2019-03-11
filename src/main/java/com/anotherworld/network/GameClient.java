@@ -32,17 +32,7 @@ public class GameClient extends Thread {
     }
 
     public void run() {
-        try {
-            getObjectFromServer();
-            getObjectFromServer();
-            getObjectFromServer();
-            getObjectFromServer();
-            getObjectFromServer();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        getInitialObjectsOfTheGame();
         sendDataToServer("Initial objects have been received. Let's start!!!!");
         while(!stopClient) {
             try {
@@ -53,11 +43,6 @@ public class GameClient extends Thread {
                 e.printStackTrace();
             }
         }
-    }
-
-    public void stopClient() {
-        stopClient = true;
-        socket.close();
     }
 
     public void sendDataToServer(String msg) {
@@ -76,7 +61,6 @@ public class GameClient extends Thread {
         ObjectOutputStream os = new ObjectOutputStream(outputStream);
         os.writeObject(input);
         byte[] data = outputStream.toByteArray();
-        
         DatagramPacket packet
                 = new DatagramPacket(data, data.length, address, port);
         try {
@@ -134,6 +118,19 @@ public class GameClient extends Thread {
         }
     }
 
+    public void getInitialObjectsOfTheGame(){
+        int numberOfInitialObjects = 5;
+        try {
+            for(int i = 0; i < numberOfInitialObjects; i++){
+                getObjectFromServer();
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<BallData> getBallData() {
         return this.ballData;
     }
@@ -167,7 +164,8 @@ public class GameClient extends Thread {
         return this.clientPlayer;
     }
 
-    public void closeSocket() {
+    public void stopClient() {
+        stopClient = true;
         socket.close();
     }
 
