@@ -90,20 +90,6 @@ public class Physics {
         return isOverlapping;
     }
 
-    public static boolean checkCollision(Player objectA, Player objectB) {
-        float xDistance = (objectA.getXCoordinate() + objectA.getXVelocity())
-                - (objectB.getXCoordinate());
-        float yDistance = (objectA.getYCoordinate() + objectA.getYVelocity())
-                - (objectB.getYCoordinate());
-
-        float sumOfRadii = objectA.getRadius() + objectB.getRadius();
-        float distanceSquared = xDistance * xDistance + yDistance * yDistance;
-
-        boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
-        logger.debug("Player " + objectA.getCharacterID());
-        return isOverlapping;
-    }
-
     /**
      * Check if the ball is colliding on the wall: If Y of the ball is colliding
      * Y of the wall (check if the value of north of the ball is lesser than
