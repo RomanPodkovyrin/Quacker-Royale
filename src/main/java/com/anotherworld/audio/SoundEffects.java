@@ -58,7 +58,6 @@ public class SoundEffects implements Runnable {
         punchFile = new File(punch);
         jumpFile = new File(jump);
         ballFile = new File(ball);
-
         screamFile = new File(scream);
         effect = new Thread(this);
         line = Optional.empty();
@@ -130,6 +129,15 @@ public class SoundEffects implements Runnable {
         currentFile = screamFile;
     }
 
+    public void stopSoundEffects() {
+        logger.info("STOPPING SOUND EFFECTS");
+        effect.stop();
+        if (line.isPresent()) {
+            line.get().close();
+        }
+        running = false;
+    }
+
     public static void main(String[] args) {
         // The code below and a main method itself is for demonstration purposes, so it shows how we can use it in a future
         SoundEffects sound = new SoundEffects();
@@ -144,15 +152,6 @@ public class SoundEffects implements Runnable {
                 System.out.println("Player");
             }
         }
-    }
-
-    public void stopSoundEffects() {
-        logger.info("STOPPING SOUND EFFECTS");
-        effect.stop();
-        if (line.isPresent()) {
-            line.get().close();
-        }
-        running = false;
     }
 
 }

@@ -8,11 +8,16 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+/**
+ * This class allows clients to get game objects from server and send the key presses to the server
+ *
+ * @author Antons Lebedjko
+ */
 public class GameClient extends Thread {
     private DatagramSocket socket;
     private InetAddress address;
     private int port = 4445;
+    private int numberOfInitialObjects = 5;
     private ArrayList<BallData> ballData = null;
     private ArrayList<PlayerData> playerData = null;
     private GameSessionData gameSessionData = null;
@@ -23,6 +28,11 @@ public class GameClient extends Thread {
     private static Logger logger = LogManager.getLogger(GameClient.class);
     private boolean stopClient = false;
 
+    /**
+     * Used to set up a connection with the server and wait until host informs that game can start
+     *
+     * @param serverIP The ip address of the host player, to which clients should connect
+     */
     public GameClient(String serverIP) throws SocketException, UnknownHostException {
         socket = new DatagramSocket();
         address = InetAddress.getByName(serverIP);
@@ -31,6 +41,9 @@ public class GameClient extends Thread {
         waitForGameToStart();
     }
 
+    /**
+     * A run method for the thread which receives the objects from the host player
+     */
     public void run() {
         getInitialObjectsOfTheGame();
         sendDataToServer("Initial objects have been received. Let's start!!!!");
@@ -45,6 +58,11 @@ public class GameClient extends Thread {
         }
     }
 
+    /**
+     * Used to send strings to the host player
+     *
+     * @param msg Any message in a String format
+     */
     public void sendDataToServer(String msg) {
         byte[] data = msg.getBytes();
         DatagramPacket packet
@@ -56,6 +74,11 @@ public class GameClient extends Thread {
         }
     }
 
+    /**
+     * Used to send the key presses of the client
+     *
+     * @param input ArrayList of the buttons pressed on a keyboard
+     */
     public void sendKeyPresses(ArrayList<Input> input) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         ObjectOutputStream os = new ObjectOutputStream(outputStream);
@@ -71,6 +94,9 @@ public class GameClient extends Thread {
         logger.trace("Key press has been send to the server");
     }
 
+    /**
+     * Waits until server informs game can be started. Also, client receives his ID
+     */
     public void waitForGameToStart() {
         byte[] data = new byte[16];
         DatagramPacket packet = new DatagramPacket(data, data.length);
@@ -84,6 +110,9 @@ public class GameClient extends Thread {
         logger.trace("My id is:" + received);
     }
 
+    /**
+     * Method which receives all the possible objects from a host player
+     */
     public void getObjectFromServer() throws ClassNotFoundException, IOException {
         byte incomingData[] = new byte[1024];
         DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
@@ -118,8 +147,10 @@ public class GameClient extends Thread {
         }
     }
 
+    /**
+     * Waits to receive initial objects of the game from a host player
+     */
     public void getInitialObjectsOfTheGame(){
-        int numberOfInitialObjects = 5;
         try {
             for(int i = 0; i < numberOfInitialObjects; i++){
                 getObjectFromServer();
@@ -131,26 +162,44 @@ public class GameClient extends Thread {
         }
     }
 
+    /**
+     * @return the BallData object
+     */
     public ArrayList<BallData> getBallData() {
         return this.ballData;
     }
 
+    /**
+     * @return the PlayerData object
+     */
     public ArrayList<PlayerData> getPlayerData() {
         return this.playerData;
     }
 
+    /**
+     * @return the GameSessionData object
+     */
     public GameSessionData getGameSessionData() {
         return this.gameSessionData;
     }
 
+    /**
+     * @return the PlatformData object
+     */
     public PlatformData getPlatformData() {
         return this.platformData;
     }
 
+    /**
+     * @return the WallData object
+     */
     public WallData getWallData() {
         return this.wallData;
     }
 
+    /**
+     * @return the PlayerData of a client
+     */
     public PlayerData getClientPlayer() {
         if (playerData != null) {
             for (int i = 0; i < playerData.size(); i++) {
@@ -160,17 +209,18 @@ public class GameClient extends Thread {
                 }
             }
         }
-
         return this.clientPlayer;
     }
 
+    /**
+     * Stops the communication with server and closes the socket
+     */
     public void stopClient() {
         stopClient = true;
         socket.close();
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        //GameClient client = new GameClient("192.168.137.222");
         GameClient client = new GameClient("localhost");
         client.start();
         int counter = 0;
