@@ -9,10 +9,10 @@ import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.PropertyReader;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -61,6 +61,17 @@ public class Physics {
                 + "location updated successfully");
     }
 
+    public static boolean checkCollision(Player object, Matrix coordinates, float  radius) {
+        float xDistance = (object.getXCoordinate() - coordinates.getX());
+        float yDistance = (object.getYCoordinate() - coordinates.getY());
+
+        float sumOfRadii = object.getRadius() + radius;
+        float distanceSquared = xDistance * xDistance + yDistance * yDistance;
+
+        boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
+        
+        return isOverlapping;
+    }
     /**
      * To check collision of the objects.
      *
@@ -71,10 +82,8 @@ public class Physics {
      */
     public static boolean checkCollision(AbstractMovable objectA,
             AbstractMovable objectB) {
-        float xDistance = (objectA.getXCoordinate() + objectA.getXVelocity())
-                - (objectB.getXCoordinate() + objectB.getXVelocity());
-        float yDistance = (objectA.getYCoordinate() + objectA.getYVelocity())
-                - (objectB.getYCoordinate() + objectB.getYVelocity());
+        float xDistance = (objectA.getXCoordinate() - objectB.getXCoordinate());
+        float yDistance = (objectA.getYCoordinate() - objectB.getYCoordinate());
 
         float sumOfRadii = objectA.getRadius() + objectB.getRadius();
         float distanceSquared = xDistance * xDistance + yDistance * yDistance;
@@ -87,20 +96,6 @@ public class Physics {
                         + ((Player) objectB).getCharacterID())
                 + " are "
                 + ((!isOverlapping) ? "not" : "") + " colliding");
-        return isOverlapping;
-    }
-
-    public static boolean checkCollision(Player objectA, Player objectB) {
-        float xDistance = (objectA.getXCoordinate() + objectA.getXVelocity())
-                - (objectB.getXCoordinate());
-        float yDistance = (objectA.getYCoordinate() + objectA.getYVelocity())
-                - (objectB.getYCoordinate());
-
-        float sumOfRadii = objectA.getRadius() + objectB.getRadius();
-        float distanceSquared = xDistance * xDistance + yDistance * yDistance;
-
-        boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
-        logger.debug("Player " + objectA.getCharacterID());
         return isOverlapping;
     }
 
@@ -170,15 +165,19 @@ public class Physics {
      */
     public static ArrayList<Matrix> calculateCollision(AbstractMovable objectA,
             AbstractMovable objectB) {
-        Matrix pointA = new Matrix(objectA.getXCoordinate(),
-                objectA.getYCoordinate());
-        Matrix pointB = new Matrix(objectB.getXCoordinate(),
-                objectB.getYCoordinate());
+        Matrix pointA = new Matrix(objectA.getXCoordinate()
+                + (objectA.getXVelocity() * objectA.getSpeed()),
+                objectA.getYCoordinate()
+                        + (objectA.getYVelocity() * objectA.getSpeed()));
+        Matrix pointB = new Matrix(objectB.getXCoordinate()
+                + (objectB.getXVelocity() * objectB.getSpeed()),
+                objectB.getYCoordinate()
+                        + (objectB.getYVelocity() * objectB.getSpeed()));
         double angleBetweenCircles = Math.atan2(pointB.getY() - pointA.getY(),
                 pointB.getX() - pointA.getX());
 
-        float radiusA = objectA.getRadius() * 1.1f;
-        float radiusB = objectB.getRadius() * 1.1f;
+        float radiusA = objectA.getRadius();
+        float radiusB = objectB.getRadius();
 
         Matrix midpointBetweenCircles = new Matrix(
                 (pointA.getX() + pointB.getX()) / 2,
@@ -222,16 +221,15 @@ public class Physics {
 
         float newVeloA = MatrixMath.innerProduct(objectA.getVelocity(), n);
         float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), n);
-        float optimisedP = (float) Math.min((2.0 * (newVeloA - newVeloB)) / 2,
-                0);
-
+        float optimisedP = Math.min((2.0f * (newVeloA - newVeloB) / 2.0f), 0);
         Matrix veloA = new Matrix(objectA.getXVelocity()
                 - (optimisedP * n.getX()), objectA.getYVelocity()
                 - (optimisedP * n.getY()));
-        veloA.normalizeThis();
         Matrix veloB = new Matrix(objectB.getXVelocity()
                 + (optimisedP * n.getX()), objectB.getYVelocity()
                 + (optimisedP * n.getY()));
+
+        veloA.normalizeThis();
         veloB.normalizeThis();
         if (objectA instanceof Ball) {
 
@@ -241,8 +239,9 @@ public class Physics {
             if (objectB instanceof Ball) {
                 objectB.setVelocity(veloB.getX(), veloB.getY());
                 objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
-            }
+            } else {
 
+            }
         }
         ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
         Matrix safe;
@@ -250,23 +249,25 @@ public class Physics {
         if (objectA instanceof Player) {
             if (((Player) objectA).getState().equals(ObjectState.DASHING)) {
                 {
-                    objectB.setVelocity(objectA.getXVelocity(),
-                            objectA.getYVelocity());
+                    objectB.setVelocity(veloB.getX(), veloB.getY());
                     objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
                     safe = newCoordinate.get(1);
                     objectB.setCoordinates(safe.getX(), safe.getY());
-                    specialCase = true;
+                    if (!(objectB instanceof Ball)) {
+                        specialCase = true;
+                    }
                 }
             }
         } else if (objectB instanceof Player) {
             if (((Player) objectB).getState().equals(ObjectState.DASHING)) {
                 {
-                    objectA.setVelocity(objectB.getXVelocity(),
-                            objectB.getYVelocity());
+                    objectA.setVelocity(veloA.getX(), veloA.getY());
                     objectA.setAngle((float) MatrixMath.vectorAngle(veloA));
                     safe = newCoordinate.get(0);
                     objectA.setCoordinates(safe.getX(), safe.getY());
-                    specialCase = true;
+                    if (!(objectA instanceof Ball)) {
+                        specialCase = true;
+                    }
                 }
             }
         }
@@ -291,11 +292,11 @@ public class Physics {
      * player by the result of the multiplication.
      * 
      * @param player
-     *            The player who is charging himself for dashing.
+     *            The player who is about to dash.
      */
     public static void charge(Player player) {
         int charge = player.getChargeLevel();
-        float speedIncreases = 1 + (charge);
+        float speedIncreases = 1 + (1.5f * charge);
 
         float speed = GameSettings.getDefaultPlayerSpeed() * speedIncreases;
 

@@ -21,7 +21,8 @@ import static com.anotherworld.tools.maths.Maths.getRandom;
  * This class allows view to call the functions to change individual settings and prepare the game.
  * Also translates persistent settings stored in properties file into the game.
  *
- * @author Roman, Alfi
+ * @author Roman P.
+ * @author Alfi S.
  */
 public class GameSettings {
 
@@ -88,7 +89,7 @@ public class GameSettings {
         loadAllGameValues();
 
     }
-    public  void loadAllGameValues() {
+    private void loadAllGameValues() {
 
         try {
             PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
@@ -109,6 +110,8 @@ public class GameSettings {
 
             this.defaultPlatformXSize = Float.parseFloat(propertyFileLogic.getValue("PLATFORM_X_SIZE"));
             this.defaultPlatformYSize = Float.parseFloat(propertyFileLogic.getValue("PLATFORM_Y_SIZE"));
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,67 +129,8 @@ public class GameSettings {
         createGameFiles();
     }
 
-    public static Logger getLogger() {
-        return logger;
-    }
 
-    public static void setLogger(Logger logger) {
-        GameSettings.logger = logger;
-    }
-
-    public Server getServer() {
-        return server;
-    }
-
-    public void setServer(Server server) {
-        this.server = server;
-    }
-
-    public GameClient getClient() {
-        return client;
-    }
-
-    public void setClient(GameClient client) {
-        this.client = client;
-    }
-
-    public boolean isServer() {
-        return server!=null;
-    }
-
-    public  boolean isClient() {
-        return  client!=null;
-    }
-
-
-    public static boolean toggleOnOff(String setting){
-        boolean settingState = false;
-        try{
-        gamesession = new PropertyReader("gamesession.properties");
-        String state = gamesession.getValue(setting);
-        switch (state){
-            case "on":
-                settingState = false;
-                gamesession.setValue(setting,"off");
-                break;
-            case "off":
-                settingState = true;
-                gamesession.setValue(setting,"on");
-                break;
-            default:
-                settingState = false;
-                gamesession.setValue(setting,"off");
-                break;
-        }
-        } catch (IOException e) {
-        e.printStackTrace();
-        }
-
-
-        return settingState;
-    }
-
-    private void createBalls(int numberOfBalls) throws IOException{
+    private void createBalls(int numberOfBalls) {
         //need number of balls somewhere
 
         PlatformData platform = platforms.get(0);
@@ -259,7 +203,6 @@ public class GameSettings {
                 if (counter < 10) {
                     counter = counter + 1;
                 } else {
-                    counter =0;
                     logger.trace("Too long to find a random location for the ball ");
                     break;
 
@@ -274,19 +217,19 @@ public class GameSettings {
 
     }
 
-    private void createWall() throws IOException{
+    private void createWall() {
         //again where is the center
         WallData wall = new WallData(80,45);
 
         wall.setxSize(defaultWallXSize);
-        wall.setWidth(wall.getxSize() * 2);
+//        wall.setWidth(wall.getxSize() * 2);
 
         wall.setySize(defaultWallYSize);
-        wall.setHeight(wall.getySize() * 2);
+//        wall.setHeight(wall.getySize() * 2);
         walls.add(wall);
     }
 
-    private void createPlatform() throws IOException {
+    private void createPlatform() {
         // Where is a center
         PlatformData platform = new PlatformData(80,45);
 
@@ -348,6 +291,30 @@ public class GameSettings {
 
     public void changeDifficulty() {
         //TODO: Think of difficulty settings.
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
+    public GameClient getClient() {
+        return client;
+    }
+
+    public void setClient(GameClient client) {
+        this.client = client;
+    }
+
+    public boolean isServer() {
+        return server!=null;
+    }
+
+    public  boolean isClient() {
+        return  client!=null;
     }
 
     public ArrayList<PlayerData> getPlayers() {

@@ -1,11 +1,11 @@
 package com.anotherworld.view;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL46.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL46.GL_NO_ERROR;
-import static org.lwjgl.opengl.GL46.glClear;
-import static org.lwjgl.opengl.GL46.glFlush;
-import static org.lwjgl.opengl.GL46.glGetError;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
+import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glFlush;
+import static org.lwjgl.opengl.GL11.glGetError;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 

@@ -8,6 +8,8 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
+
+import com.anotherworld.tools.maths.Maths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,10 +49,10 @@ public class ChasePlayer extends Job {
                     return;
                 }
                 if (vector.getX() != 0) {
-                    ai.setXVelocity((vector.getX() / Math.abs(vector.getX())) * ai.getSpeed());
+                    ai.setXVelocity(Maths.floatDivision(vector.getX() , Math.abs(vector.getX())) * ai.getSpeed());
                 }
                 if (vector.getY() != 0) {
-                    ai.setYVelocity((vector.getY() / Math.abs(vector.getY())) * ai.getSpeed());
+                    ai.setYVelocity(Maths.floatDivision(vector.getY() , Math.abs(vector.getY())) * ai.getSpeed());
                 }
                 fail();
                 return;

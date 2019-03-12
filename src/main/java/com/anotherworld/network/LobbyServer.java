@@ -14,14 +14,14 @@ public class LobbyServer extends Thread{
     private ArrayList<String> playersIPAddresses;
     private ArrayList<OutputStream> clientSockets;
     private int currentPlayersAmount;
-    private int playersAmount;
+    private int numberOfClients;
     private static Logger logger = LogManager.getLogger(LobbyServer.class);
 
-    public LobbyServer(int playersAmount){
+    public LobbyServer(int numberOfClients){
         playersIPAddresses = new ArrayList<String>();
         clientSockets = new ArrayList<OutputStream>();
         currentPlayersAmount = 0;
-        this.playersAmount = playersAmount;
+        this.numberOfClients = numberOfClients;
         port = 4446;
         try {
             TCPsocket = new ServerSocket(port);
@@ -43,15 +43,12 @@ public class LobbyServer extends Thread{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("The player Ips are: ");
-        for(String ip : playersIPAddresses)
-            System.out.println(ip);
     }
 
     private void getPlayersIP() throws IOException {
         Socket lobbySocket = TCPsocket.accept();
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
-        System.out.println("Received from: " + lobbySocket.getInetAddress().getHostAddress() + " on port " + lobbySocket.getPort());
+        logger.trace("Received from: " + lobbySocket.getInetAddress().getHostAddress() + " on port " + lobbySocket.getPort());
         clientSockets.add(lobbySocket.getOutputStream());
         playersIPAddresses.add(lobbySocket.getInetAddress().getHostAddress());
         countPlayers();
@@ -68,7 +65,7 @@ public class LobbyServer extends Thread{
 
     public void countPlayers(){
         currentPlayersAmount++;
-        if(currentPlayersAmount == playersAmount)
+        if(currentPlayersAmount == numberOfClients)
             allPlayersJoined = true;
     }
 

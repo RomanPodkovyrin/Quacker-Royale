@@ -68,6 +68,7 @@ public class CheckIfSaveToGo extends Job {
             succeed();
             logger.trace("All good no bad balls");
         } else {
+            // Loops forward in future
             Matrix newAiLocation = new Matrix(ai.getXCoordinate() + ai.getXVelocity(),ai.getYCoordinate() + ai.getYVelocity());
             Ball firstBall = imminentDangerBalls.get(0);
 
