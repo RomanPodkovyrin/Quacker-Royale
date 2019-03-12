@@ -19,11 +19,11 @@ public class PowerUpData implements Serializable {
         this.spawnTime   = spawnTime;
     }
 
-    private Matrix getCoordinates() { return this.coordinates; }
-    private float getXCoordinate()  { return this.coordinates.getX(); }
-    private float getYCoordinate()  { return this.coordinates.getY(); }
+    public Matrix getCoordinates() { return this.coordinates; }
+    public float  getXCoordinate() { return this.coordinates.getX(); }
+    public float  getYCoordinate() { return this.coordinates.getY(); }
 
-    private PowerUpType getPowerUpType() { return this.powerUpType; }
+    public PowerUpType getPowerUpType() { return this.powerUpType; }
 
-    private long spawnTime() { return this.spawnTime; }
+    public long getSpawnTime() { return this.spawnTime; }
 }

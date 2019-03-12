@@ -2,6 +2,7 @@ package com.anotherworld.tools.datapool;
 
 import java.io.Serializable;
 import java.util.LinkedList;
+import java.util.Optional;
 
 /**
  * Misc. data about the current GameSession.
@@ -18,13 +19,16 @@ public class GameSessionData implements Serializable {
     private LinkedList<String> rankings;
 
     // Power up elements of the game
-    LinkedList<PowerUpData> powerUpSchedule;
+    private LinkedList<PowerUpData> powerUpSchedule;
+    Optional<PowerUpData> currentPowerUp;
 
     public GameSessionData(long totalGameTime) {
         this.timeLeft        = totalGameTime;
         this.timeToNextStage = totalGameTime / 3; //TODO: Integrate '3' with config file.
         this.ticksElapsed    = 0;
         this.rankings        = new LinkedList<>();
+        this.powerUpSchedule = new LinkedList<>();
+        this.currentPowerUp  = Optional.empty();
     }
 
     public void copyObject(GameSessionData data) {
@@ -38,13 +42,7 @@ public class GameSessionData implements Serializable {
         return timeLeft;
     }
 
-    public void setTimeLeft(long timeLeft) {
-        this.timeLeft = timeLeft;
-    }
-
     public int getTicksElapsed() { return ticksElapsed; }
-
-    public void setTicksElapsed(int ticksElapsed) { this.ticksElapsed = ticksElapsed; }
 
     public long getTimeToNextStage() { return timeToNextStage; }
 
@@ -54,4 +52,11 @@ public class GameSessionData implements Serializable {
 
     public LinkedList<String> getRankings() { return this.rankings; }
 
+    public LinkedList<PowerUpData> getPowerUpSchedule() { return this.powerUpSchedule; }
+
+    public Optional<PowerUpData> getCurrentPowerUp() { return this.currentPowerUp; }
+
+    public void setCurrentPowerUp(PowerUpData powerUp) {
+        this.currentPowerUp = Optional.of(powerUp);
+    }
 }

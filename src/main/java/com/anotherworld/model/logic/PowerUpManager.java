@@ -32,7 +32,7 @@ public class PowerUpManager {
 
             float generationProbability = random.nextFloat();
 
-            if (generationProbability < 0.2) {
+            if (generationProbability < 0.2) { //TODO: Magic Number
                 float x  = platform.getXSize() * (random.nextFloat() * 2 - 1);
                 float y  = platform.getYSize() * (random.nextFloat() * 2 - 1);
 
@@ -46,6 +46,18 @@ public class PowerUpManager {
         }
 
         return output;
+    }
+
+    /**
+     * Sets the current power up to the latest power up in the schedule
+     * @param data the game session data which holds all the power ups.
+     */
+    public static void spawnPowerUp(GameSessionData data) {
+        PowerUpData currentPowerUp = data.getPowerUpSchedule().peek();
+        if (currentPowerUp.getSpawnTime() == data.getTimeLeft()) {
+            data.getPowerUpSchedule().pop();
+            data.setCurrentPowerUp(currentPowerUp);
+        }
     }
 
 }
