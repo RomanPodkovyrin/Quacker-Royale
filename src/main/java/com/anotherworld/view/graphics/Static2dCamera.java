@@ -5,14 +5,12 @@ package com.anotherworld.view.graphics;
  * @author Jake Stewart
  *
  */
-public class Static2dCamera implements Camera {
+public class Static2dCamera extends Camera {
 
     private final float x;
     private final float y;
     private final float width;
     private final float height;
-    
-    private final long startTime;
     
     /**
      * Creates a camera with fixed location and dimensions.
@@ -26,7 +24,6 @@ public class Static2dCamera implements Camera {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.startTime = System.currentTimeMillis();
     }
     
     @Override

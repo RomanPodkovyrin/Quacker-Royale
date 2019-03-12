@@ -161,6 +161,11 @@ public class Points2d {
         return points;
     }
 
+    /**
+     * Computes the cross product of two vectors iff they have an m value of 3 and n value of 1.
+     * @param b The vector to compute cross product with
+     * @return A new vector containing the cross product
+     */
     public Points2d crossProduct(Points2d b) {
         if (!(this.getM() == 3 && this.getN() == 1 && b.getM() == 3 && b.getN() == 1)) {
             throw new IndexOutOfBoundsException("Cannot compute cross product");
@@ -172,6 +177,10 @@ public class Points2d {
         return result;
     }
     
+    /**
+     * Normalises a Points2d so it's magnitude is 1.
+     * @return the normalised points
+     */
     public Points2d normalise() {
         float sum = 0f;
         for (int i = 0; i < this.value.length; i++) {
