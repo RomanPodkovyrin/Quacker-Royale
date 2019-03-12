@@ -52,9 +52,8 @@ public abstract class Programme {
      * @param camera The camera to use for display
      */
     public void transform(Camera camera) {
-        this.translatef(0, -1, 0);
         this.cameraProjectionf(camera.getDepth());
-        this.scalef(1, -4, 1);
+        this.scalef(1 / camera.getWidth(), -1 / camera.getHeight(), 1);
         this.cameraRotation(camera);
         this.translatef(-camera.getX(), -camera.getY(), -camera.getZ());
     }

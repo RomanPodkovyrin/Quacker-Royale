@@ -26,7 +26,6 @@ public interface Camera {
     public default Points2d getViewDirection() {
         Points2d tempUp = new Points2d(3, 1);
         tempUp.setValue(2, 0, 1f);
-        tempUp.setValue(1, 0, -1f);
         return tempUp;
     }
 

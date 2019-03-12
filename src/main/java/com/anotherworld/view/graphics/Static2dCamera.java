@@ -12,6 +12,8 @@ public class Static2dCamera implements Camera {
     private final float width;
     private final float height;
     
+    private final long startTime;
+    
     /**
      * Creates a camera with fixed location and dimensions.
      * @param x The x position
@@ -24,6 +26,7 @@ public class Static2dCamera implements Camera {
         this.y = y;
         this.width = width;
         this.height = height;
+        this.startTime = System.currentTimeMillis();
     }
     
     @Override
@@ -33,7 +36,7 @@ public class Static2dCamera implements Camera {
 
     @Override
     public float getY() {
-        return 135;
+        return y;
     }
 
     @Override
@@ -48,12 +51,12 @@ public class Static2dCamera implements Camera {
     
     @Override
     public float getDepth() {
-        return 1;
+        return 0.5f;
     }
 
     @Override
     public float getZ() {
-        return -45;
+        return -22.5f;
     }
 
 }
