@@ -31,11 +31,7 @@ public abstract class Camera {
      * The vector direction the camera is looking at.
      * @return the vector direction
      */
-    public Points2d getViewDirection() {
-        Points2d tempUp = new Points2d(3, 1);
-        tempUp.setValue(2, 0, 1f);
-        return tempUp;
-    }
+    public abstract Points2d getViewDirection();
 
     /**
      * The Camera's width in the world coordinate frame.

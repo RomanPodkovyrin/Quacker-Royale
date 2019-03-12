@@ -27,7 +27,7 @@ public class PlayerDisplayObject extends DisplayObject {
      * @param displayData The player to display
      */
     public PlayerDisplayObject(Programme programme, PlayerDisplayData displayData) {
-        super(programme, Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN, false);
+        super(programme, Points2d.gen3DCircle(displayData.getRadius()), GL_TRIANGLE_FAN, false);
         this.displayData = displayData;
         this.setColours();
         this.timeStartedFalling = Optional.empty();
