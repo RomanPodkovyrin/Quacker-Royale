@@ -132,6 +132,21 @@ public class Points2dTest {
     }
     
     @Test
+    public void gen3DCircle_ValidR_CircleIsReturned() {
+        Points2d circle = Points2d.gen3DCircle(1);
+        assertThat(circle.getValue(0, 0), is(0f));
+        assertThat(circle.getValue(1, 0), is(0f));
+        assertThat(circle.getValue(2, 0), is(0f));
+        for (int j = 1; j < circle.getN(); j++) {
+            double radius = Math.pow(circle.getValue(0, j) / circle.getValue(3, j), 2);
+            radius += Math.pow(circle.getValue(1, j) / circle.getValue(3, j), 2);
+            radius += Math.pow(circle.getValue(2, j) / circle.getValue(3, j), 2);
+            radius = Math.sqrt(radius);
+            assertThat(radius, is(closeTo(1f, TEST_ERROR)));
+        }
+    }
+    
+    @Test
     public void getPoints_RandomValues_ReturnsThePoints() {
         Points2d a = new Points2d(12, 30);
         for (int i = 0; i < a.getM(); i++) {
@@ -200,6 +215,24 @@ public class Points2dTest {
         assertThat(x, hasItem(closeTo(50d, TEST_ERROR)));
         assertThat(y, hasItem(closeTo(-25d, TEST_ERROR)));
         assertThat(y, hasItem(closeTo(25d, TEST_ERROR)));
+    }
+    
+    @Test
+    public void gen3DRectangle_NormalValues_ReturnsRectangle() {
+        Points2d a = Points2d.gen3DRectangle(100, 50);
+        assertThat(a.getN(), is(greaterThan(0)));
+        ArrayList<Double> x = new ArrayList<>();
+        ArrayList<Double> z = new ArrayList<>();
+        for (int j = 0; j < a.getN(); j++) {
+            assertThat((double)a.getValue(0, j), is(anyOf(closeTo(50f, TEST_ERROR), closeTo(-50f, TEST_ERROR))));
+            assertThat((double)a.getValue(2, j), is(anyOf(closeTo(25f, TEST_ERROR), closeTo(-25f, TEST_ERROR))));
+            x.add((double)a.getValue(0, j));
+            z.add((double)a.getValue(2, j));
+        }
+        assertThat(x, hasItem(closeTo(-50d, TEST_ERROR)));
+        assertThat(x, hasItem(closeTo(50d, TEST_ERROR)));
+        assertThat(z, hasItem(closeTo(-25d, TEST_ERROR)));
+        assertThat(z, hasItem(closeTo(25d, TEST_ERROR)));
     }
     
     @Test
