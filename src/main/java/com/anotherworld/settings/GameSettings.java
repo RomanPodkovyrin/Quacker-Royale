@@ -1,5 +1,7 @@
 package com.anotherworld.settings;
 
+import static com.anotherworld.tools.maths.Maths.getRandom;
+
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
@@ -8,14 +10,12 @@ import com.anotherworld.network.GameClient;
 import com.anotherworld.network.Server;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import static com.anotherworld.tools.maths.Maths.getRandom;
 
 /**
  * This class allows view to call the functions to change individual settings and prepare the game.
@@ -54,7 +54,7 @@ public class GameSettings {
     private float defaultPlatformXSize;
     private float defaultPlatformYSize;
 
-    // Game object
+    // Created Game objects
     private PlayerData currentPlayer;
     private ArrayList<PlayerData> players = new ArrayList<>();
     private ArrayList<PlayerData> ai = new ArrayList<>();
@@ -63,13 +63,23 @@ public class GameSettings {
     private ArrayList<WallData> walls = new ArrayList<>();
     private GameSessionData gameSession;
 
-    private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser" ));
+    private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser"));
 
-    private static PropertyReader gamesession;
-
+    // networking objects
     private Server server = null;
     private GameClient client = null;
 
+    /**
+     * This method allows to create the Game settings object with pregenerated game objects.
+     *
+     * @param currentPlayer  - The player of the machine
+     * @param players - All the other players - current players and ai
+     * @param ai  - all the ai players
+     * @param balls - all the balls
+     * @param platforms -platform
+     * @param walls - wall
+     * @param gameSession - game session
+     */
     public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
                         ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSession) {
         this.currentPlayer = currentPlayer;
@@ -86,9 +96,15 @@ public class GameSettings {
         logger.info("GameSettings wall: " + walls);
         this.gameSession = gameSession;
         logger.info("GameSettings session: " + gameSession);
+
+        // load all the default values
         loadAllGameValues();
 
     }
+
+    /**
+     * This class loads all the defaults from the property files.
+     */
     private void loadAllGameValues() {
 
         try {
@@ -118,7 +134,13 @@ public class GameSettings {
 
     }
 
-
+    /**
+     * This method generates all the game objects with the specified values.
+     *
+     * @param numberOfPlayers - the total number of players
+     * @param numberOfAIPlayers - number of AI
+     * @param numberOfBalls - number of balls
+     */
     public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
 
         this.numberOfPlayers = numberOfPlayers;
@@ -130,35 +152,41 @@ public class GameSettings {
     }
 
 
+    /**
+     * Creates all the balls placed at the random location between the platform and the wall.
+     *
+     * @param numberOfBalls - number of balls to be generated
+     */
     private void createBalls(int numberOfBalls) {
-        //need number of balls somewhere
 
         PlatformData platform = platforms.get(0);
         WallData wall = walls.get(0);
 
+        // Setting default location just in case
+        float xMin = 0;
+        float xMax = 0;
+        float yMin = 0;
+        float yMax = 0;
+
+        float ballRadius =  defaultBallRadius;
+        float ballSpeed = defaultBallSpeed;
+
         for (int i = 0; i < numberOfBalls; i++) {
 
+            // Randomly choose the side
             int side = (int)Math.floor(Math.random() * 4);
-            float xMin = platform.getxSize() + platform.getXCoordinate();
-            float xMax = platform.getxSize() + platform.getXCoordinate();
-
-            float yMin = platform.getySize() + platform.getYCoordinate();
-            float yMax = platform.getySize() + platform.getYCoordinate();
-
-            float ballRadius =  defaultBallRadius;
-            float ballSpeed = defaultBallSpeed;
             switch (side) {
                 case 0: // Left side
                     logger.trace("left");
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
-                    xMax = platform.getXCoordinate() - platform.getxSize() ;//- ballRadius;
+                    xMax = platform.getXCoordinate() - platform.getxSize();
 
                     yMin = wall.getYCoordinate() - wall.getySize() + ballRadius;
                     yMax = wall.getYCoordinate() + wall.getySize() - ballRadius;
                     break;
                 case 1: // Right side
                     logger.trace("right");
-                    xMin= platform.getXCoordinate() + platform.getxSize() ;//+ ballRadius;
+                    xMin = platform.getXCoordinate() + platform.getxSize();
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;
 
                     yMin = wall.getYCoordinate() - wall.getySize() + ballRadius;
@@ -169,7 +197,7 @@ public class GameSettings {
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;
 
-                    yMax = platform.getYCoordinate() - platform.getySize() ;//- ballRadius;
+                    yMax = platform.getYCoordinate() - platform.getySize();
                     yMin = wall.getYCoordinate() - wall.getySize() + ballRadius;
                     break;
                 case 3: // Lower side
@@ -177,7 +205,7 @@ public class GameSettings {
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;
 
-                    yMin = platform.getYCoordinate() + platform.getySize() ;//+ ballRadius;
+                    yMin = platform.getYCoordinate() + platform.getySize();
                     yMax = wall.getYCoordinate() + wall.getySize() - ballRadius;
                     break;
                 default:
@@ -185,21 +213,30 @@ public class GameSettings {
 
             }
 
+            // setting
             float newBallXCoordinate = getRandom(xMin,xMax);
             float newBallYCoordinate = getRandom(yMin,yMax);
+
+
+            // the number of tries allowed to try to randomise it
+            int counter = 0;
             boolean emptySpace = false;
 
-            int counter = 0;
+            // Looks if can find a random place without colliding with other balls
             while (!emptySpace) {
 
                 emptySpace = true;
+                // generate the random location based on the given min and max values
                 newBallXCoordinate = getRandom(xMin,xMax);
                 newBallYCoordinate = getRandom(yMin,yMax);
+
+                // Check if collides with any other balls
                 for (BallData createdBall : balls) {
                     if (MatrixMath.distanceAB(new Matrix(newBallXCoordinate, newBallYCoordinate), createdBall.getCoordinates()) <= ballRadius * 2) {
                         emptySpace = false;
                     }
                 }
+
                 if (counter < 10) {
                     counter = counter + 1;
                 } else {
@@ -209,28 +246,31 @@ public class GameSettings {
                 }
             }
 
-            // set random location with random direction
-            // probably towards the middle
-            BallData newBall = new BallData("ball " + i ,false,newBallXCoordinate,newBallYCoordinate,ObjectState.IDLE,ballSpeed,ballRadius);
+            // set random location
+            BallData newBall = new BallData("ball " + i,false,newBallXCoordinate,newBallYCoordinate,ObjectState.IDLE,ballSpeed,ballRadius);
             balls.add(newBall);
         }
 
     }
 
+    /**
+     * Created the wall with the current defaults.
+     */
     private void createWall() {
-        //again where is the center
+        // TODO magic number
         WallData wall = new WallData(80,45);
 
         wall.setxSize(defaultWallXSize);
-//        wall.setWidth(wall.getxSize() * 2);
 
         wall.setySize(defaultWallYSize);
-//        wall.setHeight(wall.getySize() * 2);
         walls.add(wall);
     }
 
+    /**
+     * Generates the platform with a given defaults.
+     */
     private void createPlatform() {
-        // Where is a center
+        // TODO magic number
         PlatformData platform = new PlatformData(80,45);
 
         platform.setxSize(defaultPlatformXSize);
@@ -243,117 +283,211 @@ public class GameSettings {
 
     }
 
-    private void createPlayers(int numberOfPlayers, int numberofAIPlayers) throws IOException {
+    /**
+     * Generates the player and randomly generates their location.
+     * @param numberOfPlayers - total number of players
+     * @param numberofAIPlayers - number of ai
+     */
+    private void createPlayers(int numberOfPlayers, int numberofAIPlayers) {
         PlatformData platform = platforms.get(0);
         int playerHealth = defaultPlayerHealth;
         float playerRadius = defaultPlayerRadius;
         float playerSpeed = defaultPlayerSpeed;
+        float distanceFromBoarder = 5;
+        // TODO magic number
+
         for (int i = 0; i < numberOfPlayers; i++) {
-            float distanceFromBoarder = 5;
+
+            // generates the random location of the player
             float xRandom = getRandom(platform.getXCoordinate() - platform.getxSize() + distanceFromBoarder,
                     platform.getXCoordinate() + platform.getxSize() - distanceFromBoarder);
 
             float yRandom = getRandom(platform.getYCoordinate() - platform.getySize() + distanceFromBoarder,
                     platform.getYCoordinate() + platform.getySize() - distanceFromBoarder);
 
+            // Creates the player object
             PlayerData newPlayer = new PlayerData(names.get(i),playerHealth,xRandom,yRandom, ObjectState.IDLE, playerSpeed,playerRadius);
+
+            // checks if need to make an AI, current players or other players
             if (numberofAIPlayers > 0) {
                 ai.add(newPlayer);
                 numberofAIPlayers--;
             } else {
-                if (i == numberOfPlayers-1) currentPlayer = newPlayer;
-                else players.add(newPlayer);
+                if (i == numberOfPlayers - 1) {
+                    currentPlayer = newPlayer;
+                } else {
+                    players.add(newPlayer);
+                }
             }
         }
 
     }
 
+
+    /**
+     * Creates the game session and gives it game time.
+     */
     private void createGameSession() {
+        // TODO magic number
         this.gameSession = new GameSessionData(60);
     }
 
+    /**
+     * Creates and returns game session with all the created game objects.
+     * @return created game session
+     */
     public GameSession createSession() {
         // TODO give the gameSessionData into gameSession
         return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0),gameSession);
     }
 
-    private void createGameFiles () {
-        try {
-            createPlatform();
-            createWall();
-            createPlayers(numberOfPlayers, numberofAIPlayers);
-            createBalls(numberOfBall);
-            createGameSession();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Gives the file creation the right sequence.
+     */
+    private void createGameFiles() {
+        // Platform and walls have to be generated before the ball and
+        createPlatform();
+        createWall();
+        createPlayers(numberOfPlayers, numberofAIPlayers);
+        createBalls(numberOfBall);
+        createGameSession();
     }
 
     public void changeDifficulty() {
         //TODO: Think of difficulty settings.
     }
 
+    /**
+     *
+     * @return - returns the server of the current game session
+     */
     public Server getServer() {
         return server;
     }
 
+    /**
+     * @param server - sets the client of the current game session
+     */
     public void setServer(Server server) {
         this.server = server;
     }
 
+    /**
+     * @return - returns the client of the current game session
+     */
     public GameClient getClient() {
         return client;
     }
 
+    /**
+     * @param client - sets the client of the current game session
+     */
     public void setClient(GameClient client) {
         this.client = client;
     }
 
+    /**
+     * @return tells if current game session is a server
+     */
     public boolean isServer() {
-        return server!=null;
+        return server != null;
     }
 
+    /**
+     * @return tells if current game session is a client
+     */
     public  boolean isClient() {
-        return  client!=null;
+        return  client != null;
     }
 
+    /**
+     * @return returns (all the players - ai - current player)
+     */
     public ArrayList<PlayerData> getPlayers() {
         return players;
     }
 
+    /**
+     * @return returns all the ai players
+     */
     public ArrayList<PlayerData> getAi() {
         return ai;
     }
 
+    /**
+     * @return returns all the balls
+     */
     public ArrayList<BallData> getBalls() {
         return balls;
     }
 
+    /**
+     * @return returns the platform
+     */
     public ArrayList<PlatformData> getPlatform() {
         return platforms;
     }
 
+    /**
+     * @return returns the game session
+     */
     public GameSessionData getGameSession() {
         return gameSession;
     }
 
+    /**
+     * @return returns the wall object
+     */
     public ArrayList<WallData> getWall() {
         return walls;
     }
 
+    /**
+     * @return returns the current player object
+     */
     public PlayerData getCurrentPlayer() {
         return currentPlayer;
     }
 
-    public static float getDefaultPlayerSpeed() { return defaultPlayerSpeed; }
+    /**
+     * @return returns the default player speed from properties file
+     */
+    public static float getDefaultPlayerSpeed() {
+        return defaultPlayerSpeed;
+    }
 
-    public static int getDefaultPlayerMaxCharge() { return defaultPlayerMaxCharge; }
+    /**
+     * @return returns the default player max charge from properties file
+     */
+    public static int getDefaultPlayerMaxCharge() {
+        return defaultPlayerMaxCharge;
+    }
 
-    public static int getBallMaxTimer() { return defaultBallMaxTimer; }
+    /**
+     * @return returns the default ball max timer from properties file
+     */
+    public static int getBallMaxTimer() {
+        return defaultBallMaxTimer;
+    }
 
-    public static int getBallTimerDecrement() { return defaultBallTimerDecrement; }
+    /**
+     * @return returns the default ball time decrement from properties file
+     */
+    public static int getBallTimerDecrement() {
+        return defaultBallTimerDecrement;
+    }
 
-    public static float getDefaultBallSpeed() { return defaultBallSpeed; }
+    /**
+     * @return returns the default ball speed from properties file
+     */
+    public static float getDefaultBallSpeed() {
+        return defaultBallSpeed;
+    }
 
-    public static int getDefaultBallDamage() { return defaultBallDamage; }
+    /**
+     * @return returns the default ball damage from properties file
+     */
+    public static int getDefaultBallDamage() {
+        return defaultBallDamage;
+    }
 }
