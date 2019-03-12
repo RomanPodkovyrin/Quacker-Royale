@@ -113,6 +113,8 @@ public class GameSession {
 
                     player.setStunTimer(5); //TODO: Magic number.
                     player.setVelocity(0,0);
+                    player.setState(ObjectState.IDLE);
+                    player.setSpeed(GameSettings.getDefaultPlayerSpeed());
 
                     Physics.collided(ball, player);
                     logger.info(player.getCharacterID() + " collided with ball");

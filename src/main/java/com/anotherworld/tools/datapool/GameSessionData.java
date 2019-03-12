@@ -9,10 +9,16 @@ import java.util.LinkedList;
  */
 public class GameSessionData implements Serializable {
 
+    // Time based elements of the game
     private int ticksElapsed;
     private long timeToNextStage;
     private long timeLeft;
+
+    // Ordered list of player rankings.
     private LinkedList<String> rankings;
+
+    // Power up elements of the game
+    LinkedList<PowerUpData> powerUpSchedule;
 
     public GameSessionData(long totalGameTime) {
         this.timeLeft        = totalGameTime;
