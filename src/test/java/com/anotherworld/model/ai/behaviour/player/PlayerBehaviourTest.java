@@ -25,11 +25,12 @@ public class PlayerBehaviourTest {
     public void setup(){
 
         // Create platform
-        platform = new Platform(new PlatformData(80,45));
+        PlatformData tempPlatform = new PlatformData(80,45);
+        platform = new Platform(tempPlatform);
 
-        platform.setXSize(70);
+        tempPlatform.setxSize(70);
 
-        platform.setYSize(50);
+        tempPlatform.setySize(50);
 
 
         // Create players
