@@ -89,7 +89,7 @@ public class GameSettings {
         loadAllGameValues();
 
     }
-    public void loadAllGameValues() {
+    private void loadAllGameValues() {
 
         try {
             PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
@@ -129,32 +129,6 @@ public class GameSettings {
         createGameFiles();
     }
 
-    public static boolean toggleOnOff(String setting) {
-        boolean settingState = false;
-        try{
-        gamesession = new PropertyReader("gamesession.properties");
-        String state = gamesession.getValue(setting);
-        switch (state){
-            case "on":
-                settingState = false;
-                gamesession.setValue(setting,"off");
-                break;
-            case "off":
-                settingState = true;
-                gamesession.setValue(setting,"on");
-                break;
-            default:
-                settingState = false;
-                gamesession.setValue(setting,"off");
-                break;
-        }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        return settingState;
-    }
 
     private void createBalls(int numberOfBalls) {
         //need number of balls somewhere
@@ -317,15 +291,6 @@ public class GameSettings {
 
     public void changeDifficulty() {
         //TODO: Think of difficulty settings.
-    }
-
-
-    public static Logger getLogger() {
-        return logger;
-    }
-
-    public static void setLogger(Logger logger) {
-        GameSettings.logger = logger;
     }
 
     public Server getServer() {
