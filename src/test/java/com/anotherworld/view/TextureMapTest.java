@@ -55,5 +55,12 @@ public class TextureMapTest {
         System.out.println(tm.toString());
         destroyTestWindow();
     }
+
+    @Test(expected = IOException.class)
+    public void load_loadNothing_isLoaded() throws IOException {
+        createTestWindow();
+        new TextureMap("res/images/loadNothing.png");
+        destroyTestWindow();
+    }
     
 }

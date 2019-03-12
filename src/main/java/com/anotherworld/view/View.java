@@ -53,6 +53,8 @@ public class View implements Runnable {
     private CountDownLatch keyListenerLatch;
     
     private volatile KeyListener keyListener;
+    
+    private volatile boolean running;
 
     private int height;
 
@@ -73,6 +75,7 @@ public class View implements Runnable {
         this.width = width;
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
+        running = true;
         logger.info("Running view");
     }
 
@@ -117,6 +120,7 @@ public class View implements Runnable {
             logger.fatal("Unable to initialise glfw");
             throw new IllegalStateException("Couldn't initialise glfw");
         }
+        running = true;
 
         logger.debug("Creating window");
         window = glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL);
@@ -161,7 +165,7 @@ public class View implements Runnable {
             error = glGetError();
         }
         
-        while (!glfwWindowShouldClose(window)) {
+        while (!glfwWindowShouldClose(window) && running) {
 
             glClear(GL_COLOR_BUFFER_BIT);
             
@@ -230,6 +234,10 @@ public class View implements Runnable {
             }
             ((GameScene)currentScene).updateGameObjects(disObj);
         }
+    }
+
+    public void close() {
+        running = false;
     }
 
 }
