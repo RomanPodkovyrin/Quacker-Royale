@@ -9,6 +9,7 @@ import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.PropertyReader;
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -60,6 +61,17 @@ public class Physics {
                 + "location updated successfully");
     }
 
+    public static boolean checkCollision(Player object, Matrix coordinates, float  radius) {
+        float xDistance = (object.getXCoordinate() - coordinates.getX());
+        float yDistance = (object.getYCoordinate() - coordinates.getY());
+
+        float sumOfRadii = object.getRadius() + radius;
+        float distanceSquared = xDistance * xDistance + yDistance * yDistance;
+
+        boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
+        
+        return isOverlapping;
+    }
     /**
      * To check collision of the objects.
      *
