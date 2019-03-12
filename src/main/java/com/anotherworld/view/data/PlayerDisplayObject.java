@@ -15,7 +15,6 @@ import java.util.Optional;
 public class PlayerDisplayObject extends DisplayObject {
 
     private final PlayerDisplayData displayData;
-    private final Programme programme;
     private float maxR;
     private float maxG;
     private float maxB;
@@ -31,7 +30,6 @@ public class PlayerDisplayObject extends DisplayObject {
         this.displayData = displayData;
         this.setColours();
         this.timeStartedFalling = Optional.empty();
-        this.programme = programme;
     }
     
     private void setColours() {
