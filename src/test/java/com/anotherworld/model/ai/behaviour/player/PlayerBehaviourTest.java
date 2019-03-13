@@ -42,8 +42,6 @@ public class PlayerBehaviourTest {
         // Create balls
         balls.clear();
         balls.add(new Ball( new BallData("ball " ,false,80,10, ObjectState.IDLE,1f,3.0f)));
-
-
     }
 
     @Test
