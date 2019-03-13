@@ -2,12 +2,16 @@ package com.anotherworld.network;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.io.*;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+/**
+ * This class allows clients to connect to the lobby server, before the actual game starts
+ *
+ * @author Antons Lebedjko
+ */
 public class LobbyClient {
     private String serverIp;
     private String myIpAddress;
@@ -16,6 +20,11 @@ public class LobbyClient {
     private int port;
     private static Logger logger = LogManager.getLogger(LobbyClient.class);
 
+    /**
+     * Used to set up a connection with the lobby server
+     *
+     * @param serverIP The ip address of the lobby host player, to which clients should connect
+     */
     public LobbyClient(String serverIP){
         this.serverIp = serverIP;
         port = 4446;
@@ -26,6 +35,9 @@ public class LobbyClient {
         }
     }
 
+    /**
+     * Used to send a message to the lobby host player, so it can store the IP address of this player
+     */
     public void sendMyIp() throws IOException {
         client = new Socket(serverIp, port);
         System.out.println("Just connected to " + client.getRemoteSocketAddress());
@@ -34,17 +46,15 @@ public class LobbyClient {
         out.writeUTF("Hello from " + client.getLocalSocketAddress());
     }
 
+    /**
+     * Waits for a confirmation message from the hot, that everyone has connected
+     * and the game is ready to be started
+     */
     public void waitForGameToStart() throws IOException {
         InputStream inFromServer = client.getInputStream();
         DataInputStream in = new DataInputStream(inFromServer);
         myID = in.readUTF();
         logger.trace("My ID is now: " + myID);
         client.close();
-    }
-
-    public static void main(String arg[]) throws Exception {
-        LobbyClient client = new LobbyClient("localhost");
-        client.sendMyIp();
-        client.waitForGameToStart();
     }
 }
