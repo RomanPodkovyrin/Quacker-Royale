@@ -178,7 +178,6 @@ public class GameSettings {
             switch (side) {
                 case 0: // Left side
                     logger.trace("left");
-                    System.out.println("Left");
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
                     xMax = platform.getXCoordinate() - platform.getxSize();
 
@@ -187,7 +186,6 @@ public class GameSettings {
                     break;
                 case 1: // Right side
                     logger.trace("right");
-                    System.out.println("Right");
                     xMin = platform.getXCoordinate() + platform.getxSize();
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;
 
@@ -196,7 +194,6 @@ public class GameSettings {
                     break;
                 case 2: // Upper side
                     logger.trace("up");
-                    System.out.println("UP");
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;
 
@@ -205,7 +202,6 @@ public class GameSettings {
                     break;
                 case 3: // Lower side
                     logger.trace("down");
-                    System.out.println("Down");
                     xMin = wall.getXCoordinate() - wall.getxSize() + ballRadius;
                     xMax = wall.getXCoordinate() + wall.getxSize() - ballRadius;
 
