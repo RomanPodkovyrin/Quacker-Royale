@@ -30,14 +30,12 @@ public class AudioControl {
 
     public static void playBackGroundMusic() {
         if (musicOn) {
-            System.out.println("Playing");
             backgroundMusic.playBackgroundMusic();
         }
     }
 
     public static void stopBackgroundMusic() {
         if (musicOn) {
-            System.out.println("Stoping");
             backgroundMusic.terminateMusic();
         }
     }

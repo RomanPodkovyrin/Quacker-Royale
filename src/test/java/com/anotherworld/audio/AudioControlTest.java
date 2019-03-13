@@ -34,8 +34,8 @@ public class AudioControlTest {
         AudioControl.setMusicOn(expectedMusicState);
         AudioControl.setEffectsOn(expectedEfFectsState);
         //Todo finish the tests
-//        AudioControl.setUp();
-//        AudioControl.playBackGroundMusic();
+        AudioControl.setUp();
+        AudioControl.playBackGroundMusic();
 //        try {
 //            Thread.sleep(30);
 //        } catch (InterruptedException e) {
