@@ -2,6 +2,7 @@ package com.anotherworld.model.logic;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
 
@@ -23,18 +24,18 @@ public class PowerUpManager {
      * @param platform platform determining the range of the coordinates for the powerup
      * @return linked list scheduling the power up spawns.
      */
-    public static LinkedList<PowerUpData> generatePowerUpSchedule(long totalTime, Platform platform) {
+    public static LinkedList<PowerUpData> generatePowerUpSchedule(long totalTime, PlatformData platform) {
 
         LinkedList<PowerUpData> output = new LinkedList<>();
         Random random = new Random();
 
         for(long i = totalTime; i > 0; i--) {
 
-            float generationProbability = random.nextFloat();
+            float generationProbability = (float) Math.random();
 
-            if (generationProbability < 0.2) { //TODO: Magic Number
-                float x  = platform.getXSize() * (random.nextFloat() * 2 - 1);
-                float y  = platform.getYSize() * (random.nextFloat() * 2 - 1);
+            if (generationProbability < .1) { //TODO: Magic Number
+                float x  = platform.getxSize() * (random.nextFloat() * 2 - 1);
+                float y  = platform.getySize() * (random.nextFloat() * 2 - 1);
 
                 Matrix coordinates = new Matrix(x,y);
                 int choice = random.nextInt(PowerUpType.values().length);
@@ -53,10 +54,12 @@ public class PowerUpManager {
      * @param data the game session data which holds all the power ups.
      */
     public static void spawnPowerUp(GameSessionData data) {
-        PowerUpData currentPowerUp = data.getPowerUpSchedule().peek();
-        if (currentPowerUp.getSpawnTime() == data.getTimeLeft()) {
-            data.getPowerUpSchedule().pop();
-            data.setCurrentPowerUp(currentPowerUp);
+        PowerUpData currentPowerUp;
+        if ((currentPowerUp = data.getPowerUpSchedule().peek()) != null) {
+            if (currentPowerUp.getSpawnTime() == data.getTimeLeft()) {
+                data.getPowerUpSchedule().pop();
+                data.setCurrentPowerUp(currentPowerUp);
+            }
         }
     }
 

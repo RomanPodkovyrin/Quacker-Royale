@@ -111,12 +111,13 @@ public class GameSession {
                         AudioControl.playerCollidedWithBall();
                     }
 
+                    Physics.collided(ball, player);
+
                     player.setStunTimer(5); //TODO: Magic number.
                     player.setVelocity(0,0);
                     player.setState(ObjectState.IDLE);
                     player.setSpeed(GameSettings.getDefaultPlayerSpeed());
 
-                    Physics.collided(ball, player);
                     logger.info(player.getCharacterID() + " collided with ball");
                 }
             }
@@ -196,8 +197,11 @@ public class GameSession {
             platform.nextStage();
             wall.nextStage();
         }
+
         platform.shrink();
         wall.shrink();
+
+        PowerUpManager.spawnPowerUp(gameData);
 
         // If someone has won, update the rankings one last time.
         if(!isRunning()) {
@@ -256,9 +260,15 @@ public class GameSession {
             }
 
             if (player.isCharging()) {
-                Physics.charge(player);
-                player.setTimeStartedCharging(gameData.getTicksElapsed());
-                player.setState(ObjectState.DASHING);
+                if (player.getChargeLevel() == 0) {
+                    // If the charge button was pressed but not long enough, reset.
+                    player.setState(ObjectState.IDLE);
+                } else {
+                    Physics.charge(player);
+                    player.setTimeStartedCharging(gameData.getTicksElapsed());
+                    player.setState(ObjectState.DASHING);
+
+                }
             }
         }
     }

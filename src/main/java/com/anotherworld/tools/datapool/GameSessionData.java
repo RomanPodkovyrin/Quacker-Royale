@@ -54,6 +54,8 @@ public class GameSessionData implements Serializable {
 
     public LinkedList<PowerUpData> getPowerUpSchedule() { return this.powerUpSchedule; }
 
+    public void setPowerUpSchedule(LinkedList<PowerUpData> schedule) { this.powerUpSchedule = schedule; }
+
     public Optional<PowerUpData> getCurrentPowerUp() { return this.currentPowerUp; }
 
     public void setCurrentPowerUp(PowerUpData powerUp) {
