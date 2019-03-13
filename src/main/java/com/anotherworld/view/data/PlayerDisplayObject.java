@@ -26,7 +26,7 @@ public class PlayerDisplayObject extends DisplayObject {
      * @param displayData The player to display
      */
     public PlayerDisplayObject(Programme programme, PlayerDisplayData displayData) {
-        super(programme, Points2d.gen3DCircle(displayData.getRadius()), GL_TRIANGLE_FAN, false);
+        super(programme, Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
         this.displayData = displayData;
         this.setColours();
         this.timeStartedFalling = Optional.empty();
@@ -62,6 +62,11 @@ public class PlayerDisplayObject extends DisplayObject {
     }
     
     @Override
+    public Optional<Integer> getTextureId() {
+        return Optional.of(0);
+    }
+    
+    @Override
     public boolean shouldDraw() {
         return true;
         //return displayData.getState() != ObjectState.DEAD;
@@ -83,7 +88,7 @@ public class PlayerDisplayObject extends DisplayObject {
             timeFalling = timeFalling / 1000;
             fallingRatio = (timeFalling * timeFalling * 4.8f);
         }
-        return fallingRatio;
+        return fallingRatio - 0;//displayData.getRadius();
     }
     
 }

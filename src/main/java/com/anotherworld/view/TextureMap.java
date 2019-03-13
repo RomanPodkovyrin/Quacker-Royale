@@ -20,6 +20,9 @@ import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 import static org.lwjgl.stb.STBImage.stbi_load;
 
+import com.anotherworld.view.data.Matrix2d;
+import com.anotherworld.view.data.Points2d;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -39,6 +42,10 @@ public class TextureMap {
     
     private final int comp;
     
+    private final int xNumOfTextures;
+    
+    private final int yNumOfTextures;
+    
     private final ByteBuffer pixels;
     
     private final int id;
@@ -54,6 +61,8 @@ public class TextureMap {
         pixels = stbi_load(location, x, y, comp, STBI_rgb_alpha);
         height = y.get();
         width = x.get();
+        xNumOfTextures = 2;
+        yNumOfTextures = 3;
         this.comp = comp.get();
         if (pixels == null) {
             throw new IOException(stbi_failure_reason());
@@ -134,6 +143,18 @@ public class TextureMap {
             s = s + pixels.get() + ";";
         }
         return s;
+    }
+
+    /**
+     * The transformation required to move the object co-ords to the texture map co-ords.
+     * @param textureId The texture id
+     * @return The required transformation
+     */
+    public Points2d getTextureTransformation(int textureId) {
+        Matrix2d transformation = Matrix2d.homScale3d(1, 1, 0); //Remove z
+        transformation = Matrix2d.homTranslate3d(textureId % xNumOfTextures, (int)Math.floor(textureId / yNumOfTextures), 0).mult(transformation);
+        transformation = Matrix2d.homScale3d(1 / (float)xNumOfTextures, 1 / (float)yNumOfTextures, 0).mult(transformation);
+        return transformation;
     }
     
 }

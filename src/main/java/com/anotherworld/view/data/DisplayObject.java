@@ -4,6 +4,7 @@ import com.anotherworld.view.Programme;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,13 +18,15 @@ import org.lwjgl.BufferUtils;
 public abstract class DisplayObject {
 
     private static Logger logger = LogManager.getLogger(DisplayObject.class);
+
+    private final float xShear = (float)Math.random();
+    
+    private final float yShear = (float)Math.random();
     
     //TODO change this back
-    public final Points2d points;
+    private final Points2d points;
     
     private final int displayType;
-    
-    private final boolean isTextured;
     
     private final Programme programme;
     
@@ -35,23 +38,21 @@ public abstract class DisplayObject {
     
     private float b;
 
-    public DisplayObject(Programme programme, Points2d points, int displayType, boolean isTextured) {
-        this(programme, points, displayType, isTextured, (float)Math.random(), (float)Math.random(), (float)Math.random());
+    public DisplayObject(Programme programme, Points2d points, int displayType) {
+        this(programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
     
     /**
      * Creates a display object from the given points.
      * @param points The points to display the object
-     * @param displayType The way the points should be displayed
      * @param isTextured If the object has a texture mapped to it
      * @param r How red the object is 0 to 1
      * @param g How green the object is 0 to 1
      * @param b How blue the object is 0 to 1
      */
-    public DisplayObject(Programme programme, Points2d points, int displayType, boolean isTextured, float r, float g, float b) {
+    public DisplayObject(Programme programme, Points2d points, int displayType, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
-        this.isTextured = isTextured;
         this.r = r;
         this.g = g;
         this.b = b;
@@ -130,6 +131,10 @@ public abstract class DisplayObject {
         return getScale(1);
     }
     
+    private float getZScale() {
+        return -getScale(2);
+    }
+    
     private float getScale(int axis) {
         float min = points.getValue(axis, 0);
         float max = points.getValue(axis, 0);
@@ -149,7 +154,7 @@ public abstract class DisplayObject {
         float yScale = getYScale();
         for (int j = 0; j < points.getN(); j++) {
             b.put((points.getValue(0, j) / xScale) + 0.5f);
-            b.put(-(points.getValue(1, j) / yScale) + 0.5f);
+            b.put((points.getValue(1, j) / yScale) + 0.5f);
         }
         b.flip();
         return b;
@@ -199,8 +204,8 @@ public abstract class DisplayObject {
         return b;
     }
     
-    public boolean hasTexture() {
-        return isTextured;
+    public Optional<Integer> getTextureId() {
+        return Optional.empty();
     }
     
     /**
@@ -220,10 +225,12 @@ public abstract class DisplayObject {
      * @return the y position
      */
     public abstract float getY();
-    
-    public float getZ() {
-        return 0;
-    }
+
+    /**
+     * Returns the z position of the object.
+     * @return the z position
+     */
+    public abstract float getZ();
     
     /**
      * Returns true if the object should be drawn.
@@ -239,6 +246,14 @@ public abstract class DisplayObject {
 
     public int getNumberOfPoints() {
         return this.points.getN();
+    }
+
+    public float getXShear() {
+        return 1;
+    }
+
+    public float getYShear() {
+        return 1;
     }
     
 }

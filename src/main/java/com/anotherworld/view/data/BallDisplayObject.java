@@ -2,6 +2,8 @@ package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
 
+import java.util.Optional;
+
 import com.anotherworld.view.Programme;
 
 /**
@@ -18,7 +20,7 @@ public class BallDisplayObject extends DisplayObject {
      * @param displayData The ball to display
      */
     public BallDisplayObject(Programme programme, BallDisplayData displayData) {
-        super(programme, Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN, true);
+        super(programme, Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
         this.displayData = displayData;
     }
     
@@ -45,6 +47,16 @@ public class BallDisplayObject extends DisplayObject {
     @Override
     public float getY() {
         return displayData.getYCoordinate();
+    }
+    
+    @Override
+    public float getZ() {
+        return 0;//-displayData.getRadius();
+    }
+    
+    @Override
+    public Optional<Integer> getTextureId() {
+        return Optional.of(0);
     }
     
     @Override
