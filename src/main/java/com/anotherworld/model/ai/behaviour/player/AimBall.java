@@ -55,6 +55,7 @@ public class AimBall extends Job {
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+        //TODO either finish me or kill me
 
         this.ai = ai;
         this.players = players;
