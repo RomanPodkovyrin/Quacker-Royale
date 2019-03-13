@@ -3,6 +3,7 @@ package com.anotherworld.settings;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.model.logic.PowerUpManager;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.network.GameClient;
 import com.anotherworld.network.Server;
@@ -270,6 +271,9 @@ public class GameSettings {
 
     private void createGameSession() {
         this.gameSession = new GameSessionData(60);
+        gameSession.setPowerUpSchedule(
+            PowerUpManager.generatePowerUpSchedule(gameSession.getTimeLeft(), platforms.get(0))
+        );
     }
 
     public GameSession createSession() {
