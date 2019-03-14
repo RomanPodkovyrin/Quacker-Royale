@@ -175,7 +175,6 @@ public class PhysicsTest {
         // ball VS dashing player
         steven.setCoordinates(aBall.getXCoordinate(), aBall.getYCoordinate());
         expected = Physics.calculateCollision(aBall, steven);
-        expected.set(1, steven.getCoordinates());
         assertEquals(true,Physics.checkCollision(aBall, steven));
         Physics.collided(aBall, steven);
         assertEquals(expected.get(0).getX(), aBall.getXCoordinate(), 0.0f);
@@ -187,7 +186,6 @@ public class PhysicsTest {
         expected = Physics.calculateCollision(steven, aBall);
         assertEquals(true,Physics.checkCollision(steven, aBall));
         Physics.collided(steven, aBall);
-        expected.set(0, steven.getCoordinates());
         assertEquals(expected.get(0).getX(), steven.getXCoordinate(), 0.0f);
         assertEquals(expected.get(0).getY(), steven.getYCoordinate(), 0.0f);
         assertEquals(expected.get(1).getX(), aBall.getXCoordinate(), 0.0f);
