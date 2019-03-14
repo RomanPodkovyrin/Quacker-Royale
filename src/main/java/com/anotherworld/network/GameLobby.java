@@ -33,7 +33,6 @@ public class GameLobby {
      * @return
      */
     public ArrayList<String> getNetworkPlayers() {
-
         return null;
     }
 }

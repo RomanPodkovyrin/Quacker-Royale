@@ -11,7 +11,6 @@ import com.anotherworld.model.ai.behaviour.player.AvoidBall;
 import com.anotherworld.model.ai.behaviour.player.AvoidEdge;
 import com.anotherworld.model.ai.behaviour.player.AvoidNeutralPlayer;
 import com.anotherworld.model.ai.behaviour.player.ChaseBall;
-import com.anotherworld.model.ai.behaviour.player.ChasePlayer;
 import com.anotherworld.model.ai.behaviour.player.CheckIfSaveToGo;
 import com.anotherworld.model.ai.behaviour.player.NeutralBallCheck;
 import com.anotherworld.model.ai.behaviour.player.WalkAbout;
@@ -158,8 +157,6 @@ public class AI {
     public void action() {
         logger.debug("AI action called.");
 
-        //TODO make then work in the order, not all at the same tick
-        //TODO make a black board so that ai can chose characters and balls which are not targeted by other ai
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
                 Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);

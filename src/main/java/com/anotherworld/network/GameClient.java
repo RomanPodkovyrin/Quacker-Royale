@@ -220,14 +220,4 @@ public class GameClient extends Thread {
         socket.close();
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        GameClient client = new GameClient("localhost");
-        client.start();
-        int counter = 0;
-        while (true) {
-            ArrayList<Input> keyPresses = new ArrayList<>();
-            keyPresses.add(Input.LEFT);
-            client.sendKeyPresses(keyPresses);
-        }
-    }
 }

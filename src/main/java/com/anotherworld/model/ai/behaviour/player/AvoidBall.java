@@ -7,10 +7,9 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
-
+import com.anotherworld.tools.maths.Maths;
 import java.util.ArrayList;
 
-import com.anotherworld.tools.maths.Maths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -95,14 +94,14 @@ public class AvoidBall extends Job {
         Matrix vector = MatrixMath.pointsVector(aiPosition, neighbour);
 
         // Check if vectors are zero
-        if((Math.abs(vector.getY() - 0f) < 0.00000001f) & (Math.abs(vector.getX() - 0f) < 0.00000001f)) {
+        if ((Math.abs(vector.getY() - 0f) < 0.00000001f) & (Math.abs(vector.getX() - 0f) < 0.00000001f)) {
             Line ballLine = new Line(ballPosition,ballDirection);
             vector = ballLine.getOrthogonalVector();
         }
 
         // - reverses the vectors, so ai goes in the opposite direction of the Ball
-        ai.setXVelocity((Maths.floatDivision(-vector.getX() , Math.abs(vector.getX()))) * ai.getSpeed());
-        ai.setYVelocity((Maths.floatDivision(-vector.getY() , Math.abs(vector.getY()))) * ai.getSpeed());
+        ai.setXVelocity((Maths.floatDivision(-vector.getX(), Math.abs(vector.getX()))) * ai.getSpeed());
+        ai.setYVelocity((Maths.floatDivision(-vector.getY(), Math.abs(vector.getY()))) * ai.getSpeed());
 
         logger.trace("Avoiding Ball at location " + ballPosition);
         logger.trace("Walking at Vector " + ai.getVelocity());
@@ -174,6 +173,7 @@ public class AvoidBall extends Job {
             float distanceFromTheBall = MatrixMath.distanceAB(ai.getCoordinates(),imminentDangerBalls.get(0).getCoordinates());
             tooFar = distanceFromTheBall >= platform.getYSize();
 
+            // checks if ai is safe because the ball is too far away
             Ball ball = imminentDangerBalls.get(0);
             Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
             float ballRate = MatrixMath.distanceAB(ball.getCoordinates(),neighbour) / ball.getSpeed();
@@ -185,7 +185,6 @@ public class AvoidBall extends Job {
 
         }
 
-        //TODO fix the length prediction
         boolean save =  imminentDangerBalls.isEmpty() | tooFar;
         logger.trace("AI is " + (save ? "Save" : "in Danger"));
         return save;

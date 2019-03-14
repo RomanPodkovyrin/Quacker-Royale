@@ -78,6 +78,7 @@ public class WalkAbout extends Job {
             succeed();
             newDestination = true;
             return;
+
         } else if (isRunning()) {
             move();
             fail();
@@ -90,12 +91,11 @@ public class WalkAbout extends Job {
      */
     private void move() {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
-        //ai.setXVelocity(vector.getX() / Math.abs(vector.getX()) * ai.getSpeed());
-        //ai.setYVelocity(vector.getY() / Math.abs(vector.getY()) * ai.getSpeed());
         vector.normalizeThis();
         ai.setXVelocity(vector.getX() * ai.getSpeed());
         ai.setYVelocity(vector.getY() * ai.getSpeed());
         logger.trace("Walking about: Moving to " + destination);
+
         if (!platform.isOnPlatform(destination)) {
             logger.trace("destination no longer on the platform");
             succeed();
