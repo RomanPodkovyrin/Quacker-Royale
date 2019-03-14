@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNotNull;
 public class NetworkControllerTest {
 
     @Test
-    public void NetworkingTest() {
+    public void networkingTest() {
         GameSettings settings = new GameSettings(new PlayerData("",0,0,0, ObjectState.IDLE,0,0),
                 new ArrayList<>(Arrays.asList(new PlayerData("",0,0,0, ObjectState.IDLE,0,0))),
                 new ArrayList<>(Arrays.asList(new PlayerData("",0,0,0, ObjectState.IDLE,0,0))),

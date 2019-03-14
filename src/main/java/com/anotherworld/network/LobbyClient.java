@@ -47,7 +47,7 @@ public class LobbyClient {
     }
 
     /**
-     * Waits for a confirmation message from the hot, that everyone has connected
+     * Waits for a confirmation message from the host, that everyone has connected
      * and the game is ready to be started
      */
     public void waitForGameToStart() throws IOException {
