@@ -10,7 +10,8 @@ public class PlayerSpriteSheet extends SpriteSheet {
     
     private static final int MAX_ID = 4;
     
-    private static final int DIRECTION_OFFSET = 0;
+    //RIGHT DOWN LEFT UP
+    private static final int DIRECTION_OFFSET = 5;
     
     private static final long FRAME_TIME = 200;
     
@@ -25,13 +26,31 @@ public class PlayerSpriteSheet extends SpriteSheet {
 
     @Override
     public int getTextureId() {
-        int id = (int)((SpriteSheet.getCurrentTime() / FRAME_TIME) % Math.max(MAX_ID + 1, 1)) + BASE_ID;
+        int id = ((int)((SpriteSheet.getCurrentTime() / FRAME_TIME) % (MAX_ID + 1))) + BASE_ID + getDirectionOffset();
+        System.out.println((SpriteSheet.getCurrentTime() / FRAME_TIME) % (MAX_ID + 1));
         return id;
     }
 
     @Override
     public int getTextureBuffer() {
         return 1;
+    }
+    
+    private int getDirectionOffset() {
+        float direction = data.getAngle();
+        if (direction >= 45f && direction <= 135f) {
+            //RIGHT
+            return DIRECTION_OFFSET * 0;
+        } else if (direction > 135f && direction < 225f) {
+            //DOWN
+            return DIRECTION_OFFSET * 1;
+        } else if (direction >= 225f && direction <= 315f) {
+            //LEFT
+            return DIRECTION_OFFSET * 2;
+        } else {
+            //UP
+            return DIRECTION_OFFSET * 3;
+        }
     }
     
 }
