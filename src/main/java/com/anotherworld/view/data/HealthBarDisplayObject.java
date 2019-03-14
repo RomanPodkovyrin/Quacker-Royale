@@ -21,7 +21,7 @@ public class HealthBarDisplayObject extends DisplayObject {
      * @param displayData The player to display
      */
     public HealthBarDisplayObject(Programme programme, PlayerDisplayData displayData) {
-        super(programme, Points2d.gen3DRectangle(displayData.getRadius() * 2, 0.75f), GL_TRIANGLE_FAN, 1f, 0f, 0f);
+        super(programme, Points2d.genRectangle(displayData.getRadius() * 2, 0.75f), GL_TRIANGLE_FAN, 1f, 0f, 0f);
         this.displayData = displayData;
         this.programme = programme;
     }
@@ -47,12 +47,13 @@ public class HealthBarDisplayObject extends DisplayObject {
 
     @Override
     public float getY() {
-        return displayData.getYCoordinate();
+        return displayData.getYCoordinate() - displayData.getRadius() - 1f;
     }
 
     @Override
     public float getZ() {
-        return -2 * displayData.getRadius() - 1f;
+        return 0;
+        //return -2 * displayData.getRadius() - 1f;
     }
     
     @Override

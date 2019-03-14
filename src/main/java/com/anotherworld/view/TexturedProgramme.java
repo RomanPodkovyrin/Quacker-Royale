@@ -123,7 +123,7 @@ public class TexturedProgramme extends Programme {
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        if (displayObject.getTextureId().isPresent()) {
+        if (displayObject.getSpriteSheet().isTextured()) {
             bufferObject.setTextureId(glGenBuffers());
             glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getTextureId().get());
             glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
@@ -185,15 +185,8 @@ public class TexturedProgramme extends Programme {
             temp.put(matrix);
             temp.flip();
             glUniformMatrix4fv(glGetUniformLocation(programmeId, "Transformation"), false, temp);
-            glUniform1i(glGetUniformLocation(programmeId, "hasTex"), displayObject.getTextureId().isPresent() ? 1 : 0);
-            if (displayObject.getTextureId().isPresent()) {
-                matrix = textureMap.getTextureTransformation(displayObject.getTextureId().get()).getPoints();
-                FloatBuffer temp2 = BufferUtils.createFloatBuffer(16);
-                temp2.put(matrix);
-                temp2.flip();
-                glUniformMatrix4fv(glGetUniformLocation(programmeId, "textureTransformation"), false, temp2);
-                glUniform2f(glGetUniformLocation(programmeId, "Shear"), displayObject.getXShear(), displayObject.getYShear());
-            }
+            
+            textureMap.loadTexture(programmeId, displayObject.getSpriteSheet(), displayObject.getXShear(), displayObject.getYShear());
             
             TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
             

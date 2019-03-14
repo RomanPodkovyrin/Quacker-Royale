@@ -1,5 +1,9 @@
 package com.anotherworld.view;
 
+import static org.lwjgl.opengl.GL20.glGetUniformLocation;
+import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL20.glUniform2f;
+import static org.lwjgl.opengl.GL20.glUniformMatrix4fv;
 import static org.lwjgl.opengl.GL46.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL46.GL_LINEAR;
 import static org.lwjgl.opengl.GL46.GL_NEAREST;
@@ -25,6 +29,7 @@ import com.anotherworld.view.data.Points2d;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -155,6 +160,22 @@ public class TextureMap {
         transformation = Matrix2d.homTranslate3d(textureId % xNumOfTextures, (int)Math.floor(textureId / yNumOfTextures), 0).mult(transformation);
         transformation = Matrix2d.homScale3d(1 / (float)xNumOfTextures, 1 / (float)yNumOfTextures, 0).mult(transformation);
         return transformation;
+    }
+    
+    public void loadTexture(int programmeId, SpriteSheet spriteSheet, float xShear, float yShear) {
+
+        //Change this to select right texture from buffer
+        glUniform1i(glGetUniformLocation(programmeId, "hasTex"), spriteSheet.isTextured() ? 1 : 0);
+        
+        if (spriteSheet.isTextured()) {
+            float[] matrix = this.getTextureTransformation(spriteSheet.getTextureId()).getPoints();
+            FloatBuffer temp2 = BufferUtils.createFloatBuffer(16);
+            temp2.put(matrix);
+            temp2.flip();
+            glUniformMatrix4fv(glGetUniformLocation(programmeId, "textureTransformation"), false, temp2);
+            glUniform2f(glGetUniformLocation(programmeId, "Shear"), xShear, yShear);
+        }
+        
     }
     
 }

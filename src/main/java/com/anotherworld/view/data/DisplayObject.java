@@ -1,6 +1,7 @@
 package com.anotherworld.view.data;
 
 import com.anotherworld.view.Programme;
+import com.anotherworld.view.SpriteSheet;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -19,11 +20,10 @@ public abstract class DisplayObject {
 
     private static Logger logger = LogManager.getLogger(DisplayObject.class);
 
-    private final float xShear = (float)Math.random();
+    private final float xShear;
     
-    private final float yShear = (float)Math.random();
+    private final float yShear;
     
-    //TODO change this back
     private final Points2d points;
     
     private final int displayType;
@@ -37,26 +37,40 @@ public abstract class DisplayObject {
     private float g;
     
     private float b;
+    
+    private SpriteSheet spriteSheet;
 
     public DisplayObject(Programme programme, Points2d points, int displayType) {
-        this(programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
+        this(new SpriteSheet(), programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
+    }
+
+    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, int displayType) {
+        this(spriteSheet, programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
+    }
+    
+    public DisplayObject(Programme programme, Points2d points, int displayType, float r, float g, float b) {
+        this(new SpriteSheet(), programme, points, displayType, r, g, b);
     }
     
     /**
      * Creates a display object from the given points.
+     * @param programme The programme used to display the object
      * @param points The points to display the object
-     * @param isTextured If the object has a texture mapped to it
+     * @param displayType The type of opengl object to display
      * @param r How red the object is 0 to 1
      * @param g How green the object is 0 to 1
      * @param b How blue the object is 0 to 1
      */
-    public DisplayObject(Programme programme, Points2d points, int displayType, float r, float g, float b) {
+    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, int displayType, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
         this.r = r;
         this.g = g;
         this.b = b;
         this.programme = programme;
+        this.xShear = 1;
+        this.yShear = 1;
+        this.spriteSheet = spriteSheet;
         programmeObjectId = programme.initialiseDisplayObject(this);
     }
     
@@ -204,10 +218,6 @@ public abstract class DisplayObject {
         return b;
     }
     
-    public Optional<Integer> getTextureId() {
-        return Optional.empty();
-    }
-    
     /**
      * Returns the angle of the object in degrees.
      * @return the angle of the object
@@ -249,11 +259,15 @@ public abstract class DisplayObject {
     }
 
     public float getXShear() {
-        return 1;
+        return xShear;
     }
 
     public float getYShear() {
-        return 1;
+        return yShear;
+    }
+
+    public SpriteSheet getSpriteSheet() {
+        return spriteSheet;
     }
     
 }

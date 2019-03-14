@@ -55,11 +55,6 @@ public class BallDisplayObject extends DisplayObject {
     }
     
     @Override
-    public Optional<Integer> getTextureId() {
-        return Optional.of(0);
-    }
-    
-    @Override
     public boolean shouldDraw() {
         return true;
     }
