@@ -174,7 +174,7 @@ public class TexturedProgramme extends Programme {
 
     @Override
     public boolean supportsTextures() {
-        return false;
+        return true;
     }
 
     @Override

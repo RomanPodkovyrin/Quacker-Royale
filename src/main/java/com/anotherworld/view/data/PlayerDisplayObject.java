@@ -18,6 +18,10 @@ public class PlayerDisplayObject extends DisplayObject {
     private float maxR;
     private float maxG;
     private float maxB;
+    private final int textureId;
+    private final int numOfTextures;
+    private final long startTime = System.currentTimeMillis();
+    private static final long FRAME_TIME = 200;
     
     private Optional<Long> timeStartedFalling;
     
@@ -26,10 +30,12 @@ public class PlayerDisplayObject extends DisplayObject {
      * @param displayData The player to display
      */
     public PlayerDisplayObject(Programme programme, PlayerDisplayData displayData) {
-        super(programme, Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
+        super(programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius() * 2, displayData.getRadius() * 2) : Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
         this.displayData = displayData;
         this.setColours();
         this.timeStartedFalling = Optional.empty();
+        this.textureId = 0;
+        this.numOfTextures = 5;
     }
     
     private void setColours() {
@@ -63,7 +69,8 @@ public class PlayerDisplayObject extends DisplayObject {
     
     @Override
     public Optional<Integer> getTextureId() {
-        return Optional.of(0);
+        int id = (int)(((System.currentTimeMillis() - startTime) / FRAME_TIME) % Math.max(numOfTextures, 1)) + textureId;
+        return Optional.of(id);
     }
     
     @Override
