@@ -180,8 +180,8 @@ public class Physics {
         float radiusB = objectB.getRadius();
 
         Matrix midpointBetweenCircles = new Matrix(
-                (pointA.getX() + pointB.getX()) / 2,
-                (pointA.getY() + pointB.getY()) / 2);
+                (pointA.getX() + pointB.getX()) / 2, //MAGIC NUMBER
+                (pointA.getY() + pointB.getY()) / 2);//MAGIC NUMBER
 
         Matrix objectAOffSet = new Matrix((float) (radiusA * Math.cos(Math.PI
                 + angleBetweenCircles)), (float) (radiusA * Math.sin(Math.PI
@@ -221,7 +221,7 @@ public class Physics {
 
         float newVeloA = MatrixMath.innerProduct(objectA.getVelocity(), n);
         float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), n);
-        float optimisedP = Math.min((2.0f * (newVeloA - newVeloB) / 2.0f), 0);
+        float optimisedP = Math.min((newVeloA - newVeloB), 0);
         Matrix veloA = new Matrix(objectA.getXVelocity()
                 - (optimisedP * n.getX()), objectA.getYVelocity()
                 - (optimisedP * n.getY()));
@@ -239,8 +239,6 @@ public class Physics {
             if (objectB instanceof Ball) {
                 objectB.setVelocity(veloB.getX(), veloB.getY());
                 objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
-            } else {
-
             }
         }
         ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
@@ -251,7 +249,7 @@ public class Physics {
                 {
                     objectB.setVelocity(veloB.getX(), veloB.getY());
                     objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
-                    safe = newCoordinate.get(1);
+                    safe = newCoordinate.get(1);//MAGIC NUMBER
                     objectB.setCoordinates(safe.getX(), safe.getY());
                     if (!(objectB instanceof Ball)) {
                         specialCase = true;
@@ -263,7 +261,7 @@ public class Physics {
                 {
                     objectA.setVelocity(veloA.getX(), veloA.getY());
                     objectA.setAngle((float) MatrixMath.vectorAngle(veloA));
-                    safe = newCoordinate.get(0);
+                    safe = newCoordinate.get(0);//MAGIC NUMBER
                     objectA.setCoordinates(safe.getX(), safe.getY());
                     if (!(objectA instanceof Ball)) {
                         specialCase = true;
@@ -272,9 +270,9 @@ public class Physics {
             }
         }
         if (!specialCase) {
-            safe = newCoordinate.get(0);
+            safe = newCoordinate.get(0);//MAGIC NUMBER
             objectA.setCoordinates(safe.getX(), safe.getY());
-            safe = newCoordinate.get(1);
+            safe = newCoordinate.get(1);//MAGIC NUMBER
             objectB.setCoordinates(safe.getX(), safe.getY());
         }
         logger.debug("Completed collision event between "
@@ -290,13 +288,13 @@ public class Physics {
      * value of himself (charge level) And it add into 1 and multiply the
      * defaultPlayerSpeed by the amplifying value. Finally, set speed of the
      * player by the result of the multiplication.
-     * 
+     * 5
      * @param player
      *            The player who is about to dash.
      */
     public static void charge(Player player) {
         int charge = player.getChargeLevel();
-        float speedIncreases = 1 + (1.5f * charge);
+        float speedIncreases = 1 + (1.5f * charge); //MAGIC NUMBER
 
         float speed = GameSettings.getDefaultPlayerSpeed() * speedIncreases;
 
