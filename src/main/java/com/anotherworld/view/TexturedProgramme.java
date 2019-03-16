@@ -39,7 +39,7 @@ public class TexturedProgramme extends Programme {
         super(window);
         init();
         try {
-            textureMap = new TextureMap("res/images/NeutralBall/NeutralBall0.png");
+            textureMap = new TextureMap("res/images/");
         } catch (IOException ex) {
             logger.catching(ex);
             throw new ProgrammeUnavailableException("Couldn't load texture map");
@@ -125,7 +125,7 @@ public class TexturedProgramme extends Programme {
         
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         
-        if (displayObject.hasTexture()) {
+        if (displayObject.getSpriteSheet().isTextured()) {
             bufferObject.setTextureId(glGenBuffers());
             glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getTextureId().get());
             glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
@@ -155,8 +155,6 @@ public class TexturedProgramme extends Programme {
         glEnable(GL_ALPHA_TEST);
         glAlphaFunc(GL_GREATER, 0);
         glUseProgram(programmeId);
-        glBindTexture(GL_TEXTURE_2D, textureMap.getId());
-        glUniform1i(glGetUniformLocation(programmeId, "tex"), 0);
     }
 
     @Override
@@ -176,7 +174,7 @@ public class TexturedProgramme extends Programme {
 
     @Override
     public boolean supportsTextures() {
-        return false;
+        return true;
     }
 
     @Override
@@ -187,7 +185,8 @@ public class TexturedProgramme extends Programme {
             temp.put(matrix);
             temp.flip();
             glUniformMatrix4fv(glGetUniformLocation(programmeId, "Transformation"), false, temp);
-            glUniform1i(glGetUniformLocation(programmeId, "hasTex"), displayObject.hasTexture() ? 1 : 0);
+            
+            textureMap.loadTexture(programmeId, displayObject.getSpriteSheet(), displayObject.getXShear(), displayObject.getYShear());
             
             TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
             

@@ -1,17 +1,16 @@
 package com.anotherworld.audio;
 
-import com.anotherworld.control.GameSessionController;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
-
 import javax.sound.sampled.*;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+/**
+ * This class is in charge of playing a background music
+ *
+ * @author Antons Lebedjko
+ */
 public class BackgroundMusic implements Runnable {
     private String fileLocation = "./res/audio/background_music.wav";
     private SourceDataLine line;
@@ -24,26 +23,31 @@ public class BackgroundMusic implements Runnable {
     private DataLine.Info information;
     private boolean running = true;
     private Thread music;
-
     private static Logger logger = LogManager.getLogger(BackgroundMusic.class);
 
+    /**
+     * Opens a background music file
+     */
     public BackgroundMusic() {
         soundFile = new File(fileLocation);
     }
 
+    /**
+     * Plays a background music
+     */
     public void playBackgroundMusic() {
         music = new Thread(this);
         music.start();
     }
 
+    /**
+     * A run method for the thread which creates a line and starts playing background music
+     */
     public void run() {
         while (running) {
-            //System.out.println("Still alive background");
             try {
                 createLine();
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (UnsupportedAudioFileException e) {
                 e.printStackTrace();
             } catch (LineUnavailableException e) {
                 e.printStackTrace();
@@ -51,8 +55,10 @@ public class BackgroundMusic implements Runnable {
         }
     }
 
-    private void createLine() throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-
+    /**
+     * Used to create a line for the background music file
+     */
+    private void createLine() throws IOException, LineUnavailableException {
         try {
             audioInputStream = AudioSystem.getAudioInputStream(soundFile);
         } catch (UnsupportedAudioFileException e) {
@@ -62,11 +68,11 @@ public class BackgroundMusic implements Runnable {
         }
         audioFormat = audioInputStream.getFormat();
         information = new DataLine.Info(SourceDataLine.class, audioFormat);
-
         line = (SourceDataLine) AudioSystem.getLine(information);
         line.open(audioFormat);
         unMuteSound();
         line.start();
+        logger.trace("Started to play background music line");
         numberOfBytesRead = 0;
         abData = new byte[2540000];
         while (numberOfBytesRead != -1) {
@@ -80,6 +86,9 @@ public class BackgroundMusic implements Runnable {
         line.close();
     }
 
+    /**
+     * Used to mute the background music
+     */
     private void muteSound() {
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
@@ -90,6 +99,9 @@ public class BackgroundMusic implements Runnable {
         }
     }
 
+    /**
+     * Used to unmute the background music
+     */
     private void unMuteSound() {
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
@@ -101,6 +113,9 @@ public class BackgroundMusic implements Runnable {
 
     }
 
+    /**
+     * Used to terminate background music
+     */
     public void terminateMusic() {
         //TODO those 3 lines prevent linux from shutting down the thread
         //line.stop();
@@ -110,21 +125,5 @@ public class BackgroundMusic implements Runnable {
         running = false;
         //music.interrupt();
         //System.exit(0);
-    }
-
-    public static void main(String[] args) {
-        BackgroundMusic ba = new BackgroundMusic();
-        ba.playBackgroundMusic();
-        while (true) {
-            Scanner sc = new Scanner(System.in);
-            int input = sc.nextInt();
-            if (input == 1) {
-                ba.muteSound();
-            } else if (input == 2) {
-                ba.unMuteSound();
-            } else if (input == 3) {
-                ba.terminateMusic();
-            }
-        }
     }
 }

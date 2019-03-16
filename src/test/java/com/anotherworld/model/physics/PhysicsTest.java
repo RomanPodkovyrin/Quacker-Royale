@@ -1,6 +1,7 @@
 package com.anotherworld.model.physics;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Wall;
@@ -8,6 +9,7 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.model.physics.Physics;
+import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
@@ -19,7 +21,7 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 public class PhysicsTest {
-    
+
     @Test
     public void theCoordinateOfAnobjectShouldUpdate() {
         BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
@@ -31,19 +33,19 @@ public class PhysicsTest {
 
         aball.setXVelocity(0.5f);
         Physics.move(aball);
-        float xCoord = (aball.getXVelocity()*aball.getSpeed()) + coord.getX();
+        float xCoord = (aball.getXVelocity() * aball.getSpeed()) + coord.getX();
         // assert statements
         assertEquals(xCoord, aball.getXCoordinate(), 0.0f);
         aball.setVelocity(0.0f, 0.5f);
         float yCoord = aball.getYCoordinate();
         Physics.move(aball);
-        yCoord += (aball.getYVelocity()*aball.getSpeed());
+        yCoord += (aball.getYVelocity() * aball.getSpeed());
         assertEquals(yCoord, aball.getYCoordinate(), 0.0f);
 
         aball.setVelocity(-0.5f, -0.5f);
         Physics.move(aball);
-        xCoord += aball.getXVelocity()*aball.getSpeed();
-        yCoord += aball.getYVelocity()*aball.getSpeed();
+        xCoord += aball.getXVelocity() * aball.getSpeed();
+        yCoord += aball.getYVelocity() * aball.getSpeed();
         assertEquals(xCoord, aball.getXCoordinate(), 0.0f);
         assertEquals(yCoord, aball.getYCoordinate(), 0.0f);
     }
@@ -68,17 +70,32 @@ public class PhysicsTest {
         float eastBound = wall.getXCoordinate() - wall.getXSize();
         aball.setCoordinates(eastBound, aball.getYCoordinate());
         Physics.bouncedWall(aball, wall);
-        expected = eastBound+aball.getRadius();
+        expected = eastBound + aball.getRadius();
         xVelocity = Math.abs(xVelocity);
         assertEquals(expected, aball.getXCoordinate(), 0.0f);
         assertEquals(xVelocity, aball.getXVelocity(), 0.0f);
+        float southBound = wall.getYCoordinate() + wall.getYSize();
+        aball.setCoordinates(aball.getXCoordinate(), southBound);
+        Physics.bouncedWall(aball, wall);
+        expected = southBound - aball.getRadius();
+        yVelocity = -Math.abs(yVelocity);
+        assertEquals(expected, aball.getYCoordinate(), 0.0f);
+        assertEquals(yVelocity, aball.getYVelocity(), 0.0f);
+        float westBound = wall.getXCoordinate() + wall.getXSize();
+        aball.setCoordinates(westBound, aball.getYCoordinate());
+        Physics.bouncedWall(aball, wall);
+        expected = westBound - aball.getRadius();
+        xVelocity = -Math.abs(xVelocity);
+        assertEquals(expected, aball.getXCoordinate(), 0.0f);
+        assertEquals(xVelocity, aball.getXVelocity(), 0.0f);
+
     }
 
     @Test
     public void collisionShouldHappen() {
         BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
         BallData b = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
-        
+
         Ball aball = new Ball(a);
         Ball bball = new Ball(b);
         assertEquals(true, Physics.checkCollision(aball, bball));
@@ -88,16 +105,91 @@ public class PhysicsTest {
 
     @Test
     public void updateAttributesWhenCollisionHappened() {
-        BallData a = new BallData("bob", false, 91.1f, 52.3f, ObjectState.MOVING , 12.1f, 3.0f);
+        BallData a = new BallData("bob", false, 91.1f, 52.3f,
+                ObjectState.MOVING, 12.1f, 3.0f);
         Ball aball = new Ball(a);
-        PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f, ObjectState.IDLE, 12.1f,
-                3.0f);
+        PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f,
+                ObjectState.IDLE, 12.1f, 3.0f);
         Player player = new Player(b, false);
         Physics.collided(aball, player);
         b.setCoordinates(aball.getXCoordinate(), aball.getYCoordinate());
         Physics.collided(aball, player);
     }
-    
-    //TODO:
-    
+
+    @Test
+    public void playerShouldIncreaseshisSpeedWhenChargeApplies() {
+        PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f,
+                ObjectState.IDLE, 0f, 3.0f);
+        Player steve = new Player(b, false);
+        steve.setChargeLevel(3);
+        Physics.charge(steve);
+        float expectedSpeed = GameSettings.getDefaultPlayerSpeed() * (1 + 3);
+        assertEquals(expectedSpeed, steve.getSpeed(), 0.0f);
+        assertEquals(3, steve.getChargeLevel(), 0);
+    }
+
+    @Test
+    public void MovingCoordinationOfPlayersToSafeCoordinates() {
+        BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
+        Ball aBall = new Ball(a);
+        
+        PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f,
+                ObjectState.IDLE, 0f, 3.0f);
+        Player steve = new Player(b, false);
+
+        PlayerData c = new PlayerData("Steve", 90, 91.1f, 52.3f,
+                ObjectState.DASHING, 0f, 3.0f);
+        Player steven = new Player(c, false);
+
+        BallData d = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
+        Ball bBall = new Ball(d);
+
+        // ball VS ball.
+        ArrayList<Matrix> expected = Physics.calculateCollision(aBall, bBall);
+        ArrayList<Matrix> originalVelo = new ArrayList<Matrix>();
+        assertEquals(true,Physics.checkCollision(aBall, bBall));
+        Physics.collided(aBall, bBall);
+        assertEquals(expected.get(0).getX(), aBall.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(0).getY(), aBall.getYCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getX(), bBall.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getY(), bBall.getYCoordinate(), 0.0f);
+        
+        // ball VS player.
+        steve.setCoordinates(aBall.getXCoordinate(), aBall.getYCoordinate());
+        expected = Physics.calculateCollision(aBall, steve);
+        assertEquals(true,Physics.checkCollision(aBall, steve));
+        Physics.collided(aBall, steve);
+        assertEquals(expected.get(0).getX(), aBall.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(0).getY(), aBall.getYCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getX(), steve.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getY(), steve.getYCoordinate(), 0.0f);
+        // player VS ball.
+        steve.setCoordinates(aBall.getXCoordinate(), aBall.getYCoordinate());
+        expected = Physics.calculateCollision(steve, aBall);
+        assertEquals(true,Physics.checkCollision(steve, aBall));
+        Physics.collided(steve, aBall);
+        assertEquals(expected.get(0).getX(), steve.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(0).getY(), steve.getYCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getX(), aBall.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getY(), aBall.getYCoordinate(), 0.0f);
+        // ball VS dashing player
+        steven.setCoordinates(aBall.getXCoordinate(), aBall.getYCoordinate());
+        expected = Physics.calculateCollision(aBall, steven);
+        assertEquals(true,Physics.checkCollision(aBall, steven));
+        Physics.collided(aBall, steven);
+        assertEquals(expected.get(0).getX(), aBall.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(0).getY(), aBall.getYCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getX(), steven.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getY(), steven.getYCoordinate(), 0.0f);
+        // Dashing player VS ball
+        steven.setCoordinates(aBall.getXCoordinate(), aBall.getYCoordinate());
+        expected = Physics.calculateCollision(steven, aBall);
+        assertEquals(true,Physics.checkCollision(steven, aBall));
+        Physics.collided(steven, aBall);
+        assertEquals(expected.get(0).getX(), steven.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(0).getY(), steven.getYCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getX(), aBall.getXCoordinate(), 0.0f);
+        assertEquals(expected.get(1).getY(), aBall.getYCoordinate(), 0.0f);
+
+    }
 }

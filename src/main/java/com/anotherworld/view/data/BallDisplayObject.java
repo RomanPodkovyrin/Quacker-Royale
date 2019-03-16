@@ -2,6 +2,7 @@ package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
 
+import com.anotherworld.view.BallSpriteSheet;
 import com.anotherworld.view.Programme;
 
 /**
@@ -18,7 +19,7 @@ public class BallDisplayObject extends DisplayObject {
      * @param displayData The ball to display
      */
     public BallDisplayObject(Programme programme, BallDisplayData displayData) {
-        super(programme, Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN, true);
+        super(new BallSpriteSheet(displayData), programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius() * 2, displayData.getRadius() * 2) : Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
         this.displayData = displayData;
     }
     
@@ -45,6 +46,11 @@ public class BallDisplayObject extends DisplayObject {
     @Override
     public float getY() {
         return displayData.getYCoordinate();
+    }
+    
+    @Override
+    public float getZ() {
+        return 0;//-displayData.getRadius();
     }
     
     @Override

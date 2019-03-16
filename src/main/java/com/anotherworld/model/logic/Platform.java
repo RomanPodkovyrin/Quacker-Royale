@@ -7,7 +7,8 @@ import com.anotherworld.tools.datapool.PlatformData;
 /**
  *Represents Platform Object.
  *
- * @author  Roman,Alfi
+ * @author Roman P
+ * @author Alfi S
  */
 public class Platform {
 
@@ -22,23 +23,23 @@ public class Platform {
     public float getYCoordinate() { return platformData.getYCoordinate(); }
 
     public float getXSize() { return platformData.getxSize(); }
-    public void setXSize(float xSize) { platformData.setxSize(xSize); }
+    private void setXSize(float xSize) { platformData.setxSize(xSize); }
 
     public float getYSize() { return platformData.getySize(); }
-    public void setYSize(float ySize) { platformData.setySize(ySize); }
+    private void setYSize(float ySize) { platformData.setySize(ySize); }
 
-    public float getXTargetSize() { return platformData.getxTargetSize(); }
-    public float getYTargetSize() { return platformData.getyTargetSize(); }
+    private float getXTargetSize() { return platformData.getxTargetSize(); }
+    private float getYTargetSize() { return platformData.getyTargetSize(); }
 
-    public float getXShrink() { return platformData.getxShrink(); }
-    public float getYShrink() { return platformData.getyShrink(); }
+    private float getXShrink() { return PlatformData.getxShrink(); }
+    private float getYShrink() { return PlatformData.getyShrink(); }
 
-    public int getStage() { return platformData.getStage(); }
+    int getStage() { return platformData.getStage(); }
 
     /**
      * Called when the platform needs to shrink.
      */
-    public void nextStage(){
+    void nextStage(){
         int stage = getStage();
         if (stage > 0) {
             platformData.setStage(stage - 1);
@@ -47,7 +48,7 @@ public class Platform {
         }
     }
 
-    public void shrink() {
+    void shrink() {
         if (getXSize() > getXTargetSize() &&
             getYSize() > getYTargetSize()) {
             setXSize(getXSize() - SIZE_DECREASE);
@@ -60,7 +61,7 @@ public class Platform {
      * @param y  the y coordinate
      * @return true if coordinates are on the platform, false if not
      */
-    public boolean isOnPlatform(float x, float y) {
+    private boolean isOnPlatform(float x, float y) {
         float leftX  = getXCoordinate() - getXSize();
         float upperY = getYCoordinate() - getYSize();
 
@@ -84,7 +85,7 @@ public class Platform {
      * @param object
      * @return true if coordinates are on the platform, false if not
      */
-    public boolean isOnPlatform(AbstractMovable object) {
+    boolean isOnPlatform(AbstractMovable object) {
         return isOnPlatform(object.getXCoordinate(),object.getYCoordinate());
     }
 

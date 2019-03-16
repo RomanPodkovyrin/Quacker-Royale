@@ -1,5 +1,6 @@
 package com.anotherworld.view.data;
 
+import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 
 /**

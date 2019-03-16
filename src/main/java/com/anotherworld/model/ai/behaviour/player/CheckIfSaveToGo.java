@@ -12,7 +12,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-
+/**
+ * This class does a look ahead for ai and sees what happens if ai keeps going
+ * in the current direction, (checks if goes into the danger zone).
+ * @author roman
+ */
 public class CheckIfSaveToGo extends Job {
 
     private static Logger logger = LogManager.getLogger(CheckIfSaveToGo.class);
@@ -39,39 +43,20 @@ public class CheckIfSaveToGo extends Job {
         this.platform = platform;
 
         logger.trace("Starting the Job");
-//        if (AIDataPool.IsDataPresent()) {
-//            ArrayList<Ball> immenentDanger = AIDataPool.getImminentDangerBalls();
-//            System.out.println(immenentDanger.toString());
-//            if (!immenentDanger.isEmpty()) {
-//                Ball firstBall = immenentDanger.get(0);
-//                Matrix neigbhour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),ai.getCoordinates());
-//                if (MatrixMath.distanceAB(ai.getCoordinates(),neigbhour) <= ai.getRadius() + firstBall.getRadius() + safeDistance) {
-//                    ai.setVelocity(0,0);
-//                    logger.info("AI stopped danger ahead");
-//                    fail();
-//                    return;
-//                }
-//                logger.trace("Balls are far away");
-//
-//            } else {
-//                logger.trace("No danger balls near");
-//                succeed();
-//            }
-//
-//        } else {
-//            logger.error("No data pool data");
-//            succeed();
-//        }
 
         sortBallLevels();
         if (imminentDangerBalls.isEmpty()) {
             succeed();
             logger.trace("All good no bad balls");
         } else {
-            Matrix newAiLocation = new Matrix(ai.getXCoordinate() + ai.getXVelocity(),ai.getYCoordinate() + ai.getYVelocity());
+
+            // looks forward in future
+            Matrix lookAhead = new Matrix(ai.getXCoordinate() + ai.getXVelocity(),ai.getYCoordinate() + ai.getYVelocity());
             Ball firstBall = imminentDangerBalls.get(0);
 
             Matrix neigbhour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),aiPosition);
+
+            // Already int the danger zone at the current moment
             if (MatrixMath.distanceAB(aiPosition,neigbhour) <= ai.getRadius() + firstBall.getRadius() + safeDistance) {
                 logger.trace("Withing the danger zone need to move out");
                 succeed();
@@ -79,8 +64,10 @@ public class CheckIfSaveToGo extends Job {
             }
 
 
-            Matrix newLocationNeigbhour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),newAiLocation);
-            if (MatrixMath.distanceAB(newAiLocation,newLocationNeigbhour) <= ai.getRadius() + firstBall.getRadius() + safeDistance + 2) {
+            Matrix lookAheadNeigbhour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),lookAhead);
+
+            // In danger in the look ahead
+            if (MatrixMath.distanceAB(lookAhead,lookAheadNeigbhour) <= ai.getRadius() + firstBall.getRadius() + safeDistance + 2) {
                 ai.setVelocity(0,0);
                 logger.trace("AI stopped danger ahead");
                 fail();
@@ -89,7 +76,6 @@ public class CheckIfSaveToGo extends Job {
 
             logger.trace("Optimal distance from danger balls");
             succeed();
-
         }
 
 

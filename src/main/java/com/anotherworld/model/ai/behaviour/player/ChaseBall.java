@@ -8,6 +8,8 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
+
+import com.anotherworld.tools.maths.Maths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,30 +34,36 @@ public class ChaseBall extends Job {
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
-        // Theoretically if this job comes after avoiding balls
-        // the balls array should already be sorted by the distance from the player
-        // NOOOOOOOOOOO
         this.ai = ai;
         this.players = players;
         this.balls = balls;
         this.platform = platform;
-        sortObject(balls);
 
         logger.debug("Starting ChaseBall Job");
+
+        //Todo by chasing the closes ball it is hard to get it on time
+        sortObject(balls);
+
         for (Ball ball: balls) {
+
+            // Checks if the ball is currently not dangerous and on the wall
             if (!ball.isDangerous() & isRunning() & platform.isOnPlatform(ball.getCoordinates())) {
                 logger.debug("Chasing the Ball at " + ball.getCoordinates());
+
                 Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
                 Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), neighbour);
+
+                // Checks if it is already near the ball
                 if (MatrixMath.distanceAB(ai.getCoordinates(),neighbour) <= ball.getRadius() + ai.getRadius()) {
                     succeed();
                     return;
                 }
+
                 if (vector.getX() != 0) {
-                    ai.setXVelocity((vector.getX() / Math.abs(vector.getX())) * ai.getSpeed());
+                    ai.setXVelocity(Maths.floatDivision(vector.getX() , Math.abs(vector.getX())) * ai.getSpeed());
                 }
                 if (vector.getY() != 0) {
-                    ai.setYVelocity((vector.getY() / Math.abs(vector.getY())) * ai.getSpeed());
+                    ai.setYVelocity(Maths.floatDivision(vector.getY() , Math.abs(vector.getY())) * ai.getSpeed());
                 }
                 succeed();
                 return;

@@ -112,6 +112,12 @@ public class GameSession {
                     }
 
                     Physics.collided(ball, player);
+
+                    player.setStunTimer(5); //TODO: Magic number.
+                    player.setVelocity(0,0);
+                    player.setState(ObjectState.IDLE);
+                    player.setSpeed(GameSettings.getDefaultPlayerSpeed());
+
                     logger.info(player.getCharacterID() + " collided with ball");
                 }
             }
@@ -123,8 +129,6 @@ public class GameSession {
                 }
             }
         }
-
-
     }
 
     /**
@@ -133,6 +137,9 @@ public class GameSession {
     private void updateAllPlayers() {
 
         for (Player player : allPlayers) {
+
+            player.decrementStunTimer();
+            if (player.getStunTimer() > 0) continue;
 
             Physics.move(player);
 
@@ -159,6 +166,7 @@ public class GameSession {
                 // Kill the player if they fall off the edge of the platform
                 if(!platform.isOnPlatform(player)) {
                     player.kill();
+                    player.setDeadByFalling(true);
                     gameData.getRankings().addFirst(player.getCharacterID());
                     livingPlayers.remove(player);
                     logger.info(player.getCharacterID() + " fell off");
@@ -177,19 +185,14 @@ public class GameSession {
         updateAllPlayers();
         updateAllBalls();
 
-        if(!isRunning()) {
-            gameData.getRankings().addFirst(livingPlayers.get(0).getCharacterID());
-            System.out.println(gameData.getRankings().toString());
-        }
-
-        // Handling the time-based elements of the game
+        // Handling the time elements of the game.
         gameData.incrementTicksElapsed();
         logger.debug("ticksElapsed: " + gameData.getTicksElapsed());
-
         if (gameData.getTicksElapsed() % 60 == 0 && gameData.getTimeLeft() > 0) {
             gameData.decrementTimeLeft();
         }
 
+        // If enough time has elapsed, then reduce the size of the stage.
         if (gameData.getTimeLeft() < gameData.getTimeToNextStage() * (platform.getStage() - 1)) {
             platform.nextStage();
             wall.nextStage();
@@ -197,6 +200,14 @@ public class GameSession {
 
         platform.shrink();
         wall.shrink();
+
+        PowerUpManager.spawnPowerUp(gameData);
+
+        // If someone has won, update the rankings one last time.
+        if(!isRunning()) {
+            gameData.getRankings().addFirst(livingPlayers.get(0).getCharacterID());
+            System.out.println(gameData.getRankings().toString());
+        }
 
     }
 
@@ -206,13 +217,14 @@ public class GameSession {
 
     /**
      * Updates the current player's velocity based on the given list of inputs.
-     * @param player
-     * @param keyPresses
-     * @param gameData
+     * @param player The playable character to move
+     * @param keyPresses The set of key presses determining the movement
+     * @param gameData game data to access time
      */
     public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {
             //TODO: Fix clunky dash.
+            player.setVelocity(0,0);
             player.setSpeed(0);
             long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
@@ -223,7 +235,7 @@ public class GameSession {
                     player.setState(ObjectState.CHARGING);
                 }
 
-                if (timeSpentCharging % 60 == 0) player.incrementChargeLevel();
+                if (timeSpentCharging % 20 == 0) player.incrementChargeLevel();
             }
         }
         else {
@@ -248,9 +260,15 @@ public class GameSession {
             }
 
             if (player.isCharging()) {
-                Physics.charge(player);
-                player.setTimeStartedCharging(gameData.getTicksElapsed());
-                player.setState(ObjectState.DASHING);
+                if (player.getChargeLevel() == 0) {
+                    // If the charge button was pressed but not long enough, reset.
+                    player.setState(ObjectState.IDLE);
+                } else {
+                    Physics.charge(player);
+                    player.setTimeStartedCharging(gameData.getTicksElapsed());
+                    player.setState(ObjectState.DASHING);
+
+                }
             }
         }
     }

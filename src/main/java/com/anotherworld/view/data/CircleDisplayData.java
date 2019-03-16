@@ -1,5 +1,7 @@
 package com.anotherworld.view.data;
 
+import com.anotherworld.model.ai.tools.Matrix;
+
 /**
  * Defines the data needed to display a circle.
  * @author Jake Stewart
@@ -8,5 +10,11 @@ package com.anotherworld.view.data;
 public interface CircleDisplayData extends DisplayData {
 
     public float getRadius();
+    
+    /**
+     * The object's current velocity in the world system.
+     * @return the velocity
+     */
+    public Matrix getVelocity();
     
 }
