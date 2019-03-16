@@ -144,6 +144,47 @@ public class Points2d {
     }
     
     /**
+     * Generates the points of a rectangle.
+     * @param w The width of the rectangle
+     * @param h The height of the rectangle
+     * @return The points of the rectangle
+     */
+    protected static final Points2d gen3DRectangle(float w, float h) {
+        Points2d points = new Points2d(4, 4);
+        points.setValue(0, 0, -w / 2);
+        points.setValue(2, 0, h / 2);
+        points.setValue(0, 1, w / 2);
+        points.setValue(2, 1, h / 2);
+        points.setValue(0, 2, w / 2);
+        points.setValue(2, 2, -h / 2);
+        points.setValue(0, 3, -w / 2);
+        points.setValue(2, 3, -h / 2);
+        
+        for (int j = 0; j < 4; j++) {
+            points.setValue(3, j, 1f);
+        }
+        return points;
+    }
+    
+    /**
+     * Generates the points of a circle.
+     * @param r The radius of the circle
+     * @return The points of the circle
+     */
+    protected static final Points2d gen3DCircle(float r) {
+        Points2d points = new Points2d(4, 38);
+        points.setValue(0, 0, 0f);
+        points.setValue(1, 0, 0f);
+        points.setValue(3, 0, 1f);
+        for (int i = 0; i <= 36; i += 1) {
+            points.setValue(0, i + 1, r * (float)(Math.sin(((double)i / 18) * Math.PI)));
+            points.setValue(2, i + 1, r * (float)(Math.cos(((double)i / 18) * Math.PI)));
+            points.setValue(3, i + 1, 1f);
+        }
+        return points;
+    }
+    
+    /**
      * Generates the points of a circle.
      * @param r The radius of the circle
      * @return The points of the circle
@@ -159,6 +200,41 @@ public class Points2d {
             points.setValue(3, i + 1, 1f);
         }
         return points;
+    }
+
+    /**
+     * Computes the cross product of two vectors iff they have an m value of 3 and n value of 1.
+     * @param b The vector to compute cross product with
+     * @return A new vector containing the cross product
+     */
+    public Points2d crossProduct(Points2d b) {
+        if (!(this.getM() == 3 && this.getN() == 1 && b.getM() == 3 && b.getN() == 1)) {
+            throw new IndexOutOfBoundsException("Cannot compute cross product");
+        }
+        Points2d result = new Points2d(3, 1);
+        result.setValue(0, 0, this.getValue(1, 0) * b.getValue(2, 0) - this.getValue(2, 0) * b.getValue(1, 0));
+        result.setValue(1, 0, this.getValue(2, 0) * b.getValue(0, 0) - this.getValue(0, 0) * b.getValue(2, 0));
+        result.setValue(2, 0, this.getValue(0, 0) * b.getValue(1, 0) - this.getValue(1, 0) * b.getValue(0, 0));
+        return result;
+    }
+    
+    /**
+     * Normalises a Points2d so it's magnitude is 1.
+     * @return the normalised points
+     */
+    public Points2d normalise() {
+        float sum = 0f;
+        for (int i = 0; i < this.value.length; i++) {
+            sum += this.value[i] * this.value[i];
+        }
+        sum = (float)Math.sqrt(sum);
+        Points2d result = new Points2d(this.getM(), this.getN());
+        if (sum != 0) {
+            for (int i = 0; i < result.value.length; i++) {
+                result.value[i] = this.value[i] / sum;
+            }
+        }
+        return result;
     }
     
 }

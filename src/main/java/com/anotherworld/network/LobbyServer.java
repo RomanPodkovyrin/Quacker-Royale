@@ -110,4 +110,16 @@ public class LobbyServer extends Thread{
     public ArrayList<String> getIPs(){
         return playersIPAddresses;
     }
+
+    /**
+     * Stops the communication with all clients and closes the socket
+     */
+    public void stopLobbyServer() {
+        allPlayersJoined = true;
+        try {
+            TCPsocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

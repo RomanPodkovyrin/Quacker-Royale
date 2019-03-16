@@ -1,6 +1,14 @@
 package com.anotherworld.view;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwInit;
+import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
+import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
+import static org.lwjgl.glfw.GLFW.glfwTerminate;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
+
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_NO_ERROR;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -33,7 +41,6 @@ import java.util.concurrent.TimeUnit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.Platform;
 
@@ -54,6 +61,8 @@ public class View implements Runnable {
     private CountDownLatch keyListenerLatch;
     
     private volatile KeyListener keyListener;
+    
+    private volatile boolean running;
 
     private int height;
 
@@ -74,6 +83,7 @@ public class View implements Runnable {
         this.width = width;
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
+        running = true;
         logger.info("Running view");
     }
 
@@ -118,6 +128,7 @@ public class View implements Runnable {
             logger.fatal("Unable to initialise glfw");
             throw new IllegalStateException("Couldn't initialise glfw");
         }
+        running = true;
 
         logger.debug("Creating window");
         window = glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL);
@@ -161,8 +172,8 @@ public class View implements Runnable {
             logger.error("Initialise GL error " + error);
             error = glGetError();
         }
-
-        while (!glfwWindowShouldClose(window)) {
+        
+        while (!glfwWindowShouldClose(window) && running) {
 
             glClear(GL_COLOR_BUFFER_BIT);
             
@@ -231,6 +242,10 @@ public class View implements Runnable {
             }
             ((GameScene)currentScene).updateGameObjects(disObj);
         }
+    }
+
+    public void close() {
+        running = false;
     }
 
 }

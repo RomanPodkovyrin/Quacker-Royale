@@ -1,9 +1,11 @@
 package com.anotherworld.view.data;
 
 import com.anotherworld.view.Programme;
+import com.anotherworld.view.SpriteSheet;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,12 +19,14 @@ import org.lwjgl.BufferUtils;
 public abstract class DisplayObject {
 
     private static Logger logger = LogManager.getLogger(DisplayObject.class);
+
+    private final float xShear;
+    
+    private final float yShear;
     
     private final Points2d points;
     
     private final int displayType;
-    
-    private final boolean isTextured;
     
     private final Programme programme;
     
@@ -33,28 +37,40 @@ public abstract class DisplayObject {
     private float g;
     
     private float b;
+    
+    private SpriteSheet spriteSheet;
 
-    public DisplayObject(Programme programme, Points2d points, int displayType, boolean isTextured) {
-        this(programme, points, displayType, isTextured, (float)Math.random(), (float)Math.random(), (float)Math.random());
+    public DisplayObject(Programme programme, Points2d points, int displayType) {
+        this(new SpriteSheet(), programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
+    }
+
+    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, int displayType) {
+        this(spriteSheet, programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
+    }
+    
+    public DisplayObject(Programme programme, Points2d points, int displayType, float r, float g, float b) {
+        this(new SpriteSheet(), programme, points, displayType, r, g, b);
     }
     
     /**
      * Creates a display object from the given points.
+     * @param programme The programme used to display the object
      * @param points The points to display the object
-     * @param displayType The way the points should be displayed
-     * @param isTextured If the object has a texture mapped to it
+     * @param displayType The type of opengl object to display
      * @param r How red the object is 0 to 1
      * @param g How green the object is 0 to 1
      * @param b How blue the object is 0 to 1
      */
-    public DisplayObject(Programme programme, Points2d points, int displayType, boolean isTextured, float r, float g, float b) {
+    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, int displayType, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
-        this.isTextured = isTextured;
         this.r = r;
         this.g = g;
         this.b = b;
         this.programme = programme;
+        this.xShear = 1;
+        this.yShear = 1;
+        this.spriteSheet = spriteSheet;
         programmeObjectId = programme.initialiseDisplayObject(this);
     }
     
@@ -86,11 +102,14 @@ public abstract class DisplayObject {
     }
     
     public void transform() {
-        programme.translatef(this.getX(), this.getY(), 0);
-        programme.rotatef(-this.getTheta(), 0, 0, 1);
+        programme.translatef(this.getX(), this.getY(), this.getZ());
+        //programme.rotatef(-this.getTheta(), 0, 0, 1);
     }
     
-    
+    /**
+     * Returns a float buffer containing the object co-ordinate points for the display object.
+     * @return the point buffer for the display object.
+     */
     public FloatBuffer getVertexBuffer() {
         FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
         for (Float f : points.getPoints()) {
@@ -112,6 +131,10 @@ public abstract class DisplayObject {
         return buff;
     }
     
+    /**
+     * Returns an int buffer containing the edges of the object.
+     * @return the edges
+     */
     public IntBuffer getEdgeBuffer() {
         IntBuffer b = BufferUtils.createIntBuffer(points.getN());
         for (int i = 0; i < points.getN(); i++) {
@@ -129,6 +152,10 @@ public abstract class DisplayObject {
         return getScale(1);
     }
     
+    private float getZScale() {
+        return -getScale(2);
+    }
+    
     private float getScale(int axis) {
         float min = points.getValue(axis, 0);
         float max = points.getValue(axis, 0);
@@ -142,13 +169,17 @@ public abstract class DisplayObject {
         return max - min;
     }
     
+    /**
+     * Returns a float buffer containing the texture co-ordinates for each point.
+     * @return the texture co-ordinates
+     */
     public FloatBuffer getTextureBuffer() {
         FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
         float xScale = getXScale();
         float yScale = getYScale();
         for (int j = 0; j < points.getN(); j++) {
             b.put((points.getValue(0, j) / xScale) + 0.5f);
-            b.put(-(points.getValue(1, j) / yScale) + 0.5f);
+            b.put((points.getValue(1, j) / yScale) + 0.5f);
         }
         b.flip();
         return b;
@@ -198,10 +229,6 @@ public abstract class DisplayObject {
         return b;
     }
     
-    public boolean hasTexture() {
-        return isTextured;
-    }
-    
     /**
      * Returns the angle of the object in degrees.
      * @return the angle of the object
@@ -219,6 +246,12 @@ public abstract class DisplayObject {
      * @return the y position
      */
     public abstract float getY();
+
+    /**
+     * Returns the z position of the object.
+     * @return the z position
+     */
+    public abstract float getZ();
     
     /**
      * Returns true if the object should be drawn.
@@ -234,6 +267,18 @@ public abstract class DisplayObject {
 
     public int getNumberOfPoints() {
         return this.points.getN();
+    }
+
+    public float getXShear() {
+        return xShear;
+    }
+
+    public float getYShear() {
+        return yShear;
+    }
+
+    public SpriteSheet getSpriteSheet() {
+        return spriteSheet;
     }
     
 }

@@ -1,7 +1,13 @@
 package com.anotherworld.tools.input;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.glfwGetKey;
+
 import java.util.ArrayList;
-import static org.lwjgl.glfw.GLFW.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,11 +26,21 @@ public class KeyListener {
     public ArrayList<Input> getKeyPresses() {
         ArrayList<Input> keyPresses = new ArrayList<>();
 
-        if (glfwGetKey(window, GLFW_KEY_UP)    == 1) keyPresses.add(Input.UP);
-        if (glfwGetKey(window, GLFW_KEY_DOWN)  == 1) keyPresses.add(Input.DOWN);
-        if (glfwGetKey(window, GLFW_KEY_LEFT)  == 1) keyPresses.add(Input.LEFT);
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == 1) keyPresses.add(Input.RIGHT);
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == 1) keyPresses.add(Input.CHARGE);
+        if (glfwGetKey(window, GLFW_KEY_UP)    == 1) {
+            keyPresses.add(Input.UP);
+        }
+        if (glfwGetKey(window, GLFW_KEY_DOWN)  == 1) {
+            keyPresses.add(Input.DOWN);
+        }
+        if (glfwGetKey(window, GLFW_KEY_LEFT)  == 1) {
+            keyPresses.add(Input.LEFT);
+        }
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == 1) {
+            keyPresses.add(Input.RIGHT);
+        }
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == 1) {
+            keyPresses.add(Input.CHARGE);
+        }
 
         return keyPresses;
     }

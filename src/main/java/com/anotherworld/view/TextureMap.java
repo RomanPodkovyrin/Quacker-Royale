@@ -1,28 +1,14 @@
 package com.anotherworld.view;
 
-import static org.lwjgl.opengl.GL46.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL46.GL_LINEAR;
-import static org.lwjgl.opengl.GL46.GL_NEAREST;
-import static org.lwjgl.opengl.GL46.GL_RGBA;
 import static org.lwjgl.opengl.GL46.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL46.GL_TEXTURE_MAG_FILTER;
-import static org.lwjgl.opengl.GL46.GL_TEXTURE_MIN_FILTER;
-import static org.lwjgl.opengl.GL46.GL_TEXTURE_WRAP_S;
-import static org.lwjgl.opengl.GL46.GL_TEXTURE_WRAP_T;
-import static org.lwjgl.opengl.GL46.GL_UNSIGNED_BYTE;
 import static org.lwjgl.opengl.GL46.glBindTexture;
-import static org.lwjgl.opengl.GL46.glDeleteTextures;
-import static org.lwjgl.opengl.GL46.glGenTextures;
-import static org.lwjgl.opengl.GL46.glTexImage2D;
-import static org.lwjgl.opengl.GL46.glTexParameteri;
-
-import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
-import static org.lwjgl.stb.STBImage.stbi_failure_reason;
-import static org.lwjgl.stb.STBImage.stbi_load;
+import static org.lwjgl.opengl.GL46.glGetUniformLocation;
+import static org.lwjgl.opengl.GL46.glUniform1i;
+import static org.lwjgl.opengl.GL46.glUniform2f;
+import static org.lwjgl.opengl.GL46.glUniformMatrix4fv;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
+import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
@@ -33,107 +19,54 @@ import org.lwjgl.BufferUtils;
  */
 public class TextureMap {
     
-    private final int height;
+    public static final int PLAYER_TEXTURE_BUFFER = 0;
+    public static final int BALL_TEXTURE_BUFFER = 1;
     
-    private final int width;
-    
-    private final int comp;
-    
-    private final ByteBuffer pixels;
-    
-    private final int id;
+    private TextureBuffer[] textureBuffers;
     
     /**
-     * Loads the texture map from the specified location.
-     * @param location the texture map location
+     * Loads the textures from files the specified folder.
+     * @param location the texture folder location
      */
     public TextureMap(String location) throws IOException {
-        IntBuffer x = BufferUtils.createIntBuffer(1);
-        IntBuffer y = BufferUtils.createIntBuffer(1);
-        IntBuffer comp = BufferUtils.createIntBuffer(1);
-        pixels = stbi_load(location, x, y, comp, STBI_rgb_alpha);
-        height = y.get();
-        width = x.get();
-        this.comp = comp.get();
-        if (pixels == null) {
-            throw new IOException(stbi_failure_reason());
+        textureBuffers = new TextureBuffer[2];
+        textureBuffers[PLAYER_TEXTURE_BUFFER] = new TextureBuffer(location + "miniDuck.png", 4, 5);
+        textureBuffers[BALL_TEXTURE_BUFFER] = new TextureBuffer(location + "NeutralBall/NeutralBall0.png", 1, 1);
+    }
+    
+    /**
+     * Loads a texture the correct texture for an object to the opengl buffers.
+     * @param programmeId The programme id to use
+     * @param spriteSheet The sprite sheet to load
+     * @param xShear The x shear on the sprite
+     * @param yShear The y shear on the sprite
+     */
+    public void loadTexture(int programmeId, SpriteSheet spriteSheet, float xShear, float yShear) {
+
+        //Change this to select right texture from buffer
+        glUniform1i(glGetUniformLocation(programmeId, "hasTex"), spriteSheet.isTextured() ? 1 : 0);
+        
+        if (spriteSheet.isTextured()) {
+            glBindTexture(GL_TEXTURE_2D, textureBuffers[spriteSheet.getTextureBuffer()].getId());
+            glUniform1i(glGetUniformLocation(programmeId, "tex"), 0);
+            float[] matrix = textureBuffers[spriteSheet.getTextureBuffer()].getTextureTransformation(spriteSheet.getTextureId()).getPoints();
+            FloatBuffer temp2 = BufferUtils.createFloatBuffer(16);
+            temp2.put(matrix);
+            temp2.flip();
+            glUniformMatrix4fv(glGetUniformLocation(programmeId, "textureTransformation"), false, temp2);
+            glUniform2f(glGetUniformLocation(programmeId, "Shear"), xShear, yShear);
         }
-        pixels.limit(pixels.capacity());
-        id = loadTextureMap();
+        
     }
 
-    
-    private int loadTextureMap() {
-        int id = glGenTextures();
-        
-        glBindTexture(GL_TEXTURE_2D, id);
-        
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        
-        glTexImage2D(GL_TEXTURE_2D, 0, this.getEncoding(), this.getWidth(), this.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, this.getPixels());
-        
-        glBindTexture(GL_TEXTURE_2D, 0);
-        
-        return id;
-    }
-    
+    /**
+     * Destroys the opengl buffers for the textures.
+     */
     public void destroy() {
-        glDeleteTextures(GL_TEXTURE_2D);
-    }
-
-    /**
-     * Returns the height of the texture map in pixels.
-     * @return the height
-     */
-    public int getHeight() {
-        return height;
-    }
-
-    /**
-     * Returns the width of the texture map in pixels.
-     * @return the width
-     */
-    public int getWidth() {
-        return width;
-    }
-    
-    /**
-     * Returns the type of opengl enum encoding used by the loaded image.
-     * @return the type of encoding
-     */
-    private int getEncoding() {
-        return GL_RGBA;
-    }
-    
-    /**
-     * Returns the opengl texture id.
-     * @return the opengl id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * Returns the pixels as a float array.
-     * @return the pixels
-     */
-    public ByteBuffer getPixels() {
-        pixels.position(0);
-        pixels.limit(pixels.capacity());
-        return pixels;
-    }
-    
-    @Override
-    public String toString() {
-        String s = "x: " + width + "y: " + height + "# of channels: " + comp + "size: " + pixels.capacity() + "\n";
-        //TODO make this more efficient
-        while (pixels.hasRemaining()) {
-            s = s + pixels.get() + ";";
+        for (TextureBuffer textureBuffer : textureBuffers) {
+            textureBuffer.destroy();
         }
-        return s;
+        textureBuffers = new TextureBuffer[0];
     }
     
 }

@@ -1,5 +1,6 @@
 package com.anotherworld.tools.datapool;
 
+import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
 
@@ -122,4 +123,10 @@ public class WallData implements RectangleDisplayData, Serializable {
     public ObjectState getState() {
         return null;
     }
+
+    @Override
+    public Matrix getVelocity() {
+        return new Matrix(0, 0);
+    }
+    
 }
