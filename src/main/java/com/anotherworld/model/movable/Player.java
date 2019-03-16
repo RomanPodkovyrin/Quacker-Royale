@@ -43,11 +43,17 @@ public class Player extends AbstractMovable {
             this.setStunTimer(this.getStunTimer() - 1);
     }
 
-    public boolean isDead()     { return playerData.getState().equals(ObjectState.DEAD); }
-
-    public boolean isDeadByFalling() { return playerData.isDeadByFalling(); }
+    public boolean isDead() { return playerData.getState().equals(ObjectState.DEAD); }
 
     public void setDeadByFalling(boolean deadByFalling) { playerData.setDeadByFalling(deadByFalling);}
+
+    public boolean isShielded() { return playerData.isShielded(); }
+
+    public void setShielded(boolean shielded) { playerData.setShielded(shielded); }
+
+    public boolean isTimeStopper() { return playerData.isTimeStopper(); }
+
+    public void setTimeStopper(boolean timeStopper) { playerData.setTimeStopper(timeStopper); }
 
     public boolean isCharging() { return playerData.getState().equals(ObjectState.CHARGING); }
 

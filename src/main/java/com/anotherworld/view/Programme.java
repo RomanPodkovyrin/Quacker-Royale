@@ -2,6 +2,7 @@ package com.anotherworld.view;
 
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.Matrix2d;
+import com.anotherworld.view.data.Points2d;
 import com.anotherworld.view.graphics.Camera;
 
 import java.util.Stack;
@@ -51,8 +52,31 @@ public abstract class Programme {
      * @param camera The camera to use for display
      */
     public void transform(Camera camera) {
-        this.scalef(2 / camera.getWidth(), -2 / camera.getHeight(), 1);
-        this.translatef(-camera.getX(), -camera.getY(), 0);
+        this.cameraProjectionf(camera.getDepth());
+        this.scalef(1 / camera.getWidth(), -1 / camera.getHeight(), 1);
+        this.cameraRotation(camera);
+        this.translatef(-camera.getX(), -camera.getY(), -camera.getZ());
+    }
+    
+    private void cameraRotation(Camera camera) {
+        Points2d n = camera.getViewDirection().normalise();
+        Points2d v = camera.getHandedness().normalise();
+        Points2d u = camera.getUpDirection().normalise();
+        Matrix2d rotation = new Matrix2d(4, 4);
+        for (int i = 0; i < 3; i++) {
+            rotation.setValue(0, i, v.getValue(i, 0));
+            rotation.setValue(1, i, u.getValue(i, 0));
+            rotation.setValue(2, i, n.getValue(i, 0));
+        }
+        rotation.setValue(3, 3, 1f);
+        this.multiplyCurrent(rotation);
+    }
+
+    private void cameraProjectionf(float depth) {
+        Matrix2d projection = this.getIdentity();
+        projection.setValue(3, 2, 1 / depth);
+        projection.setValue(2, 2, 0);
+        this.multiplyCurrent(projection);
     }
 
     /**

@@ -1,11 +1,13 @@
 package com.anotherworld.view.graphics;
 
+import com.anotherworld.view.data.Points2d;
+
 /**
  * Creates a static camera to view the game.
  * @author Jake Stewart
  *
  */
-public class Static2dCamera implements Camera {
+public class Static2dCamera extends Camera {
 
     private final float x;
     private final float y;
@@ -44,6 +46,23 @@ public class Static2dCamera implements Camera {
     @Override
     public float getHeight() {
         return height;
+    }
+    
+    @Override
+    public float getDepth() {
+        return 0.5f;
+    }
+
+    @Override
+    public float getZ() {
+        return -22.5f;
+    }
+    
+    @Override
+    public Points2d getViewDirection() {
+        Points2d tempUp = new Points2d(3, 1);
+        tempUp.setValue(2, 0, 1f);
+        return tempUp;
     }
 
 }

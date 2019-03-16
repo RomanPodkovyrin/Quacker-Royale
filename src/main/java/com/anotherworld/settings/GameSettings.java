@@ -454,6 +454,11 @@ public class GameSettings {
     }
 
     /**
+     * @return returns the default player health from properties file
+     */
+    public static int getDefaultPlayerHealth() { return defaultPlayerHealth; }
+
+    /**
      * @return returns the default player speed from properties file
      */
     public static float getDefaultPlayerSpeed() {

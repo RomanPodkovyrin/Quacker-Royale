@@ -4,5 +4,6 @@ import java.io.Serializable;
 
 public enum PowerUpType implements Serializable {
     HEAL,
-    TIME_STOP
+    TIME_STOP,
+    SHIELD
 }

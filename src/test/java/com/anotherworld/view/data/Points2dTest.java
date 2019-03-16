@@ -1,11 +1,14 @@
 package com.anotherworld.view.data;
 
+import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -129,6 +132,21 @@ public class Points2dTest {
     }
     
     @Test
+    public void gen3DCircle_ValidR_CircleIsReturned() {
+        Points2d circle = Points2d.gen3DCircle(1);
+        assertThat(circle.getValue(0, 0), is(0f));
+        assertThat(circle.getValue(1, 0), is(0f));
+        assertThat(circle.getValue(2, 0), is(0f));
+        for (int j = 1; j < circle.getN(); j++) {
+            double radius = Math.pow(circle.getValue(0, j) / circle.getValue(3, j), 2);
+            radius += Math.pow(circle.getValue(1, j) / circle.getValue(3, j), 2);
+            radius += Math.pow(circle.getValue(2, j) / circle.getValue(3, j), 2);
+            radius = Math.sqrt(radius);
+            assertThat(radius, is(closeTo(1f, TEST_ERROR)));
+        }
+    }
+    
+    @Test
     public void getPoints_RandomValues_ReturnsThePoints() {
         Points2d a = new Points2d(12, 30);
         for (int i = 0; i < a.getM(); i++) {
@@ -200,6 +218,24 @@ public class Points2dTest {
     }
     
     @Test
+    public void gen3DRectangle_NormalValues_ReturnsRectangle() {
+        Points2d a = Points2d.gen3DRectangle(100, 50);
+        assertThat(a.getN(), is(greaterThan(0)));
+        ArrayList<Double> x = new ArrayList<>();
+        ArrayList<Double> z = new ArrayList<>();
+        for (int j = 0; j < a.getN(); j++) {
+            assertThat((double)a.getValue(0, j), is(anyOf(closeTo(50f, TEST_ERROR), closeTo(-50f, TEST_ERROR))));
+            assertThat((double)a.getValue(2, j), is(anyOf(closeTo(25f, TEST_ERROR), closeTo(-25f, TEST_ERROR))));
+            x.add((double)a.getValue(0, j));
+            z.add((double)a.getValue(2, j));
+        }
+        assertThat(x, hasItem(closeTo(-50d, TEST_ERROR)));
+        assertThat(x, hasItem(closeTo(50d, TEST_ERROR)));
+        assertThat(z, hasItem(closeTo(-25d, TEST_ERROR)));
+        assertThat(z, hasItem(closeTo(25d, TEST_ERROR)));
+    }
+    
+    @Test
     public void genWall_NormalValues_ReturnsWall() {
         Points2d a = Points2d.genWall(100, 50, 5);
         assertThat(a.getN(), is(greaterThan(0)));
@@ -219,6 +255,86 @@ public class Points2dTest {
         assertThat(y, hasItem(closeTo(25d, TEST_ERROR)));
         assertThat(y, hasItem(closeTo(-30d, TEST_ERROR)));
         assertThat(y, hasItem(closeTo(30d, TEST_ERROR)));
+    }
+    
+    @Test
+    public void normalise_ZeroVector_ZeroVector() {
+        Points2d b = new Points2d(40, 20);
+        b = b.normalise();
+        for (int i = 0; i < b.getM(); i++) {
+            for (int j = 0; j < b.getN(); j++) {
+                assertThat((double)b.getValue(i, j), is(closeTo(0f, TEST_ERROR)));
+            }
+        }
+    }
+    
+    @Test
+    public void normalise_OneOneVector_OneOneVector() {
+        Points2d b = new Points2d(4, 1);
+        b.setValue(2, 0, 1f);
+        b = b.normalise();
+        for (int i = 0; i < b.getM(); i++) {
+            for (int j = 0; j < b.getN(); j++) {
+                assertThat((double)b.getValue(i, j), is(closeTo((i == 2 && j == 0) ? 1f : 0f, TEST_ERROR)));
+            }
+        }
+    }
+    
+    @Test
+    public void normalise_RandomVector_NormalisedVector() {
+        Points2d b = new Points2d(50, 20);
+        for (int i = 0; i < b.getM(); i++) {
+            for (int j = 0; j < b.getN(); j++) {
+                b.setValue(i, j, (float)Math.random());
+            }
+        }
+        b = b.normalise();
+        float total = 0f;
+        for (int i = 0; i < b.getM(); i++) {
+            for (int j = 0; j < b.getN(); j++) {
+                assertThat(b.getValue(i, j), is(allOf(greaterThanOrEqualTo(-1f), lessThanOrEqualTo(1f))));
+                total += b.getValue(i, j) * b.getValue(i, j);
+            }
+        }
+        assertThat((double)total, is(closeTo(1f, TEST_ERROR)));
+    }
+    
+    @Test
+    public void crossProduct_ZeroVector_ZeroVector() {
+        Points2d a = new Points2d(3, 1);
+        Points2d b = new Points2d(3, 1);
+        Points2d c = a.crossProduct(b);
+        for (int i = 0; i < 3; i++) {
+            assertThat((double)c.getValue(i, 0), is(closeTo(0f, TEST_ERROR)));
+        }
+    }
+    
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void crossProduct_WrongVectoram_Error() {
+        Points2d a = new Points2d(2, 1);
+        Points2d b = new Points2d(3, 1);
+        a.crossProduct(b);
+    }
+    
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void crossProduct_WrongVectoran_Error() {
+        Points2d a = new Points2d(3, 2);
+        Points2d b = new Points2d(3, 1);
+        a.crossProduct(b);
+    }
+    
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void crossProduct_WrongVectorbm_Error() {
+        Points2d a = new Points2d(3, 1);
+        Points2d b = new Points2d(2, 1);
+        a.crossProduct(b);
+    }
+    
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void crossProduct_WrongVectorbn_Error() {
+        Points2d a = new Points2d(3, 1);
+        Points2d b = new Points2d(3, 0);
+        a.crossProduct(b);
     }
 
 }

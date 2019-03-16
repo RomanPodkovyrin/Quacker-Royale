@@ -29,6 +29,10 @@ public class CheckIfSaveToGo extends Job {
     //The allowed safe distance between the ball and the player
     private float safeDistance = 2;
 
+    public CheckIfSaveToGo(){
+
+    }
+
     @Override
     public void reset() {
 

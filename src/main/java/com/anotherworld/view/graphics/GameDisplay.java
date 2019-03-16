@@ -1,5 +1,6 @@
 package com.anotherworld.view.graphics;
 
+import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
 
 import java.util.ArrayList;
@@ -26,6 +27,9 @@ public class GameDisplay extends GraphicsDisplay {
         }
     }
     
-    
+    @Override
+    public void transform(Programme programme) {
+        super.transform(programme);
+    }
     
 }

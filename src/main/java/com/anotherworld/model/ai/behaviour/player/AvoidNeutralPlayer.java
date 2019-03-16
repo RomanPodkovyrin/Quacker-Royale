@@ -21,6 +21,10 @@ public class AvoidNeutralPlayer extends Job {
 
     private static Logger logger = LogManager.getLogger(AvoidNeutralPlayer.class);
 
+    public AvoidNeutralPlayer(){
+
+    }
+
     @Override
     public void reset() {
 

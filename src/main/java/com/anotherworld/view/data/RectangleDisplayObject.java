@@ -24,7 +24,7 @@ public class RectangleDisplayObject extends DisplayObject {
      * @param displayData The rectangle to display
      */
     public RectangleDisplayObject(Programme programme, RectangleDisplayData displayData) {
-        super(programme, Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), GL_TRIANGLE_FAN, false, 0.6f, 0.4f, 0f);
+        super(programme, Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), GL_TRIANGLE_FAN, 0.6f, 0.4f, 0f);
         this.displayData = displayData;
         this.maxWidth = displayData.getWidth();
         this.maxHeight = displayData.getHeight();
@@ -52,6 +52,11 @@ public class RectangleDisplayObject extends DisplayObject {
     @Override
     public float getY() {
         return displayData.getYCoordinate();
+    }
+    
+    @Override
+    public float getZ() {
+        return 0f;
     }
     
     @Override

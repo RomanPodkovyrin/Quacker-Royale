@@ -1,9 +1,15 @@
 package com.anotherworld.tools;
 
-import org.junit.Before;
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.Writer;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class ConfigToolTest {
     private PropertyReader testProperty;
@@ -15,25 +21,32 @@ public class ConfigToolTest {
     //private
 
     @Before
-    public void setUp(){
+    public void setUp() {
         try {
+            File file = new File("res/config/" + propertyFileName);
+            if (!file.exists()) {
+                System.out.println("Writing");
+                Writer output = new BufferedWriter(new FileWriter("res/config/" + propertyFileName));
+                output.append("#Sun Feb 17 16:51:22 GMT 2019\n" + "age=21\n" + "name=Bob\n" + "");
+                output.close();
+            }
             testProperty = new PropertyReader(propertyFileName);
             testProperty.setValue(nameTag, "Bob");
             testProperty.setValue(ageTag,"21");
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void testGettingNonExisting() throws Exception{
+    public void testGettingNonExisting() throws Exception {
 
         //Test the non-existing tag
-        assertNull(testProperty.getValue(emptyTag) );
+        assertNull(testProperty.getValue(emptyTag));
     }
 
     @Test
-    public  void testGettingValues() throws Exception{
+    public  void testGettingValues() throws Exception {
         setUp();
 
         //Reading values
@@ -43,7 +56,7 @@ public class ConfigToolTest {
     }
 
     @Test
-    public void testSettingValues()throws Exception{
+    public void testSettingValues()throws Exception {
 
         //Changing existing values
         testProperty.setValue(nameTag,"Mike");
@@ -53,7 +66,7 @@ public class ConfigToolTest {
     }
 
     @Test
-    public void testSettingNewValues() throws Exception{
+    public void testSettingNewValues() throws Exception {
 
         //checking key are non-existent
         assertNull(testProperty.getValue(emptyTag));
@@ -69,7 +82,7 @@ public class ConfigToolTest {
     }
 
     @Test
-    public void testRemoval() throws Exception{
+    public void testRemoval() throws Exception {
 
         //Check that doesn't exist
         assertNull(testProperty.getValue("NonExistent"));
