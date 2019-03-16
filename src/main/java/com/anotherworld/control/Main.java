@@ -8,6 +8,7 @@ import com.anotherworld.network.NetworkController;
 import com.anotherworld.network.Server;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
+import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
@@ -36,6 +37,15 @@ public class Main {
     private static Logger logger = LogManager.getLogger(Main.class);
     private boolean runTheHostGame = false;
 
+    private int defaultSinglePlayerAI;
+    private int defaultSinglePlayerPlayers;
+    private int defaultSinglePlayerBalls;
+
+    private int defaultMultiPlayerAI;
+    private int defaultMultiPlayerBalls;
+    private int defaultNumberClients;
+
+
     /**
      * The main should only be used for testing.
      *
@@ -58,6 +68,19 @@ public class Main {
     }
 
     public Main() {
+        PropertyReader propertyFileLogic = null;
+        try {
+            propertyFileLogic = new PropertyReader("logic.properties");
+            this.defaultSinglePlayerAI = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_AI"));
+            this.defaultSinglePlayerPlayers = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_PLAYERS"));
+            this.defaultSinglePlayerBalls = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_BALLS"));
+            this.defaultMultiPlayerAI = Integer.parseInt(propertyFileLogic.getValue("MULTI_PLAYER_AI"));
+            this.defaultMultiPlayerBalls = Integer.parseInt(propertyFileLogic.getValue("MULTI_PLAYER_BALLS"));
+            this.defaultNumberClients = Integer.parseInt(propertyFileLogic.getValue("NUMBER_CLIENTS"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // need to set default config files?
     }
 
@@ -99,21 +122,17 @@ public class Main {
     public void host() {
         logger.info("User starting the server");
 
-        // number of network players
-        int numberOfPlayers = 1;
-        int numberOfBalls = 3;
-
         logger.trace("Multiplayer lobby is created and started");
-        LobbyServer lobbyServer = new LobbyServer(numberOfPlayers);
+        LobbyServer lobbyServer = new LobbyServer(defaultNumberClients);
         lobbyServer.start();
 
-        logger.trace("Setting up the game session with " + numberOfPlayers + 1 + " players, " + numberOfBalls + " balls");
-        GameSettings settings = new GameSettings(numberOfPlayers + 1,0,3);
+        logger.trace("Setting up the game session with " + defaultNumberClients + 1 + " players, " + defaultMultiPlayerBalls + " balls");
+        GameSettings settings = new GameSettings(defaultNumberClients + 1,defaultMultiPlayerAI,defaultMultiPlayerBalls);
 
         logger.trace("Setting up the game Server");
         Server server = null;
         try {
-            server  = new Server(numberOfPlayers, settings);
+            server  = new Server(defaultNumberClients, settings);
             server.start();
         } catch (SocketException e) {
             e.printStackTrace();
@@ -237,7 +256,7 @@ public class Main {
     }
 
     public void startSinglePlayer() {
-        GameSettings settings = new GameSettings(4,3,6);
+        GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
         startTheGame(settings, new NetworkController());
     }
 
