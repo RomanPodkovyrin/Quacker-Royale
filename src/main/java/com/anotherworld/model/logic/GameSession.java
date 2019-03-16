@@ -80,60 +80,59 @@ public class GameSession {
         for(Ball ball : this.balls) {
 
             // Move the ball
-            if (!gameData.isTimeStopped()) {
-                Physics.move(ball);
+            if (gameData.isTimeStopped()) continue;
+            Physics.move(ball);
 
 
-                // Handle the danger state of the balls.
-                if (ball.isDangerous()) {
-                    ball.reduceTimer(GameSettings.getBallTimerDecrement());
-                    if (ball.getTimer() <= 0) {
-                        ball.setDangerous(false);
-                        ball.setSpeed(GameSettings.getDefaultBallSpeed());
-                    }
+            // Handle the danger state of the balls.
+            if (ball.isDangerous()) {
+                ball.reduceTimer(GameSettings.getBallTimerDecrement());
+                if (ball.getTimer() <= 0) {
+                    ball.setDangerous(false);
+                    ball.setSpeed(GameSettings.getDefaultBallSpeed());
                 }
+            }
 
-                // Check if a ball has collided with the wall.
-                if (Physics.bouncedWall(ball, this.wall)) {
-                    AudioControl.ballCollidedWithWall();
-                }
+            // Check if a ball has collided with the wall.
+            if (Physics.bouncedWall(ball, this.wall)) {
+                AudioControl.ballCollidedWithWall();
+            }
 
-                // Check if a ball has collided with a player.
-                for (Player player : this.allPlayers) {
-                    if (player.isDead()) continue;
+            // Check if a ball has collided with a player.
+            for (Player player : this.allPlayers) {
+                if (player.isDead()) continue;
 
-                    if (Physics.checkCollision(ball, player)) {
+                if (Physics.checkCollision(ball, player)) {
 
-                        if (!ball.isDangerous()) {
-                            ball.setDangerous(true);
-                            ball.setTimer(GameSettings.getBallMaxTimer());
-                            ball.setSpeed(ball.getSpeed() * 2);
+                    if (!ball.isDangerous()) {
+                        ball.setDangerous(true);
+                        ball.setTimer(GameSettings.getBallMaxTimer());
+                        ball.setSpeed(ball.getSpeed() * 2);
+                    } else {
+                        if (player.isShielded()) {
+                            player.setShielded(false);
+                            //TODO: Play shield break sound effect
                         } else {
-                            if (player.isShielded()) {
-                                player.setShielded(false);
-                                //TODO: Play shield break sound effect
-                            } else {
-                                player.damage(ball.getDamage());
-                                AudioControl.playerCollidedWithBall();
-                            }
+                            player.damage(ball.getDamage());
+                            AudioControl.playerCollidedWithBall();
                         }
-
-                        Physics.collided(ball, player);
-
-                        player.setStunTimer(5); //TODO: Magic number.
-                        player.setVelocity(0, 0);
-                        player.setState(ObjectState.IDLE);
-                        player.setSpeed(GameSettings.getDefaultPlayerSpeed());
-
-                        logger.info(player.getCharacterID() + " collided with ball");
                     }
+
+                    Physics.collided(ball, player);
+
+                    player.setStunTimer(5); //TODO: Magic number.
+                    player.setVelocity(0, 0);
+                    player.setState(ObjectState.IDLE);
+                    player.setSpeed(GameSettings.getDefaultPlayerSpeed());
+
+                    logger.info(player.getCharacterID() + " collided with ball");
                 }
+            }
 
-                // Check if a ball has collided with another ball.
-                for (Ball ballB : this.balls) {
-                    if (!ball.equals(ballB) && Physics.checkCollision(ball, ballB)) {
-                        Physics.collided(ball, ballB);
-                    }
+            // Check if a ball has collided with another ball.
+            for (Ball ballB : this.balls) {
+                if (!ball.equals(ballB) && Physics.checkCollision(ball, ballB)) {
+                    Physics.collided(ball, ballB);
                 }
             }
         }
@@ -148,7 +147,12 @@ public class GameSession {
 
             player.decrementStunTimer();
             if (player.getStunTimer() > 0) continue;
-            if (gameData.isTimeStopped() && !player.isTimeStopper()) continue;
+            if (!gameData.isTimeStopped()){
+                Physics.move(player);
+            } else {
+                if (player.isTimeStopper())
+                    Physics.move(player);
+            }
 
             if (!player.isDead()) {
 
