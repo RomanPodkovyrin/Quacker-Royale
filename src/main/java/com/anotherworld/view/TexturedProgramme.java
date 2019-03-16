@@ -153,8 +153,6 @@ public class TexturedProgramme extends Programme {
         glEnable(GL_ALPHA_TEST);
         glAlphaFunc(GL_GREATER, 0);
         glUseProgram(programmeId);
-        glBindTexture(GL_TEXTURE_2D, textureMap.getId());
-        glUniform1i(glGetUniformLocation(programmeId, "tex"), 0);
     }
 
     @Override

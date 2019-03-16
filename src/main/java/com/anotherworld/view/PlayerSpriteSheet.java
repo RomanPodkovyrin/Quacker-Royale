@@ -27,7 +27,6 @@ public class PlayerSpriteSheet extends SpriteSheet {
     @Override
     public int getTextureId() {
         int id = ((int)((SpriteSheet.getCurrentTime() / FRAME_TIME) % (MAX_ID + 1))) + BASE_ID + getDirectionOffset();
-        System.out.println((SpriteSheet.getCurrentTime() / FRAME_TIME) % (MAX_ID + 1));
         return id;
     }
 
