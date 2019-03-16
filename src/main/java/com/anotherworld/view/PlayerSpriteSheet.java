@@ -15,6 +15,10 @@ public class PlayerSpriteSheet extends SpriteSheet {
     
     private static final long FRAME_TIME = 200;
     
+    private static final float MIN_ANIMATION_SPEED = 0.1f;
+    
+    private int directionOffset = 0;
+    
     public PlayerSpriteSheet(PlayerDisplayData data) {
         this.data = data;
     }
@@ -26,7 +30,12 @@ public class PlayerSpriteSheet extends SpriteSheet {
 
     @Override
     public int getTextureId() {
-        int id = ((int)((SpriteSheet.getCurrentTime() / FRAME_TIME) % (MAX_ID + 1))) + BASE_ID + getDirectionOffset();
+        int id = 0;
+        if (data.getVelocity().magnitude() >= MIN_ANIMATION_SPEED) {
+            directionOffset = getDirectionOffset();
+            id = ((int)((SpriteSheet.getCurrentTime() / FRAME_TIME) % (MAX_ID + 1))) + BASE_ID;
+        }
+        id += directionOffset;
         return id;
     }
 

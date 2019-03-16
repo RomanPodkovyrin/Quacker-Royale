@@ -1,5 +1,6 @@
 package com.anotherworld.view.data;
 
+import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 
 /**
@@ -26,6 +27,12 @@ public interface DisplayData {
      * @return the angle
      */
     public float getAngle();
+    
+    /**
+     * The object's current velocity in the world system.
+     * @return the velocity
+     */
+    public Matrix getVelocity();
     
     /**
      * The object's current state.

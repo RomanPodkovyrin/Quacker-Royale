@@ -79,6 +79,14 @@ public class Matrix implements Serializable {
         x = Maths.floatDivision(x , magnitude);
         y = Maths.floatDivision(y , magnitude);
     }
+    
+    /**
+     * Returns the magnitude of the vector.
+     * @return the magnitude
+     */
+    public float magnitude() {
+        return MatrixMath.magnitude(this);
+    }
 
     /**
      * Divide Matrix by a scalar.

@@ -59,10 +59,14 @@ public class TextureMap {
         
     }
 
+    /**
+     * Destroys the opengl buffers for the textures.
+     */
     public void destroy() {
         for (TextureBuffer textureBuffer : textureBuffers) {
             textureBuffer.destroy();
         }
+        textureBuffers = new TextureBuffer[0];
     }
     
 }

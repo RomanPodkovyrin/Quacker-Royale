@@ -106,7 +106,10 @@ public abstract class DisplayObject {
         //programme.rotatef(-this.getTheta(), 0, 0, 1);
     }
     
-    
+    /**
+     * Returns a float buffer containing the object co-ordinate points for the display object.
+     * @return the point buffer for the display object.
+     */
     public FloatBuffer getVertexBuffer() {
         FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
         for (Float f : points.getPoints()) {
@@ -128,6 +131,10 @@ public abstract class DisplayObject {
         return buff;
     }
     
+    /**
+     * Returns an int buffer containing the edges of the object.
+     * @return the edges
+     */
     public IntBuffer getEdgeBuffer() {
         IntBuffer b = BufferUtils.createIntBuffer(points.getN());
         for (int i = 0; i < points.getN(); i++) {
@@ -162,6 +169,10 @@ public abstract class DisplayObject {
         return max - min;
     }
     
+    /**
+     * Returns a float buffer containing the texture co-ordinates for each point.
+     * @return the texture co-ordinates
+     */
     public FloatBuffer getTextureBuffer() {
         FloatBuffer b = BufferUtils.createFloatBuffer(points.getPoints().length);
         float xScale = getXScale();
