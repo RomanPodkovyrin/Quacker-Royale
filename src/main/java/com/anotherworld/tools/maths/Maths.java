@@ -14,7 +14,7 @@ public class Maths {
     }
 
     public static int getRandom(int min, int max) {
-        return min + ((int)Math.random()) * (max - min);
+        return (int)(min + (Math.random()) * (max - min));
     }
 
     /**

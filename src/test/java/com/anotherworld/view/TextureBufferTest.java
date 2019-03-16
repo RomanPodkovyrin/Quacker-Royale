@@ -14,7 +14,7 @@ import java.io.IOException;
 import org.junit.Test;
 import org.lwjgl.opengl.GL;
 
-public class TextureMapTest {
+public class TextureBufferTest {
 
     /**
      * Creates a test window that allows opengl and glfw calls.
@@ -48,11 +48,18 @@ public class TextureMapTest {
     @Test
     public void load_loadAlien_isLoaded() throws IOException {
         createTestWindow();
-        TextureMap tm = new TextureMap("res/images/alien.png");
+        TextureBuffer tm = new TextureBuffer("res/images/alien.png", 1, 1);
         assertThat(tm.getHeight(), is(96));
         assertThat(tm.getWidth(), is(96));
         assertThat(tm.getPixels().capacity(), is(greaterThanOrEqualTo(96 * 96 * 4)));
         System.out.println(tm.toString());
+        destroyTestWindow();
+    }
+
+    @Test(expected = IOException.class)
+    public void load_loadNothing_isLoaded() throws IOException {
+        createTestWindow();
+        new TextureMap("res/images/loadNothing.png");
         destroyTestWindow();
     }
     

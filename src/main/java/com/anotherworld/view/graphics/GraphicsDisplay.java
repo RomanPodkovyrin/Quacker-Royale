@@ -56,7 +56,7 @@ public class GraphicsDisplay {
      */
     public void draw(Programme programme) {
         programme.pushMatrix();
-        programme.transform(camera);
+        this.transform(programme);
         for (int i = 0; i < objects.size(); i++) {
             programme.pushMatrix();
             objects.get(i).transform();
@@ -64,6 +64,10 @@ public class GraphicsDisplay {
             programme.popMatrix();
         }
         programme.popMatrix();
+    }
+    
+    public void transform(Programme programme) {
+        programme.transform(camera);
     }
     
     public float getX() {
