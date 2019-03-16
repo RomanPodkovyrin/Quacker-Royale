@@ -44,6 +44,13 @@ public class TextureBuffer {
     
     private final int id;
     
+    /**
+     * Creates a texture buffer from the image stored at the location.
+     * @param location The image location
+     * @param xNumOfTextures The number of texture tiles in the x axis
+     * @param yNumOfTextures The number of texture tiles in the y axis
+     * @throws IOException If the image couldn't be loaded
+     */
     public TextureBuffer(String location, int xNumOfTextures, int yNumOfTextures) throws IOException {
         IntBuffer x = BufferUtils.createIntBuffer(1);
         IntBuffer y = BufferUtils.createIntBuffer(1);
@@ -78,6 +85,9 @@ public class TextureBuffer {
         return id;
     }
     
+    /**
+     * Destroys the open gl buffer.
+     */
     public void destroy() {
         glDeleteTextures(GL_TEXTURE_2D);
     }

@@ -280,5 +280,9 @@ public abstract class DisplayObject {
     public SpriteSheet getSpriteSheet() {
         return spriteSheet;
     }
+
+    public Points2d getPoints() {
+        return points;
+    }
     
 }

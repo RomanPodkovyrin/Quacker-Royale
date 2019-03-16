@@ -3,54 +3,17 @@ package com.anotherworld.view;
 import static org.lwjgl.opengl.GL46.glBegin;
 import static org.lwjgl.opengl.GL46.glColor4f;
 import static org.lwjgl.opengl.GL46.glEnd;
-import static org.lwjgl.opengl.GL46.glLoadIdentity;
-import static org.lwjgl.opengl.GL46.glPopMatrix;
-import static org.lwjgl.opengl.GL46.glPushMatrix;
-import static org.lwjgl.opengl.GL46.glRotatef;
-import static org.lwjgl.opengl.GL46.glScalef;
-import static org.lwjgl.opengl.GL46.glTranslatef;
 import static org.lwjgl.opengl.GL46.glVertex4f;
 
 import com.anotherworld.view.data.DisplayObject;
-
-import java.nio.FloatBuffer;
+import com.anotherworld.view.data.Points2d;
 
 public class LegacyProgramme extends Programme {
 
     public LegacyProgramme() throws ProgrammeUnavailableException {
         super();
     }
-
-    @Override
-    public void pushMatrix() {
-        glPushMatrix();
-    }
-
-    @Override
-    public void loadIdentity() {
-        glLoadIdentity();
-    }
-
-    @Override
-    public void translatef(float x, float y, float z) {
-        glTranslatef(x, y, z);
-    }
-
-    @Override
-    public void scalef(float x, float y, float z) {
-        glScalef(x, y, z);
-    }
-
-    @Override
-    public void rotatef(float angle, float x, float y, float z) {
-        glRotatef(angle, x, y, z);
-    }
-
-    @Override
-    public void popMatrix() {
-        glPopMatrix();
-    }
-
+    
     @Override
     public void use() {
     }
@@ -75,11 +38,12 @@ public class LegacyProgramme extends Programme {
 
     @Override
     public void draw(DisplayObject object) {
-        FloatBuffer points = object.getVertexBuffer();
+        Points2d points = object.getPoints();
         glColor4f(object.getR(), object.getG(), object.getB(), 1f);
         glBegin(object.getDisplayType());
-        while (points.hasRemaining()) {
-            glVertex4f(points.get(), points.get(), points.get(), points.get());
+        points = this.getCurrentMatrix().mult(points);
+        for (int j = 0; j < points.getN(); j++) {
+            glVertex4f(points.getValue(0, j), points.getValue(1, j), points.getValue(2, j), points.getValue(3, j));
         }
         glEnd();
     }

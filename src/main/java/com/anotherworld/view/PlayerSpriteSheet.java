@@ -13,7 +13,7 @@ public class PlayerSpriteSheet extends SpriteSheet {
     //RIGHT DOWN LEFT UP
     private static final int DIRECTION_OFFSET = 5;
     
-    private static final long FRAME_TIME = 200;
+    private static final long FRAME_TIME = 75;
     
     private static final float MIN_ANIMATION_SPEED = 0.1f;
     

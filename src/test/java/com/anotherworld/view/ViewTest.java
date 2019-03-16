@@ -1,5 +1,6 @@
 package com.anotherworld.view;
 
+import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
 
@@ -62,6 +63,11 @@ public class ViewTest {
         @Override
         public float getHeight() {
             return 90;
+        }
+
+        @Override
+        public Matrix getVelocity() {
+            return new Matrix(0, 0);
         }
         
     }
