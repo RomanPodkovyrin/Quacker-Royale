@@ -89,7 +89,7 @@ public class BackgroundMusic implements Runnable {
     /**
      * Used to mute the background music
      */
-    private void muteSound() {
+    public void muteSound() {
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMinimum());
@@ -102,7 +102,7 @@ public class BackgroundMusic implements Runnable {
     /**
      * Used to unmute the background music
      */
-    private void unMuteSound() {
+    public void unMuteSound() {
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMaximum());
@@ -110,20 +110,14 @@ public class BackgroundMusic implements Runnable {
             volume = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
             volume.setValue(volume.getMaximum());
         }
-
     }
 
     /**
      * Used to terminate background music
      */
     public void terminateMusic() {
-        //TODO those 3 lines prevent linux from shutting down the thread
-        //line.stop();
-        //line.drain();
         music.stop();
         line.close();
         running = false;
-        //music.interrupt();
-        //System.exit(0);
     }
 }
