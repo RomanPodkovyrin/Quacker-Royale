@@ -1,16 +1,20 @@
 package com.anotherworld.model.logic;
 
 import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.movable.Player;
+import com.anotherworld.model.physics.Physics;
+import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
 
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Random;
 
 /**
- * Handles generation and representation of powerups in the game.
+ * Handles generation and representation of powerups in the game
  * Only one power up will appear on the platform at a time,
  * and the time of its appearance will be randomised.
  *
@@ -20,7 +24,7 @@ import java.util.Random;
 public class PowerUpManager {
 
     /**
-     * Generates a Power Up at a random location within the range of the platform
+     * Generates a Power Up at a random location within the range of the platform.
      * @param platform platform determining the range of the coordinates for the powerup
      * @return linked list scheduling the power up spawns.
      */
@@ -29,7 +33,7 @@ public class PowerUpManager {
         LinkedList<PowerUpData> output = new LinkedList<>();
         Random random = new Random();
 
-        for(long i = totalTime; i > 0; i--) {
+        for (long i = totalTime; i > 0; i--) {
 
             float generationProbability = (float) Math.random();
 
@@ -50,7 +54,7 @@ public class PowerUpManager {
     }
 
     /**
-     * Sets the current power up to the latest power up in the schedule
+     * Sets the current power up to the latest power up in the schedule.
      * @param data the game session data which holds all the power ups.
      */
     public static void spawnPowerUp(GameSessionData data) {
@@ -58,7 +62,46 @@ public class PowerUpManager {
         if ((currentPowerUp = data.getPowerUpSchedule().peek()) != null) {
             if (currentPowerUp.getSpawnTime() == data.getTimeLeft()) {
                 data.getPowerUpSchedule().pop();
-                data.setCurrentPowerUp(currentPowerUp);
+                data.setCurrentPowerUp(Optional.of(currentPowerUp));
+            }
+        }
+    }
+
+    /**
+     * When a player collects a powerup, the function applies the effects.
+     * depending on the type of the powerup
+     * @param player The player collecting the powerup
+     * @param data The game session data which holds all the information.
+     */
+    public static void collect(Player player, GameSessionData data) {
+        Optional<PowerUpData> pu = data.getCurrentPowerUp();
+        if (pu.isPresent()) {
+            PowerUpData powerUp = pu.get();
+            if (Physics.checkCollision(player, powerUp.getCoordinates(), powerUp.getRadius())) {
+                //Apply effects
+                switch (powerUp.getPowerUpType()) {
+                    case HEAL:
+                        player.setHealth(GameSettings.getDefaultPlayerHealth());
+                        //TODO: Play heal sound effect
+                        break;
+
+                    case TIME_STOP:
+                        player.setTimeStopper(true);
+                        data.setTimeStopped(true);
+                        //TODO: Play time stop sound effect
+                        break;
+
+                    case SHIELD:
+                        player.setShielded(true);
+                        //TODO: Play shield pickup sound effect
+                        break;
+
+                    default:
+                        break;
+                }
+
+                //Delete the current power up
+                data.setCurrentPowerUp(Optional.empty());
             }
         }
     }

@@ -22,6 +22,7 @@ public class PowerUpData implements Serializable {
     public Matrix getCoordinates() { return this.coordinates; }
     public float  getXCoordinate() { return this.coordinates.getX(); }
     public float  getYCoordinate() { return this.coordinates.getY(); }
+    public float  getRadius() { return this.radius; }
 
     public PowerUpType getPowerUpType() { return this.powerUpType; }
 

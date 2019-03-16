@@ -15,6 +15,10 @@ public class GameSessionData implements Serializable {
     private long timeToNextStage;
     private long timeLeft;
 
+    // Time stopping mechanic in the game
+    private long timeStopCounter;
+    private boolean timeStopped;
+
     // Ordered list of player rankings.
     private LinkedList<String> rankings;
 
@@ -26,39 +30,77 @@ public class GameSessionData implements Serializable {
         this.timeLeft        = totalGameTime;
         this.timeToNextStage = totalGameTime / 3; //TODO: Integrate '3' with config file.
         this.ticksElapsed    = 0;
+        this.timeStopCounter = 0;
+        this.timeStopped     = false;
         this.rankings        = new LinkedList<>();
         this.powerUpSchedule = new LinkedList<>();
         this.currentPowerUp  = Optional.empty();
     }
 
     public void copyObject(GameSessionData data) {
-        this.ticksElapsed = data.ticksElapsed;
+        this.timeLeft        = data.timeLeft;
         this.timeToNextStage = data.timeToNextStage;
-        this.timeLeft = data.timeLeft;
-        this.rankings = data.rankings;
+        this.ticksElapsed    = data.ticksElapsed;
+        this.timeStopCounter = data.timeStopCounter;
+        this.timeStopped     = data.timeStopped;
+        this.rankings        = data.rankings;
+        this.powerUpSchedule = data.powerUpSchedule;
+        this.currentPowerUp  = data.currentPowerUp;
     }
 
     public long getTimeLeft() {
         return timeLeft;
     }
 
-    public int getTicksElapsed() { return ticksElapsed; }
+    public int getTicksElapsed() {
+        return ticksElapsed;
+    }
 
-    public long getTimeToNextStage() { return timeToNextStage; }
+    public long getTimeToNextStage() {
+        return timeToNextStage;
+    }
 
-    public void incrementTicksElapsed() { this.ticksElapsed++; }
+    public void incrementTicksElapsed() {
+        this.ticksElapsed++;
+    }
 
-    public void decrementTimeLeft() { this.timeLeft--; }
+    public void decrementTimeLeft() {
+        this.timeLeft--;
+    }
 
-    public LinkedList<String> getRankings() { return this.rankings; }
+    public long getTimeStopCounter() {
+        return this.timeStopCounter;
+    }
 
-    public LinkedList<PowerUpData> getPowerUpSchedule() { return this.powerUpSchedule; }
+    public void decrementTimeStopCounter() {
+        this.timeStopCounter--;
+    }
 
-    public void setPowerUpSchedule(LinkedList<PowerUpData> schedule) { this.powerUpSchedule = schedule; }
+    public boolean isTimeStopped() {
+        return this.timeStopped;
+    }
 
-    public Optional<PowerUpData> getCurrentPowerUp() { return this.currentPowerUp; }
+    public void setTimeStopped(boolean timeStopped) {
+        this.timeStopped = timeStopped;
+    }
 
-    public void setCurrentPowerUp(PowerUpData powerUp) {
-        this.currentPowerUp = Optional.of(powerUp);
+    public LinkedList<String> getRankings() {
+        return this.rankings;
+    }
+
+    public LinkedList<PowerUpData> getPowerUpSchedule() {
+        return this.powerUpSchedule;
+    }
+
+    public void setPowerUpSchedule(LinkedList<PowerUpData> schedule) {
+        this.powerUpSchedule = schedule;
+    }
+
+    public Optional<PowerUpData> getCurrentPowerUp() {
+        return this.currentPowerUp;
+    }
+
+    public void setCurrentPowerUp(Optional<PowerUpData> powerUp) {
+        this.currentPowerUp = powerUp;
     }
 }
