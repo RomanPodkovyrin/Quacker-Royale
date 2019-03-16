@@ -1,12 +1,14 @@
 package com.anotherworld.view;
 
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.glfw.GLFW.glfwGetKey;
 
-import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.Matrix2d;
 import com.anotherworld.view.data.Points2d;
 import com.anotherworld.view.graphics.Camera;
+import com.anotherworld.view.input.MouseState;
 
 import java.nio.DoubleBuffer;
 import java.util.Stack;
@@ -234,15 +236,15 @@ public abstract class Programme {
 
     /**
      * Returns the cursors current position.
-     * @return A matrix containing the position
+     * @return A mouse state containing the position
      */
-    public Matrix getCursorPosition() {
+    public MouseState getCursorPosition() {
         DoubleBuffer cursorX = BufferUtils.createDoubleBuffer(1);
         DoubleBuffer cursorY = BufferUtils.createDoubleBuffer(1);
         
         glfwGetCursorPos(window, cursorX, cursorY);
         
-        return new Matrix((float)cursorX.get(), (float)cursorY.get());
+        return new MouseState((float)cursorX.get(), (float)cursorY.get(), glfwGetKey(window, GLFW_MOUSE_BUTTON_1) == 1);
     }
     
 }

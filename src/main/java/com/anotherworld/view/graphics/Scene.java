@@ -2,7 +2,10 @@ package com.anotherworld.view.graphics;
 
 import static org.lwjgl.opengl.GL46.glViewport;
 
+import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.view.Programme;
+import com.anotherworld.view.input.MouseState;
+
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,8 +35,7 @@ public class Scene {
     public void draw(int width, int height, Programme programme) {
         logger.debug("Drawing Scene");
         
-        //TODO do this
-        programme.getCursorPosition();
+        MouseState ms = programme.getCursorPosition();
         
         for (int i = 0; i < displays.size(); i++) {
             logger.trace("Drawing scene: " + i);
@@ -43,8 +45,13 @@ public class Scene {
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
             glViewport(x, y, w, h);
-            display.draw(programme);
+            display.draw(programme, translateMouseState(ms));
         }
+    }
+    
+    private MouseState translateMouseState(MouseState mouseState) {
+        //TODO Translate the mouse state
+        return mouseState;
     }
     
     /**

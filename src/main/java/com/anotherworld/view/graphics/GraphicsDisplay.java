@@ -2,6 +2,9 @@ package com.anotherworld.view.graphics;
 
 import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.input.Button;
+import com.anotherworld.view.input.Clickable;
+import com.anotherworld.view.input.MouseState;
 
 import java.util.ArrayList;
 
@@ -53,8 +56,10 @@ public class GraphicsDisplay {
 
     /**
      * Returns draws the objects it contains to the screen.
+     * @param programme 
+     * @param mouseState 
      */
-    public void draw(Programme programme) {
+    public void draw(Programme programme, MouseState mouseState) {
         programme.pushMatrix();
         this.transform(programme);
         for (int i = 0; i < objects.size(); i++) {
@@ -62,6 +67,18 @@ public class GraphicsDisplay {
             objects.get(i).transform();
             objects.get(i).draw();
             programme.popMatrix();
+            if (Clickable.class.isAssignableFrom(objects.get(i).getClass())) {
+                Clickable temp = (Clickable)objects.get(i);
+                if (mouseState.getX() >= temp.getX() && mouseState.getY() >= temp.getY() && mouseState.getX() < temp.getX() + temp.getWidth() && mouseState.getY() < temp.getY() + temp.getWidth()) {
+                    if (mouseState.isMouseDown()) {
+                        temp.click();
+                    } else {
+                        temp.hover();
+                    }
+                } else {
+                    temp.release();
+                }
+            }
         }
         programme.popMatrix();
     }
