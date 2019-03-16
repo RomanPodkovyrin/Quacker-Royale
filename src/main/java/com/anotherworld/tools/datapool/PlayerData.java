@@ -23,6 +23,8 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
     private int stunTimer;
 
     private boolean deadByFalling;
+    private boolean shielded;
+    private boolean timeStopper;
 
     public PlayerData(String objectID, int health,
                       float xCoordinate, float yCoordinate,
@@ -34,11 +36,12 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
         this.timeStartedCharging = 0;
         this.stunTimer = 0;
         this.deadByFalling = false;
+        this.shielded = false;
+        this.timeStopper = false;
     }
 
     public void copyObject(PlayerData data) {
         this.health = data.getHealth();
-//        this.maxHealth = data.getMaxHealth();
         this.deadByFalling = data.deadByFalling;
         super.copyObject(data);
     }
@@ -61,4 +64,10 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
 
     public boolean isDeadByFalling() { return this.deadByFalling; }
     public void setDeadByFalling(boolean deadByFalling) { this.deadByFalling = deadByFalling; }
+
+    public boolean isShielded() { return this.shielded; }
+    public void setShielded(boolean shielded) { this.shielded = shielded; }
+
+    public boolean isTimeStopper() { return this.timeStopper; }
+    public void setTimeStopper(boolean timeStopper) { this.timeStopper = timeStopper; }
 }
