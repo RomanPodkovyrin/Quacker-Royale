@@ -23,6 +23,10 @@ public class AimBall extends Job {
 
     private static Logger logger = LogManager.getLogger(AimBall.class);
 
+    public AimBall(){
+
+    }
+
     @Override
     public void reset() {
 
@@ -44,7 +48,7 @@ public class AimBall extends Job {
         return withingTheRange(checkDegree, (lineDegree - 180) % 360, lineDegree);
     }
 
-    public boolean withingTheRange(float check, float from, float to) {
+    private boolean withingTheRange(float check, float from, float to) {
         if (from < to) {
             return check < to & check > from;
         } else if (from > to) {
