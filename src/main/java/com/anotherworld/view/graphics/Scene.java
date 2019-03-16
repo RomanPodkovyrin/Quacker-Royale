@@ -2,7 +2,6 @@ package com.anotherworld.view.graphics;
 
 import static org.lwjgl.opengl.GL46.glViewport;
 
-import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.view.Programme;
 import com.anotherworld.view.input.MouseState;
 
@@ -75,6 +74,10 @@ public class Scene {
     private int convertScale(float floatScale, int intScale, int intValue) {
         logger.trace("Converting scale " + floatScale);
         return Math.min(intScale - intValue, Math.max(0, (int)Math.round((floatScale / 2f) * ((float)intScale))));
+    }
+    
+    public void addDisplay(GraphicsDisplay d) {
+        displays.add(d);
     }
 
     /**

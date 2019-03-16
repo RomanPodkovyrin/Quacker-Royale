@@ -148,6 +148,7 @@ public class View implements Runnable {
         keyListener = new KeyListener(window);
         
         keyListenerLatch.countDown();
+        //TODO change this
         currentScene = new GameScene();
         
         try {
@@ -207,6 +208,12 @@ public class View implements Runnable {
         attemptDestroy(programme);
     }
     
+    public void switchToGameScene() {
+        synchronized (eventQueue) {
+            eventQueue.add(new SwitchScene(new GameScene()));
+        }
+    }
+    
     private void attemptDestroy() {
         logger.info("Closing window");
         if (currentScene != null) {
@@ -240,6 +247,10 @@ public class View implements Runnable {
                 disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
             }
             ((GameScene)currentScene).updateGameObjects(disObj);
+        } else if (event.getClass().equals(SwitchScene.class)) {
+            SwitchScene sceneEvent = (SwitchScene)event;
+            currentScene.destoryObjects();
+            currentScene = sceneEvent.getScene();
         }
     }
 
