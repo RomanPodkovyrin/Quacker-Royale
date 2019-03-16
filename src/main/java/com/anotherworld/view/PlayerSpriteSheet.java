@@ -32,7 +32,7 @@ public class PlayerSpriteSheet extends SpriteSheet {
 
     @Override
     public int getTextureBuffer() {
-        return 1;
+        return TextureMap.PLAYER_TEXTURE_BUFFER;
     }
     
     private int getDirectionOffset() {

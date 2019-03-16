@@ -1,9 +1,7 @@
 package com.anotherworld.view;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glBindTexture;
-import static org.lwjgl.opengl.GL20.glGetUniformLocation;
-import static org.lwjgl.opengl.GL20.glUniform1i;
+import static org.lwjgl.opengl.GL46.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL46.glBindTexture;
 import static org.lwjgl.opengl.GL46.glGetUniformLocation;
 import static org.lwjgl.opengl.GL46.glUniform1i;
 import static org.lwjgl.opengl.GL46.glUniform2f;
@@ -21,14 +19,19 @@ import org.lwjgl.BufferUtils;
  */
 public class TextureMap {
     
-    private TextureBuffer textureBuffer;
+    public static final int PLAYER_TEXTURE_BUFFER = 0;
+    public static final int BALL_TEXTURE_BUFFER = 1;
+    
+    private TextureBuffer[] textureBuffers;
     
     /**
-     * Loads the texture map from the specified location.
-     * @param location the texture map location
+     * Loads the textures from files the specified folder.
+     * @param location the texture folder location
      */
     public TextureMap(String location) throws IOException {
-        textureBuffer = new TextureBuffer(location, 4, 5);
+        textureBuffers = new TextureBuffer[2];
+        textureBuffers[PLAYER_TEXTURE_BUFFER] = new TextureBuffer(location + "miniDuck.png", 4, 5);
+        textureBuffers[BALL_TEXTURE_BUFFER] = new TextureBuffer(location + "NeutralBall/NeutralBall0.png", 1, 1);
     }
     
     /**
@@ -44,9 +47,9 @@ public class TextureMap {
         glUniform1i(glGetUniformLocation(programmeId, "hasTex"), spriteSheet.isTextured() ? 1 : 0);
         
         if (spriteSheet.isTextured()) {
-            glBindTexture(GL_TEXTURE_2D, textureBuffer.getId());
+            glBindTexture(GL_TEXTURE_2D, textureBuffers[spriteSheet.getTextureBuffer()].getId());
             glUniform1i(glGetUniformLocation(programmeId, "tex"), 0);
-            float[] matrix = textureBuffer.getTextureTransformation(spriteSheet.getTextureId()).getPoints();
+            float[] matrix = textureBuffers[spriteSheet.getTextureBuffer()].getTextureTransformation(spriteSheet.getTextureId()).getPoints();
             FloatBuffer temp2 = BufferUtils.createFloatBuffer(16);
             temp2.put(matrix);
             temp2.flip();
@@ -57,7 +60,9 @@ public class TextureMap {
     }
 
     public void destroy() {
-        textureBuffer.destroy();
+        for (TextureBuffer textureBuffer : textureBuffers) {
+            textureBuffer.destroy();
+        }
     }
     
 }
