@@ -237,7 +237,7 @@ public class Main {
     }
 
     public void startSinglePlayer() {
-        GameSettings settings = new GameSettings(4,3,6);
+        GameSettings settings = new GameSettings(4,3,2);
         startTheGame(settings, new NetworkController());
     }
 

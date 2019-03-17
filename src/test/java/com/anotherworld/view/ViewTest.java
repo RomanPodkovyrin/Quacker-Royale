@@ -27,7 +27,7 @@ public class ViewTest {
         thread.start();
         ArrayList<RectangleDisplayData> platform = new ArrayList<>();
         platform.add(new RectangleTestDisplayData());
-        view.updateGameObjects(new ArrayList<>(), new ArrayList<>(), platform, new ArrayList<>());
+        view.updateGameObjects(new ArrayList<>(), new ArrayList<>(), platform, new ArrayList<>(), null);
         Thread.sleep(15000);
         view.close();
         thread.join();

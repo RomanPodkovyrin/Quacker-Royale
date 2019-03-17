@@ -155,6 +155,8 @@ public class GameSession {
             }
 
             if (!player.isDead()) {
+                // Check if a player has collided with a power up
+                PowerUpManager.collect(player, gameData);
 
                 if (player.getHealth() <= 0) {
                     player.kill();
@@ -173,9 +175,6 @@ public class GameSession {
                         Physics.collided(player, playerB);
                     }
                 }
-
-                // Check if a player has collided with a power up
-                PowerUpManager.collect(player, gameData);
 
                 // Kill the player if they fall off the edge of the platform
                 if(!platform.isOnPlatform(player)) {
@@ -204,6 +203,10 @@ public class GameSession {
         logger.debug("ticksElapsed: " + gameData.getTicksElapsed());
         if (gameData.getTicksElapsed() % 60 == 0 && gameData.getTimeLeft() > 0) {
             gameData.decrementTimeLeft();
+            if(gameData.isTimeStopped() && gameData.getTimeStopCounter() > 0) {
+                gameData.decrementTimeStopCounter();
+                if(gameData.getTimeStopCounter() <= 0) gameData.setTimeStopped(false);
+            }
         }
 
         // If enough time has elapsed, then reduce the size of the stage.
