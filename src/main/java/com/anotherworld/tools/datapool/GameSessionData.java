@@ -16,7 +16,7 @@ public class GameSessionData implements Serializable {
     private long timeLeft;
 
     // Time stopping mechanic in the game
-    private long timeStopCounter;
+    private int timeStopCounter;
     private boolean timeStopped;
 
     // Ordered list of player rankings.
@@ -68,8 +68,12 @@ public class GameSessionData implements Serializable {
         this.timeLeft--;
     }
 
-    public long getTimeStopCounter() {
+    public int getTimeStopCounter() {
         return this.timeStopCounter;
+    }
+
+    public void setTimeStopCounter(int timeStopCounter) {
+        this.timeStopCounter = timeStopCounter;
     }
 
     public void decrementTimeStopCounter() {

@@ -85,7 +85,7 @@ public class Physics {
         float yDistance = (object.getYCoordinate() - coordinates.getY());
 
         float sumOfRadii = object.getRadius() + radius;
-        float distanceSquared = xDistance * xDistance + yDistance * yDistance;
+        float distanceSquared =xDistance * xDistance + yDistance * yDistance;
 
         boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
         
