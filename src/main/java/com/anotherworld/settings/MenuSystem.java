@@ -1,6 +1,7 @@
 package com.anotherworld.settings;
 
-import com.anotherworld.control.Main;
+import com.anotherworld.control.Controller;
+import com.anotherworld.view.View;
 
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -17,14 +18,12 @@ import javafx.stage.Stage;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
-import javax.swing.JTextField;
-
-import static javafx.application.Application.launch;
-
-public class MenuDemo extends Application {
-    Stage window;
-    Scene scene1, scene2;
-    private static Main control;
+public class MenuSystem extends Application {
+    private Stage window;
+    private Scene scene1;
+    private Scene scene2;
+    private static Controller control;
+    private static View view;
 
     // public MenuDemo(Main control) {
     // this.control = control;
@@ -34,6 +33,8 @@ public class MenuDemo extends Application {
     // launch the application
     @Override
     public void start(Stage primaryStage) throws Exception {
+        control = new Controller(view);
+        // launch the application
         window = primaryStage;
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -105,9 +106,9 @@ public class MenuDemo extends Application {
                     + (musicButton.getText().split(" ")[1].equals("On") ? "Off"
                             : "On"));
             if (musicButton.getText().split(" ")[1].equals("On")) {
-                Main.musicSetting(true);
+                Controller.musicSetting(true);
             } else {
-                Main.musicSetting(false);
+                Controller.musicSetting(false);
             }
         });
         musicButton.setFont(font);
@@ -122,9 +123,9 @@ public class MenuDemo extends Application {
                     + (sfxButton.getText().split(" ")[1].equals("On") ? "Off"
                             : "On"));
             if (sfxButton.getText().split(" ")[1].equals("On")) {
-                Main.sfxSetting(true);
+                Controller.sfxSetting(true);
             } else {
-                Main.sfxSetting(false);
+                Controller.sfxSetting(false);
             }
         });
         sfxButton.setFont(font);
@@ -258,8 +259,8 @@ public class MenuDemo extends Application {
     }
 
     public static void main(String[] args) {
-        control = new Main();
-        // launch the application
+        View view = new View(1920 / 2, 1080 / 2);
+        MenuSystem.view = view;
         launch(args);
     }
 }

@@ -64,11 +64,6 @@ public class ViewTest {
         public float getHeight() {
             return 90;
         }
-
-        @Override
-        public Matrix getVelocity() {
-            return new Matrix(0, 0);
-        }
         
     }
     

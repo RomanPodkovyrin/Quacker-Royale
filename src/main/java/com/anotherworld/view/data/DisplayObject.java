@@ -5,7 +5,6 @@ import com.anotherworld.view.SpriteSheet;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
