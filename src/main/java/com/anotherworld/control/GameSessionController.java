@@ -100,12 +100,20 @@ public class GameSessionController {
         // Time in ms to sleep
         int sleepTime = 0;
 
+        boolean keyDown = false;
+
 
 
         while (viewThread.isAlive() && session.isRunning()) {
 
+            // music and effect mute unmute control
             if(keyListener.getKeyPresses().contains(Input.MUTE)) {
-                AudioControl.muteUnmute();
+                if (!keyDown) {
+                    AudioControl.muteUnmute();
+                    keyDown = true;
+                }
+            } else {
+                keyDown = false;
             }
 
             // if client check if there are game objects to update

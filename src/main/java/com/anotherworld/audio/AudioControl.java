@@ -32,9 +32,9 @@ public class AudioControl {
             }
             backgroundMusic.muteSound();
         }
-        if (effectsOn) {
-            soundEffects = new SoundEffects();
-        }
+
+        soundEffects = new SoundEffects();
+
 
 
         // soundEffects set up
@@ -65,10 +65,12 @@ public class AudioControl {
             logger.info("Muted sound effects and Music");
             backgroundMusic.muteSound();
             effectsOn = false;
+            musicOn = false;
         } else {
             logger.info("Unmuted sound effects and Music");
-//            backgroundMusic.unMuteSound();
+            backgroundMusic.unMuteSound();
             effectsOn = true;
+            musicOn = true;
         }
 
     }
