@@ -17,7 +17,7 @@ public class Succeeder extends Job {
 
     private static Logger logger = LogManager.getLogger(Succeeder.class);
 
-    public Job job;
+    private Job job;
 
     public Succeeder(Job job) {
         this.job = job;

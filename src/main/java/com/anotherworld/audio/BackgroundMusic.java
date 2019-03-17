@@ -2,12 +2,20 @@ package com.anotherworld.audio;
 
 import java.io.File;
 import java.io.IOException;
-import javax.sound.sampled.*;
+import java.util.Scanner;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * This class is in charge of playing a background music
+ * This class is in charge of playing a background music.
  *
  * @author Antons Lebedjko
  */
@@ -23,17 +31,18 @@ public class BackgroundMusic implements Runnable {
     private DataLine.Info information;
     private boolean running = true;
     private Thread music;
+    private boolean isOn = true;
     private static Logger logger = LogManager.getLogger(BackgroundMusic.class);
 
     /**
-     * Opens a background music file
+     * Opens a background music file.
      */
     public BackgroundMusic() {
         soundFile = new File(fileLocation);
     }
 
     /**
-     * Plays a background music
+     * Plays a background music.
      */
     public void playBackgroundMusic() {
         music = new Thread(this);
@@ -41,12 +50,20 @@ public class BackgroundMusic implements Runnable {
     }
 
     /**
-     * A run method for the thread which creates a line and starts playing background music
+     * A run method for the thread which creates a line and starts playing background music.
      */
     public void run() {
         while (running) {
             try {
-                createLine();
+                audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if(isOn)
+                    createLine();
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (LineUnavailableException e) {
@@ -56,16 +73,10 @@ public class BackgroundMusic implements Runnable {
     }
 
     /**
-     * Used to create a line for the background music file
+     * Used to create a line for the background music file.
      */
     private void createLine() throws IOException, LineUnavailableException {
-        try {
-            audioInputStream = AudioSystem.getAudioInputStream(soundFile);
-        } catch (UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
         audioFormat = audioInputStream.getFormat();
         information = new DataLine.Info(SourceDataLine.class, audioFormat);
         line = (SourceDataLine) AudioSystem.getLine(information);
@@ -87,9 +98,10 @@ public class BackgroundMusic implements Runnable {
     }
 
     /**
-     * Used to mute the background music
+     * Used to mute the background music.
      */
-    private void muteSound() {
+    public void muteSound() {
+        isOn = false;
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMinimum());
@@ -100,9 +112,10 @@ public class BackgroundMusic implements Runnable {
     }
 
     /**
-     * Used to unmute the background music
+     * Used to unmute the background music.
      */
-    private void unMuteSound() {
+    public void unMuteSound() {
+        isOn = true;
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMaximum());
@@ -110,20 +123,27 @@ public class BackgroundMusic implements Runnable {
             volume = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
             volume.setValue(volume.getMaximum());
         }
-
     }
 
     /**
-     * Used to terminate background music
+     * Used to terminate background music.
      */
     public void terminateMusic() {
-        //TODO those 3 lines prevent linux from shutting down the thread
-        //line.stop();
-        //line.drain();
         music.stop();
         line.close();
         running = false;
-        //music.interrupt();
-        //System.exit(0);
+    }
+
+    public static void main(String args[]){
+        BackgroundMusic bm = new BackgroundMusic();
+        bm.playBackgroundMusic();
+        while(true){
+            Scanner sc = new Scanner(System.in);
+            int i = sc.nextInt();
+            if(i==1)
+                bm.muteSound();
+            if(i==2)
+                bm.unMuteSound();
+        }
     }
 }

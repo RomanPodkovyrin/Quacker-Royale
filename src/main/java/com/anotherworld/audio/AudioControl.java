@@ -7,6 +7,8 @@ public class AudioControl {
     private static SoundEffects soundEffects;
     private static boolean musicOn = true;
     private static boolean effectsOn = true;
+    private static boolean mutedSoundEffects = false;
+    private static boolean mutedBackgroundMusic = false;
 
     public static void setUp() {
         if (musicOn) {
@@ -26,6 +28,10 @@ public class AudioControl {
 
     public static void setEffectsOn(boolean effectsOn) {
         AudioControl.effectsOn = effectsOn;
+    }
+
+    public static void muteUnmute(){
+
     }
 
     public static void playBackGroundMusic() {

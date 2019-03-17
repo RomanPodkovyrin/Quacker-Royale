@@ -17,6 +17,10 @@ import org.apache.logging.log4j.Logger;
 public class NeutralBallCheck extends Job {
     private static Logger logger = LogManager.getLogger(NeutralBallCheck.class);
 
+    public NeutralBallCheck(){
+
+    }
+
     @Override
     public void reset() {
 
