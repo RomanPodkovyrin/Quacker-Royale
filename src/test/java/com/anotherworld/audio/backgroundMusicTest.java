@@ -14,6 +14,7 @@ public class backgroundMusicTest {
             e.printStackTrace();
         }
         bMusic.muteSound();
+        bMusic.unMuteSound();
         bMusic.terminateMusic();
     }
 }
