@@ -1,6 +1,8 @@
 package com.anotherworld.audio;
 
-import java.io.IOException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * This class controls background and sound effects.
@@ -13,15 +15,22 @@ public class AudioControl {
     private static SoundEffects soundEffects;
     private static boolean musicOn = true;
     private static boolean effectsOn = true;
-    private static boolean mutedSoundEffects = false;
-    private static boolean mutedBackgroundMusic = false;
+
+    private static Logger logger = LogManager.getLogger(AudioControl.class);
 
     /**
      * To be used at the beginning of the game to start background and effects depending on the previous settings.
      */
     public static void setUp() {
-        if (musicOn) {
-            backgroundMusic = new BackgroundMusic();
+        backgroundMusic = new BackgroundMusic();
+        backgroundMusic.playBackgroundMusic();
+        if (!musicOn) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            backgroundMusic.muteSound();
         }
         if (effectsOn) {
             soundEffects = new SoundEffects();
@@ -51,25 +60,25 @@ public class AudioControl {
      * Mutes of unmutes background music and sound effects.
      */
     public static void muteUnmute(){
+        if (musicOn | effectsOn) {
 
-    }
-
-    /**
-     * Starts playing background music.
-     */
-    public static void playBackGroundMusic() {
-        if (musicOn) {
-            backgroundMusic.playBackgroundMusic();
+            logger.info("Muted sound effects and Music");
+            backgroundMusic.muteSound();
+            effectsOn = false;
+        } else {
+            logger.info("Unmuted sound effects and Music");
+//            backgroundMusic.unMuteSound();
+            effectsOn = true;
         }
+
     }
+
 
     /**
      * Stops playing background music.
      */
     public static void stopBackgroundMusic() {
-        if (musicOn) {
-            backgroundMusic.terminateMusic();
-        }
+        backgroundMusic.terminateMusic();
     }
 
     /**

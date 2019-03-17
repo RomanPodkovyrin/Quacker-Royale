@@ -5,6 +5,7 @@ import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
@@ -57,8 +58,6 @@ public class GameSessionController {
 
         // Starting the background music and effects threads
         AudioControl.setUp();
-        AudioControl.playBackGroundMusic();
-
 
         // Starting the View thread
         this.viewThread = new Thread(view);
@@ -104,6 +103,10 @@ public class GameSessionController {
 
 
         while (viewThread.isAlive() && session.isRunning()) {
+
+            if(keyListener.getKeyPresses().contains(Input.MUTE)) {
+                AudioControl.muteUnmute();
+            }
 
             // if client check if there are game objects to update
             network.clientControl(keyListener);

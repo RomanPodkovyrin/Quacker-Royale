@@ -2,6 +2,7 @@ package com.anotherworld.audio;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Scanner;
 import javax.sound.sampled.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,7 @@ public class BackgroundMusic implements Runnable {
     private DataLine.Info information;
     private boolean running = true;
     private Thread music;
+    private boolean isOn = true;
     private static Logger logger = LogManager.getLogger(BackgroundMusic.class);
 
     /**
@@ -46,7 +48,15 @@ public class BackgroundMusic implements Runnable {
     public void run() {
         while (running) {
             try {
-                createLine();
+                if (isOn) {
+                    createLine();
+                } else {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (LineUnavailableException e) {
@@ -90,6 +100,7 @@ public class BackgroundMusic implements Runnable {
      * Used to mute the background music
      */
     public void muteSound() {
+        isOn = false;
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMinimum());
@@ -103,6 +114,7 @@ public class BackgroundMusic implements Runnable {
      * Used to unmute the background music
      */
     public void unMuteSound() {
+        isOn = true;
         if (line.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             volume = (FloatControl) line.getControl(FloatControl.Type.MASTER_GAIN);
             volume.setValue(volume.getMaximum());
@@ -119,5 +131,18 @@ public class BackgroundMusic implements Runnable {
         music.stop();
         line.close();
         running = false;
+    }
+
+    public static void main(String[] args){
+        BackgroundMusic bm = new BackgroundMusic();
+        bm.playBackgroundMusic();
+        while(true){
+            Scanner s = new Scanner(System.in);
+            int i = s.nextInt();
+            if(i==1)
+                bm.muteSound();
+            if(i==2)
+                bm.unMuteSound();
+        }
     }
 }
