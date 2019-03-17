@@ -35,16 +35,16 @@ public class AudioControlTest {
         AudioControl.setEffectsOn(expectedEfFectsState);
         //Todo finish the tests
         AudioControl.setUp();
-        AudioControl.playBackGroundMusic();
 //        try {
 //            Thread.sleep(30);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-//        AudioControl.stopBackgroundMusic();
-//        AudioControl.playerCollidedWithBall();
-//        AudioControl.ballCollidedWithWall();
-//        AudioControl.stopSoundEffects();
+        AudioControl.playerCollidedWithBall();
+        AudioControl.ballCollidedWithWall();
+        AudioControl.stopSoundEffects();
+        AudioControl.stopBackgroundMusic();
+
 
     }
 }

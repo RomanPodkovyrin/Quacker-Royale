@@ -30,19 +30,19 @@ public class BehaviourTest {
         // Tests if inverts the success
         Inverter invertedJob = new Inverter(jobSuccess);
         invertedJob.start();
-        invertedJob.act(null,null,null,null);
+        invertedJob.act(null,null,null,null,null);
         assertTrue(invertedJob.isFailure());
 
         // Tests if inverts the fail
         invertedJob = new Inverter(jobFail);
         invertedJob.start();
-        invertedJob.act(null,null,null,null);
+        invertedJob.act(null,null,null,null,null);
         assertTrue(invertedJob.isSuccess());
 
         // Tests if keeps the job running
         invertedJob = new Inverter(jobRunning);
         invertedJob.start();
-        invertedJob.act(null,null,null,null);
+        invertedJob.act(null,null,null,null,null);
         assertTrue(invertedJob.isRunning());
     }
 
@@ -52,62 +52,62 @@ public class BehaviourTest {
         // test if continues running with success job
         Repeat repeatJob = new Repeat(jobSuccess);
         repeatJob.start();
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isRunning());
 
         // test if continues running with fail job
         repeatJob = new Repeat(jobFail);
         repeatJob.start();
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isRunning());
 
         // test if continues running with running job
         repeatJob = new Repeat(jobRunning);
         repeatJob.start();
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isRunning());
 
         // test if finishing running after one run with success job
         repeatJob = new Repeat(jobSuccess,1);
         repeatJob.start();
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isSuccess());
 
         // test if finishing running after one run with fail job
         repeatJob = new Repeat(jobFail,1);
         repeatJob.start();
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isSuccess());
 
         // test if still running after one run with running job
         repeatJob = new Repeat(jobRunning,1);
         repeatJob.start();
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isRunning());
 
 
         // test if finishing running after two runs with success job
         repeatJob = new Repeat(jobSuccess,2);
         repeatJob.start();
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isRunning());
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isSuccess());
 
         // test if finishing running after two runs with fail job
         repeatJob = new Repeat(jobFail,2);
         repeatJob.start();
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isRunning());
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isSuccess());
 
         // test if still running  running after two runs with running job
         repeatJob = new Repeat(jobRunning,2);
         repeatJob.start();
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isRunning());
-        repeatJob.act(null,null,null,null);
+        repeatJob.act(null,null,null,null,null);
         assertTrue(repeatJob.isRunning());
 
     }
@@ -120,7 +120,7 @@ public class BehaviourTest {
                 new JobFailTest(), new JobFailTest(), new JobFailTest()
         ));
         Selector selectorJob = new Selector(failJobs);
-        selectorJob.act(null,null,null,null);
+        selectorJob.act(null,null,null,null,null);
         assertTrue(selectorJob.isFailure());
 
         // Test if succeeds after running success job
@@ -128,7 +128,7 @@ public class BehaviourTest {
             new JobFailTest(),jobSuccess,jobFail
         ));
         selectorJob = new Selector(jobs);
-        selectorJob.act(null,null,null,null);
+        selectorJob.act(null,null,null,null,null);
         assertTrue(selectorJob.isSuccess());
         assertTrue(jobSuccess.isSuccess());
         assertNull(jobFail.state);
@@ -141,7 +141,7 @@ public class BehaviourTest {
             new JobFailTest(),jobFail, jobSuccess
         ));
         selectorJob = new Selector(jobs);
-        selectorJob.act(null,null,null,null);
+        selectorJob.act(null,null,null,null,null);
         assertTrue(selectorJob.isSuccess());
         assertTrue(jobSuccess.isSuccess());
         assertTrue(jobFail.isFailure());
@@ -155,7 +155,7 @@ public class BehaviourTest {
                 new JobFailTest(), new JobFailTest(), new JobFailTest()
         ));
         SequenceSuccess sequenceSuccessJob = new SequenceSuccess(failJobs);
-        sequenceSuccessJob.act(null,null,null,null);
+        sequenceSuccessJob.act(null,null,null,null,null);
         assertTrue(sequenceSuccessJob.isFailure());
 
         // Test if fails after running a mixture of success and fail jobs
@@ -163,7 +163,7 @@ public class BehaviourTest {
                 jobSuccess,jobFail
         ));
         sequenceSuccessJob = new SequenceSuccess(jobs);
-        sequenceSuccessJob.act(null,null,null,null);
+        sequenceSuccessJob.act(null,null,null,null,null);
         assertTrue(sequenceSuccessJob.isFailure());
         assertTrue(jobSuccess.isSuccess());
         assertTrue(jobFail.isFailure());
@@ -175,7 +175,7 @@ public class BehaviourTest {
                 jobFail, jobSuccess
         ));
         sequenceSuccessJob = new SequenceSuccess(jobs);
-        sequenceSuccessJob.act(null,null,null,null);
+        sequenceSuccessJob.act(null,null,null,null,null);
         assertTrue(sequenceSuccessJob.isFailure());
         assertNull(jobSuccess.state);
         assertTrue(jobFail.isFailure());
@@ -186,7 +186,7 @@ public class BehaviourTest {
                 new JobSuccessTest(), jobSuccess
         ));
         sequenceSuccessJob = new SequenceSuccess(jobs);
-        sequenceSuccessJob.act(null,null,null,null);
+        sequenceSuccessJob.act(null,null,null,null,null);
         assertTrue(sequenceSuccessJob.isSuccess());
         assertTrue(jobSuccess.isSuccess());
     }
@@ -199,7 +199,7 @@ public class BehaviourTest {
                 new JobFailTest(), new JobFailTest(), new JobFailTest()
         ));
         Sequence sequenceJob = new Sequence(failJobs);
-        sequenceJob.act(null,null,null,null);
+        sequenceJob.act(null,null,null,null,null);
         assertTrue(sequenceJob.isSuccess());
 
         // Test if succeeds after running mixture of success and fail jobs
@@ -207,7 +207,7 @@ public class BehaviourTest {
                 jobSuccess,jobFail
         ));
         sequenceJob = new Sequence(jobs);
-        sequenceJob.act(null,null,null,null);
+        sequenceJob.act(null,null,null,null,null);
         assertTrue(sequenceJob.isSuccess());
         assertTrue(jobSuccess.isSuccess());
         assertTrue(jobFail.isFailure());
@@ -219,7 +219,7 @@ public class BehaviourTest {
                 jobFail, jobSuccess
         ));
         sequenceJob = new Sequence(jobs);
-        sequenceJob.act(null,null,null,null);
+        sequenceJob.act(null,null,null,null,null);
         assertTrue(sequenceJob.isSuccess());
         assertTrue(jobSuccess.isSuccess());
         assertTrue(jobFail.isFailure());
@@ -227,7 +227,7 @@ public class BehaviourTest {
 
         // Check if succeeds after running no jobs
         sequenceJob = new Sequence(new ArrayList<>());
-        sequenceJob.act(null,null,null,null);
+        sequenceJob.act(null,null,null,null,null);
         assertTrue(sequenceJob.isSuccess());
 
         // Test if succeeds after running running jobs
@@ -236,7 +236,7 @@ public class BehaviourTest {
                 new JobRunningTest(), jobRunning
         ));
         sequenceJob = new Sequence(jobs);
-        sequenceJob.act(null,null,null,null);
+        sequenceJob.act(null,null,null,null,null);
         assertTrue(sequenceJob.isSuccess());
         assertTrue(jobRunning.isRunning());
     }
@@ -247,43 +247,43 @@ public class BehaviourTest {
         // Check if still running after running success job
         RepeatSuccess repeatSuccessJob = new RepeatSuccess(jobSuccess);
         repeatSuccessJob.start();
-        repeatSuccessJob.act(null,null,null,null);
+        repeatSuccessJob.act(null,null,null,null,null);
         assertTrue(repeatSuccessJob.isRunning());
-        repeatSuccessJob.act(null,null,null,null);
+        repeatSuccessJob.act(null,null,null,null,null);
         assertTrue(repeatSuccessJob.isRunning());
 
 
         // Check if fails after running fail job
         repeatSuccessJob = new RepeatSuccess(jobFail);
         repeatSuccessJob.start();
-        repeatSuccessJob.act(null,null,null,null);
+        repeatSuccessJob.act(null,null,null,null,null);
         assertTrue(repeatSuccessJob.isFailure());
 
 
         // Test if is still running when running running job
         repeatSuccessJob = new RepeatSuccess(jobRunning);
         repeatSuccessJob.start();
-        repeatSuccessJob.act(null,null,null,null);
+        repeatSuccessJob.act(null,null,null,null,null);
         assertTrue(repeatSuccessJob.isRunning());
 
         // Check if succeeds when running success once
         repeatSuccessJob = new RepeatSuccess(jobSuccess,1);
         repeatSuccessJob.start();
-        repeatSuccessJob.act(null,null,null,null);
+        repeatSuccessJob.act(null,null,null,null,null);
         assertTrue(repeatSuccessJob.isSuccess());
 
         // Check if succeeds when running success twice
         repeatSuccessJob = new RepeatSuccess(jobSuccess,2);
         repeatSuccessJob.start();
-        repeatSuccessJob.act(null,null,null,null);
+        repeatSuccessJob.act(null,null,null,null,null);
         assertTrue(repeatSuccessJob.isRunning());
-        repeatSuccessJob.act(null,null,null,null);
+        repeatSuccessJob.act(null,null,null,null,null);
         assertTrue(repeatSuccessJob.isSuccess());
 
         // Test if fails after running fail once
         repeatSuccessJob = new RepeatSuccess(jobFail,1);
         repeatSuccessJob.start();
-        repeatSuccessJob.act(null,null,null,null);
+        repeatSuccessJob.act(null,null,null,null,null);
         assertTrue(repeatSuccessJob.isFailure());
     }
 
@@ -304,17 +304,17 @@ public class BehaviourTest {
 
         // Tests if succeeder succeeds with success job
         Succeeder succeederJob = new Succeeder(jobSuccess);
-        succeederJob.act(null,null,null,null);
+        succeederJob.act(null,null,null,null,null);
         assertTrue(succeederJob.isSuccess());
 
         // Test if succeeder succeeds with fail job
         succeederJob = new Succeeder(jobFail);
-        succeederJob.act(null,null,null,null);
+        succeederJob.act(null,null,null,null,null);
         assertTrue(succeederJob.isSuccess());
 
         // Test if succeeds with running job
         succeederJob = new Succeeder(jobRunning);
-        succeederJob.act(null,null,null,null);
+        succeederJob.act(null,null,null,null,null);
         assertTrue(succeederJob.isSuccess());
 
 

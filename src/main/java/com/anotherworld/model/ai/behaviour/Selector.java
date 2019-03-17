@@ -4,6 +4,8 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
+
+import com.anotherworld.tools.datapool.GameSessionData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,7 +38,7 @@ public class Selector extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
 
         
 
@@ -47,7 +49,7 @@ public class Selector extends Job {
 
             if (currentJob.isRunning()) {
                 logger.trace("Running current Job");
-                currentJob.act(ai, players, balls, platform);
+                currentJob.act(ai, players, balls, platform,session);
             }
 
             if (currentJob.isSuccess()) {
