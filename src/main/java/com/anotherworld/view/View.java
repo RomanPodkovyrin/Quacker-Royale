@@ -17,23 +17,17 @@ import static org.lwjgl.opengl.GL11.glGetError;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
-import com.anotherworld.view.data.BallDisplayData;
-import com.anotherworld.view.data.BallDisplayObject;
-import com.anotherworld.view.data.DisplayObject;
-import com.anotherworld.view.data.HealthBarDisplayObject;
-import com.anotherworld.view.data.PlayerDisplayData;
-import com.anotherworld.view.data.PlayerDisplayObject;
-import com.anotherworld.view.data.RectangleDisplayData;
-import com.anotherworld.view.data.RectangleDisplayObject;
-import com.anotherworld.view.data.WallDisplayObject;
+import com.anotherworld.view.data.*;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -111,10 +105,13 @@ public class View implements Runnable {
      * @param rectangleObjects The new platform objects.
      * @param wallObjects The new wall objects.
      */
-    public void updateGameObjects(ArrayList<? extends PlayerDisplayData> playerObjects, ArrayList<? extends BallDisplayData> ballObjects,
-            ArrayList<? extends RectangleDisplayData> rectangleObjects, ArrayList<? extends WallData> wallObjects) {
+    public void updateGameObjects(ArrayList<? extends PlayerDisplayData> playerObjects,
+                                  ArrayList<? extends BallDisplayData> ballObjects,
+                                  ArrayList<? extends RectangleDisplayData> rectangleObjects,
+                                  ArrayList<? extends WallData> wallObjects,
+                                  GameSessionData gameSessionData) {
         synchronized (eventQueue) {
-            eventQueue.add(new UpdateDisplayObjects(playerObjects, ballObjects, rectangleObjects, wallObjects));
+            eventQueue.add(new UpdateDisplayObjects(playerObjects, ballObjects, rectangleObjects, wallObjects, gameSessionData));
         }
     }
 
@@ -239,6 +236,9 @@ public class View implements Runnable {
             }
             for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
                 disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
+            }
+            for (int i = 0; i < updateEvent.getGameSessionData().getPowerUpSchedule().size(); i++) {
+                disObj.add(new PowerUpDisplayObject(programme, updateEvent.getGameSessionData(), i));
             }
             ((GameScene)currentScene).updateGameObjects(disObj);
         }

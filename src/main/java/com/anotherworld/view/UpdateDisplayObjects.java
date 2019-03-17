@@ -1,5 +1,6 @@
 package com.anotherworld.view;
 
+import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.PlayerDisplayData;
@@ -18,14 +19,18 @@ class UpdateDisplayObjects implements ViewEvent {
     private final ArrayList<? extends BallDisplayData> ballObjects;
     private final ArrayList<? extends RectangleDisplayData> rectangleObjects;
     private final ArrayList<? extends WallData> wallObjects;
-    
+    private final GameSessionData gameSessionData;
+
     public UpdateDisplayObjects(ArrayList<? extends PlayerDisplayData> playerObjects,
-            ArrayList<? extends BallDisplayData> ballObjects,
-            ArrayList<? extends RectangleDisplayData> rectangleObjects, ArrayList<? extends WallData> wallObjects) {
+                                ArrayList<? extends BallDisplayData> ballObjects,
+                                ArrayList<? extends RectangleDisplayData> rectangleObjects,
+                                ArrayList<? extends WallData> wallObjects,
+                                GameSessionData gameSessionData) {
         this.playerObjects = playerObjects;
         this.ballObjects = ballObjects;
         this.rectangleObjects = rectangleObjects;
         this.wallObjects = wallObjects;
+        this.gameSessionData = gameSessionData;
     }
 
     /**
@@ -59,5 +64,11 @@ class UpdateDisplayObjects implements ViewEvent {
     public ArrayList<? extends WallData> getWallObjects() {
         return wallObjects;
     }
+
+    /**
+     * Returns the data for the current game session for the view.
+     * @return the game session data
+     */
+    public GameSessionData getGameSessionData() { return gameSessionData; }
 
 }
