@@ -28,6 +28,10 @@ public class GraphicsDisplay {
     private Camera camera;
     
     protected ArrayList<DisplayObject> objects;
+    
+    public GraphicsDisplay() {
+        this(-1f, -1f, 2f, 2f, new Static2dCamera(0, 0, 2, 2));
+    }
 
     /**
      * Creates a new Graphics display (Uses normalised device coordinates).
@@ -101,6 +105,10 @@ public class GraphicsDisplay {
     
     public float getWidth() {
         return width;
+    }
+    
+    public void addObject(DisplayObject object) {
+        objects.add(object);
     }
 
     /**

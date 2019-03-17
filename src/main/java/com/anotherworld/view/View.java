@@ -208,9 +208,20 @@ public class View implements Runnable {
         attemptDestroy(programme);
     }
     
+    public Programme getProgramme() {
+        //TODO change this to be like get key logger
+        return this.programme;
+    }
+    
     public void switchToGameScene() {
         synchronized (eventQueue) {
             eventQueue.add(new SwitchScene(new GameScene()));
+        }
+    }
+    
+    public void switchToScene(Scene scene) {
+        synchronized (eventQueue) {
+            eventQueue.add(new SwitchScene(scene));
         }
     }
     
@@ -224,6 +235,7 @@ public class View implements Runnable {
     
     private void attemptDestroy(Programme programme) {
         logger.info("Closing window");
+        //TODO delete all object for all scenes
         currentScene.destoryObjects();
         programme.destroy();
         glfwTerminate();
@@ -249,7 +261,6 @@ public class View implements Runnable {
             ((GameScene)currentScene).updateGameObjects(disObj);
         } else if (event.getClass().equals(SwitchScene.class)) {
             SwitchScene sceneEvent = (SwitchScene)event;
-            currentScene.destoryObjects();
             currentScene = sceneEvent.getScene();
         }
     }
