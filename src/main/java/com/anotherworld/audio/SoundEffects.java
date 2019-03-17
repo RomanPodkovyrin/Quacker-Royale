@@ -3,17 +3,24 @@ package com.anotherworld.audio;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * This class is in charge of playing the sound effects
+ * This class is in charge of playing the sound effects.
  *
  * @author Antons Lebedjko
  * @author Roman P
  */
 public class SoundEffects implements Runnable {
+    //File paths and the references from where they have been taken
     //https://freesound.org/people/qubodup/sounds/332060/
     private String ballCollidedWithWallSound =  "./res/audio/ball_collided_with_the_wall.au";
     //https://freesound.org/people/jeckkech/sounds/391658/
@@ -31,6 +38,7 @@ public class SoundEffects implements Runnable {
     //https://freesound.org/people/plagasul/sounds/85/
     private String scream = "./res/audio/jeEH.wav";
 
+    //All the files of sound effects
     private File ballCollidedWithWallFile;
     private File playerCollidedWithBallFile;
     private File errorFile;
@@ -52,9 +60,9 @@ public class SoundEffects implements Runnable {
     private static Logger logger = LogManager.getLogger(SoundEffects.class);
 
     /**
-     * Used to load the sound files and initialize the thread
+     * Used to load the sound files and initialize the thread.
      */
-    public SoundEffects(){
+    public SoundEffects() {
         ballCollidedWithWallFile = new File(ballCollidedWithWallSound);
         playerCollidedWithBallFile = new File(playerCollidedWithBallSound);
         errorFile = new File(error);
@@ -69,7 +77,7 @@ public class SoundEffects implements Runnable {
     }
 
     /**
-     * A run method for the thread that plays the current sound effect
+     * A run method for the thread that plays the current sound effect.
      */
     public void run() {
         while (running) {
@@ -101,7 +109,7 @@ public class SoundEffects implements Runnable {
     }
 
     /**
-     * Used to create a line for the current sound effect
+     * Used to create a line for the current sound effect.
      *
      * @param filename a sound file of the current sound effect
      */
@@ -130,7 +138,7 @@ public class SoundEffects implements Runnable {
     }
 
     /**
-     * Plays a sound of ball collision with the wall
+     * Plays a sound of ball collision with the wall.
      */
     public void ballCollidedWithWall() {
         logger.trace("Play ball sound");
@@ -138,14 +146,14 @@ public class SoundEffects implements Runnable {
     }
 
     /**
-     * Plays a sound of ball collision with the another ball
+     * Plays a sound of ball collision with the another ball.
      */
     public void playerCollidedWithBall() {
         currentFile = screamFile;
     }
 
     /**
-     * Stops the sound effects
+     * Stops the sound effects.
      */
     public void stopSoundEffects() {
         logger.info("STOPPING SOUND EFFECTS");
