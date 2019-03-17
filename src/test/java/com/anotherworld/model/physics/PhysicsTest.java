@@ -1,7 +1,6 @@
 package com.anotherworld.model.physics;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Wall;
@@ -14,8 +13,6 @@ import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
 
-import java.awt.List;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -129,18 +126,10 @@ public class PhysicsTest {
     }
 
     @Test
-    public void MovingCoordinationOfPlayersToSafeCoordinates() {
+    public void movingCoordinationOfPlayersToSafeCoordinates() {
         BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
         Ball aBall = new Ball(a);
         
-        PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f,
-                ObjectState.IDLE, 0f, 3.0f);
-        Player steve = new Player(b, false);
-
-        PlayerData c = new PlayerData("Steve", 90, 91.1f, 52.3f,
-                ObjectState.DASHING, 0f, 3.0f);
-        Player steven = new Player(c, false);
-
         BallData d = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
         Ball bBall = new Ball(d);
 
@@ -155,6 +144,11 @@ public class PhysicsTest {
         assertEquals(expected.get(1).getY(), bBall.getYCoordinate(), 0.0f);
         
         // ball VS player.
+        
+        PlayerData b = new PlayerData("Steve", 90, 91.1f, 52.3f,
+                ObjectState.IDLE, 0f, 3.0f);
+        Player steve = new Player(b, false);
+        
         steve.setCoordinates(aBall.getXCoordinate(), aBall.getYCoordinate());
         expected = Physics.calculateCollision(aBall, steve);
         assertEquals(true,Physics.checkCollision(aBall, steve));
@@ -173,6 +167,11 @@ public class PhysicsTest {
         assertEquals(expected.get(1).getX(), aBall.getXCoordinate(), 0.0f);
         assertEquals(expected.get(1).getY(), aBall.getYCoordinate(), 0.0f);
         // ball VS dashing player
+        
+        PlayerData c = new PlayerData("Steve", 90, 91.1f, 52.3f,
+                ObjectState.DASHING, 0f, 3.0f);
+        Player steven = new Player(c, false);
+
         steven.setCoordinates(aBall.getXCoordinate(), aBall.getYCoordinate());
         expected = Physics.calculateCollision(aBall, steven);
         assertEquals(true,Physics.checkCollision(aBall, steven));

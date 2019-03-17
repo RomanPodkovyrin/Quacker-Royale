@@ -29,7 +29,7 @@ public class Physics {
 
     /**
      * This method is to setup the attributes of the Physics class such as
-     * friction and rate
+     * friction and rate.
      */
     public static void setUp() {
         PropertyReader property;
@@ -45,7 +45,8 @@ public class Physics {
     }
 
     /**
-     * To make the object move
+     * To make the object move. And the way object move is by adding up the product of 
+     * speed and velocity of the object on its original coordination.
      * 
      * @param object
      *            the object to move
@@ -61,7 +62,23 @@ public class Physics {
                 + "location updated successfully");
     }
 
-    public static boolean checkCollision(Player object, Matrix coordinates, float  radius) {
+    /** 
+     * To check for collision between a player and coordinate of an item as well as its radius.
+     * 
+     * @param object
+     *          The player who is used in checking for collision
+     *          
+     * @param coordinates
+     *          The coordinate of the item
+     *          
+     * @param radius
+     *          The radius of the item.
+     *         
+     * @return boolean
+     *          Indicates if the object is collided with the item. 
+     */
+    
+    public static boolean checkCollision(Player object, Matrix coordinates, float radius) {
         float xDistance = (object.getXCoordinate() - coordinates.getX());
         float yDistance = (object.getYCoordinate() - coordinates.getY());
 
@@ -77,11 +94,12 @@ public class Physics {
      *
      * @param objectA
      *            the first object to check
+     *            
      * @param objectB
      *            the second object to check
      */
-    public static boolean checkCollision(AbstractMovable objectA,
-            AbstractMovable objectB) {
+    
+    public static boolean checkCollision(AbstractMovable objectA, AbstractMovable objectB) {
         float xDistance = (objectA.getXCoordinate() - objectB.getXCoordinate());
         float yDistance = (objectA.getYCoordinate() - objectB.getYCoordinate());
 
@@ -108,6 +126,7 @@ public class Physics {
      * 
      * @param ball
      *            the ball to check for collisions
+     *            
      * @param wall
      *            the wall to check for collisions
      */
@@ -160,6 +179,7 @@ public class Physics {
      * 
      * @param objectA
      *            An object which is collided.
+     *            
      * @param objectB
      *            An object which is collided.
      */
@@ -209,6 +229,7 @@ public class Physics {
      * 
      * @param objectA
      *            the first object in the collision
+     *            
      * @param objectB
      *            the second object in the collision
      */
@@ -288,7 +309,7 @@ public class Physics {
      * value of himself (charge level) And it add into 1 and multiply the
      * defaultPlayerSpeed by the amplifying value. Finally, set speed of the
      * player by the result of the multiplication.
-     * 5
+     * 
      * @param player
      *            The player who is about to dash.
      */
