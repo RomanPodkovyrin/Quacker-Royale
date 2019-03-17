@@ -23,6 +23,8 @@ public class Physics {
     private static final String RATE = "ACCELERATE";
     private static final String FALLING = "FALLINGSPEED";
     private static final String FILE = "physics.properties";
+    private static final float CHARGE_RATE = 1.5f;
+    private static final int FIRST = 0, SECOND = 1, TWO = 2;
     static float friction;
     static float rate;
     static float fallingSpeed;
@@ -200,8 +202,8 @@ public class Physics {
         float radiusB = objectB.getRadius();
 
         Matrix midpointBetweenCircles = new Matrix(
-                (pointA.getX() + pointB.getX()) / 2, //MAGIC NUMBER
-                (pointA.getY() + pointB.getY()) / 2);//MAGIC NUMBER
+                (pointA.getX() + pointB.getX()) / TWO, 
+                (pointA.getY() + pointB.getY()) / TWO);
 
         Matrix objectAOffSet = new Matrix((float) (radiusA * Math.cos(Math.PI
                 + angleBetweenCircles)), (float) (radiusA * Math.sin(Math.PI
@@ -270,7 +272,7 @@ public class Physics {
                 {
                     objectB.setVelocity(veloB.getX(), veloB.getY());
                     objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
-                    safe = newCoordinate.get(1);//MAGIC NUMBER
+                    safe = newCoordinate.get(SECOND);
                     objectB.setCoordinates(safe.getX(), safe.getY());
                     if (!(objectB instanceof Ball)) {
                         specialCase = true;
@@ -282,7 +284,7 @@ public class Physics {
                 {
                     objectA.setVelocity(veloA.getX(), veloA.getY());
                     objectA.setAngle((float) MatrixMath.vectorAngle(veloA));
-                    safe = newCoordinate.get(0);//MAGIC NUMBER
+                    safe = newCoordinate.get(FIRST);
                     objectA.setCoordinates(safe.getX(), safe.getY());
                     if (!(objectA instanceof Ball)) {
                         specialCase = true;
@@ -291,9 +293,9 @@ public class Physics {
             }
         }
         if (!specialCase) {
-            safe = newCoordinate.get(0);//MAGIC NUMBER
+            safe = newCoordinate.get(FIRST);
             objectA.setCoordinates(safe.getX(), safe.getY());
-            safe = newCoordinate.get(1);//MAGIC NUMBER
+            safe = newCoordinate.get(SECOND);
             objectB.setCoordinates(safe.getX(), safe.getY());
         }
         logger.debug("Completed collision event between "
@@ -306,7 +308,8 @@ public class Physics {
 
     /**
      * This method allows player to increase his speed depends on the internal
-     * value of himself (charge level) And it add into 1 and multiply the
+     * value of himself (charge level) And it add into 1 (1 is to make sure the
+     * player still have the speed without any charge) and multiply the
      * defaultPlayerSpeed by the amplifying value. Finally, set speed of the
      * player by the result of the multiplication.
      * 
@@ -315,7 +318,7 @@ public class Physics {
      */
     public static void charge(Player player) {
         int charge = player.getChargeLevel();
-        float speedIncreases = 1 + (1.5f * charge); //MAGIC NUMBER
+        float speedIncreases = 1 + (CHARGE_RATE * charge);
 
         float speed = GameSettings.getDefaultPlayerSpeed() * speedIncreases;
 

@@ -135,7 +135,6 @@ public class PhysicsTest {
 
         // ball VS ball.
         ArrayList<Matrix> expected = Physics.calculateCollision(aBall, bBall);
-        ArrayList<Matrix> originalVelo = new ArrayList<Matrix>();
         assertEquals(true,Physics.checkCollision(aBall, bBall));
         Physics.collided(aBall, bBall);
         assertEquals(expected.get(0).getX(), aBall.getXCoordinate(), 0.0f);
