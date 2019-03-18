@@ -6,6 +6,8 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.GameSessionData;
 import java.util.ArrayList;
+
+import com.anotherworld.tools.datapool.PlayerData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,7 +26,7 @@ public class CheckHealth extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
         logger.trace("Checking health level");
         float healthPercentage = 0.5f;
         float aiHealth = (float)ai.getHealth();

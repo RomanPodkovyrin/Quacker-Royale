@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class AITools {
     //TODO make a walk to method
 
-    public static void moveTo(Player ai, Matrix destination) {
+    public static void moveTo(PlayerData ai, Matrix destination) {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
         vector.normalizeThis();
         ai.setXVelocity(vector.getX() * ai.getSpeed());

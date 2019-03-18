@@ -4,6 +4,7 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 
 import java.util.ArrayList;
 
@@ -19,8 +20,8 @@ public abstract class Job {
 
     protected JobState state;
 
-    protected Player ai;
-    protected ArrayList<Player> players;
+    protected PlayerData ai;
+    protected ArrayList<PlayerData> players;
     protected ArrayList<Ball> balls;
     protected Platform platform;
     protected GameSessionData session;
@@ -52,7 +53,7 @@ public abstract class Job {
      * @param balls All the balls on the boards
      * @param platform The platform
      */
-    public abstract void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session);
+    public abstract void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session);
 
     /**
      * Sets the Job state to SUCCESS.

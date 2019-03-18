@@ -19,6 +19,7 @@ import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 
 import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,8 +33,8 @@ public class AI {
 
     private static Logger logger = LogManager.getLogger(AI.class);
 
-    private ArrayList<Pair<Player,ArrayList<Player>>> aiPlayers = new ArrayList<>();
-    private ArrayList<Player> allPlayers;
+    private ArrayList<Pair<PlayerData,ArrayList<PlayerData>>> aiPlayers = new ArrayList<>();
+    private ArrayList<PlayerData> allPlayers;
     private ArrayList<Ball> balls;
     private ArrayList<Job> jobs = new ArrayList<>();
     private Platform platform;
@@ -49,14 +50,14 @@ public class AI {
      * @param balls all the balls on the map
      * @param platform the current platform
      */
-    public AI(ArrayList<Player> ais, ArrayList<Player> allPlayers, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public AI(ArrayList<PlayerData> ais, ArrayList<PlayerData> allPlayers, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
         this.allPlayers = allPlayers;
         this.balls = balls;
         this.platform = platform;
         this.session = session;
 
         // Gives all AIs their individual jobs
-        for (Player ai : ais) {
+        for (PlayerData ai : ais) {
             // Gives the AI representation of other players(AIs and human players)
             aiPlayers.add(new Pair<>(ai, removePlayer(allPlayers,ai)));
 
@@ -149,11 +150,11 @@ public class AI {
      * @param player the player to be removed
      * @return returns the new list of players with the removed player
      */
-    private ArrayList<Player> removePlayer(ArrayList<Player> players, Player player) {
-        ArrayList<Player> newPlayers = new ArrayList<>();
+    private ArrayList<PlayerData> removePlayer(ArrayList<PlayerData> players, PlayerData player) {
+        ArrayList<PlayerData> newPlayers = new ArrayList<>();
 
-        for (Player p : players) {
-            if (!p.getCharacterID().equals(player.getCharacterID())) {
+        for (PlayerData p : players) {
+            if (!p.getObjectID().equals(player.getObjectID())) {
                 newPlayers.add(p);
             }
         }
@@ -170,13 +171,13 @@ public class AI {
 
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
-                Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
+                Pair<PlayerData, ArrayList<PlayerData>> pair = aiPlayers.get(i);
                 if (pair.getKey().getState() == ObjectState.DEAD) {
 
-                    logger.debug(pair.getKey().getCharacterID() + " is dead");
+                    logger.debug(pair.getKey().getObjectID() + " is dead");
                     pair.getKey().setVelocity(0,0);
                 } else {
-                    logger.debug(pair.getKey().getCharacterID() + " Starting AI");
+                    logger.debug(pair.getKey().getObjectID() + " Starting AI");
 
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform, session);
                 }
