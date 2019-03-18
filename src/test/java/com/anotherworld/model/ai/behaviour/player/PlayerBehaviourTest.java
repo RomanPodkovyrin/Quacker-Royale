@@ -20,6 +20,7 @@ public class PlayerBehaviourTest {
     private ArrayList<Player> otherPlayers = new ArrayList<>();
     private ArrayList<Ball> balls = new ArrayList<>();
     private Platform platform;
+    private GameSessionData session;
 
     @Before
     public void setup(){
@@ -42,6 +43,8 @@ public class PlayerBehaviourTest {
         // Create balls
         balls.clear();
         balls.add(new Ball( new BallData("ball " ,false,80,10, ObjectState.IDLE,1f,3.0f)));
+
+        session = new GameSessionData(10);
     }
 
     @Test
@@ -56,7 +59,7 @@ public class PlayerBehaviourTest {
         ball.setVelocity(0,1);
         ball.setCoordinates(81,ball.getYCoordinate());
         AvoidBall job = new AvoidBall();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0f,currentAI.getXVelocity(), delta);
         assertEquals(0f,currentAI.getYVelocity(), delta);
 
@@ -66,7 +69,7 @@ public class PlayerBehaviourTest {
         ball.setVelocity(0,1);
         ball.setCoordinates(79,ball.getYCoordinate());
         job = new AvoidBall();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0f,currentAI.getXVelocity(), delta);
         assertEquals(0f,currentAI.getYVelocity(), delta);
 
@@ -76,7 +79,7 @@ public class PlayerBehaviourTest {
         ball.setVelocity(1,0);
         ball.setCoordinates(50,45);
         job = new AvoidBall();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0f,currentAI.getXVelocity(), delta);
         assertEquals(0f,currentAI.getYVelocity(), delta);
 
@@ -86,7 +89,7 @@ public class PlayerBehaviourTest {
         ball.setVelocity(1,0);
         ball.setCoordinates(50,44);
         job = new AvoidBall();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0f,currentAI.getXVelocity(), delta);
         assertEquals(0f,currentAI.getYVelocity(), delta);
 
@@ -101,7 +104,7 @@ public class PlayerBehaviourTest {
         ball.setVelocity(0,1);
         ball.setCoordinates(81,ball.getYCoordinate());
         job = new AvoidBall();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(-1f,currentAI.getXVelocity(), delta);
         assertEquals(0f,currentAI.getYVelocity(), delta);
 
@@ -111,7 +114,7 @@ public class PlayerBehaviourTest {
         ball.setVelocity(0,1);
         ball.setCoordinates(79,ball.getYCoordinate());
         job = new AvoidBall();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(1f,currentAI.getXVelocity(), delta);
         assertEquals(0f,currentAI.getYVelocity(), delta);
 
@@ -121,7 +124,7 @@ public class PlayerBehaviourTest {
         ball.setVelocity(1,0);
         ball.setCoordinates(50,46);
         job = new AvoidBall();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0f,currentAI.getXVelocity(), delta);
         assertEquals(-1f,currentAI.getYVelocity(), delta);
 
@@ -131,7 +134,7 @@ public class PlayerBehaviourTest {
         ball.setVelocity(1,0);
         ball.setCoordinates(50,44);
         job = new AvoidBall();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0f,currentAI.getXVelocity(), delta);
         assertEquals(1f,currentAI.getYVelocity(), delta);
 
@@ -142,7 +145,7 @@ public class PlayerBehaviourTest {
         ball.setVelocity(1,0);
         ball.setCoordinates(50,45);
         job = new AvoidBall();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertTrue(!(currentAI.getXVelocity() == 0 & currentAI.getYVelocity() ==0)  );
     }
 
@@ -156,7 +159,7 @@ public class PlayerBehaviourTest {
         AvoidEdge job = new AvoidEdge();
         currentAI.setCoordinates(80,94);
         currentAI.setVelocity(0,0);
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
 
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(-1,currentAI.getYVelocity(),delta);
@@ -166,7 +169,7 @@ public class PlayerBehaviourTest {
         job = new AvoidEdge();
         currentAI.setCoordinates(80,-4);
         currentAI.setVelocity(0,0);
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
 
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(1,currentAI.getYVelocity(),delta);
@@ -175,7 +178,7 @@ public class PlayerBehaviourTest {
         job = new AvoidEdge();
         currentAI.setCoordinates(11,45);
         currentAI.setVelocity(0,0);
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
 
         assertEquals(1,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
@@ -184,7 +187,7 @@ public class PlayerBehaviourTest {
         job = new AvoidEdge();
         currentAI.setCoordinates(149,45);
         currentAI.setVelocity(0,0);
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
 
         assertEquals(-1,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
@@ -193,7 +196,7 @@ public class PlayerBehaviourTest {
         job = new AvoidEdge();
         currentAI.setCoordinates(80,45);
         currentAI.setVelocity(0,0);
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
 
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
@@ -209,7 +212,7 @@ public class PlayerBehaviourTest {
         ball.setDangerous(true);
         ChaseBall job = new ChaseBall();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
 
@@ -221,7 +224,7 @@ public class PlayerBehaviourTest {
         currentAI.setVelocity(0,0);
         job = new ChaseBall();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(-1,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
 
@@ -232,7 +235,7 @@ public class PlayerBehaviourTest {
         currentAI.setVelocity(0,0);
         job = new ChaseBall();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(1,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
 
@@ -243,7 +246,7 @@ public class PlayerBehaviourTest {
         currentAI.setVelocity(0,0);
         job = new ChaseBall();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(1,currentAI.getYVelocity(),delta);
 
@@ -254,7 +257,7 @@ public class PlayerBehaviourTest {
         currentAI.setVelocity(0,0);
         job = new ChaseBall();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(-1,currentAI.getYVelocity(),delta);
     }
@@ -272,7 +275,7 @@ public class PlayerBehaviourTest {
         currentAI.setCoordinates(80,45);
         CheckIfSaveToGo job = new CheckIfSaveToGo();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(1,currentAI.getYVelocity(),delta);
 
@@ -284,7 +287,7 @@ public class PlayerBehaviourTest {
         currentAI.setCoordinates(80,45);
         job = new CheckIfSaveToGo();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(1,currentAI.getYVelocity(),delta);
 
@@ -297,7 +300,7 @@ public class PlayerBehaviourTest {
         currentAI.setCoordinates(80,45);
         job = new CheckIfSaveToGo();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(1,currentAI.getYVelocity(),delta);
 
@@ -310,7 +313,7 @@ public class PlayerBehaviourTest {
         currentAI.setCoordinates(80,45);
         job = new CheckIfSaveToGo();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
 
@@ -328,7 +331,7 @@ public class PlayerBehaviourTest {
         currentAI.setCoordinates(82,45);
         currentAI.setVelocity(-1,0);
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertTrue(currentAI.getYVelocity() == 1 | currentAI.getYVelocity() == -1);
 
@@ -340,7 +343,7 @@ public class PlayerBehaviourTest {
         currentAI.setCoordinates(83,45);
         currentAI.setVelocity(-1,0);
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(-1,currentAI.getXVelocity(),delta);
         assertEquals(0, currentAI.getYVelocity(),delta);
 
@@ -354,7 +357,7 @@ public class PlayerBehaviourTest {
         currentAI.setCoordinates(82,45);
         currentAI.setVelocity(-1,0);
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(-1,currentAI.getXVelocity(),delta);
         assertEquals(0, currentAI.getYVelocity(),delta);
     }
@@ -365,13 +368,13 @@ public class PlayerBehaviourTest {
         ball.setDangerous(false);
         NeutralBallCheck job = new NeutralBallCheck();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(Job.JobState.SUCCESS, job.getState());
 
         ball.setDangerous(true);
         job = new NeutralBallCheck();
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(Job.JobState.FAILURE, job.getState());
 
     }
@@ -382,7 +385,7 @@ public class PlayerBehaviourTest {
         currentAI.setCoordinates(80,45);
         currentAI.setVelocity(0,0);
         job.start();
-        job.act(currentAI,otherPlayers,balls,platform);
+        job.act(currentAI,otherPlayers,balls,platform,session);
         assertTrue(currentAI.getYVelocity() != 0 | currentAI.getXVelocity() != 0);
     }
 

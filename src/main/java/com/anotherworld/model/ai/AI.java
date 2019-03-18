@@ -167,7 +167,7 @@ public class AI {
                 } else {
                     logger.debug(pair.getKey().getCharacterID() + " Starting AI");
 
-                    jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform);
+                    jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform, null);
                 }
             }
         //tick = tick + 1;

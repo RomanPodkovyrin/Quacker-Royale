@@ -17,7 +17,6 @@ public class AudioControlTest {
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
                 {true,true},
-                {true,false},
                 {false,true},
                 {false,false}
         });
@@ -34,17 +33,19 @@ public class AudioControlTest {
         AudioControl.setMusicOn(expectedMusicState);
         AudioControl.setEffectsOn(expectedEfFectsState);
         //Todo finish the tests
-        AudioControl.setUp();
-        AudioControl.playBackGroundMusic();
+//        AudioControl.setUp();
 //        try {
-//            Thread.sleep(30);
+//            Thread.sleep(5000);
 //        } catch (InterruptedException e) {
 //            e.printStackTrace();
 //        }
-//        AudioControl.stopBackgroundMusic();
+//        System.out.println("hello");
 //        AudioControl.playerCollidedWithBall();
 //        AudioControl.ballCollidedWithWall();
 //        AudioControl.stopSoundEffects();
+//        System.out.println("m");
+//        AudioControl.stopBackgroundMusic();
+//        System.out.println("d");
 
     }
 }
