@@ -3,6 +3,7 @@ package com.anotherworld.model.ai.behaviour;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.GameSessionData;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,7 @@ public abstract class Job {
     protected ArrayList<Player> players;
     protected ArrayList<Ball> balls;
     protected Platform platform;
+    protected GameSessionData session;
 
     /**
      * Call when need to initialise a new Job.
@@ -50,7 +52,7 @@ public abstract class Job {
      * @param balls All the balls on the boards
      * @param platform The platform
      */
-    public abstract void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform);
+    public abstract void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session);
 
     /**
      * Sets the Job state to SUCCESS.

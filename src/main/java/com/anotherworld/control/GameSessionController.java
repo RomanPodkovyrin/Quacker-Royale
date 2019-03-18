@@ -5,6 +5,7 @@ import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
@@ -13,11 +14,21 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 /**
  * Controller object that connects the View and the Model of the game.
  * @author Alfi S
  */
 public class GameSessionController {
+
+
+
+    private GameSession session;
+    private GameSettings settings;
+    private View view;
+    private Thread viewThread;
+    private KeyListener keyListener;
+    private NetworkController network;
 
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
 
@@ -30,15 +41,6 @@ public class GameSessionController {
     private final static int MAX_FRAME_DROP = 5;
     // the time between frames
     private final static int    FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
-
-
-
-    private GameSession session;
-    private GameSettings settings;
-    private View view;
-    private Thread viewThread;
-    private KeyListener keyListener;
-    private NetworkController network;
 
 
     /**
@@ -57,8 +59,6 @@ public class GameSessionController {
 
         // Starting the background music and effects threads
         AudioControl.setUp();
-        AudioControl.playBackGroundMusic();
-
 
         // Starting the View thread
         this.viewThread = new Thread(view);
@@ -101,9 +101,21 @@ public class GameSessionController {
         // Time in ms to sleep
         int sleepTime = 0;
 
+        boolean keyDown = false;
+
 
 
         while (viewThread.isAlive() && session.isRunning()) {
+
+            // music and effect mute unmute control
+            if(keyListener.getKeyPresses().contains(Input.MUTE)) {
+                if (!keyDown) {
+                    AudioControl.muteUnmute();
+                    keyDown = true;
+                }
+            } else {
+                keyDown = false;
+            }
 
             // if client check if there are game objects to update
             network.clientControl(keyListener);

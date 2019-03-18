@@ -1,16 +1,11 @@
 package com.anotherworld.tools.input;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.glfw.GLFW.glfwGetKey;
-
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class KeyListener {
 
@@ -40,6 +35,9 @@ public class KeyListener {
         }
         if (glfwGetKey(window, GLFW_KEY_SPACE) == 1) {
             keyPresses.add(Input.CHARGE);
+        }
+        if (glfwGetKey(window, GLFW_KEY_M) == 1) {
+            keyPresses.add(Input.MUTE);
         }
 
         return keyPresses;
