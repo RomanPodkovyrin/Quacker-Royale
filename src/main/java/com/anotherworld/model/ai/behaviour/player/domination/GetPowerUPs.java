@@ -1,32 +1,27 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour.player.domination;
 
 import com.anotherworld.model.ai.AITools;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
-import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.GameSessionData;
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
+import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 /**
- * Looks if health power up. And directs AI towards it. Fail if no power up, Succeed if health power up is present.
+ * Gets either time stop or shield power up.
  * @author roman
  */
-public class GetHealth extends Job {
+public class GetPowerUPs extends Job {
 
-    private static Logger logger = LogManager.getLogger(GetHealth.class);
+    private static Logger logger = LogManager.getLogger(GetPowerUPs.class);
 
     @Override
     public void reset() {
@@ -35,12 +30,12 @@ public class GetHealth extends Job {
 
     @Override
     public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
-
         try {
             PowerUpData powerUP = session.getCurrentPowerUp().get();
-            if (powerUP.getPowerUpType().equals(PowerUpType.HEAL)) {
+            PowerUpType type = powerUP.getPowerUpType();
+            if (type.equals(PowerUpType.TIME_STOP) || type.equals(PowerUpType.SHIELD)) {
+                logger.trace("Getting " + type +" power up");
                 Matrix destination = powerUP.getCoordinates();
-                logger.info("Getting Heal power up from: " + destination);
                 AITools.moveTo(ai,destination);
                 succeed();
                 return;
@@ -50,6 +45,5 @@ public class GetHealth extends Job {
             fail();
             return;
         }
-
     }
 }

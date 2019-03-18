@@ -1,4 +1,4 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour.player.domination;
 
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
@@ -16,11 +16,15 @@ import org.apache.logging.log4j.Logger;
 
 
 
-public class ChasePlayer extends Job {
+/**
+ * Job class which makes the player chase the neutral ball.
+ * @author roman
+ */
+public class ChaseBall extends Job {
 
-    private static Logger logger = LogManager.getLogger(ChasePlayer.class);
+    private static Logger logger = LogManager.getLogger(ChaseBall.class);
 
-    public  ChasePlayer() {
+    public  ChaseBall() {
         super();
     }
 
@@ -35,37 +39,44 @@ public class ChasePlayer extends Job {
         this.players = players;
         this.balls = balls;
         this.platform = platform;
-        this.session =session;
-        players = sortObject(players);
+        this.session = session;
 
-        logger.debug("Starting ChasePlayer Job");
-        for (Player player: players) {
-            if (isRunning()) {
-                logger.debug("Chasing the Player");
-                Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), player.getCoordinates());
+        logger.debug("Starting ChaseBall Job");
 
-                // checks if close to other player
-                if (MatrixMath.distanceAB(ai.getCoordinates(),player.getCoordinates()) <= player.getRadius() + ai.getRadius() + 15) {
+        //Todo by chasing the closes ball it is hard to get it on time
+        sortObject(balls);
+
+        for (Ball ball: balls) {
+
+            // Checks if the ball is currently not dangerous and on the wall
+            if (!ball.isDangerous() & isRunning() & platform.isOnPlatform(ball.getCoordinates())) {
+                logger.debug("Chasing the Ball at " + ball.getCoordinates());
+
+                Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
+                Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), neighbour);
+
+                // Checks if it is already near the ball
+                if (MatrixMath.distanceAB(ai.getCoordinates(),neighbour) <= ball.getRadius() + ai.getRadius()) {
                     succeed();
                     return;
                 }
+
                 if (vector.getX() != 0) {
                     ai.setXVelocity(Maths.floatDivision(vector.getX() , Math.abs(vector.getX())) * ai.getSpeed());
                 }
                 if (vector.getY() != 0) {
                     ai.setYVelocity(Maths.floatDivision(vector.getY() , Math.abs(vector.getY())) * ai.getSpeed());
                 }
-                fail();
+                succeed();
                 return;
             } else {
-                logger.debug("Finishing ChasePlayer with fail: nothing to chase");
+                logger.debug("Finishing ChaseBall with fail: nothing to chase");
                 ai.setXVelocity(0);
                 ai.setYVelocity(0);
                 fail();
                 return;
             }
         }
-
     }
 
     /**
@@ -74,11 +85,10 @@ public class ChasePlayer extends Job {
      * @param objects The object to be sorted based on the distance from the AI
      * @return returns an ArrayList of Balls starting with the closes one
      */
-    private ArrayList<Player> sortObject(ArrayList<Player> objects) {
+    private ArrayList<Ball> sortObject(ArrayList<Ball> objects) {
 
         objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getXCoordinate(),o1.getYCoordinate()),ai.getCoordinates()))
                 .compareTo(MatrixMath.distanceAB(new Matrix(o2.getXCoordinate(),o2.getYCoordinate()),ai.getCoordinates())));
         return objects;
     }
 }
-

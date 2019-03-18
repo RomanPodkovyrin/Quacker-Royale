@@ -8,12 +8,15 @@ import com.anotherworld.model.ai.behaviour.Sequence;
 import com.anotherworld.model.ai.behaviour.SequenceSuccess;
 import com.anotherworld.model.ai.behaviour.player.*;
 
+import com.anotherworld.model.ai.behaviour.player.domination.ChaseBall;
+import com.anotherworld.model.ai.behaviour.player.domination.GetPowerUPs;
+import com.anotherworld.model.ai.behaviour.player.peace.WalkAbout;
+import com.anotherworld.model.ai.behaviour.player.survival.*;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.anotherworld.tools.datapool.GameSessionData;
 import javafx.util.Pair;
@@ -117,9 +120,9 @@ public class AI {
         domination.add(new Inverter(new ChaseBall()));
 //        domination.add((new ChasePlayer()));
 
-        ArrayList<Job> ballAim = new ArrayList<>();
-        ballAim.add(new NeutralBallCheck());
-        ballAim.add(new AimBall());
+//        ArrayList<Job> ballAim = new ArrayList<>();
+//        ballAim.add(new NeutralBallCheck());
+//        ballAim.add(new AimBall());
 
 //        domination.add(new SequenceSuccess(ballAim));
         return  domination;
