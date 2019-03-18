@@ -1,6 +1,5 @@
 package com.anotherworld.audio;
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -59,7 +58,7 @@ public class AudioControl {
     /**
      * Mutes of unmutes background music and sound effects.
      */
-    public static void muteUnmute(){
+    public static void muteUnmute() {
         if (musicOn | effectsOn) {
 
             logger.info("Muted sound effects and Music");

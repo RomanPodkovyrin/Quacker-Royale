@@ -1,16 +1,17 @@
 package com.anotherworld.network;
 
-import org.junit.Test;
+import static junit.framework.TestCase.assertTrue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import org.junit.Test;
 
-import static junit.framework.TestCase.assertTrue;
 
 public class LobbyClientAndLobbyServerTest {
     int numberOfClients = 3;
+
     @Test
-    public void lobbyServerConnectionsWaitingTest() throws InterruptedException, IOException {
+    public void lobbyServerConnectionsWaitingTest() throws IOException {
         //starting lobby server
         LobbyServer lobbyServer = new LobbyServer(numberOfClients);
         lobbyServer.start();
