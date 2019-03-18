@@ -1,41 +1,44 @@
 package com.anotherworld.network;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.*;
-import java.net.*;
-import java.util.ArrayList;
-
 /**
  * This class allows host player to create a lobby, so
- * all the clients can connect to it before game starts
+ * all the clients can connect to it before game starts.
  *
  * @author Antons Lebedjko
  */
-public class LobbyServer extends Thread{
-    private ServerSocket TCPsocket;
+public class LobbyServer extends Thread {
+    private ServerSocket tcpSocket;
     private int port;
     private boolean allPlayersJoined;
-    private ArrayList<String> playersIPAddresses;
+    private ArrayList<String> playersIpAddresses;
     private ArrayList<OutputStream> clientSockets;
     private int currentPlayersAmount;
     private int numberOfClients;
     private static Logger logger = LogManager.getLogger(LobbyServer.class);
 
     /**
-     * Used to set up a connection with the clients
+     * Used to set up a connection with the clients.
      *
      * @param numberOfClients the amount of clients that are going to play
      */
-    public LobbyServer(int numberOfClients){
-        playersIPAddresses = new ArrayList<String>();
+    public LobbyServer(int numberOfClients) {
+        playersIpAddresses = new ArrayList<String>();
         clientSockets = new ArrayList<OutputStream>();
         currentPlayersAmount = 0;
         this.numberOfClients = numberOfClients;
         port = 4446;
         try {
-            TCPsocket = new ServerSocket(port);
+            tcpSocket = new ServerSocket(port);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -43,10 +46,10 @@ public class LobbyServer extends Thread{
 
     /**
      * A run method for the thread which waits for all clients to connect,
-     * after that it will inform them that the game can start
+     * after that it will inform them that the game can start.
      */
-    public void run(){
-        while(!allPlayersJoined){
+    public void run() {
+        while (!allPlayersJoined) {
             try {
                 getPlayersIP();
             } catch (IOException e) {
@@ -61,23 +64,23 @@ public class LobbyServer extends Thread{
     }
 
     /**
-     * Used to get IP addresses of all the clients
+     * Used to get IP addresses of all the clients.
      */
     private void getPlayersIP() throws IOException {
-        Socket lobbySocket = TCPsocket.accept();
+        Socket lobbySocket = tcpSocket.accept();
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
         logger.trace("Received from: " + lobbySocket.getInetAddress().getHostAddress() + " on port " + lobbySocket.getPort());
         clientSockets.add(lobbySocket.getOutputStream());
-        playersIPAddresses.add(lobbySocket.getInetAddress().getHostAddress());
+        playersIpAddresses.add(lobbySocket.getInetAddress().getHostAddress());
         countPlayers();
         logger.trace("New player has joined the lobby. Now there are " + currentPlayersAmount + " player in lobby");
     }
 
     /**
-     * Used to send a message to all clients, that everyone has connected and gam can be started
+     * Used to send a message to all clients, that everyone has connected and gam can be started.
      */
     public void informAllClientsThatGameCanStart() throws IOException {
-        for(int i = 0; i< clientSockets.size(); i++){
+        for (int i = 0; i < clientSockets.size(); i++) {
             DataOutputStream out = new DataOutputStream(clientSockets.get(i));
             out.writeUTF(String.valueOf(i));
             clientSockets.get(i).close();
@@ -85,39 +88,40 @@ public class LobbyServer extends Thread{
     }
 
     /**
-     * Used to track how many clients have already connected to the Lobby Server
+     * Used to track how many clients have already connected to the Lobby Server.
      */
-    public void countPlayers(){
+    public void countPlayers() {
         currentPlayersAmount++;
-        if(currentPlayersAmount == numberOfClients)
+        if (currentPlayersAmount == numberOfClients) {
             allPlayersJoined = true;
+        }
     }
 
     /**
-     * Used to send the player id of each client
+     * Used to send the player id of each client.
      *
      * @return the status if all players have joined the lobby or they haven't yet
      */
-    public boolean isReady(){
+    public boolean isReady() {
         return allPlayersJoined;
     }
 
     /**
-     * Used to get all the IP addresses of the clients
+     * Used to get all the IP addresses of the clients.
      *
      * @return the ArrayList with all clients IPs
      */
-    public ArrayList<String> getIPs(){
-        return playersIPAddresses;
+    public ArrayList<String> getIPs() {
+        return playersIpAddresses;
     }
 
     /**
-     * Stops the communication with all clients and closes the socket
+     * Stops the communication with all clients and closes the socket.
      */
     public void stopLobbyServer() {
         allPlayersJoined = true;
         try {
-            TCPsocket.close();
+            tcpSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
