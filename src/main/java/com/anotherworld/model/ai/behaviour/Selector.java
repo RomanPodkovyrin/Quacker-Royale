@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Executes the given jobs in order until one of them succeeds.
- * @author  Roman
+ * @author Roman
  *
  */
 public class Selector extends Job {

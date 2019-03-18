@@ -64,7 +64,7 @@ public class GameSession {
         this.platform = new Platform(platform);
         this.wall = new Wall(wall);
 
-        this.ai = new AI(aiPlayers, this.allPlayers, this.balls, this.platform);
+        this.ai = new AI(aiPlayers, this.allPlayers, this.balls, this.platform, this.gameData);
 
         Physics.setUp();
     }

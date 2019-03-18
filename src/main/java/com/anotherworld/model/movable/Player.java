@@ -24,6 +24,10 @@ public class Player extends AbstractMovable {
         playerData.setHealth(health);
     }
 
+    public int getMaxHealth() {
+        return playerData.getMaxHealth();
+    }
+
     public int getChargeLevel() { return playerData.getChargeLevel(); }
 
     public void setChargeLevel(int chargeLevel) { playerData.setChargeLevel(chargeLevel); }

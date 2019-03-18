@@ -2,6 +2,7 @@ package com.anotherworld.model.ai.behaviour.player;
 
 import static com.anotherworld.tools.maths.Maths.getRandom;
 
+import com.anotherworld.model.ai.AITools;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
@@ -93,10 +94,7 @@ public class WalkAbout extends Job {
      * Moves ai in the direction of the set coordinates.
      */
     private void move() {
-        Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
-        vector.normalizeThis();
-        ai.setXVelocity(vector.getX() * ai.getSpeed());
-        ai.setYVelocity(vector.getY() * ai.getSpeed());
+        AITools.moveTo(ai,destination);
         logger.trace("Walking about: Moving to " + destination);
 
         if (!platform.isOnPlatform(destination)) {
