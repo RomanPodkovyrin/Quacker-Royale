@@ -1,21 +1,23 @@
 package com.anotherworld.settings;
 
 import com.anotherworld.control.Controller;
-import com.anotherworld.tools.input.KeyListenerNotFoundException;
-import com.anotherworld.view.Programme;
 import com.anotherworld.view.View;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.Scene;
 
-import com.anotherworld.view.input.Button;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.TextFieldData;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MenuSystem {
     private Scene scene1;
     private Scene scene2;
     private Controller control;
     private View view;
+    
+    private static Logger logger = LogManager.getLogger(MenuSystem.class);
     
     public MenuSystem(View view, Controller control) {
         this.view = view;
@@ -44,10 +46,14 @@ public class MenuSystem {
         ButtonData buttonSinglePlayer = new ButtonData("Play SinglePlayer");
         buttonSinglePlayer.setOnAction(e -> {
             // start the game
-            view.switchToGameScene();
-            control.startSinglePlayer();
-            //TODO switch this to logging
-            System.out.println("Finished the game");
+            Thread x = new Thread(() -> {
+                logger.info("Starting game");
+                view.switchToGameScene();
+                control.startSinglePlayer();
+                view.switchToScene(scene1);
+                logger.info("Finished the game");
+            });
+            x.start();
         });
         buttonSinglePlayer.setWidth(0.5f);
         buttonSinglePlayer.setHeight(0.1f);
@@ -224,7 +230,6 @@ public class MenuSystem {
 
     public static void main(String[] args) {
         View view = new View(1920 / 2, 1080 / 2);
-
 
         // Starting the View thread
         Thread viewThread = new Thread(view);

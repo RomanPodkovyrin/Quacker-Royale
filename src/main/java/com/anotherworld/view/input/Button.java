@@ -30,6 +30,7 @@ public class Button extends RectangleDisplayObject implements Clickable {
             for (ButtonListener l : listeners) {
                 l.clicked();
             }
+            buttonData.preformAction();
         }
     }
     

@@ -1,16 +1,17 @@
 package com.anotherworld.view;
 
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
-import static org.lwjgl.glfw.GLFW.glfwGetKey;
+import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
+import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.Matrix2d;
-import com.anotherworld.view.data.Points2d;
 import com.anotherworld.view.graphics.Camera;
 import com.anotherworld.view.input.MouseState;
 
 import java.nio.DoubleBuffer;
+import java.nio.IntBuffer;
 import java.util.Stack;
 
 import org.lwjgl.BufferUtils;
@@ -220,7 +221,14 @@ public abstract class Programme {
         
         glfwGetCursorPos(window, cursorX, cursorY);
         
-        return new MouseState((float)cursorX.get(), (float)cursorY.get(), glfwGetKey(window, GLFW_MOUSE_BUTTON_1) == 1);
+        IntBuffer width = BufferUtils.createIntBuffer(1);
+        IntBuffer height = BufferUtils.createIntBuffer(1);
+        
+        glfwGetWindowSize(window, width, height);
+        float x = -1 + (2 * (float)cursorX.get() / ((float)width.get()));
+        float y = 1 + -(2 * (float)cursorY.get() / ((float)height.get()));
+        
+        return new MouseState(x, y, glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1);
     }
     
 }

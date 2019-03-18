@@ -36,7 +36,6 @@ public class GameSessionController {
     private GameSession session;
     private GameSettings settings;
     private View view;
-    private Thread viewThread;
     private KeyListener keyListener;
     private NetworkController network;
 
@@ -98,7 +97,7 @@ public class GameSessionController {
 
 
 
-        while (viewThread.isAlive() && session.isRunning()) {
+        while (session.isRunning()) {
 
             // if client check if there are game objects to update
             network.clientControl(keyListener);

@@ -222,13 +222,12 @@ public class View implements Runnable {
     }
     
     public void switchToGameScene() {
-        synchronized (eventQueue) {
-            eventQueue.add(new SwitchScene(new GameScene()));
-        }
+        this.switchToScene(new GameScene());
     }
     
     public void switchToScene(Scene scene) {
         synchronized (eventQueue) {
+            System.out.println("Scene switch queued");
             eventQueue.add(new SwitchScene(scene));
         }
     }
@@ -250,6 +249,7 @@ public class View implements Runnable {
     }
     
     private void completeEvent(ViewEvent event) {
+        System.out.println(event.getClass());
         if (event.getClass().equals(UpdateDisplayObjects.class) && currentScene.getClass().equals(GameScene.class)) {
             ArrayList<DisplayObject> disObj = new ArrayList<>();
             UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects)event);
@@ -267,9 +267,11 @@ public class View implements Runnable {
                 disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
             }
             ((GameScene)currentScene).updateGameObjects(disObj);
+            System.out.println("Adding Objects");
         } else if (event.getClass().equals(SwitchScene.class)) {
             SwitchScene sceneEvent = (SwitchScene)event;
             currentScene = sceneEvent.getScene();
+            System.out.println("Switching scene");
         }
     }
 
@@ -278,7 +280,8 @@ public class View implements Runnable {
     }
 
     public void setTitle(String string) {
-        glfwSetWindowTitle(window, string);
+        //TODO fix this
+        //glfwSetWindowTitle(window, string);
     }
 
     public Object getAllKeyListener() {

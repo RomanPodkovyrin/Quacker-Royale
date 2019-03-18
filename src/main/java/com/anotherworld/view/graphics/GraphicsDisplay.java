@@ -33,7 +33,7 @@ public class GraphicsDisplay {
     private ArrayList<ButtonData> buttonsToAdd;
     
     public GraphicsDisplay() {
-        this(-1f, -1f, 2f, 2f, new Static2dCamera(0, 0, 1, 1));
+        this(-1f, -1f, 2f, 2f, new Static2dCamera(0, 0, 2, 2));
     }
 
     /**
@@ -72,6 +72,7 @@ public class GraphicsDisplay {
             for (ButtonData button : buttonsToAdd) {
                 objects.add(new Button(programme, button));
             }
+            buttonsToAdd.clear();
         }
         programme.pushMatrix();
         this.transform(programme);
@@ -86,6 +87,7 @@ public class GraphicsDisplay {
                     if (mouseState.isMouseDown()) {
                         temp.click();
                     } else {
+                        temp.release();
                         temp.hover();
                     }
                 } else {

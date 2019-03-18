@@ -32,8 +32,7 @@ public class ButtonData implements RectangleDisplayData {
     }
     
     public void preformAction() {
-        //TODO i have no idea what to do here
-        action.notify();
+        action.handle(new ActionEvent());
     }
     
     public void setBackgroundColour(float r, float g, float b) {

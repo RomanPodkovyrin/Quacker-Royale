@@ -58,7 +58,7 @@ public abstract class Camera {
      * @param camera The camera to use for display
      */
     public Matrix2d transform() {
-        Matrix2d transformation = (Matrix2d.homScale3d(1 / this.getWidth(), -1 / this.getHeight(), 0));
+        Matrix2d transformation = (Matrix2d.homScale3d(2 / this.getWidth(), -2 / this.getHeight(), 0));
         transformation = transformation.mult(Matrix2d.homTranslate3d(-this.getX(), -this.getY(), -this.getZ()));
         return transformation;
     }
