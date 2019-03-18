@@ -21,9 +21,9 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 public class PlayerBehaviourTest {
-    private Player currentAI;
-    private ArrayList<Player> otherPlayers = new ArrayList<>();
-    private ArrayList<Ball> balls = new ArrayList<>();
+    private PlayerData currentAI;
+    private ArrayList<PlayerData> otherPlayers = new ArrayList<>();
+    private ArrayList<BallData> balls = new ArrayList<>();
     private Platform platform;
     private GameSessionData session;
 
@@ -40,14 +40,14 @@ public class PlayerBehaviourTest {
 
 
         // Create players
-        currentAI = new Player(new PlayerData("AI",100,80,45, ObjectState.IDLE, 1f,1f),true);
+        currentAI = new PlayerData("AI",100,80,45, ObjectState.IDLE, 1f,1f);
         currentAI.setVelocity(0,0);
         otherPlayers.clear();
-        otherPlayers.add(new Player(new PlayerData("player",100,50,30, ObjectState.IDLE, 1f,1f),false));
+        otherPlayers.add(new PlayerData("player",100,50,30, ObjectState.IDLE, 1f,1f));
 
         // Create balls
         balls.clear();
-        balls.add(new Ball( new BallData("ball " ,false,80,10, ObjectState.IDLE,1f,3.0f)));
+        balls.add(new BallData("ball " ,false,80,10, ObjectState.IDLE,1f,3.0f));
 
         session = new GameSessionData(10);
     }
@@ -59,7 +59,7 @@ public class PlayerBehaviourTest {
 
         // Testing neutral balls, should not move
         // Testing if stays still
-        Ball ball = balls.get(0);
+        BallData ball = balls.get(0);
         ball.setDangerous(false);
         ball.setVelocity(0,1);
         ball.setCoordinates(81,ball.getYCoordinate());
@@ -212,7 +212,7 @@ public class PlayerBehaviourTest {
         float delta = 0.00001f;
 
         // Should not chase the ball
-        Ball ball = balls.get(0);
+        BallData ball = balls.get(0);
         currentAI.setVelocity(0,0);
         ball.setDangerous(true);
         ChaseBall job = new ChaseBall();
@@ -272,7 +272,7 @@ public class PlayerBehaviourTest {
         float delta = 0.00001f;
 
         // Stays stationary because ball is neutral
-        Ball ball = balls.get(0);
+        BallData ball = balls.get(0);
         ball.setDangerous(false);
         ball.setVelocity(1,0);
         ball.setCoordinates(10,45);
@@ -329,7 +329,7 @@ public class PlayerBehaviourTest {
         float delta = 0.00001f;
 
         // Too close move away
-        Player player = otherPlayers.get(0);
+        PlayerData player = otherPlayers.get(0);
         AvoidNeutralPlayer job = new AvoidNeutralPlayer();
         player.setCoordinates(80,45);
         player.setVelocity(1,0);
@@ -369,7 +369,7 @@ public class PlayerBehaviourTest {
 
     @Test
     public void neutralBallCheckTest() {
-        Ball ball = balls.get(0);
+        BallData ball = balls.get(0);
         ball.setDangerous(false);
         NeutralBallCheck job = new NeutralBallCheck();
         job.start();
