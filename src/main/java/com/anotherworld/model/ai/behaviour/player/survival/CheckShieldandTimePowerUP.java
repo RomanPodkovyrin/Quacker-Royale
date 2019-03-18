@@ -28,6 +28,10 @@ public class CheckShieldandTimePowerUP extends Job {
     @Override
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         //TODO need a way of checking what power up the player has
+        if (ai.isTimeStopper() || ai.isShielded()) {
+            succeed();
+            return;
+        }
         fail();
 
     }
