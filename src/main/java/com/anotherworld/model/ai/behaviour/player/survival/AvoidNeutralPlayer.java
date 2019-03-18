@@ -1,4 +1,4 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour.player.survival;
 
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
@@ -8,6 +8,7 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.maths.Maths;
 import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
@@ -32,21 +33,21 @@ public class AvoidNeutralPlayer extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
         this.ai = ai;
         this.players = players;
         this.balls = balls;
         this.platform = platform;
         this.session = session;
 
-        for (Player player: players) {
+        for (PlayerData player: players) {
 
             if (!player.isDead()) {
 
                 // Checks the distance between the player and the ai
                 if (MatrixMath.distanceAB(player.getCoordinates(), ai.getCoordinates()) <= player.getRadius() + ai.getRadius() + 0.5) {
                     fail();
-                    logger.debug("Avoiding player " + player.getCharacterID());
+                    logger.debug("Avoiding player " + player.getObjectID());
                     Matrix vector = MatrixMath.pointsVector(player.getCoordinates(),ai.getCoordinates());
                     Line line = new Line(player.getCoordinates(), vector);
                     Matrix orthogonal = line.getOrthogonalVector();

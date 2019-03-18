@@ -1,4 +1,4 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour.player.domination;
 
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
@@ -10,6 +10,7 @@ import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 
 import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -60,7 +61,7 @@ public class AimBall extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
         //TODO either finish me or kill me
 
         this.ai = ai;
@@ -70,7 +71,7 @@ public class AimBall extends Job {
         this.session = session;
 
         Ball targetBall = null;
-        Player targetPlayer = null;
+        PlayerData targetPlayer = null;
         logger.info("Aim ball start");
         // find the furthest ball
         balls = sortObject(balls);
@@ -84,7 +85,7 @@ public class AimBall extends Job {
                 Matrix vectorToNormal = MatrixMath.pointsVector(ai.getCoordinates(), neighbour);
                 if (onTheSide(vectorTocheck, vectorToNormal, -180)) {
                     //means ball is on the left side
-                    for (Player player : players) {
+                    for (PlayerData player : players) {
                         Matrix vectorToPlayer = MatrixMath.pointsVector(ai.getCoordinates(), player.getCoordinates());
                         if (onTheSide(vectorToPlayer, vectorToNormal, -180)) {
                             //can aim
@@ -97,7 +98,7 @@ public class AimBall extends Job {
                     }
                 } else {
                     //means ball is on the right side
-                    for (Player player : players) {
+                    for (PlayerData player : players) {
                         Matrix vectorToPlayer = MatrixMath.pointsVector(ai.getCoordinates(), player.getCoordinates());
                         if (onTheSide(vectorToPlayer, vectorToNormal, 180)) {
                             //can aim

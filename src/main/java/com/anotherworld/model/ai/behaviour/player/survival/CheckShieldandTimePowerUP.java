@@ -1,30 +1,23 @@
-package com.anotherworld.model.ai.behaviour;
+package com.anotherworld.model.ai.behaviour.player.survival;
 
+import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
-import java.util.ArrayList;
-
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
 
 /**
- * Succeeds no matter what.
- *
+ * Checks if Currently have shield or time power up.
  * @author roman
  */
-public class Succeeder extends Job {
+public class CheckShieldandTimePowerUP extends Job {
 
-    private static Logger logger = LogManager.getLogger(Succeeder.class);
-
-    private Job job;
-
-    public Succeeder(Job job) {
-        this.job = job;
-    }
+    private static Logger logger = LogManager.getLogger(CheckShieldandTimePowerUP.class);
 
     @Override
     public void reset() {
@@ -33,12 +26,8 @@ public class Succeeder extends Job {
 
     @Override
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
-
-        job.start();
-        job.act(ai,players,balls,platform,session);
-
-        logger.trace("Succeeder Succeeded");
-        succeed();
+        //TODO need a way of checking what power up the player has
+        fail();
 
     }
 }

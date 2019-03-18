@@ -6,20 +6,20 @@ import com.anotherworld.model.ai.behaviour.Repeat;
 import com.anotherworld.model.ai.behaviour.Selector;
 import com.anotherworld.model.ai.behaviour.Sequence;
 import com.anotherworld.model.ai.behaviour.SequenceSuccess;
-import com.anotherworld.model.ai.behaviour.player.AimBall;
-import com.anotherworld.model.ai.behaviour.player.AvoidBall;
-import com.anotherworld.model.ai.behaviour.player.AvoidEdge;
-import com.anotherworld.model.ai.behaviour.player.AvoidNeutralPlayer;
-import com.anotherworld.model.ai.behaviour.player.ChaseBall;
-import com.anotherworld.model.ai.behaviour.player.CheckIfSaveToGo;
-import com.anotherworld.model.ai.behaviour.player.NeutralBallCheck;
-import com.anotherworld.model.ai.behaviour.player.WalkAbout;
+import com.anotherworld.model.ai.behaviour.player.*;
 
+import com.anotherworld.model.ai.behaviour.player.domination.ChaseBall;
+import com.anotherworld.model.ai.behaviour.player.domination.GetPowerUPs;
+import com.anotherworld.model.ai.behaviour.player.peace.WalkAbout;
+import com.anotherworld.model.ai.behaviour.player.survival.*;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
+
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import javafx.util.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,11 +33,12 @@ public class AI {
 
     private static Logger logger = LogManager.getLogger(AI.class);
 
-    private ArrayList<Pair<Player,ArrayList<Player>>> aiPlayers = new ArrayList<>();
-    private ArrayList<Player> allPlayers;
+    private ArrayList<Pair<PlayerData,ArrayList<PlayerData>>> aiPlayers = new ArrayList<>();
+    private ArrayList<PlayerData> allPlayers;
     private ArrayList<Ball> balls;
     private ArrayList<Job> jobs = new ArrayList<>();
     private Platform platform;
+    private GameSessionData session;
 
     private int tick = 0;
 
@@ -49,19 +50,20 @@ public class AI {
      * @param balls all the balls on the map
      * @param platform the current platform
      */
-    public AI(ArrayList<Player> ais, ArrayList<Player> allPlayers, ArrayList<Ball> balls, Platform platform) {
+    public AI(ArrayList<PlayerData> ais, ArrayList<PlayerData> allPlayers, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
         this.allPlayers = allPlayers;
         this.balls = balls;
         this.platform = platform;
+        this.session = session;
 
         // Gives all AIs their individual jobs
-        for (Player ai : ais) {
+        for (PlayerData ai : ais) {
             // Gives the AI representation of other players(AIs and human players)
             aiPlayers.add(new Pair<>(ai, removePlayer(allPlayers,ai)));
 
             // Setting up domination and peace combined list
             ArrayList<Job> dominationAndPeace = new ArrayList<>();
-            dominationAndPeace.add(new Selector(getDomination()));
+            dominationAndPeace.add(new SequenceSuccess(getDomination()));
             dominationAndPeace.add(new SequenceSuccess(getPeace()));
 
             // Setting up the extra check if the given action can be done to avoid the ball
@@ -93,7 +95,16 @@ public class AI {
         ArrayList<Job> survival = new ArrayList<>();
         survival.add(new AvoidEdge());
         survival.add(new AvoidNeutralPlayer());
-        survival.add(new AvoidBall());
+
+        ArrayList<Job> powerCheck = new ArrayList<>();
+        powerCheck.add(new CheckShieldandTimePowerUP());
+        powerCheck.add(new AvoidBall());
+        survival.add(new Selector(powerCheck));
+
+        ArrayList<Job> healPowerUP = new ArrayList<>();
+        healPowerUP.add(new CheckHealth());
+        healPowerUP.add(new Inverter(new GetHealth()));
+        survival.add(new Selector(healPowerUP));
         //survival.add(new AvoidPlayerCharge);
         return survival;
     }
@@ -106,12 +117,13 @@ public class AI {
     private ArrayList<Job> getDomination() {
         // Set up of the domination skills
         ArrayList<Job> domination = new ArrayList<>();
+        domination.add(new Inverter(new GetPowerUPs()));
         domination.add(new Inverter(new ChaseBall()));
 //        domination.add((new ChasePlayer()));
 
-        ArrayList<Job> ballAim = new ArrayList<>();
-        ballAim.add(new NeutralBallCheck());
-        ballAim.add(new AimBall());
+//        ArrayList<Job> ballAim = new ArrayList<>();
+//        ballAim.add(new NeutralBallCheck());
+//        ballAim.add(new AimBall());
 
 //        domination.add(new SequenceSuccess(ballAim));
         return  domination;
@@ -138,11 +150,11 @@ public class AI {
      * @param player the player to be removed
      * @return returns the new list of players with the removed player
      */
-    private ArrayList<Player> removePlayer(ArrayList<Player> players, Player player) {
-        ArrayList<Player> newPlayers = new ArrayList<>();
+    private ArrayList<PlayerData> removePlayer(ArrayList<PlayerData> players, PlayerData player) {
+        ArrayList<PlayerData> newPlayers = new ArrayList<>();
 
-        for (Player p : players) {
-            if (!p.getCharacterID().equals(player.getCharacterID())) {
+        for (PlayerData p : players) {
+            if (!p.getObjectID().equals(player.getObjectID())) {
                 newPlayers.add(p);
             }
         }
@@ -159,15 +171,15 @@ public class AI {
 
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
-                Pair<Player, ArrayList<Player>> pair = aiPlayers.get(i);
+                Pair<PlayerData, ArrayList<PlayerData>> pair = aiPlayers.get(i);
                 if (pair.getKey().getState() == ObjectState.DEAD) {
 
-                    logger.debug(pair.getKey().getCharacterID() + " is dead");
+                    logger.debug(pair.getKey().getObjectID() + " is dead");
                     pair.getKey().setVelocity(0,0);
                 } else {
-                    logger.debug(pair.getKey().getCharacterID() + " Starting AI");
+                    logger.debug(pair.getKey().getObjectID() + " Starting AI");
 
-                    jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform, null);
+                    jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform, session);
                 }
             }
         //tick = tick + 1;

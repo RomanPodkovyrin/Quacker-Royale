@@ -1,4 +1,4 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour.player.survival;
 
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Matrix;
@@ -7,6 +7,7 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.maths.Maths;
 import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
@@ -31,7 +32,7 @@ public class AvoidEdge extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
 
         this.ai = ai;
         this.players = players;
