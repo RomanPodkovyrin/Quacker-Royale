@@ -8,6 +8,8 @@ import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
+
+import com.anotherworld.tools.datapool.GameSessionData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,13 +60,14 @@ public class AimBall extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
         //TODO either finish me or kill me
 
         this.ai = ai;
         this.players = players;
         this.balls = balls;
         this.platform = platform;
+        this.session = session;
 
         Ball targetBall = null;
         Player targetPlayer = null;
