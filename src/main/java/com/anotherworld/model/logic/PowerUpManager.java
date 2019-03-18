@@ -7,6 +7,7 @@ import com.anotherworld.model.physics.Physics;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
 import com.anotherworld.view.data.PowerUpDisplayData;
@@ -67,7 +68,8 @@ public class PowerUpManager {
     public static void spawnPowerUp(GameSessionData data) {
         PowerUpData nextPowerUp;
         Optional<PowerUpData> currentPowerUp = data.getCurrentPowerUp();
-        if ((nextPowerUp = data.getPowerUpSchedule().peek()) != null) {
+        nextPowerUp = data.getPowerUpSchedule().peek();
+        if (nextPowerUp != null) {
             if (nextPowerUp.getSpawnTime() == data.getTimeLeft()) {
                 data.getPowerUpSchedule().pop();
                 if (currentPowerUp.isPresent()) currentPowerUp.get().setState(ObjectState.INACTIVE);
@@ -82,7 +84,7 @@ public class PowerUpManager {
      * @param player The player collecting the powerup
      * @param data The game session data which holds all the information.
      */
-    public static void collect(Player player, GameSessionData data) {
+    public static void collect(PlayerData player, GameSessionData data) {
         Optional<PowerUpData> pu = data.getCurrentPowerUp();
         if (pu.isPresent()) {
             PowerUpData powerUp = pu.get();
@@ -90,13 +92,13 @@ public class PowerUpManager {
                 //Apply effects
                 switch (powerUp.getPowerUpType()) {
                     case HEAL:
-                        System.out.println(player.getCharacterID() + " was healed");
+                        System.out.println(player.getObjectID() + " was healed");
                         player.setHealth(GameSettings.getDefaultPlayerHealth());
                         //TODO: Play heal sound effect
                         break;
 
                     case TIME_STOP:
-                        System.out.println(player.getCharacterID() + " stopped time");
+                        System.out.println(player.getObjectID() + " stopped time");
                         player.setTimeStopper(true);
                         data.setTimeStopped(true);
                         data.setTimeStopCounter(3); // TODO: Yet another magic number
@@ -104,7 +106,7 @@ public class PowerUpManager {
                         break;
 
                     case SHIELD:
-                        System.out.println(player.getCharacterID() + " has a shield");
+                        System.out.println(player.getObjectID() + " has a shield");
                         player.setShielded(true);
                         //TODO: Play shield pickup sound effect
                         break;

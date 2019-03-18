@@ -1,4 +1,4 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour.player.domination;
 
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
@@ -9,7 +9,9 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 
+import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.maths.Maths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,7 +36,7 @@ public class ChaseBall extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         this.ai = ai;
         this.players = players;
         this.balls = balls;
@@ -46,7 +48,7 @@ public class ChaseBall extends Job {
         //Todo by chasing the closes ball it is hard to get it on time
         sortObject(balls);
 
-        for (Ball ball: balls) {
+        for (BallData ball: balls) {
 
             // Checks if the ball is currently not dangerous and on the wall
             if (!ball.isDangerous() & isRunning() & platform.isOnPlatform(ball.getCoordinates())) {
@@ -85,7 +87,7 @@ public class ChaseBall extends Job {
      * @param objects The object to be sorted based on the distance from the AI
      * @return returns an ArrayList of Balls starting with the closes one
      */
-    private ArrayList<Ball> sortObject(ArrayList<Ball> objects) {
+    private ArrayList<BallData> sortObject(ArrayList<BallData> objects) {
 
         objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getXCoordinate(),o1.getYCoordinate()),ai.getCoordinates()))
                 .compareTo(MatrixMath.distanceAB(new Matrix(o2.getXCoordinate(),o2.getYCoordinate()),ai.getCoordinates())));
