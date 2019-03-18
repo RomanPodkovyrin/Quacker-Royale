@@ -2,74 +2,36 @@ package com.anotherworld.model.movable;
 
 import com.anotherworld.tools.datapool.PlayerData;
 
-public class Player extends AbstractMovable {
-    private boolean aiEnabled;
+public class Player {
 
-    PlayerData playerData;
-
-    public Player(PlayerData playerData, boolean aiEnabled) {
-        super(playerData);
-        this.playerData = playerData;
+    public static void incrementChargeLevel(PlayerData playerData) {
+        playerData.setChargeLevel(playerData.getChargeLevel() + 1);
     }
 
-    public String getCharacterID() { return playerData.getObjectID(); }
 
-    public void setCharacterID(String characterID) {
-        playerData.setObjectID(characterID);
+    public static void decrementStunTimer(PlayerData playerData) {
+        if (playerData.getStunTimer() > 0)
+            playerData.setStunTimer(playerData.getStunTimer() - 1);
     }
 
-    public int getHealth() { return playerData.getHealth(); }
-
-    public void setHealth(int health) {
-        playerData.setHealth(health);
+    public static boolean isDead(PlayerData playerData) {
+        return playerData.getState().equals(ObjectState.DEAD);
     }
 
-    public int getMaxHealth() {
-        return playerData.getMaxHealth();
+    public static boolean isCharging(PlayerData playerData) {
+        return playerData.getState().equals(ObjectState.CHARGING);
     }
 
-    public int getChargeLevel() { return playerData.getChargeLevel(); }
-
-    public void setChargeLevel(int chargeLevel) { playerData.setChargeLevel(chargeLevel); }
-
-    public long getTimeStartedCharging() { return playerData.getTimeStartedCharging(); }
-
-    public void setTimeStartedCharging(long timeStartedCharging) { playerData.setTimeStartedCharging(timeStartedCharging); }
-
-    public void incrementChargeLevel() { this.setChargeLevel(this.getChargeLevel() + 1); }
-
-    public int getStunTimer() { return playerData.getStunTimer(); }
-
-    public void setStunTimer(int stunTimer) { playerData.setStunTimer(stunTimer); }
-
-    public void decrementStunTimer() {
-        if (this.getStunTimer() > 0)
-            this.setStunTimer(this.getStunTimer() - 1);
+    public static boolean isDashing(PlayerData playerData)  {
+        return playerData.getState().equals(ObjectState.DASHING);
     }
 
-    public boolean isDead() { return playerData.getState().equals(ObjectState.DEAD); }
-
-    public void setDeadByFalling(boolean deadByFalling) { playerData.setDeadByFalling(deadByFalling);}
-
-    public boolean isShielded() { return playerData.isShielded(); }
-
-    public void setShielded(boolean shielded) { playerData.setShielded(shielded); }
-
-    public boolean isTimeStopper() { return playerData.isTimeStopper(); }
-
-    public void setTimeStopper(boolean timeStopper) { playerData.setTimeStopper(timeStopper); }
-
-    public boolean isCharging() { return playerData.getState().equals(ObjectState.CHARGING); }
-
-    public boolean isDashing()  { return playerData.getState().equals(ObjectState.DASHING);}
-
-    public void damage(int damageDealt) {
+    public static void damage(PlayerData playerData, int damageDealt) {
         playerData.setHealth(playerData.getHealth() - damageDealt);
     }
 
-    public void kill() {
+    public static void kill(PlayerData playerData) {
         playerData.setState(ObjectState.DEAD);
         playerData.setSpeed(0);
     }
-
 }

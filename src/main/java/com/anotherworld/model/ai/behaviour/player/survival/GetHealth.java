@@ -6,6 +6,7 @@ import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
@@ -32,7 +33,7 @@ public class GetHealth extends Job {
     }
 
     @Override
-    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
         try {
             PowerUpData powerUP = session.getCurrentPowerUp().get();

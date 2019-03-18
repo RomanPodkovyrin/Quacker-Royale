@@ -22,12 +22,12 @@ public class GameSession {
 
     private static Logger logger = LogManager.getLogger(GameSession.class);
 
-    private Player currentPlayer;
-    private ArrayList<Player> allPlayers;
-    private ArrayList<Player> livingPlayers;
+    private PlayerData currentPlayer;
+    private ArrayList<PlayerData> allPlayers;
+    private ArrayList<PlayerData> livingPlayers;
 
     private AI ai;
-    private ArrayList<Ball> balls;
+    private ArrayList<BallData> balls;
 
     private Platform platform;
     private Wall wall;
@@ -40,15 +40,18 @@ public class GameSession {
                        GameSessionData gameSessionData) {
 
         this.gameData = gameSessionData;
-        this.currentPlayer = new Player(currentPlayer, false);
+        this.currentPlayer = currentPlayer;
         this.allPlayers = new ArrayList<>();
 
-        this.allPlayers.add(this.currentPlayer);
-        ArrayList<Player> aiPlayers = new ArrayList<>();
-        for(PlayerData data : players) allPlayers.add(new Player(data, false));
-        for(PlayerData data : ais) {
-            aiPlayers.add(new Player(data, true));
-        }
+        this.allPlayers.add(currentPlayer);
+        ArrayList<PlayerData> aiPlayers = new ArrayList<>();
+
+        for(PlayerData data : players)
+            allPlayers.add(data);
+
+        for(PlayerData data : ais)
+            aiPlayers.add(data);
+
         this.allPlayers.addAll(aiPlayers);
 
         this.livingPlayers = new ArrayList<>();
@@ -56,9 +59,8 @@ public class GameSession {
 
         this.balls = new ArrayList<>();
         for(BallData data : balls) {
-            Ball newBall = new Ball(data);
-            newBall.setVelocity(newBall.getSpeed(), newBall.getSpeed());
-            this.balls.add(newBall);
+            data.setVelocity(data.getSpeed(), data.getSpeed());
+            this.balls.add(data);
         }
 
         this.platform = new Platform(platform);
@@ -71,121 +73,6 @@ public class GameSession {
 
     public boolean isRunning() {
         return livingPlayers.size() > 1;
-    }
-
-    /**
-     * Updates all ball positions and states, and calculates positions.
-     */
-    private void updateAllBalls() {
-        for(Ball ball : this.balls) {
-
-            // Move the ball
-            if (gameData.isTimeStopped()) continue;
-            Physics.move(ball);
-
-
-            // Handle the danger state of the balls.
-            if (ball.isDangerous()) {
-                ball.reduceTimer(GameSettings.getBallTimerDecrement());
-                if (ball.getTimer() <= 0) {
-                    ball.setDangerous(false);
-                    ball.setSpeed(GameSettings.getDefaultBallSpeed());
-                }
-            }
-
-            // Check if a ball has collided with the wall.
-            if (Physics.bouncedWall(ball, this.wall)) {
-                AudioControl.ballCollidedWithWall();
-            }
-
-            // Check if a ball has collided with a player.
-            for (Player player : this.allPlayers) {
-                if (player.isDead()) continue;
-
-                if (Physics.checkCollision(ball, player)) {
-
-                    if (!ball.isDangerous()) {
-                        ball.setDangerous(true);
-                        ball.setTimer(GameSettings.getBallMaxTimer());
-                        ball.setSpeed(ball.getSpeed() * 2);
-                    } else {
-                        if (player.isShielded()) {
-                            player.setShielded(false);
-                            //TODO: Play shield break sound effect
-                        } else {
-                            player.damage(ball.getDamage());
-                            AudioControl.playerCollidedWithBall();
-                        }
-                    }
-
-                    Physics.collided(ball, player);
-
-                    player.setStunTimer(5); //TODO: Magic number.
-                    player.setVelocity(0, 0);
-                    player.setState(ObjectState.IDLE);
-                    player.setSpeed(GameSettings.getDefaultPlayerSpeed());
-
-                    logger.info(player.getCharacterID() + " collided with ball");
-                }
-            }
-
-            // Check if a ball has collided with another ball.
-            for (Ball ballB : this.balls) {
-                if (!ball.equals(ballB) && Physics.checkCollision(ball, ballB)) {
-                    Physics.collided(ball, ballB);
-                }
-            }
-        }
-    }
-
-    /**
-     * Updates all player positions and calculates player collisions.
-     */
-    private void updateAllPlayers() {
-
-        for (Player player : allPlayers) {
-
-            player.decrementStunTimer();
-            if (player.getStunTimer() > 0) continue;
-            if (!gameData.isTimeStopped()){
-                Physics.move(player);
-            } else {
-                if (player.isTimeStopper())
-                    Physics.move(player);
-            }
-
-            if (!player.isDead()) {
-                // Check if a player has collided with a power up
-                PowerUpManager.collect(player, gameData);
-
-                if (player.getHealth() <= 0) {
-                    player.kill();
-                    gameData.getRankings().addFirst(player.getCharacterID());
-                    livingPlayers.remove(player);
-                    logger.info(player.getCharacterID() + " was killed.");
-                }
-
-                // Check if a player has collided with another player.
-                for (Player playerB : this.allPlayers) {
-
-                    if (playerB.isDead()) continue;
-
-                    if(!player.equals(playerB)
-                            && Physics.checkCollision(player, playerB)) {
-                        Physics.collided(player, playerB);
-                    }
-                }
-
-                // Kill the player if they fall off the edge of the platform
-                if(!platform.isOnPlatform(player)) {
-                    player.kill();
-                    player.setDeadByFalling(true);
-                    gameData.getRankings().addFirst(player.getCharacterID());
-                    livingPlayers.remove(player);
-                    logger.info(player.getCharacterID() + " fell off");
-                }
-            }
-        }
     }
 
     /**
@@ -222,10 +109,125 @@ public class GameSession {
 
         // If someone has won, update the rankings one last time.
         if(!isRunning()) {
-            gameData.getRankings().addFirst(livingPlayers.get(0).getCharacterID());
+            gameData.getRankings().addFirst(livingPlayers.get(0).getObjectID());
             System.out.println(gameData.getRankings().toString());
         }
 
+    }
+
+    /**
+     * Updates all ball positions and states, and calculates positions.
+     */
+    private void updateAllBalls() {
+        for(BallData ball : this.balls) {
+
+            // Move the ball
+            if (gameData.isTimeStopped()) continue;
+            Physics.move(ball);
+
+
+            // Handle the danger state of the balls.
+            if (ball.isDangerous()) {
+                Ball.reduceTimer(ball, GameSettings.getBallTimerDecrement());
+                if (ball.getTimer() <= 0) {
+                    ball.setDangerous(false);
+                    ball.setSpeed(GameSettings.getDefaultBallSpeed());
+                }
+            }
+
+            // Check if a ball has collided with the wall.
+            if (Physics.bouncedWall(ball, this.wall)) {
+                AudioControl.ballCollidedWithWall();
+            }
+
+            // Check if a ball has collided with a player.
+            for (PlayerData player : this.allPlayers) {
+                if (Player.isDead(player)) continue;
+
+                if (Physics.checkCollision(ball, player)) {
+
+                    if (!ball.isDangerous()) {
+                        ball.setDangerous(true);
+                        ball.setTimer(GameSettings.getBallMaxTimer());
+                        ball.setSpeed(ball.getSpeed() * 2);
+                    } else {
+                        if (player.isShielded()) {
+                            player.setShielded(false);
+                            //TODO: Play shield break sound effect
+                        } else {
+                            Player.damage(player, ball.getDamage());
+                            AudioControl.playerCollidedWithBall();
+                        }
+                    }
+
+                    Physics.collided(ball, player);
+
+                    player.setStunTimer(5); //TODO: Magic number.
+                    player.setVelocity(0, 0);
+                    player.setState(ObjectState.IDLE);
+                    player.setSpeed(GameSettings.getDefaultPlayerSpeed());
+
+                    logger.info(player.getObjectID() + " collided with ball");
+                }
+            }
+
+            // Check if a ball has collided with another ball.
+            for (BallData ballB : this.balls) {
+                if (!ball.equals(ballB) && Physics.checkCollision(ball, ballB)) {
+                    Physics.collided(ball, ballB);
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates all player positions and calculates player collisions.
+     */
+    private void updateAllPlayers() {
+
+        for (PlayerData player : allPlayers) {
+
+            Player.decrementStunTimer(player);
+            if (player.getStunTimer() > 0) continue;
+            if (!gameData.isTimeStopped()){
+                Physics.move(player);
+            } else {
+                if (player.isTimeStopper())
+                    Physics.move(player);
+            }
+
+            if (!Player.isDead(player)) {
+                // Check if a player has collided with a power up
+                PowerUpManager.collect(player, gameData);
+
+                if (player.getHealth() <= 0) {
+                    Player.kill(player);
+                    gameData.getRankings().addFirst(player.getObjectID());
+                    livingPlayers.remove(player);
+                    logger.info(player.getObjectID() + " was killed.");
+                }
+
+                // Check if a player has collided with another player.
+                for (PlayerData playerB : this.allPlayers) {
+
+                    if (Player.isDead(playerB)) continue;
+
+                    if(!player.equals(playerB)
+                            && Physics.checkCollision(player, playerB)) {
+                        Physics.collided(player, playerB);
+                    }
+                }
+
+                // Kill the player if they fall off the edge of the platform
+                if(!platform.isOnPlatform(player)) {
+                    Player.kill(player);
+                    player.setDeadByFalling(true);
+                    gameData.getRankings().addFirst(player.getObjectID());
+                    livingPlayers.remove(player);
+                    logger.info(player.getObjectID() + " fell off");
+                }
+            }
+        }
     }
 
     public void updatePlayer(ArrayList<Input> keyPresses) {
@@ -238,7 +240,7 @@ public class GameSession {
      * @param keyPresses The set of key presses determining the movement
      * @param gameData game data to access time
      */
-    public static void updatePlayer(Player player, ArrayList<Input> keyPresses, GameSessionData gameData) {
+    public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {
             //TODO: Fix clunky dash.
             player.setVelocity(0,0);
@@ -247,17 +249,17 @@ public class GameSession {
 
             if (player.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()) {
 
-                if (!player.isCharging()) {
+                if (!Player.isCharging(player)) {
                     player.setTimeStartedCharging(gameData.getTicksElapsed());
                     player.setState(ObjectState.CHARGING);
                 }
 
-                if (timeSpentCharging % 20 == 0) player.incrementChargeLevel();
+                if (timeSpentCharging % 20 == 0) Player.incrementChargeLevel(player);
             }
         }
         else {
 
-            if (!player.isDashing()) {
+            if (!Player.isDashing(player)) {
                 if (keyPresses.contains(Input.UP)) player.setYVelocity(-1);
                 else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(1);
                 else player.setYVelocity(0);
@@ -276,7 +278,7 @@ public class GameSession {
                 }
             }
 
-            if (player.isCharging()) {
+            if (Player.isCharging(player)) {
                 if (player.getChargeLevel() == 0) {
                     // If the charge button was pressed but not long enough, reset.
                     player.setState(ObjectState.IDLE);

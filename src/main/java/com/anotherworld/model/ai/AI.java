@@ -18,6 +18,7 @@ import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 
+import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 import javafx.util.Pair;
@@ -35,7 +36,7 @@ public class AI {
 
     private ArrayList<Pair<PlayerData,ArrayList<PlayerData>>> aiPlayers = new ArrayList<>();
     private ArrayList<PlayerData> allPlayers;
-    private ArrayList<Ball> balls;
+    private ArrayList<BallData> balls;
     private ArrayList<Job> jobs = new ArrayList<>();
     private Platform platform;
     private GameSessionData session;
@@ -50,7 +51,7 @@ public class AI {
      * @param balls all the balls on the map
      * @param platform the current platform
      */
-    public AI(ArrayList<PlayerData> ais, ArrayList<PlayerData> allPlayers, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public AI(ArrayList<PlayerData> ais, ArrayList<PlayerData> allPlayers, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         this.allPlayers = allPlayers;
         this.balls = balls;
         this.platform = platform;

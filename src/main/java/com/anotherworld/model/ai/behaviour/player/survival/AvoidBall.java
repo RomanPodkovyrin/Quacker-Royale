@@ -7,6 +7,7 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.maths.Maths;
@@ -25,9 +26,9 @@ public class AvoidBall extends Job {
 
     private static Logger logger = LogManager.getLogger(AvoidBall.class);
 
-    private ArrayList<Ball> possibleDangerBalls = new ArrayList<>();
-    private ArrayList<Ball> dangerBalls = new ArrayList<>();
-    private ArrayList<Ball> imminentDangerBalls = new ArrayList<>();
+    private ArrayList<BallData> possibleDangerBalls = new ArrayList<>();
+    private ArrayList<BallData> dangerBalls = new ArrayList<>();
+    private ArrayList<BallData> imminentDangerBalls = new ArrayList<>();
     private Matrix aiPosition;
     private Matrix aiDirection;
 
@@ -47,7 +48,7 @@ public class AvoidBall extends Job {
     }
 
     @Override
-    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         this.ai = ai;
         this.players = players;
         this.balls = balls;
@@ -117,7 +118,7 @@ public class AvoidBall extends Job {
      * @param objects The object to be sorted based on the distance from the AI
      * @return returns an ArrayList of Balls starting with the closes one
      */
-    private ArrayList<Ball> sortObject(ArrayList<Ball> objects) {
+    private ArrayList<BallData> sortObject(ArrayList<BallData> objects) {
 
         objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getXCoordinate(),o1.getYCoordinate()),aiPosition))
                 .compareTo(MatrixMath.distanceAB(new Matrix(o2.getXCoordinate(),o2.getYCoordinate()),aiPosition)));
@@ -138,7 +139,7 @@ public class AvoidBall extends Job {
         possibleDangerBalls.clear();
         imminentDangerBalls.clear();
 
-        for (Ball ball: balls) {
+        for (BallData ball: balls) {
 
             if (ball.isDangerous()) {
                 possibleDangerBalls.add(ball);
@@ -177,7 +178,7 @@ public class AvoidBall extends Job {
             tooFar = distanceFromTheBall >= platform.getYSize();
 
             // checks if ai is safe because the ball is too far away
-            Ball ball = imminentDangerBalls.get(0);
+            BallData ball = imminentDangerBalls.get(0);
             Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
             float ballRate = MatrixMath.distanceAB(ball.getCoordinates(),neighbour) / ball.getSpeed();
             float aiRate = MatrixMath.distanceAB(ai.getCoordinates(),neighbour) / ai.getSpeed();
@@ -199,7 +200,7 @@ public class AvoidBall extends Job {
      * @param ball the ball to be checked
      * @return  true - can affect false cannot
      */
-    private boolean canAffect(Ball ball) {
+    private boolean canAffect(BallData ball) {
         Matrix ballPosition = ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
         return MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition);
@@ -210,7 +211,7 @@ public class AvoidBall extends Job {
      * @param ball the ball to be checked
      * @return  true - too close, false at a safe distance
      */
-    private boolean isClose(Ball ball) {
+    private boolean isClose(BallData ball) {
         Matrix ballPosition =  ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
 

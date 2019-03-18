@@ -7,6 +7,7 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.maths.Maths;
@@ -33,7 +34,7 @@ public class AvoidNeutralPlayer extends Job {
     }
 
     @Override
-    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         this.ai = ai;
         this.players = players;
         this.balls = balls;
@@ -42,7 +43,7 @@ public class AvoidNeutralPlayer extends Job {
 
         for (PlayerData player: players) {
 
-            if (!player.isDead()) {
+            if (!Player.isDead(player)) {
 
                 // Checks the distance between the player and the ai
                 if (MatrixMath.distanceAB(player.getCoordinates(), ai.getCoordinates()) <= player.getRadius() + ai.getRadius() + 0.5) {

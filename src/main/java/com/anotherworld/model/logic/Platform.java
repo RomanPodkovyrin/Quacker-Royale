@@ -2,6 +2,7 @@ package com.anotherworld.model.logic;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.AbstractMovable;
+import com.anotherworld.tools.datapool.MovableData;
 import com.anotherworld.tools.datapool.PlatformData;
 
 /**
@@ -85,7 +86,7 @@ public class Platform {
      * @param object
      * @return true if coordinates are on the platform, false if not
      */
-    boolean isOnPlatform(AbstractMovable object) {
+    boolean isOnPlatform(MovableData object) {
         return isOnPlatform(object.getXCoordinate(),object.getYCoordinate());
     }
 
