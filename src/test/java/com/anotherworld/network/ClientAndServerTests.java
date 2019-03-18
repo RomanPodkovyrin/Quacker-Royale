@@ -1,5 +1,7 @@
 package com.anotherworld.network;
 
+import static junit.framework.TestCase.assertTrue;
+
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
@@ -7,12 +9,10 @@ import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
-import org.junit.Test;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import static junit.framework.TestCase.assertTrue;
+import org.junit.Test;
 
 
 public class ClientAndServerTests {

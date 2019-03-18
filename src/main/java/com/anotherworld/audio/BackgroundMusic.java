@@ -62,8 +62,9 @@ public class BackgroundMusic implements Runnable {
                 e.printStackTrace();
             }
             try {
-                if(isOn)
+                if (isOn) {
                     createLine();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (LineUnavailableException e) {
@@ -132,18 +133,5 @@ public class BackgroundMusic implements Runnable {
         music.stop();
         line.close();
         running = false;
-    }
-
-    public static void main(String args[]){
-        BackgroundMusic bm = new BackgroundMusic();
-        bm.playBackgroundMusic();
-        while(true){
-            Scanner sc = new Scanner(System.in);
-            int i = sc.nextInt();
-            if(i==1)
-                bm.muteSound();
-            if(i==2)
-                bm.unMuteSound();
-        }
     }
 }

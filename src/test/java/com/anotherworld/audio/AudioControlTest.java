@@ -1,12 +1,10 @@
 package com.anotherworld.audio;
 
+import java.util.Arrays;
+import java.util.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import javax.sound.sampled.AudioSystem;
-import java.util.Arrays;
-import java.util.Collection;
 
 @RunWith(Parameterized.class)
 public class AudioControlTest {
