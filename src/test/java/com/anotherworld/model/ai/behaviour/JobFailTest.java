@@ -17,6 +17,6 @@ public class JobFailTest extends Job {
 
     @Override
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
-
+        fail();
     }
 }
