@@ -1,17 +1,19 @@
 package com.anotherworld.network;
 
+import static org.junit.Assert.assertEquals;
+
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.tools.datapool.*;
-import org.junit.Test;
-
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 public class NetworkControllerTest {
 
@@ -28,13 +30,12 @@ public class NetworkControllerTest {
         GameClient client;
         Server server;
         try {
-//            client = new GameClient("localhost");
-//            NetworkController networking = new NetworkController(client,settings);
-//            assertEquals(true,networking.isClient());
-//            assertEquals(false,networking.isServer());
-//            System.out.println("R");
-//            networking.stopNetworking();
-
+//          client = new GameClient("localhost");
+//          NetworkController networking = new NetworkController(client,settings);
+//          assertEquals(true,networking.isClient());
+//          assertEquals(false,networking.isServer());
+//          System.out.println("R");
+//          networking.stopNetworking();
             server = new Server(1,settings);
             NetworkController networking = new NetworkController(server,settings);
             assertEquals(true,networking.isServer());

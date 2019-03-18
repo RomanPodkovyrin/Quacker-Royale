@@ -2,10 +2,10 @@ package com.anotherworld.audio;
 
 import org.junit.Test;
 
-public class backgroundMusicTest {
+public class BackgroundMusicTest {
 
     @Test
-    public void testBackgroundMusic(){
+    public void testBackgroundMusic() {
         BackgroundMusic bMusic = new BackgroundMusic();
         bMusic.playBackgroundMusic();
         try {
