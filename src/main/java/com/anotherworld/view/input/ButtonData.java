@@ -8,10 +8,10 @@ import javafx.event.EventHandler;
 
 public class ButtonData implements RectangleDisplayData {
 
-    private float x;
-    private float y;
-    private float width;
-    private float height;
+    private float x = 0;
+    private float y = 0;
+    private float width = 0;
+    private float height = 0;
     private String text;
     private float backgroundR;
     private float backgroundG;

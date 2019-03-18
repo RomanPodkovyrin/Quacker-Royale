@@ -280,4 +280,9 @@ public abstract class DisplayObject {
         return spriteSheet;
     }
     
+    @Override
+    public String toString() {
+        return points.toString();
+    }
+    
 }

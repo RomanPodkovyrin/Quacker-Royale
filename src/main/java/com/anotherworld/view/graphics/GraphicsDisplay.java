@@ -3,6 +3,7 @@ package com.anotherworld.view.graphics;
 import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.input.Button;
+import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.Clickable;
 import com.anotherworld.view.input.MouseState;
 
@@ -29,8 +30,10 @@ public class GraphicsDisplay {
     
     protected ArrayList<DisplayObject> objects;
     
+    private ArrayList<ButtonData> buttonsToAdd;
+    
     public GraphicsDisplay() {
-        this(-1f, -1f, 2f, 2f, new Static2dCamera(0, 0, 2, 2));
+        this(-1f, -1f, 2f, 2f, new Static2dCamera(0, 0, 1, 1));
     }
 
     /**
@@ -56,6 +59,7 @@ public class GraphicsDisplay {
         this.width = width;
         this.camera = camera;
         objects = new ArrayList<>();
+        buttonsToAdd = new ArrayList<>();
     }
 
     /**
@@ -64,6 +68,11 @@ public class GraphicsDisplay {
      * @param mouseState 
      */
     public void draw(Programme programme, MouseState mouseState) {
+        synchronized (buttonsToAdd) {
+            for (ButtonData button : buttonsToAdd) {
+                objects.add(new Button(programme, button));
+            }
+        }
         programme.pushMatrix();
         this.transform(programme);
         for (int i = 0; i < objects.size(); i++) {
@@ -107,8 +116,10 @@ public class GraphicsDisplay {
         return width;
     }
     
-    public void addObject(DisplayObject object) {
-        objects.add(object);
+    public void addButton(ButtonData object) {
+        synchronized (buttonsToAdd) {
+            buttonsToAdd.add(object);
+        }
     }
 
     /**

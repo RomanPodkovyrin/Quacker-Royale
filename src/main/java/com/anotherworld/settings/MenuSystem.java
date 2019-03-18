@@ -1,6 +1,7 @@
 package com.anotherworld.settings;
 
 import com.anotherworld.control.Controller;
+import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.Programme;
 import com.anotherworld.view.View;
 import com.anotherworld.view.graphics.GraphicsDisplay;
@@ -8,8 +9,9 @@ import com.anotherworld.view.graphics.Scene;
 
 import com.anotherworld.view.input.Button;
 import com.anotherworld.view.input.ButtonData;
+import com.anotherworld.view.input.TextFieldData;
 
-public class MenuSystem implements Runnable {
+public class MenuSystem {
     private Scene scene1;
     private Scene scene2;
     private Controller control;
@@ -20,15 +22,19 @@ public class MenuSystem implements Runnable {
         this.control = control;
     }
     
-    @Override
-    public void run() {
+    public void start() {
+        
+        //TODO i think all the menus are rendered upside down
+        
         control = new Controller(view);
-        Programme programme = view.getProgramme();
+        
         // launch the application
 
         //final Font font = new Font("Arial", height / 27);
 
         ButtonData label1 = new ButtonData("Welcome to the main page");
+        label1.setWidth(0.5f);
+        label1.setHeight(0.1f);
         ButtonData button1 = new ButtonData("Go to settings");
         button1.setOnAction(e -> view.switchToScene(scene2));
         button1.setWidth(0.5f);
@@ -40,8 +46,8 @@ public class MenuSystem implements Runnable {
             // start the game
             view.switchToGameScene();
             control.startSinglePlayer();
+            //TODO switch this to logging
             System.out.println("Finished the game");
-            // window.close();
         });
         buttonSinglePlayer.setWidth(0.5f);
         buttonSinglePlayer.setHeight(0.1f);
@@ -56,13 +62,13 @@ public class MenuSystem implements Runnable {
         scene1 = new Scene();
         GraphicsDisplay graphicsDisplay1 = new GraphicsDisplay();
         label1.setPosition(0f, -0.6f);
-        graphicsDisplay1.addObject(new Button(programme, label1));
+        graphicsDisplay1.addButton(label1);
         buttonSinglePlayer.setPosition(0f, -0.2f);
-        graphicsDisplay1.addObject(new Button(programme, buttonSinglePlayer));
+        graphicsDisplay1.addButton(buttonSinglePlayer);
         buttonMultiPlayer.setPosition(0f, 0.2f);
-        graphicsDisplay1.addObject(new Button(programme, buttonMultiPlayer));
+        graphicsDisplay1.addButton(buttonMultiPlayer);
         button1.setPosition(0f, 0.6f);
-        graphicsDisplay1.addObject(new Button(programme, button1));
+        graphicsDisplay1.addButton(button1);
         
         scene1.addDisplay(graphicsDisplay1);
 
@@ -109,13 +115,13 @@ public class MenuSystem implements Runnable {
         scene2 = new Scene();
         GraphicsDisplay graphicsDisplay2 = new GraphicsDisplay();
         setting.setPosition(0f, -0.6f);
-        graphicsDisplay2.addObject(new Button(programme, setting));
+        graphicsDisplay2.addButton(setting);
         musicButton.setPosition(0f, -0.2f);
-        graphicsDisplay2.addObject(new Button(programme, musicButton));
+        graphicsDisplay2.addButton(musicButton);
         sfxButton.setPosition(0f, 0.2f);
-        graphicsDisplay2.addObject(new Button(programme, sfxButton));
+        graphicsDisplay2.addButton(sfxButton);
         backToMenu.setPosition(0f, 0.6f);
-        graphicsDisplay2.addObject(new Button(programme, backToMenu));
+        graphicsDisplay2.addButton(backToMenu);
         
         scene2.addDisplay(graphicsDisplay2);
 
@@ -141,13 +147,13 @@ public class MenuSystem implements Runnable {
         Scene scene3 = new Scene();
         GraphicsDisplay graphicsDisplay3 = new GraphicsDisplay();
         multi.setPosition(0f, -0.6f);
-        graphicsDisplay3.addObject(new Button(programme, multi));
+        graphicsDisplay3.addButton(multi);
         buttonHost.setPosition(0f, -0.2f);
-        graphicsDisplay3.addObject(new Button(programme, buttonHost));
+        graphicsDisplay3.addButton(buttonHost);
         buttonClient.setPosition(0f, 0.2f);
-        graphicsDisplay3.addObject(new Button(programme, buttonClient));
+        graphicsDisplay3.addButton(buttonClient);
         backToMenu2.setPosition(0f, 0.6f);
-        graphicsDisplay3.addObject(new Button(programme, backToMenu2));
+        graphicsDisplay3.addButton(backToMenu2);
         
         scene3.addDisplay(graphicsDisplay3);
         
@@ -155,7 +161,7 @@ public class MenuSystem implements Runnable {
         
         ButtonData client = new ButtonData("Please type in the IP and Port of the host and press connect");
         
-        TextField ipAndPort = new TextField("localhost"); //TODO oof
+        TextFieldData ipAndPort = new TextFieldData("localhost", view.getAllKeyListener()); //TODO oof
         ipAndPort.setWidth(0.5f);
         ipAndPort.setHeight(0.1f);
         
@@ -177,13 +183,13 @@ public class MenuSystem implements Runnable {
         Scene scene4 = new Scene();
         GraphicsDisplay graphicsDisplay4 = new GraphicsDisplay();
         client.setPosition(0f, -0.6f);
-        graphicsDisplay4.addObject(new Button(programme, client));
+        graphicsDisplay4.addButton(client);
         ipAndPort.setPosition(0f, -0.2f);
-        graphicsDisplay4.addObject(new Button(programme, ipAndPort));
+        graphicsDisplay4.addButton(ipAndPort);
         buttonConnect.setPosition(0f, 0.2f);
-        graphicsDisplay4.addObject(new Button(programme, buttonConnect));
+        graphicsDisplay4.addButton(buttonConnect);
         backToMulti.setPosition(0f, 0.6f);
-        graphicsDisplay4.addObject(new Button(programme, backToMulti));
+        graphicsDisplay4.addButton(backToMulti);
         
         scene4.addDisplay(graphicsDisplay4);
         
@@ -201,9 +207,9 @@ public class MenuSystem implements Runnable {
         Scene scene5 = new Scene();
         GraphicsDisplay graphicsDisplay5 = new GraphicsDisplay();
         host.setPosition(0f, -0.2f);
-        graphicsDisplay5.addObject(new Button(programme, host));
+        graphicsDisplay5.addButton(host);
         backToMulti2.setPosition(0f, 0.2f);
-        graphicsDisplay5.addObject(new Button(programme, backToMulti2));
+        graphicsDisplay5.addButton(backToMulti2);
         
         scene5.addDisplay(graphicsDisplay5);
         
@@ -218,7 +224,14 @@ public class MenuSystem implements Runnable {
 
     public static void main(String[] args) {
         View view = new View(1920 / 2, 1080 / 2);
+
+
+        // Starting the View thread
+        Thread viewThread = new Thread(view);
+        viewThread.start();
+        System.out.println("Starting menu");
         MenuSystem ms = new MenuSystem(view, new Controller(view));
+        ms.start();
     }
     
 }

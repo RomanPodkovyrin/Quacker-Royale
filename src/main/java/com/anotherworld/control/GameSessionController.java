@@ -59,11 +59,6 @@ public class GameSessionController {
         AudioControl.setUp();
         AudioControl.playBackGroundMusic();
 
-
-        // Starting the View thread
-        this.viewThread = new Thread(view);
-        viewThread.start();
-
         // Sleeping the main thread for 1 second to register the key inputs.
         try {
             Thread.sleep(1000);

@@ -5,6 +5,7 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
@@ -145,11 +146,7 @@ public class View implements Runnable {
 
         GL.createCapabilities();
         
-        keyListener = new KeyListener(window);
-        
-        keyListenerLatch.countDown();
-        //TODO change this
-        currentScene = new GameScene();
+        currentScene = new Scene();
         
         try {
             programme = new TexturedProgramme(window);
@@ -165,6 +162,10 @@ public class View implements Runnable {
                 throw new RuntimeException("Couldn't start any rendering program");
             }
         }
+        
+        keyListener = new KeyListener(window);
+        
+        keyListenerLatch.countDown();
         
         int error = glGetError();
         
@@ -208,9 +209,16 @@ public class View implements Runnable {
         attemptDestroy(programme);
     }
     
-    public Programme getProgramme() {
-        //TODO change this to be like get key logger
-        return this.programme;
+    public Programme getProgramme() throws KeyListenerNotFoundException {
+        logger.info("Request for key listener objected");
+        try {
+            if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
+                return this.programme;
+            }
+        } catch (InterruptedException e) {
+            logger.catching(e);
+        }
+        throw new KeyListenerNotFoundException("Timeout of 10 seconds, check if window was initialized");
     }
     
     public void switchToGameScene() {
@@ -267,6 +275,15 @@ public class View implements Runnable {
 
     public void close() {
         running = false;
+    }
+
+    public void setTitle(String string) {
+        glfwSetWindowTitle(window, string);
+    }
+
+    public Object getAllKeyListener() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
