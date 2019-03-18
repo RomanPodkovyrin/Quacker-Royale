@@ -186,7 +186,8 @@ public class GameSessionController {
         view.updateGameObjects(players,
                                settings.getBalls(),
                                settings.getPlatform(),
-                               settings.getWall());
+                               settings.getWall(),
+                               settings.getGameSession());
     }
 
     // TODO need key listener which would be sending the client key preses to host
