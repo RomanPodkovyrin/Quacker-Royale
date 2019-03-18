@@ -9,6 +9,7 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 
+import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 import org.apache.logging.log4j.LogManager;
@@ -61,7 +62,7 @@ public class AimBall extends Job {
     }
 
     @Override
-    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         //TODO either finish me or kill me
 
         this.ai = ai;
@@ -70,13 +71,13 @@ public class AimBall extends Job {
         this.platform = platform;
         this.session = session;
 
-        Ball targetBall = null;
+        BallData targetBall = null;
         PlayerData targetPlayer = null;
         logger.info("Aim ball start");
         // find the furthest ball
         balls = sortObject(balls);
         outerloop:
-        for (Ball ball: balls) {
+        for (BallData ball: balls) {
             if (!ball.isDangerous()) {
                 targetBall = ball;
                 Matrix fromAItoBall = MatrixMath.pointsVector(ai.getCoordinates(), ball.getCoordinates());
@@ -162,7 +163,7 @@ public class AimBall extends Job {
      * @param objects The object to be sorted based on the distance from the AI
      * @return returns an ArrayList of Balls starting with the furthest one
      */
-    private ArrayList<Ball> sortObject(ArrayList<Ball> objects) {
+    private ArrayList<BallData> sortObject(ArrayList<BallData> objects) {
 
         objects.sort((o2, o1) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getXCoordinate(),o1.getYCoordinate()),ai.getCoordinates()))
                 .compareTo(MatrixMath.distanceAB(new Matrix(o2.getXCoordinate(),o2.getYCoordinate()),ai.getCoordinates())));

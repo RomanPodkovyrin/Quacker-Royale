@@ -9,6 +9,7 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 
+import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 import org.apache.logging.log4j.LogManager;
@@ -24,9 +25,9 @@ public class CheckIfSaveToGo extends Job {
 
     private static Logger logger = LogManager.getLogger(CheckIfSaveToGo.class);
 
-    private ArrayList<Ball> possibleDangerBalls = new ArrayList<>();
-    private ArrayList<Ball> dangerBalls = new ArrayList<>();
-    private ArrayList<Ball> imminentDangerBalls = new ArrayList<>();
+    private ArrayList<BallData> possibleDangerBalls = new ArrayList<>();
+    private ArrayList<BallData> dangerBalls = new ArrayList<>();
+    private ArrayList<BallData> imminentDangerBalls = new ArrayList<>();
     private Matrix aiPosition;
 
     //The allowed safe distance between the ball and the player
@@ -42,7 +43,7 @@ public class CheckIfSaveToGo extends Job {
     }
 
     @Override
-    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         aiPosition = ai.getCoordinates();
         this.ai = ai;
         this.players = players;
@@ -60,7 +61,7 @@ public class CheckIfSaveToGo extends Job {
 
             // looks forward in future
             Matrix lookAhead = new Matrix(ai.getXCoordinate() + ai.getXVelocity(),ai.getYCoordinate() + ai.getYVelocity());
-            Ball firstBall = imminentDangerBalls.get(0);
+            BallData firstBall = imminentDangerBalls.get(0);
 
             Matrix neigbhour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),aiPosition);
 
@@ -95,7 +96,7 @@ public class CheckIfSaveToGo extends Job {
         possibleDangerBalls.clear();
         imminentDangerBalls.clear();
 
-        for (Ball ball: balls) {
+        for (BallData ball: balls) {
 
             if (ball.isDangerous()) {
                 possibleDangerBalls.add(ball);
@@ -116,13 +117,13 @@ public class CheckIfSaveToGo extends Job {
 
     }
 
-    private boolean canAffect(Ball ball) {
+    private boolean canAffect(BallData ball) {
         Matrix ballPosition = ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
         return MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition);
     }
 
-    private boolean isClose(Ball ball) {
+    private boolean isClose(BallData ball) {
         Matrix ballPosition =  ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
 
