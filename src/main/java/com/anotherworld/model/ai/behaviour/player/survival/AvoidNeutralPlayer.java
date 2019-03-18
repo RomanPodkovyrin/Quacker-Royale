@@ -53,8 +53,8 @@ public class AvoidNeutralPlayer extends Job {
                     Line line = new Line(player.getCoordinates(), vector);
                     Matrix orthogonal = line.getOrthogonalVector();
 
-                    ai.setXVelocity(Maths.floatDivision(orthogonal.getX(), Math.abs(orthogonal.getX())) * ai.getSpeed());
-                    ai.setYVelocity(Maths.floatDivision(orthogonal.getY(), Math.abs(orthogonal.getY())) * ai.getSpeed());
+                    ai.setXVelocity(Maths.floatDivision(orthogonal.getX(), Math.abs(orthogonal.getX())) );
+                    ai.setYVelocity(Maths.floatDivision(orthogonal.getY(), Math.abs(orthogonal.getY())) );
                     return;
                 }
             }

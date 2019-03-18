@@ -92,6 +92,11 @@ public class AudioControl {
         }
     }
 
+    public static  void win(){
+        if (effectsOn) {
+            soundEffects.win();
+        }
+    }
     /**
      * Plays ball collision with the wall.
      */

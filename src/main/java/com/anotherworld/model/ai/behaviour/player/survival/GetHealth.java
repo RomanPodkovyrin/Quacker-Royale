@@ -39,7 +39,7 @@ public class GetHealth extends Job {
             PowerUpData powerUP = session.getCurrentPowerUp().get();
             if (powerUP.getPowerUpType().equals(PowerUpType.HEAL)) {
                 Matrix destination = powerUP.getCoordinates();
-                logger.info("Getting Heal power up from: " + destination);
+                logger.trace("Getting Heal power up from: " + destination);
                 AITools.moveTo(ai,destination);
                 succeed();
                 return;

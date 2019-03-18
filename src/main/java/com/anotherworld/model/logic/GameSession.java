@@ -8,6 +8,7 @@ import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.*;
 import com.anotherworld.tools.input.Input;
 
+import com.anotherworld.tools.maths.Maths;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -110,8 +111,15 @@ public class GameSession {
         // If someone has won, update the rankings one last time.
         if(!isRunning()) {
             gameData.getRankings().addFirst(livingPlayers.get(0).getObjectID());
+            AudioControl.win();
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println(gameData.getRankings().toString());
         }
+
 
     }
 

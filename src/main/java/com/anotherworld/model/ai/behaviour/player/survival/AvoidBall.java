@@ -104,8 +104,9 @@ public class AvoidBall extends Job {
         }
 
         // - reverses the vectors, so ai goes in the opposite direction of the Ball
-        ai.setXVelocity((Maths.floatDivision(-vector.getX(), Math.abs(vector.getX()))) * ai.getSpeed());
-        ai.setYVelocity((Maths.floatDivision(-vector.getY(), Math.abs(vector.getY()))) * ai.getSpeed());
+
+        ai.setXVelocity((Maths.floatDivision(-vector.getX(), Math.abs(vector.getX()))) );
+        ai.setYVelocity((Maths.floatDivision(-vector.getY(), Math.abs(vector.getY()))) );
 
         logger.trace("Avoiding Ball at location " + ballPosition);
         logger.trace("Walking at Vector " + ai.getVelocity());
