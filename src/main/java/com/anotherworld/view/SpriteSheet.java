@@ -19,5 +19,9 @@ public class SpriteSheet {
     public int getTextureBuffer() {
         return 0;
     }
+
+    public boolean shouldBeTransformed() {
+        return true;
+    }
     
 }

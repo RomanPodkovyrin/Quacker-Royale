@@ -2,11 +2,12 @@ package com.anotherworld.view.input;
 
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
+import com.anotherworld.view.data.TextDisplayData;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 
-public class ButtonData implements RectangleDisplayData {
+public class ButtonData implements RectangleDisplayData, TextDisplayData {
 
     private float x = 0;
     private float y = 0;
@@ -22,9 +23,9 @@ public class ButtonData implements RectangleDisplayData {
     private EventHandler<ActionEvent> action;
     
     public ButtonData(String text) {
-        this.textR = 0;
-        this.textG = 0;
-        this.textB = 0;
+        this.textR = 1;
+        this.textG = 1;
+        this.textB = 1;
         this.backgroundR = 1;
         this.backgroundG = 1;
         this.backgroundB = 1;

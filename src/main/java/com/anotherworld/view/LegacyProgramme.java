@@ -12,6 +12,7 @@ import static org.lwjgl.opengl.GL46.glTranslatef;
 import static org.lwjgl.opengl.GL46.glVertex4f;
 
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.TextDisplayObject;
 
 import java.nio.FloatBuffer;
 
@@ -100,6 +101,10 @@ public class LegacyProgramme extends Programme {
 
     @Override
     public void updateObjectColour(DisplayObject displayObject) {
+    }
+
+    @Override
+    public void updateBuffers(DisplayObject textDisplayObject) {
     }
 
 }

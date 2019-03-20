@@ -3,6 +3,7 @@ package com.anotherworld.view;
 import static org.lwjgl.opengl.GL46.*;
 
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.data.TexturedDisplayObjectBuffers;
 
 import java.io.IOException;
@@ -233,6 +234,28 @@ public class TexturedProgramme extends Programme {
         glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
         glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    @Override
+    public void updateBuffers(DisplayObject displayObject) {
+        TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
+        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getVerticesId());
+        glBufferData(GL_ARRAY_BUFFER, displayObject.getVertexBuffer(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
+        glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        if (displayObject.getSpriteSheet().isTextured()) {
+            glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getTextureId().get());
+            glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.getEdgesId());
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getEdgeBuffer(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
 }

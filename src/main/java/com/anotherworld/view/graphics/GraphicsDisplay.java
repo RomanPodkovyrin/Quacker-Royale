@@ -2,6 +2,7 @@ package com.anotherworld.view.graphics;
 
 import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.input.Button;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.Clickable;
@@ -71,6 +72,7 @@ public class GraphicsDisplay {
         synchronized (buttonsToAdd) {
             for (ButtonData button : buttonsToAdd) {
                 objects.add(new Button(programme, button));
+                objects.add(new TextDisplayObject(programme, button));
             }
             buttonsToAdd.clear();
         }

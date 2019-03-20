@@ -144,13 +144,15 @@ public class TextureBuffer {
 
     /**
      * The transformation required to move the object co-ords to the texture map co-ords.
-     * @param textureId The texture id
+     * @param spriteSheet The texture id
      * @return The required transformation
      */
-    public Points2d getTextureTransformation(int textureId) {
+    public Points2d getTextureTransformation(SpriteSheet spriteSheet) {
         Matrix2d transformation = Matrix2d.homScale3d(1, 1, 0); //Remove z
-        transformation = Matrix2d.homTranslate3d(textureId % xNumOfTextures, (int)Math.floor(textureId / xNumOfTextures), 0).mult(transformation);
-        transformation = Matrix2d.homScale3d(1 / (float)xNumOfTextures, 1 / (float)yNumOfTextures, 0).mult(transformation);
+        if (spriteSheet.shouldBeTransformed()) {
+            transformation = Matrix2d.homTranslate3d(spriteSheet.getTextureId() % xNumOfTextures, (int)Math.floor(spriteSheet.getTextureId() / xNumOfTextures), 0).mult(transformation);
+            transformation = Matrix2d.homScale3d(1 / (float)xNumOfTextures, 1 / (float)yNumOfTextures, 0).mult(transformation);
+        }
         return transformation;
     }
     

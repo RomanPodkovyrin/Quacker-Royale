@@ -7,6 +7,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.Matrix2d;
+import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.graphics.Camera;
 import com.anotherworld.view.input.MouseState;
 
@@ -230,5 +231,7 @@ public abstract class Programme {
         
         return new MouseState(x, y, glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1);
     }
+
+    public abstract void updateBuffers(DisplayObject DisplayObject);
     
 }
