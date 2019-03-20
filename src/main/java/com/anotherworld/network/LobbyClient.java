@@ -1,14 +1,18 @@
 package com.anotherworld.network;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
- * This class allows clients to connect to the lobby server, before the actual game starts
+ * This class allows clients to connect to the lobby server, before the actual game starts.
  *
  * @author Antons Lebedjko
  */
@@ -21,11 +25,11 @@ public class LobbyClient {
     private static Logger logger = LogManager.getLogger(LobbyClient.class);
 
     /**
-     * Used to set up a connection with the lobby server
+     * Used to set up a connection with the lobby server.
      *
-     * @param serverIP The ip address of the lobby host player, to which clients should connect
+     * @param serverIP The ip address of the lobby host player, to which clients should connect.
      */
-    public LobbyClient(String serverIP){
+    public LobbyClient(String serverIP) {
         this.serverIp = serverIP;
         port = 4446;
         try {
@@ -36,7 +40,7 @@ public class LobbyClient {
     }
 
     /**
-     * Used to send a message to the lobby host player, so it can store the IP address of this player
+     * Used to send a message to the lobby host player, so it can store the IP address of this player.
      */
     public void sendMyIp() throws IOException {
         client = new Socket(serverIp, port);
@@ -47,7 +51,7 @@ public class LobbyClient {
     }
 
     /**
-     * Waits for a confirmation message from the host, that everyone has connected
+     * Waits for a confirmation message from the host, that everyone has connected.
      * and the game is ready to be started
      */
     public void waitForGameToStart() throws IOException {

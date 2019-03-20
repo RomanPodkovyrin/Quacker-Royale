@@ -66,7 +66,7 @@ public class Matrix implements Serializable {
      */
     public Matrix normalize() {
 
-        float magnitude = MatrixMath.magnitude(this);
+        float magnitude = this.magnitude();
         return new Matrix(Maths.floatDivision(x , magnitude),Maths.floatDivision( y , magnitude));
     }
 
@@ -75,7 +75,7 @@ public class Matrix implements Serializable {
      */
     public void normalizeThis() {
 
-        float magnitude = MatrixMath.magnitude(this);
+        float magnitude = this.magnitude();
         x = Maths.floatDivision(x , magnitude);
         y = Maths.floatDivision(y , magnitude);
     }

@@ -4,7 +4,7 @@ import org.junit.Test;
 
 public class SoundEffectsTest {
     @Test
-    public void testSoundEffects(){
+    public void testSoundEffects() {
         SoundEffects soundEffects = new SoundEffects();
         soundEffects.playerCollidedWithBall();
         soundEffects.ballCollidedWithWall();

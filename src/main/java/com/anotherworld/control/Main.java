@@ -102,7 +102,7 @@ public class Main {
             } else {
                 GLFW.glfwInit();
                 GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-                view = new View((int)(mode.width() * 0.8), (int)(mode.height() * 0.8));
+                view = new View((int)(mode.width() ), (int)(mode.height() ));
             }
             // Starts the game itself
             logger.trace("The game session started");
