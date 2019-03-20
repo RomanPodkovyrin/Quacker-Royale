@@ -36,7 +36,7 @@ public class GetHealth extends Job {
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
         try {
-            PowerUpData powerUP = session.getCurrentPowerUp().get();
+            PowerUpData powerUP = session.getCurrentPowerUp();
             if (powerUP.getPowerUpType().equals(PowerUpType.HEAL)) {
                 Matrix destination = powerUP.getCoordinates();
                 logger.trace("Getting Heal power up from: " + destination);
@@ -44,7 +44,7 @@ public class GetHealth extends Job {
                 succeed();
                 return;
             }
-        } catch (NoSuchElementException e) {
+        } catch (NullPointerException e) {
             logger.trace("No power up is present");
             fail();
             return;
