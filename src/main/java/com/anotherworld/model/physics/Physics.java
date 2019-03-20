@@ -24,7 +24,7 @@ public class Physics {
     private static final String FALLING = "FALLINGSPEED";
     private static final String FILE = "physics.properties";
     private static final float CHARGE_RATE = 1.5f;
-    private static final int FIRST = 0, SECOND = 1, TWO = 2;
+    private static final int FIRST = 0, SECOND = 1, AVERAGE = 2;
     static float friction;
     static float rate;
     static float fallingSpeed;
@@ -85,7 +85,7 @@ public class Physics {
         float yDistance = (object.getYCoordinate() - coordinates.getY());
 
         float sumOfRadii = object.getRadius() + radius;
-        float distanceSquared =xDistance * xDistance + yDistance * yDistance;
+        float distanceSquared = xDistance * xDistance + yDistance * yDistance;
 
         boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
         
@@ -202,8 +202,8 @@ public class Physics {
         float radiusB = objectB.getRadius();
 
         Matrix midpointBetweenCircles = new Matrix(
-                (pointA.getX() + pointB.getX()) / TWO, 
-                (pointA.getY() + pointB.getY()) / TWO);
+                (pointA.getX() + pointB.getX()) / AVERAGE, 
+                (pointA.getY() + pointB.getY()) / AVERAGE);
 
         Matrix objectAOffSet = new Matrix((float) (radiusA * Math.cos(Math.PI
                 + angleBetweenCircles)), (float) (radiusA * Math.sin(Math.PI

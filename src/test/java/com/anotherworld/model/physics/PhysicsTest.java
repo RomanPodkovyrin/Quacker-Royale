@@ -27,7 +27,9 @@ public class PhysicsTest {
         Physics.move(aball);
         assertEquals(coord.getX(), aball.getXCoordinate(), 0.0f);
         assertEquals(coord.getY(), aball.getYCoordinate(), 0.0f);
-
+        Physics.move(aball);
+        assertEquals(coord.getX(), aball.getXCoordinate(), 0.0f);
+        assertEquals(coord.getY(), aball.getYCoordinate(), 0.0f);
         aball.setXVelocity(0.5f);
         Physics.move(aball);
         float xCoord = (aball.getXVelocity() * aball.getSpeed()) + coord.getX();
@@ -85,7 +87,6 @@ public class PhysicsTest {
         xVelocity = -Math.abs(xVelocity);
         assertEquals(expected, aball.getXCoordinate(), 0.0f);
         assertEquals(xVelocity, aball.getXVelocity(), 0.0f);
-
     }
 
     @Test
