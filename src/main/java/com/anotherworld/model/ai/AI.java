@@ -70,7 +70,11 @@ public class AI {
             // Setting up the extra check if the given action can be done to avoid the ball
             ArrayList<Job> extra = new ArrayList<>();
             extra.add(new SequenceSuccess(dominationAndPeace));
-            extra.add(new CheckIfSaveToGo());
+            ArrayList<Job> powerCheck = new ArrayList<>();
+            powerCheck.add(new CheckShieldandTimePowerUP());
+            powerCheck.add(new CheckIfSaveToGo());
+            extra.add(new Selector(powerCheck));
+//            extra.add(new CheckIfSaveToGo());
 
 
             // Setting up the main routine
@@ -183,7 +187,7 @@ public class AI {
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform, session);
                 }
             }
-        //tick = tick + 1;
+        tick = tick + 1;
         } else if (tick == 3) {
             tick = 0;
         } else {

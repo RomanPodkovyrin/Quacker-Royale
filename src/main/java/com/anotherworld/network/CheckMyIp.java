@@ -12,5 +12,6 @@ public class CheckMyIp {
         System.out.println("2: " + inetAddress.getCanonicalHostName());
         System.out.println("3: " + Inet4Address.getLocalHost());
         System.out.println("4: " + Inet6Address.getLocalHost());
+        System.out.println("5: " + InetAddress.getLocalHost().getHostAddress());
     }
 }

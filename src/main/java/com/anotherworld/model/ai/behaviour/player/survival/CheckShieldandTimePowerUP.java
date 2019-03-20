@@ -29,6 +29,7 @@ public class CheckShieldandTimePowerUP extends Job {
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         //TODO need a way of checking what power up the player has
         if (ai.isTimeStopper() || ai.isShielded()) {
+            logger.trace("Ai is shielded or has a time stop");
             succeed();
             return;
         }
