@@ -304,12 +304,12 @@ public class GameSession {
     }
 
     public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses) {
-        if (keyPresses.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
-        else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
+        if (keyPresses.contains(Input.UP)) player.setYVelocity(-1);
+        else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(1);
         else player.setYVelocity(0);
 
-        if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
-        else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
+        if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-1);
+        else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(1);
         else player.setXVelocity(0);
     }
 }
