@@ -33,7 +33,7 @@ public class GetPowerUPs extends Job {
     @Override
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         try {
-            PowerUpData powerUP = session.getCurrentPowerUp().get();
+            PowerUpData powerUP = session.getCurrentPowerUp();
             PowerUpType type = powerUP.getPowerUpType();
             if (type.equals(PowerUpType.TIME_STOP) || type.equals(PowerUpType.SHIELD)) {
                 logger.trace("Getting " + type +" power up");
@@ -42,7 +42,7 @@ public class GetPowerUPs extends Job {
                 succeed();
                 return;
             }
-        } catch (NoSuchElementException e) {
+        } catch (NullPointerException e) {
             logger.trace("No power up is present");
             fail();
             return;
