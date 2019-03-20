@@ -36,11 +36,11 @@ public class GameSessionController {
 
     // FPS here means the number of game logic computation as second
     // desired FPS
-    private final static int    MAX_FPS = 60;
+    private final static int MAX_FPS = 60;
     // maximum number of frames which are allowed to be dropped
     private final static int MAX_FRAME_DROP = 5;
     // the time between frames
-    private final static int    FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
+    private final static int FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
 
 
     /**
