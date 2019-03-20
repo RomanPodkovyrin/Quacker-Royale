@@ -34,7 +34,7 @@ public class CheckHealth extends Job {
         int aiMaxHealth = ai.getMaxHealth();
         float  optimalHealth = aiMaxHealth * healthPercentage;
         if (aiHealth <= optimalHealth) {
-            logger.info("Low health: " + aiHealth + " / " + aiMaxHealth);
+            logger.trace("Low health: " + aiHealth + " / " + aiMaxHealth);
             fail();
             return;
         }

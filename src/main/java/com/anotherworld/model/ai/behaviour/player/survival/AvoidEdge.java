@@ -49,8 +49,8 @@ public class AvoidEdge extends Job {
         // Generates the vector matrix from players location to teh center of the platform
         Matrix vectorFromPlatformCenter = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
         Matrix toCenter = MatrixMath.pointsVector(ai.getCoordinates(),platformCoordinates);
-        toCenter = new Matrix(Maths.floatDivision(toCenter.getX(), Math.abs(toCenter.getX())) * ai.getSpeed(),
-                Maths.floatDivision(toCenter.getY(), Math.abs(toCenter.getY())) * ai.getSpeed());
+        toCenter = new Matrix(Maths.floatDivision(toCenter.getX(), Math.abs(toCenter.getX())),
+                Maths.floatDivision(toCenter.getY(), Math.abs(toCenter.getY())) );
 
         // Checks if the AI is near the horizontal edge
         if (Math.abs(vectorFromPlatformCenter.getX()) >= platform.getXSize() - distanceFromEdge) {

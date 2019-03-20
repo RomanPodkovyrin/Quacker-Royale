@@ -51,10 +51,10 @@ public class ChasePlayer extends Job {
                     return;
                 }
                 if (vector.getX() != 0) {
-                    ai.setXVelocity(Maths.floatDivision(vector.getX() , Math.abs(vector.getX())) * ai.getSpeed());
+                    ai.setXVelocity(Maths.floatDivision(vector.getX() , Math.abs(vector.getX())));
                 }
                 if (vector.getY() != 0) {
-                    ai.setYVelocity(Maths.floatDivision(vector.getY() , Math.abs(vector.getY())) * ai.getSpeed());
+                    ai.setYVelocity(Maths.floatDivision(vector.getY() , Math.abs(vector.getY())) );
                 }
                 fail();
                 return;

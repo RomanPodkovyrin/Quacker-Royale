@@ -39,6 +39,8 @@ public class SoundEffects implements Runnable {
     private String scream = "./res/audio/jeEH.wav";
     //https://freesound.org/people/Reitanna/sounds/242664/
     private String quack ="./res/audio/quack.wav";
+    //https://freesound.org/people/FoolBoyMedia/sounds/397434/
+    private String win = "./res/audio/crowd-cheer.wav";
 
     //All the files of sound effects
     private File ballCollidedWithWallFile;
@@ -50,6 +52,7 @@ public class SoundEffects implements Runnable {
     private File screamFile;
     private File jumpFile;
     private File quackFile;
+    private File winFile;
 
     private Optional<SourceDataLine> line;
     private AudioInputStream audioInputStream;
@@ -75,6 +78,7 @@ public class SoundEffects implements Runnable {
         ballFile = new File(ball);
         screamFile = new File(scream);
         quackFile = new File(quack);
+        winFile = new File(win);
         effect = new Thread(this);
         line = Optional.empty();
         effect.start();
@@ -112,6 +116,7 @@ public class SoundEffects implements Runnable {
         }
     }
 
+
     /**
      * Used to create a line for the current sound effect.
      *
@@ -147,6 +152,11 @@ public class SoundEffects implements Runnable {
     public void ballCollidedWithWall() {
         logger.trace("Play ball sound");
 //        currentFile = ballFile;
+    }
+
+    public void win() {
+        System.out.println("Hello");
+        currentFile = winFile;
     }
 
     /**
