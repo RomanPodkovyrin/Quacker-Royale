@@ -2,6 +2,7 @@ package com.anotherworld.view;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.view.data.RectangleDisplayData;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class ViewTest {
         thread.start();
         ArrayList<RectangleDisplayData> platform = new ArrayList<>();
         platform.add(new RectangleTestDisplayData());
-        view.updateGameObjects(new ArrayList<>(), new ArrayList<>(), platform, new ArrayList<>(), null);
+        view.updateGameObjects(new ArrayList<>(), new ArrayList<>(), platform, new ArrayList<>(), new GameSessionData(10));
         Thread.sleep(15000);
         view.close();
         thread.join();
