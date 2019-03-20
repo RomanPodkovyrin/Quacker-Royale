@@ -67,13 +67,13 @@ public class PowerUpManager {
      */
     public static void spawnPowerUp(GameSessionData data) {
         PowerUpData nextPowerUp;
-        Optional<PowerUpData> currentPowerUp = data.getCurrentPowerUp();
+        PowerUpData currentPowerUp = data.getCurrentPowerUp();
         nextPowerUp = data.getPowerUpSchedule().peek();
         if (nextPowerUp != null) {
             if (nextPowerUp.getSpawnTime() == data.getTimeLeft()) {
                 data.getPowerUpSchedule().pop();
-                if (currentPowerUp.isPresent()) currentPowerUp.get().setState(ObjectState.INACTIVE);
-                data.setCurrentPowerUp(Optional.of(nextPowerUp));
+                if (currentPowerUp != null) currentPowerUp.setState(ObjectState.INACTIVE);
+                data.setCurrentPowerUp(nextPowerUp);
             }
         }
     }
@@ -85,9 +85,8 @@ public class PowerUpManager {
      * @param data The game session data which holds all the information.
      */
     public static void collect(PlayerData player, GameSessionData data) {
-        Optional<PowerUpData> pu = data.getCurrentPowerUp();
-        if (pu.isPresent()) {
-            PowerUpData powerUp = pu.get();
+        PowerUpData powerUp = data.getCurrentPowerUp();
+        if (powerUp != null) {
             if (Physics.checkCollision(player, powerUp.getCoordinates(), powerUp.getRadius())) {
                 //Apply effects
                 switch (powerUp.getPowerUpType()) {
@@ -118,7 +117,7 @@ public class PowerUpManager {
                 powerUp.setState(ObjectState.INACTIVE);
 
                 //Delete the current power up
-                data.setCurrentPowerUp(Optional.empty());
+                data.setCurrentPowerUp(null);
             }
         }
     }
