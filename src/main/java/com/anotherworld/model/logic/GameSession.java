@@ -197,7 +197,10 @@ public class GameSession {
 
             Player.decrementStunTimer(player);
             if (player.getStunTimer() > 0) continue;
+
             if (!gameData.isTimeStopped()){
+                if(player.isTimeStopper())
+                    player.setTimeStopper(false);
                 Physics.move(player);
             } else {
                 if (player.isTimeStopper())
