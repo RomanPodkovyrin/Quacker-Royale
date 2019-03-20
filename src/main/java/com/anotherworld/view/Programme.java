@@ -28,8 +28,11 @@ public abstract class Programme {
     
     private final long window;
     
+    private boolean mouseDown;
+    
     public Programme(long window) throws ProgrammeUnavailableException {
         matrixStack = new Stack<>();
+        this.mouseDown = false;
         this.window = window;
     }
 
@@ -227,9 +230,21 @@ public abstract class Programme {
         
         glfwGetWindowSize(window, width, height);
         float x = -1 + (2 * (float)cursorX.get() / ((float)width.get()));
-        float y = 1 + -(2 * (float)cursorY.get() / ((float)height.get()));
+        float y = -1 + (2 * (float)cursorY.get() / ((float)height.get()));
         
-        return new MouseState(x, y, glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1);
+        boolean pressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1;
+        
+        if (pressed) {
+            if (!mouseDown) {
+                mouseDown = true;
+            } else {
+                pressed = false;
+            }
+        } else {
+            mouseDown = false;
+        }
+        
+        return new MouseState(x, y, pressed);
     }
 
     public abstract void updateBuffers(DisplayObject DisplayObject);

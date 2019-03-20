@@ -6,10 +6,6 @@ public interface Clickable {
 
     public void release();
     
-    public void hover();
-    
-    public void moveOff();
-    
     public float getX();
     
     public float getY();

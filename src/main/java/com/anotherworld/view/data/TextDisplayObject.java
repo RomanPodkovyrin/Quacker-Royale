@@ -11,10 +11,24 @@ public class TextDisplayObject extends DisplayObject {
     
     private TextDisplayData data;
     
+    private Programme programme;
+    
+    private String currentText = "";
+    
     public TextDisplayObject(Programme programme, TextDisplayData data) {
         super(new TextSpriteSheet(), programme, TextSpriteSheet.generateLetterPoints(data.getText(), data.getHeight() / 2), GL_QUADS, data.getTextR(), data.getTextG(), data.getTextB());
         this.data = data;
-        programme.updateBuffers(this);
+        this.programme = programme;
+    }
+    
+    @Override
+    public void transform() {
+        super.transform();
+        if (!currentText.equals(data.getText())) {
+            super.updatePoints(TextSpriteSheet.generateLetterPoints(data.getText(), data.getHeight() / 2));
+            programme.updateBuffers(this);
+            currentText = data.getText();
+        }
     }
 
     @Override

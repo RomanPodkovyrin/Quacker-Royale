@@ -85,12 +85,11 @@ public class GraphicsDisplay {
             programme.popMatrix();
             if (Clickable.class.isAssignableFrom(objects.get(i).getClass())) {
                 Clickable temp = (Clickable)objects.get(i);
-                if (mouseState.getX() >= temp.getX() && mouseState.getY() >= temp.getY() && mouseState.getX() < temp.getX() + temp.getWidth() && mouseState.getY() < temp.getY() + temp.getWidth()) {
+                if (mouseState.getX() >= temp.getX() - temp.getWidth() / 2 && mouseState.getY() >= temp.getY() - temp.getHeight() / 2 && mouseState.getX() < temp.getX() + temp.getWidth() / 2 && mouseState.getY() < temp.getY() + temp.getHeight() / 2) {
                     if (mouseState.isMouseDown()) {
                         temp.click();
                     } else {
                         temp.release();
-                        temp.hover();
                     }
                 } else {
                     temp.release();

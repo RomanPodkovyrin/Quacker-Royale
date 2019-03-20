@@ -1,5 +1,7 @@
 package com.anotherworld.view.input;
 
+import java.util.Optional;
+
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
 import com.anotherworld.view.data.TextDisplayData;
@@ -20,7 +22,7 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     private float textR;
     private float textG;
     private float textB;
-    private EventHandler<ActionEvent> action;
+    private Optional<ButtonListener> action;
     
     public ButtonData(String text) {
         this.textR = 1;
@@ -30,10 +32,13 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
         this.backgroundG = 1;
         this.backgroundB = 1;
         this.text = text;
+        action = Optional.empty();
     }
     
     public void preformAction() {
-        action.handle(new ActionEvent());
+        if (action.isPresent()) {
+            action.get().clicked();
+        }
     }
     
     public void setBackgroundColour(float r, float g, float b) {
@@ -99,8 +104,8 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
         return text;
     }
 
-    public void setOnAction(EventHandler<ActionEvent> action) {
-        this.action = action;
+    public void setOnAction(ButtonListener action) {
+        this.action = Optional.of(action);
     }
     
     public float getTextR() {

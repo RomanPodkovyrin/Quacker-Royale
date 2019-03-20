@@ -23,7 +23,7 @@ public abstract class DisplayObject {
     
     private final float yShear;
     
-    private final Points2d points;
+    private Points2d points;
     
     private final int displayType;
     
@@ -283,6 +283,10 @@ public abstract class DisplayObject {
     @Override
     public String toString() {
         return points.toString();
+    }
+
+    public void updatePoints(Points2d points) {
+        this.points = points;
     }
     
 }

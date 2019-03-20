@@ -12,8 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class MenuSystem {
-    private Scene scene1;
-    private Scene scene2;
     private Controller control;
     private View view;
     
@@ -38,34 +36,22 @@ public class MenuSystem {
         label1.setWidth(0.5f);
         label1.setHeight(0.1f);
         ButtonData button1 = new ButtonData("Go to settings");
-        button1.setOnAction(e -> view.switchToScene(scene2));
         button1.setWidth(0.5f);
         button1.setHeight(0.1f);
         button1.setBackgroundColour(0.09f, 1f, 0.06f);
         
         ButtonData buttonSinglePlayer = new ButtonData("Play SinglePlayer");
-        buttonSinglePlayer.setOnAction(e -> {
-            // start the game
-            Thread x = new Thread(() -> {
-                logger.info("Starting game");
-                view.switchToGameScene();
-                control.startSinglePlayer();
-                view.switchToScene(scene1);
-                logger.info("Finished the game");
-            });
-            x.start();
-        });
         buttonSinglePlayer.setWidth(0.5f);
         buttonSinglePlayer.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
+        buttonSinglePlayer.setBackgroundColour(0.09f, 1f, 0.06f);
 
         ButtonData buttonMultiPlayer = new ButtonData("Play MultiPlayer");
         buttonMultiPlayer.setWidth(0.5f);
         buttonMultiPlayer.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
+        buttonMultiPlayer.setBackgroundColour(0.09f, 1f, 0.06f);
 
         // Layout 1 - children are laid out in vertical column
-        scene1 = new Scene();
+        Scene scene1 = new Scene();
         GraphicsDisplay graphicsDisplay1 = new GraphicsDisplay();
         label1.setPosition(0f, -0.6f);
         graphicsDisplay1.addButton(label1);
@@ -77,6 +63,18 @@ public class MenuSystem {
         graphicsDisplay1.addButton(button1);
         
         scene1.addDisplay(graphicsDisplay1);
+        
+        buttonSinglePlayer.setOnAction(() -> {
+            // start the game
+            Thread x = new Thread(() -> {
+                logger.info("Starting game");
+                view.switchToGameScene();
+                control.startSinglePlayer();
+                view.switchToScene(scene1);
+                logger.info("Finished the game");
+            });
+            x.start();
+        });
 
         ButtonData setting = new ButtonData("Welcome to settings");
         
@@ -84,13 +82,14 @@ public class MenuSystem {
         backToMenu.setWidth(0.5f);
         backToMenu.setHeight(0.1f);
         button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMenu.setOnAction(e -> view.switchToScene(scene1));
+        backToMenu.setOnAction(() -> view.switchToScene(scene1));
         
         ButtonData musicButton = new ButtonData("Music: On");
         musicButton.setWidth(0.5f);
         musicButton.setHeight( 0.1f);
         button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        musicButton.setOnAction(e -> {
+        musicButton.setOnAction(() -> {
+            logger.info("Music button pressed");
             musicButton.setText("Music: "
                     + (musicButton.getText().split(" ")[1].equals("On") ? "Off"
                             : "On"));
@@ -106,7 +105,7 @@ public class MenuSystem {
         sfxButton.setHeight(0.1f);
         button1.setBackgroundColour(0.09f, 1f, 0.06f);
 
-        sfxButton.setOnAction(e -> {
+        sfxButton.setOnAction(() -> {
             sfxButton.setText("SFX: "
                     + (sfxButton.getText().split(" ")[1].equals("On") ? "Off"
                             : "On"));
@@ -118,7 +117,7 @@ public class MenuSystem {
         });
         
         // Layout 2 - children are laid out in vertical column
-        scene2 = new Scene();
+        Scene scene2 = new Scene();
         GraphicsDisplay graphicsDisplay2 = new GraphicsDisplay();
         setting.setPosition(0f, -0.6f);
         graphicsDisplay2.addButton(setting);
@@ -130,6 +129,8 @@ public class MenuSystem {
         graphicsDisplay2.addButton(backToMenu);
         
         scene2.addDisplay(graphicsDisplay2);
+        
+        button1.setOnAction(() -> view.switchToScene(scene2));
 
         ButtonData multi = new ButtonData("Multiplayer");
         
@@ -147,7 +148,7 @@ public class MenuSystem {
         backToMenu2.setWidth(0.5f);
         backToMenu2.setHeight(0.1f);
         button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMenu2.setOnAction(e -> view.switchToScene(scene1));
+        backToMenu2.setOnAction(() -> view.switchToScene(scene1));
 
         // Layout 1 - children are laid out in vertical column
         Scene scene3 = new Scene();
@@ -163,7 +164,7 @@ public class MenuSystem {
         
         scene3.addDisplay(graphicsDisplay3);
         
-        buttonMultiPlayer.setOnAction(e -> view.switchToScene(scene3));
+        buttonMultiPlayer.setOnAction(() -> view.switchToScene(scene3));
         
         ButtonData client = new ButtonData("Please type in the IP and Port of the host and press connect");
         
@@ -175,7 +176,7 @@ public class MenuSystem {
         buttonConnect.setWidth(0.5f);
         buttonConnect.setHeight(0.1f);
         button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        buttonConnect.setOnAction(e ->{
+        buttonConnect.setOnAction(() ->{
             control.connect(ipAndPort.getText());
         });
 
@@ -183,7 +184,7 @@ public class MenuSystem {
         backToMulti.setWidth(0.5f);
         backToMulti.setHeight(0.1f);
         button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMulti.setOnAction(e -> view.switchToScene(scene3));
+        backToMulti.setOnAction(() -> view.switchToScene(scene3));
 
         // Layout 1 - children are laid out in vertical column
         Scene scene4 = new Scene();
@@ -199,7 +200,7 @@ public class MenuSystem {
         
         scene4.addDisplay(graphicsDisplay4);
         
-        buttonClient.setOnAction(e -> view.switchToScene(scene4));
+        buttonClient.setOnAction(() -> view.switchToScene(scene4));
         
         ButtonData host = new ButtonData("Hosting...");
 
@@ -207,7 +208,7 @@ public class MenuSystem {
         backToMulti2.setWidth(0.5f);
         backToMulti2.setHeight(0.1f);
         button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMulti2.setOnAction(e -> view.switchToScene(scene3));
+        backToMulti2.setOnAction(() -> view.switchToScene(scene3));
 
         // Layout 1 - children are laid out in vertical column
         Scene scene5 = new Scene();
@@ -219,7 +220,7 @@ public class MenuSystem {
         
         scene5.addDisplay(graphicsDisplay5);
         
-        buttonHost.setOnAction(e -> {
+        buttonHost.setOnAction(() -> {
             control.host();
             view.switchToScene(scene5);
         });
