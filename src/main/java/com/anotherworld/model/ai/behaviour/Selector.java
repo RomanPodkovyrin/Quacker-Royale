@@ -5,7 +5,9 @@ import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import java.util.ArrayList;
 
+import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Executes the given jobs in order until one of them succeeds.
- * @author  Roman
+ * @author Roman
  *
  */
 public class Selector extends Job {
@@ -38,7 +40,7 @@ public class Selector extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform, GameSessionData session) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
         
 

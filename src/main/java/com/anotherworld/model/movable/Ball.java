@@ -2,28 +2,28 @@ package com.anotherworld.model.movable;
 
 import com.anotherworld.tools.datapool.BallData;
 
-public class Ball extends AbstractMovable {
+public class Ball {
 
-    private BallData ballData;
-
-    public Ball(BallData ballData){
-        super(ballData);
-        this.ballData = ballData;
+    public static int getDamage(BallData ballData) {
+        return ballData.getDamage();
     }
 
-    public int getDamage() { return ballData.getDamage(); }
+    public static boolean isDangerous(BallData ballData) {
+        return ballData.isDangerous();
+    }
+    public static void setDangerous(BallData ballData, boolean dangerous) {
+        ballData.setDangerous(dangerous);
+    }
 
-    public boolean isDangerous() { return ballData.isDangerous(); }
-    public void setDangerous(boolean dangerous) { ballData.setDangerous(dangerous); }
+    public static int getTimer(BallData ballData) {
+        return ballData.getTimer();
+    }
+    public static void setTimer(BallData ballData, int time) {
+        ballData.setTimer(time);
+    }
 
-    public int getTimer() { return ballData.getTimer(); }
-    public void setTimer(int time) { ballData.setTimer(time); }
-
-    public void reduceTimer(int amount) {
+    public static void reduceTimer(BallData ballData, int amount) {
         ballData.setTimer(ballData.getTimer() - amount);
     }
 
-    public String toString() {
-        return "Location: x "+ getXCoordinate() + " y " + getYCoordinate();
-    }
 }
