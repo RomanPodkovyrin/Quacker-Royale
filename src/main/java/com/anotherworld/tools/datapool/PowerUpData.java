@@ -24,10 +24,10 @@ public class PowerUpData implements Serializable, PowerUpDisplayData {
     }
 
     public void copyObject(PowerUpData data) {
-        this.coordinates = data.getCoordinates();
-        this.powerUpType = data.getPowerUpType();
-        this.spawnTime = data.getSpawnTime();
-        this.state = data.getState();
+        this.coordinates = data.coordinates;
+        this.powerUpType = data.powerUpType;
+        this.spawnTime   = data.spawnTime;
+        this.state       = data.state;
     }
 
     public Matrix getCoordinates() { return this.coordinates; }
@@ -57,4 +57,11 @@ public class PowerUpData implements Serializable, PowerUpDisplayData {
         return new Matrix(0, 0);
     }
 
+    @Override
+    public String toString() {
+        return "(" +
+                this.state.toString() + ", " +
+                "x:" + this.coordinates.getX() + ", " +
+                "y:" + this.coordinates.getY() + ")";
+    }
 }

@@ -5,6 +5,7 @@ import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
@@ -198,6 +199,11 @@ public class GameSessionController {
 
 
     private void render() {
+
+        for(PowerUpData pu : settings.getGameSession().getPowerUpSchedule()) {
+            System.out.println(pu);
+        }
+
         ArrayList<PlayerData> players = new ArrayList<>();
         players.addAll(settings.getAi());
         players.add(settings.getCurrentPlayer());
@@ -208,6 +214,4 @@ public class GameSessionController {
                                settings.getWall(),
                                settings.getGameSession());
     }
-
-    // TODO need key listener which would be sending the client key preses to host
 }
