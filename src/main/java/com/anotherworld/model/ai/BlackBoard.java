@@ -38,7 +38,10 @@ public class BlackBoard {
 
     public static void setState(String id, AI_State state){
         playersStates.put(id,state);
+    }
 
+    public static AI_State getState(String id){
+        return playersStates.get(id);
     }
 
     public static void main(){
