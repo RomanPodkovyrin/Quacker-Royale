@@ -60,7 +60,7 @@ public class PowerUpData implements Serializable, PowerUpDisplayData {
     @Override
     public String toString() {
         return "(" +
-                this.state.toString() + ", " +
+                this.powerUpType.toString() + ", " +
                 "x:" + this.coordinates.getX() + ", " +
                 "y:" + this.coordinates.getY() + ")";
     }
