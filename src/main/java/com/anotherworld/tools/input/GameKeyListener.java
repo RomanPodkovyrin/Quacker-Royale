@@ -12,13 +12,13 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class KeyListener {
+public class GameKeyListener {
 
-    private static Logger logger = LogManager.getLogger(KeyListener.class);
+    private static Logger logger = LogManager.getLogger(GameKeyListener.class);
     
     private final Long window;
     
-    public KeyListener(Long window) {
+    public GameKeyListener(Long window) {
         logger.info("Creating keylistener for window " + window);
         this.window = window;
     }
@@ -26,7 +26,7 @@ public class KeyListener {
     public ArrayList<Input> getKeyPresses() {
         ArrayList<Input> keyPresses = new ArrayList<>();
 
-        if (glfwGetKey(window, GLFW_KEY_UP)    == 1) {
+        if (glfwGetKey(window, GLFW_KEY_UP) == 1) {
             keyPresses.add(Input.UP);
         }
         if (glfwGetKey(window, GLFW_KEY_DOWN)  == 1) {

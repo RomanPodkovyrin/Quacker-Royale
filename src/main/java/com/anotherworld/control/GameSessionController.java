@@ -5,7 +5,7 @@ import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 
@@ -36,7 +36,7 @@ public class GameSessionController {
     private GameSession session;
     private GameSettings settings;
     private View view;
-    private KeyListener keyListener;
+    private GameKeyListener keyListener;
     private NetworkController network;
 
 

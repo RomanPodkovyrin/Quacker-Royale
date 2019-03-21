@@ -1,11 +1,24 @@
 package com.anotherworld.view.input;
 
+import com.anotherworld.tools.input.StringKeyListener;
+
+import java.util.Optional;
+
 public class TextFieldData extends ButtonData {
 
-    public TextFieldData(String text, Object object) {
+    private Optional<StringKeyListener> kl = Optional.empty();
+    
+    public TextFieldData(String text, StringKeyListener object) {
         super(text);
+        this.kl = Optional.of(object);
     }
     
-    //TODO add text reading functionality
+    @Override
+    public String getText() {
+        if (!kl.isPresent()) {
+            return super.getText();
+        }
+        return kl.get().getCurrentString();
+    }
 
 }

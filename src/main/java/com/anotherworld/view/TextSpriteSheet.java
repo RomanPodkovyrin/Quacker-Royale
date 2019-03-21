@@ -63,7 +63,6 @@ public class TextSpriteSheet extends SpriteSheet {
             buffer.put((id % dimensions.getX()) / dimensions.getX());
             buffer.put((float)(Math.floor((float)(id) / dimensions.getX()) + 1) / dimensions.getY());
         }
-        System.out.println(text);
         buffer.flip();
         return buffer;
     }

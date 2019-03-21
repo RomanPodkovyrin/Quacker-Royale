@@ -19,8 +19,9 @@ import static org.lwjgl.opengl.GL11.glGetError;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import com.anotherworld.tools.datapool.WallData;
-import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
+import com.anotherworld.tools.input.StringKeyListener;
 import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.BallDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
@@ -45,9 +46,9 @@ import org.lwjgl.opengl.GL;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.Platform;
 
-
 /**
  * Creates a window and manages the game's display.
+ * 
  * @author Jake Stewart
  *
  */
@@ -60,22 +61,23 @@ public class View implements Runnable {
     private Scene currentScene;
 
     private CountDownLatch keyListenerLatch;
-    
-    private volatile KeyListener keyListener;
-    
+
+    private volatile GameKeyListener keyListener;
+
     private volatile boolean running;
 
     private int height;
 
     private int width;
-    
+
     private Queue<ViewEvent> eventQueue;
-    
+
     private Programme programme;
 
     /**
      * Creates the View object initialising it's values.
-     * @param width The screen width
+     * 
+     * @param width  The screen width
      * @param height The screen height
      */
     public View(int width, int height) {
@@ -90,10 +92,12 @@ public class View implements Runnable {
 
     /**
      * Returns the key listener for the view's window.
+     * 
      * @return The keyListener
-     * @throws KeyListenerNotFoundException If the keyListener couldn't be retrieved in 10 seconds
+     * @throws KeyListenerNotFoundException If the keyListener couldn't be retrieved
+     *                                      in 10 seconds
      */
-    public KeyListener getKeyListener() throws KeyListenerNotFoundException {
+    public GameKeyListener getKeyListener() throws KeyListenerNotFoundException {
         logger.info("Request for key listener objected");
         try {
             if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
@@ -107,12 +111,14 @@ public class View implements Runnable {
 
     /**
      * Stages new objects to be used for the game display.
-     * @param playerObjects The new player objects.
-     * @param ballObjects The new ball objects.
+     * 
+     * @param playerObjects    The new player objects.
+     * @param ballObjects      The new ball objects.
      * @param rectangleObjects The new platform objects.
-     * @param wallObjects The new wall objects.
+     * @param wallObjects      The new wall objects.
      */
-    public void updateGameObjects(ArrayList<? extends PlayerDisplayData> playerObjects, ArrayList<? extends BallDisplayData> ballObjects,
+    public void updateGameObjects(ArrayList<? extends PlayerDisplayData> playerObjects,
+            ArrayList<? extends BallDisplayData> ballObjects,
             ArrayList<? extends RectangleDisplayData> rectangleObjects, ArrayList<? extends WallData> wallObjects) {
         synchronized (eventQueue) {
             eventQueue.add(new UpdateDisplayObjects(playerObjects, ballObjects, rectangleObjects, wallObjects));
@@ -135,7 +141,7 @@ public class View implements Runnable {
         window = glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL);
 
         glfwSetWindowPos(window, width / 8, height / 8);
-        
+
         if (window == null) {
             logger.fatal("Unable to create game window");
             attemptDestroy();
@@ -145,9 +151,9 @@ public class View implements Runnable {
         glfwMakeContextCurrent(window);
 
         GL.createCapabilities();
-        
+
         currentScene = new Scene();
-        
+
         try {
             programme = new TexturedProgramme(window);
         } catch (ProgrammeUnavailableException e1) {
@@ -162,38 +168,38 @@ public class View implements Runnable {
                 throw new RuntimeException("Couldn't start any rendering program");
             }
         }
-        
-        keyListener = new KeyListener(window);
-        
+
+        keyListener = new GameKeyListener(window);
+
         keyListenerLatch.countDown();
-        
+
         int error = glGetError();
-        
+
         while (error != GL_NO_ERROR) {
             logger.error("Initialise GL error " + error);
             error = glGetError();
         }
-        
+
         while (!glfwWindowShouldClose(window) && running) {
 
             glClear(GL_COLOR_BUFFER_BIT);
-            
+
             programme.use();
-            
+
             synchronized (eventQueue) {
                 while (!eventQueue.isEmpty()) {
                     completeEvent(eventQueue.poll());
                 }
             }
-            
+
             programme.loadIdentity();
-            
+
             currentScene.draw(width, height, programme);
 
             glFlush();
-            
+
             error = glGetError();
-            
+
             while (error != GL_NO_ERROR) {
                 logger.error("Display GL error " + error);
                 error = glGetError();
@@ -208,7 +214,7 @@ public class View implements Runnable {
         }
         attemptDestroy(programme);
     }
-    
+
     public Programme getProgramme() throws KeyListenerNotFoundException {
         logger.info("Request for key listener objected");
         try {
@@ -220,18 +226,18 @@ public class View implements Runnable {
         }
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, check if window was initialized");
     }
-    
+
     public void switchToGameScene() {
         this.switchToScene(new GameScene());
     }
-    
+
     public void switchToScene(Scene scene) {
         synchronized (eventQueue) {
             System.out.println("Scene switch queued");
             eventQueue.add(new SwitchScene(scene));
         }
     }
-    
+
     private void attemptDestroy() {
         logger.info("Closing window");
         if (currentScene != null) {
@@ -239,20 +245,20 @@ public class View implements Runnable {
         }
         glfwTerminate();
     }
-    
+
     private void attemptDestroy(Programme programme) {
         logger.info("Closing window");
-        //TODO delete all object for all scenes
+        // TODO delete all object for all scenes
         currentScene.destoryObjects();
         programme.destroy();
         glfwTerminate();
     }
-    
+
     private void completeEvent(ViewEvent event) {
         System.out.println(event.getClass());
         if (event.getClass().equals(UpdateDisplayObjects.class) && currentScene.getClass().equals(GameScene.class)) {
             ArrayList<DisplayObject> disObj = new ArrayList<>();
-            UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects)event);
+            UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects) event);
             for (int i = 0; i < updateEvent.getRectangleObjects().size(); i++) {
                 disObj.add(new RectangleDisplayObject(programme, updateEvent.getRectangleObjects().get(i)));
             }
@@ -266,10 +272,10 @@ public class View implements Runnable {
             for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
                 disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
             }
-            ((GameScene)currentScene).updateGameObjects(disObj);
+            ((GameScene) currentScene).updateGameObjects(disObj);
             System.out.println("Adding Objects");
         } else if (event.getClass().equals(SwitchScene.class)) {
-            SwitchScene sceneEvent = (SwitchScene)event;
+            SwitchScene sceneEvent = (SwitchScene) event;
             currentScene = sceneEvent.getScene();
             System.out.println("Switching scene");
         }
@@ -280,13 +286,20 @@ public class View implements Runnable {
     }
 
     public void setTitle(String string) {
-        //TODO fix this
-        //glfwSetWindowTitle(window, string);
+        // TODO fix this
+        // glfwSetWindowTitle(window, string);
     }
 
-    public Object getAllKeyListener() {
-        // TODO Auto-generated method stub
-        return null;
+    public StringKeyListener getAllKeyListener(String start) throws KeyListenerNotFoundException {
+        logger.info("Request for key listener objected");
+        try {
+            if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
+                return new StringKeyListener(window, start);
+            }
+        } catch (InterruptedException e) {
+            logger.catching(e);
+        }
+        throw new KeyListenerNotFoundException("Timeout of 10 seconds, check if window was initialized");
     }
 
 }

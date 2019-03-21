@@ -1,13 +1,10 @@
 package com.anotherworld.view.input;
 
-import java.util.Optional;
-
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
 import com.anotherworld.view.data.TextDisplayData;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import java.util.Optional;
 
 public class ButtonData implements RectangleDisplayData, TextDisplayData {
 

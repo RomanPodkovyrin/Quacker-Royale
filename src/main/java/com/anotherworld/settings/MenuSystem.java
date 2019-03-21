@@ -1,6 +1,7 @@
 package com.anotherworld.settings;
 
 import com.anotherworld.control.Controller;
+import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.Scene;
@@ -22,7 +23,7 @@ public class MenuSystem {
         this.control = control;
     }
     
-    public void start() {
+    public void start() throws KeyListenerNotFoundException {
         
         //TODO i think all the menus are rendered upside down
         
@@ -168,7 +169,7 @@ public class MenuSystem {
         
         ButtonData client = new ButtonData("Please type in the IP and Port of the host and press connect");
         
-        TextFieldData ipAndPort = new TextFieldData("localhost", view.getAllKeyListener()); //TODO oof
+        TextFieldData ipAndPort = new TextFieldData("localhost", view.getAllKeyListener("LOCALHOST")); //TODO oof
         ipAndPort.setWidth(0.5f);
         ipAndPort.setHeight(0.1f);
         
@@ -235,9 +236,13 @@ public class MenuSystem {
         // Starting the View thread
         Thread viewThread = new Thread(view);
         viewThread.start();
-        System.out.println("Starting menu");
+        logger.info("Starting menu");
         MenuSystem ms = new MenuSystem(view, new Controller(view));
-        ms.start();
+        try {
+            ms.start();
+        } catch (KeyListenerNotFoundException e) {
+            e.printStackTrace();
+        }
     }
     
 }
