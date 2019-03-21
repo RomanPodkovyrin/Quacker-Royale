@@ -9,8 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BlackBoard {
+
+    public enum AI_State{
+        NORMAL,INVULNERABLE
+    }
+
     private static Map<String, String>targetedBalls = new HashMap<>();
     private static Map<String, String> targetedPlayers = new HashMap<>();
+    private static Map<String, AI_State> playersStates = new HashMap<>();
 
     /**
      *
@@ -28,6 +34,15 @@ public class BlackBoard {
 
     public static void stopTargetingPlayer(String targetPlayer, String ai) {
         targetedPlayers.remove(targetPlayer);
+    }
+
+    public static void setState(String id, AI_State state){
+        playersStates.put(id,state);
+
+    }
+
+    public static void main(){
+
     }
 
 }
