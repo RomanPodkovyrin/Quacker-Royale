@@ -1,8 +1,6 @@
 package com.anotherworld.network;
 
 import com.anotherworld.model.logic.GameSession;
-import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
@@ -80,7 +78,7 @@ public class NetworkController {
         balls = settings.getBalls();
         platform = settings.getPlatform().get(0);
         wall = settings.getWall().get(0);
-        gameSessionData = settings.getGameSession();
+        gameSessionData = settings.getGameSessionData();
 
     }
 

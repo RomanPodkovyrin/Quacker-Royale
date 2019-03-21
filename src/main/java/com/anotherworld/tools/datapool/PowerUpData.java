@@ -21,9 +21,11 @@ public class PowerUpData implements Serializable, PowerUpDisplayData {
         this.coordinates = coordinates;
         this.powerUpType = powerUpType;
         this.spawnTime   = spawnTime;
+        this.state = ObjectState.INACTIVE;
     }
 
     public void copyObject(PowerUpData data) {
+        System.out.println("updated " + this);
         this.coordinates = data.coordinates;
         this.powerUpType = data.powerUpType;
         this.spawnTime   = data.spawnTime;

@@ -64,7 +64,7 @@ public class Server extends Thread {
         balls = settings.getBalls();
         platform = settings.getPlatform().get(0);
         wall = settings.getWall().get(0);
-        gamesession = settings.getGameSession();
+        gamesession = settings.getGameSessionData();
         socket = new DatagramSocket(port);
         dataReceived = new byte[10000];
         this.numberOfPlayers = numberOfClients;

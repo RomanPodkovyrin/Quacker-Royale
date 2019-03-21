@@ -200,10 +200,6 @@ public class GameSessionController {
 
     private void render() {
 
-        for(PowerUpData pu : settings.getGameSession().getPowerUpSchedule()) {
-            System.out.println("CONTROL: "+ pu);
-        }
-
         ArrayList<PlayerData> players = new ArrayList<>();
         players.addAll(settings.getAi());
         players.add(settings.getCurrentPlayer());
@@ -212,6 +208,6 @@ public class GameSessionController {
                                settings.getBalls(),
                                settings.getPlatform(),
                                settings.getWall(),
-                               settings.getGameSession());
+                               settings.getGameSessionData());
     }
 }

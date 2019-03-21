@@ -1,8 +1,5 @@
 package com.anotherworld.settings;
 
-import com.anotherworld.model.ai.tools.Line;
-import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.network.GameClient;
 import com.anotherworld.network.Server;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -99,7 +96,7 @@ public class GameSettingsTest {
         assertEquals(expectedNumberOfAI, settings.getAi().size());
         assertEquals(expectedNumberOfBalls,settings.getBalls().size());
         assertEquals(expectedNumberOfPlatforms,settings.getPlatform().size());
-        assertNotNull(settings.getGameSession());
+        assertNotNull(settings.getGameSessionData());
         assertEquals(expectedNumberOfWalls,settings.getWall().size());
         if (numberOfPlayers > 0) {
             assertNotNull(settings.getCurrentPlayer());
