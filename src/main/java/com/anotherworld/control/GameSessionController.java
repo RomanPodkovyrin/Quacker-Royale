@@ -201,7 +201,7 @@ public class GameSessionController {
     private void render() {
 
         for(PowerUpData pu : settings.getGameSession().getPowerUpSchedule()) {
-            System.out.println(pu);
+            System.out.println("CONTROL: "+ pu);
         }
 
         ArrayList<PlayerData> players = new ArrayList<>();
