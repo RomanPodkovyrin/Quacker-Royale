@@ -3,6 +3,7 @@ package com.anotherworld.settings;
 import com.anotherworld.control.Controller;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
+import com.anotherworld.view.data.TextListData;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.Scene;
 
@@ -238,6 +239,17 @@ public class MenuSystem {
     private GraphicsDisplay createHostMenuDisplay(Scene multiplayerMenuScene) {
         ButtonData host = new ButtonData("Hosting...");
 
+        TextListData playerList = new TextListData(2);
+        playerList.setWidth(0.5f);
+        playerList.setHeight(0.2f);
+        
+        playerList.addTextSource(() -> {
+            return "Yes";
+        }, 0);
+        playerList.addTextSource(() -> {
+            return "No";
+        }, 1);
+        
         ButtonData backToMulti = new ButtonData("Go back");
         backToMulti.setWidth(0.5f);
         backToMulti.setHeight(0.1f);
@@ -249,6 +261,8 @@ public class MenuSystem {
 
         // Layout 1 - children are laid out in vertical column
         GraphicsDisplay graphicsDisplay5 = new GraphicsDisplay();
+        playerList.setPosition(0f, -0.6f);
+        graphicsDisplay5.addButton(playerList);
         host.setPosition(0f, -0.2f);
         graphicsDisplay5.addButton(host);
         backToMulti.setPosition(0f, 0.2f);

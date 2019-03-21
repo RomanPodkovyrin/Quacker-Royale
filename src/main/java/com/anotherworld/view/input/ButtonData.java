@@ -3,6 +3,7 @@ package com.anotherworld.view.input;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
 import com.anotherworld.view.data.TextDisplayData;
+import com.anotherworld.view.data.TextSource;
 
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     private float y = 0;
     private float width = 0;
     private float height = 0;
-    private String text;
+    private TextSource text;
     private float backgroundR;
     private float backgroundG;
     private float backgroundB;
@@ -22,6 +23,12 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     private Optional<ButtonListener> action;
     
     public ButtonData(String text) {
+        this(() -> {
+            return text;
+        });
+    }
+    
+    public ButtonData(TextSource text){
         this.textR = 1;
         this.textG = 1;
         this.textB = 1;
@@ -64,7 +71,9 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     }
     
     public void setText(String text) {
-        this.text = text;
+        this.text = () -> {
+            return text;
+        };
     }
     
     @Override
@@ -98,7 +107,7 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     }
     
     public String getText() {
-        return text;
+        return text.getText();
     }
 
     public void setOnAction(ButtonListener action) {
