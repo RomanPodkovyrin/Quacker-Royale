@@ -215,7 +215,11 @@ public class Controller {
         NetworkController network = new NetworkController(client, settings);
         startTheGame(settings,network);
     }
-
+    
+    public void disconnect() {
+        //TODO implement client disconnect and server disconnect
+    }
+    
     public void startSinglePlayer() {
         GameSettings settings = new GameSettings(4,3,6);
         startTheGame(settings, new NetworkController());

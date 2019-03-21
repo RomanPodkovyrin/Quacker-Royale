@@ -15,23 +15,38 @@ import org.apache.logging.log4j.Logger;
 public class MenuSystem {
     private Controller control;
     private View view;
-    
+
     private static Logger logger = LogManager.getLogger(MenuSystem.class);
-    
+
     public MenuSystem(View view, Controller control) {
         this.view = view;
         this.control = control;
     }
-    
-    public void start() throws KeyListenerNotFoundException {
-        
-        //TODO i think all the menus are rendered upside down
-        
-        control = new Controller(view);
-        
-        // launch the application
 
-        //final Font font = new Font("Arial", height / 27);
+    public void start() throws KeyListenerNotFoundException {
+
+        // TODO Change throw to menucouldnotbecreated or similar
+
+        control = new Controller(view);
+
+        Scene mainMenuScene = new Scene();
+        Scene settingScene = new Scene();
+        Scene multiplayerMenuScene = new Scene();
+        Scene clientMenuScene = new Scene();
+        Scene hostMenuScene = new Scene();
+        mainMenuScene.addDisplay(this.createMainMenu(mainMenuScene, settingScene, multiplayerMenuScene));
+        settingScene.addDisplay(this.createSettingMenu(mainMenuScene));
+        multiplayerMenuScene.addDisplay(this.createMultiplayerMenuDisplay(mainMenuScene, clientMenuScene, hostMenuScene));
+        clientMenuScene.addDisplay(this.createClientMenuDisplay(mainMenuScene, multiplayerMenuScene));
+        hostMenuScene.addDisplay(this.createHostMenuDisplay(multiplayerMenuScene));
+
+        // final Font font = new Font("Arial", height / 27);
+
+        view.switchToScene(mainMenuScene);
+        view.setTitle("Bullet Hell");
+    }
+
+    private GraphicsDisplay createMainMenu(Scene mainMenuScene, Scene settingsScene, Scene multiplayerMenuScene) {
 
         ButtonData label1 = new ButtonData("Welcome to the main page");
         label1.setWidth(0.5f);
@@ -40,7 +55,9 @@ public class MenuSystem {
         button1.setWidth(0.5f);
         button1.setHeight(0.1f);
         button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        
+
+        button1.setOnAction(() -> view.switchToScene(settingsScene));
+
         ButtonData buttonSinglePlayer = new ButtonData("Play SinglePlayer");
         buttonSinglePlayer.setWidth(0.5f);
         buttonSinglePlayer.setHeight(0.1f);
@@ -51,65 +68,64 @@ public class MenuSystem {
         buttonMultiPlayer.setHeight(0.1f);
         buttonMultiPlayer.setBackgroundColour(0.09f, 1f, 0.06f);
 
+        buttonMultiPlayer.setOnAction(() -> view.switchToScene(multiplayerMenuScene));
+
         // Layout 1 - children are laid out in vertical column
-        Scene scene1 = new Scene();
-        GraphicsDisplay graphicsDisplay1 = new GraphicsDisplay();
+        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
         label1.setPosition(0f, -0.6f);
-        graphicsDisplay1.addButton(label1);
+        graphicsDisplay.addButton(label1);
         buttonSinglePlayer.setPosition(0f, -0.2f);
-        graphicsDisplay1.addButton(buttonSinglePlayer);
+        graphicsDisplay.addButton(buttonSinglePlayer);
         buttonMultiPlayer.setPosition(0f, 0.2f);
-        graphicsDisplay1.addButton(buttonMultiPlayer);
+        graphicsDisplay.addButton(buttonMultiPlayer);
         button1.setPosition(0f, 0.6f);
-        graphicsDisplay1.addButton(button1);
-        
-        scene1.addDisplay(graphicsDisplay1);
-        
+        graphicsDisplay.addButton(button1);
+
         buttonSinglePlayer.setOnAction(() -> {
             // start the game
             Thread x = new Thread(() -> {
                 logger.info("Starting game");
                 view.switchToGameScene();
                 control.startSinglePlayer();
-                view.switchToScene(scene1);
+                view.switchToScene(mainMenuScene);
                 logger.info("Finished the game");
             });
             x.start();
         });
 
-        ButtonData setting = new ButtonData("Welcome to settings");
-        
+        return (graphicsDisplay);
+
+    }
+
+    private GraphicsDisplay createSettingMenu(Scene mainMenuScene) {
+
         ButtonData backToMenu = new ButtonData("Go to main page");
         backToMenu.setWidth(0.5f);
         backToMenu.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMenu.setOnAction(() -> view.switchToScene(scene1));
-        
+        backToMenu.setBackgroundColour(0.09f, 1f, 0.06f);
+        backToMenu.setOnAction(() -> view.switchToScene(mainMenuScene));
+
         ButtonData musicButton = new ButtonData("Music: On");
         musicButton.setWidth(0.5f);
-        musicButton.setHeight( 0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
+        musicButton.setHeight(0.1f);
+        musicButton.setBackgroundColour(0.09f, 1f, 0.06f);
         musicButton.setOnAction(() -> {
             logger.info("Music button pressed");
-            musicButton.setText("Music: "
-                    + (musicButton.getText().split(" ")[1].equals("On") ? "Off"
-                            : "On"));
+            musicButton.setText("Music: " + (musicButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
             if (musicButton.getText().split(" ")[1].equals("On")) {
                 Controller.musicSetting(true);
             } else {
                 Controller.musicSetting(false);
             }
         });
-        
+
         ButtonData sfxButton = new ButtonData("SFX: On");
         sfxButton.setWidth(0.5f);
         sfxButton.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
+        sfxButton.setBackgroundColour(0.09f, 1f, 0.06f);
 
         sfxButton.setOnAction(() -> {
-            sfxButton.setText("SFX: "
-                    + (sfxButton.getText().split(" ")[1].equals("On") ? "Off"
-                            : "On"));
+            sfxButton.setText("SFX: " + (sfxButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
             if (sfxButton.getText().split(" ")[1].equals("On")) {
                 Controller.sfxSetting(true);
             } else {
@@ -117,78 +133,95 @@ public class MenuSystem {
             }
         });
         
+        ButtonData setting = new ButtonData("Welcome to settings");
+
         // Layout 2 - children are laid out in vertical column
-        Scene scene2 = new Scene();
-        GraphicsDisplay graphicsDisplay2 = new GraphicsDisplay();
+        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
         setting.setPosition(0f, -0.6f);
-        graphicsDisplay2.addButton(setting);
+        graphicsDisplay.addButton(setting);
         musicButton.setPosition(0f, -0.2f);
-        graphicsDisplay2.addButton(musicButton);
+        graphicsDisplay.addButton(musicButton);
         sfxButton.setPosition(0f, 0.2f);
-        graphicsDisplay2.addButton(sfxButton);
+        graphicsDisplay.addButton(sfxButton);
         backToMenu.setPosition(0f, 0.6f);
-        graphicsDisplay2.addButton(backToMenu);
-        
-        scene2.addDisplay(graphicsDisplay2);
-        
-        button1.setOnAction(() -> view.switchToScene(scene2));
+        graphicsDisplay.addButton(backToMenu);
+        return graphicsDisplay;
+    }
+    
+    private GraphicsDisplay createMultiplayerMenuDisplay(Scene mainMenuScene, Scene clientMenuScene, Scene hostMenuScene) {
 
         ButtonData multi = new ButtonData("Multiplayer");
-        
+
         ButtonData buttonHost = new ButtonData("Host");
         buttonHost.setWidth(0.5f);
         buttonHost.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
+        buttonHost.setBackgroundColour(0.09f, 1f, 0.06f);
+
+        buttonHost.setOnAction(() -> {
+            // start the game
+            Thread x = new Thread(() -> {
+                view.switchToScene(hostMenuScene);
+                control.host();
+            });
+            x.start();
+        });
 
         ButtonData buttonClient = new ButtonData("Client");
         buttonClient.setWidth(0.5f);
         buttonClient.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
+        buttonClient.setOnAction(() -> view.switchToScene(clientMenuScene));
+        buttonClient.setBackgroundColour(0.09f, 1f, 0.06f);
 
         ButtonData backToMenu2 = new ButtonData("Go to main page");
         backToMenu2.setWidth(0.5f);
         backToMenu2.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMenu2.setOnAction(() -> view.switchToScene(scene1));
+        backToMenu2.setBackgroundColour(0.09f, 1f, 0.06f);
+        backToMenu2.setOnAction(() -> view.switchToScene(mainMenuScene));
 
         // Layout 1 - children are laid out in vertical column
-        Scene scene3 = new Scene();
-        GraphicsDisplay graphicsDisplay3 = new GraphicsDisplay();
+        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
         multi.setPosition(0f, -0.6f);
-        graphicsDisplay3.addButton(multi);
+        graphicsDisplay.addButton(multi);
         buttonHost.setPosition(0f, -0.2f);
-        graphicsDisplay3.addButton(buttonHost);
+        graphicsDisplay.addButton(buttonHost);
         buttonClient.setPosition(0f, 0.2f);
-        graphicsDisplay3.addButton(buttonClient);
+        graphicsDisplay.addButton(buttonClient);
         backToMenu2.setPosition(0f, 0.6f);
-        graphicsDisplay3.addButton(backToMenu2);
+        graphicsDisplay.addButton(backToMenu2);
+
+        return (graphicsDisplay);
         
-        scene3.addDisplay(graphicsDisplay3);
-        
-        buttonMultiPlayer.setOnAction(() -> view.switchToScene(scene3));
-        
+    }
+    
+    private GraphicsDisplay createClientMenuDisplay(Scene mainMenuScene, Scene multiplayerMenuScene) throws KeyListenerNotFoundException {
         ButtonData client = new ButtonData("Please type in the IP and Port of the host and press connect");
-        
-        TextFieldData ipAndPort = new TextFieldData("localhost", view.getAllKeyListener("LOCALHOST")); //TODO oof
+
+        TextFieldData ipAndPort = new TextFieldData("localhost", view.getAllKeyListener("LOCALHOST"));
         ipAndPort.setWidth(0.5f);
         ipAndPort.setHeight(0.1f);
-        
+
         ButtonData buttonConnect = new ButtonData("Connect");
         buttonConnect.setWidth(0.5f);
         buttonConnect.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        buttonConnect.setOnAction(() ->{
-            control.connect(ipAndPort.getText());
+        buttonConnect.setBackgroundColour(0.09f, 1f, 0.06f);
+        buttonConnect.setOnAction(() -> {
+            Thread x = new Thread(() -> {
+                logger.info("Starting game");
+                view.switchToGameScene();
+                control.connect(ipAndPort.getText());
+                view.switchToScene(mainMenuScene);
+                logger.info("Finished the game");
+            });
+            x.start();
         });
 
         ButtonData backToMulti = new ButtonData("Go back");
         backToMulti.setWidth(0.5f);
         backToMulti.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMulti.setOnAction(() -> view.switchToScene(scene3));
+        backToMulti.setBackgroundColour(0.09f, 1f, 0.06f);
+        backToMulti.setOnAction(() -> view.switchToScene(multiplayerMenuScene));
 
         // Layout 1 - children are laid out in vertical column
-        Scene scene4 = new Scene();
         GraphicsDisplay graphicsDisplay4 = new GraphicsDisplay();
         client.setPosition(0f, -0.6f);
         graphicsDisplay4.addButton(client);
@@ -198,36 +231,30 @@ public class MenuSystem {
         graphicsDisplay4.addButton(buttonConnect);
         backToMulti.setPosition(0f, 0.6f);
         graphicsDisplay4.addButton(backToMulti);
-        
-        scene4.addDisplay(graphicsDisplay4);
-        
-        buttonClient.setOnAction(() -> view.switchToScene(scene4));
-        
+
+        return (graphicsDisplay4);
+    }
+    
+    private GraphicsDisplay createHostMenuDisplay(Scene multiplayerMenuScene) {
         ButtonData host = new ButtonData("Hosting...");
 
-        ButtonData backToMulti2 = new ButtonData("Go back");
-        backToMulti2.setWidth(0.5f);
-        backToMulti2.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMulti2.setOnAction(() -> view.switchToScene(scene3));
+        ButtonData backToMulti = new ButtonData("Go back");
+        backToMulti.setWidth(0.5f);
+        backToMulti.setHeight(0.1f);
+        backToMulti.setBackgroundColour(0.09f, 1f, 0.06f);
+        backToMulti.setOnAction(() -> {
+            control.disconnect();
+            view.switchToScene(multiplayerMenuScene);
+        });
 
         // Layout 1 - children are laid out in vertical column
-        Scene scene5 = new Scene();
         GraphicsDisplay graphicsDisplay5 = new GraphicsDisplay();
         host.setPosition(0f, -0.2f);
         graphicsDisplay5.addButton(host);
-        backToMulti2.setPosition(0f, 0.2f);
-        graphicsDisplay5.addButton(backToMulti2);
-        
-        scene5.addDisplay(graphicsDisplay5);
-        
-        buttonHost.setOnAction(() -> {
-            control.host();
-            view.switchToScene(scene5);
-        });
+        backToMulti.setPosition(0f, 0.2f);
+        graphicsDisplay5.addButton(backToMulti);
 
-        view.switchToScene(scene1);
-        view.setTitle("Bullet Hell");
+        return (graphicsDisplay5);
     }
 
     public static void main(String[] args) {
@@ -244,5 +271,5 @@ public class MenuSystem {
             e.printStackTrace();
         }
     }
-    
+
 }
