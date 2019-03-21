@@ -45,6 +45,14 @@ public class ChaseBall extends Job {
 
         logger.debug("Starting ChaseBall Job");
 
+        if (ai.isTimeStopper()){
+            logger.debug("Has time stop don't chase the ball");
+//                ai.setXVelocity(0);
+//                ai.setYVelocity(0);
+            fail();
+            return;
+        }
+
         //Todo by chasing the closes ball it is hard to get it on time
         sortObject(balls);
 
@@ -73,8 +81,8 @@ public class ChaseBall extends Job {
                 return;
             } else {
                 logger.debug("Finishing ChaseBall with fail: nothing to chase");
-                ai.setXVelocity(0);
-                ai.setYVelocity(0);
+//                ai.setXVelocity(0);
+//                ai.setYVelocity(0);
                 fail();
                 return;
             }

@@ -184,7 +184,7 @@ public class AI {
                 }
             }
         tick = tick + 1;
-        } else if (tick == 3) {
+        } else if (tick == 7) {
             tick = 0;
         } else {
             tick = tick + 1;

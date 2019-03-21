@@ -1,5 +1,6 @@
 package com.anotherworld.model.ai.behaviour.player.survival;
 
+import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
@@ -31,8 +32,10 @@ public class CheckShieldandTimePowerUP extends Job {
         if (ai.isTimeStopper() || ai.isShielded()) {
             logger.trace("Ai is shielded or has a time stop");
             succeed();
+//            BlackBoard.setState(ai.getObjectID(), BlackBoard.AI_State.INVULNERABLE);
             return;
         }
+//        BlackBoard.setState(ai.getObjectID(), BlackBoard.AI_State.NORMAL);
         fail();
 
     }

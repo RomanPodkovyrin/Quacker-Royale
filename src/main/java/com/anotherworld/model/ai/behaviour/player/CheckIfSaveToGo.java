@@ -1,5 +1,6 @@
 package com.anotherworld.model.ai.behaviour.player;
 
+import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;
@@ -52,6 +53,13 @@ public class CheckIfSaveToGo extends Job {
         this.session = session;
 
         logger.trace("Starting the Job");
+
+        if (ai.isTimeStopper() || ai.isShielded()) {
+//            logger.trace("Ai is shielded or has a time stop");
+            succeed();
+            logger.trace("AI is invulnerable move on");
+            return;
+        }
 
         sortBallLevels();
         if (imminentDangerBalls.isEmpty()) {
