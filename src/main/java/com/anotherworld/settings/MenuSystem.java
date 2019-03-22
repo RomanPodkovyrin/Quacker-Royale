@@ -37,13 +37,19 @@ public class MenuSystem {
         Scene hostLobbyMenuScene = new Scene();
         Scene connectionFailedScene = new Scene();
         Scene victoryScene = new Scene();
+        Scene audioSettingsScene = new Scene();
+        Scene videoSettingsScene = new Scene();
+        Scene keyBindingScene = new Scene();
         mainMenuScene.addDisplay(this.createMainMenu(victoryScene, settingScene, multiplayerMenuScene));
-        settingScene.addDisplay(this.createSettingMenu(mainMenuScene));
+        settingScene.addDisplay(this.createSettingMenu(mainMenuScene, audioSettingsScene, videoSettingsScene, keyBindingScene));
+        audioSettingsScene.addDisplay(this.createAudioSettings(settingScene));
+        //TODO set video settings scene
+        //TODO set key binding scene
         multiplayerMenuScene.addDisplay(this.createMultiplayerMenuDisplay(mainMenuScene, clientMenuScene, hostLobbyMenuScene, connectionFailedScene));
         clientMenuScene.addDisplay(this.createClientMenuDisplay(mainMenuScene, multiplayerMenuScene));
         hostLobbyMenuScene.addDisplay(this.createHostLobbyMenuDisplay(multiplayerMenuScene));
         connectionFailedScene.addDisplay(this.createConnectionFailedDisplay(mainMenuScene));
-        victoryScene.addDisplay(this.createVictoryScene(mainMenuScene));
+        victoryScene.addDisplay(this.createVictoryDisplay(mainMenuScene));
         
         // final Font font = new Font("Arial", height / 27);
 
@@ -102,13 +108,55 @@ public class MenuSystem {
 
     }
 
-    private GraphicsDisplay createSettingMenu(Scene mainMenuScene) {
+    private GraphicsDisplay createSettingMenu(Scene mainMenuScene, Scene audioSettingsScene, Scene videoSettingsScene, Scene keyBindingScene) {
+        ButtonData setting = new ButtonData("Settings");
+        setting.setWidth(0.5f);
+        setting.setHeight(0.1f);
 
-        ButtonData backToMenu = new ButtonData("Go to main page");
+        ButtonData backToMenu = new ButtonData("Return to Menu");
         backToMenu.setWidth(0.5f);
         backToMenu.setHeight(0.1f);
         backToMenu.setBackgroundColour(0.09f, 1f, 0.06f);
         backToMenu.setOnAction(() -> view.switchToScene(mainMenuScene));
+
+        ButtonData audioSettings = new ButtonData("Audio Settings");
+        audioSettings.setWidth(0.5f);
+        audioSettings.setHeight(0.1f);
+        audioSettings.setBackgroundColour(0.09f, 1f, 0.06f);
+        audioSettings.setOnAction(() -> view.switchToScene(audioSettingsScene));
+
+        ButtonData videoSettings = new ButtonData("Video Settings");
+        videoSettings.setWidth(0.5f);
+        videoSettings.setHeight(0.1f);
+        videoSettings.setBackgroundColour(0.09f, 1f, 0.06f);
+        videoSettings.setOnAction(() -> view.switchToScene(videoSettingsScene));
+
+        ButtonData keyBindings = new ButtonData("Key Bindings");
+        keyBindings.setWidth(0.5f);
+        keyBindings.setHeight(0.1f);
+        keyBindings.setBackgroundColour(0.09f, 1f, 0.06f);
+        keyBindings.setOnAction(() -> view.switchToScene(keyBindingScene));
+
+        // Layout 2 - children are laid out in vertical column
+        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
+        setting.setPosition(0f, -0.6f);
+        graphicsDisplay.addButton(setting);
+        audioSettings.setPosition(0f, -0.3f);
+        graphicsDisplay.addButton(audioSettings);
+        videoSettings.setPosition(0f, 0f);
+        graphicsDisplay.addButton(videoSettings);
+        keyBindings.setPosition(0f, 0.3f);
+        graphicsDisplay.addButton(keyBindings);
+        backToMenu.setPosition(0f, 0.6f);
+        graphicsDisplay.addButton(backToMenu);
+        return graphicsDisplay;
+    }
+    
+    private GraphicsDisplay createAudioSettings(Scene settingsMenuScene) {
+        
+        ButtonData audioTitle = new ButtonData("Audio Settings");
+        audioTitle.setWidth(0.5f);
+        audioTitle.setHeight(0.1f);
 
         ButtonData musicButton = new ButtonData("Music: On");
         musicButton.setWidth(0.5f);
@@ -137,20 +185,25 @@ public class MenuSystem {
                 Controller.sfxSetting(false);
             }
         });
-        
-        ButtonData setting = new ButtonData("Welcome to settings");
 
-        // Layout 2 - children are laid out in vertical column
-        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
-        setting.setPosition(0f, -0.6f);
-        graphicsDisplay.addButton(setting);
+        ButtonData backToSettings = new ButtonData("Return to Settings");
+        backToSettings.setWidth(0.5f);
+        backToSettings.setHeight(0.1f);
+        backToSettings.setBackgroundColour(0.09f, 1f, 0.06f);
+        backToSettings.setOnAction(() -> view.switchToScene(settingsMenuScene));
+        
+        
+        GraphicsDisplay audioSettings = new GraphicsDisplay();
+        audioTitle.setPosition(0f, -0.6f);
+        audioSettings.addButton(audioTitle);
         musicButton.setPosition(0f, -0.2f);
-        graphicsDisplay.addButton(musicButton);
+        audioSettings.addButton(musicButton);
         sfxButton.setPosition(0f, 0.2f);
-        graphicsDisplay.addButton(sfxButton);
-        backToMenu.setPosition(0f, 0.6f);
-        graphicsDisplay.addButton(backToMenu);
-        return graphicsDisplay;
+        audioSettings.addButton(sfxButton);
+        backToSettings.setPosition(0f, 0.6f);
+        audioSettings.addButton(backToSettings);
+        
+        return audioSettings;
     }
     
     private GraphicsDisplay createMultiplayerMenuDisplay(Scene mainMenuScene, Scene clientMenuScene, Scene hostMenuScene, Scene connectionFailedScene) {
@@ -179,7 +232,7 @@ public class MenuSystem {
             x.start();
         });
 
-        ButtonData buttonClient = new ButtonData("Client");
+        ButtonData buttonClient = new ButtonData("Connect");
         buttonClient.setWidth(0.5f);
         buttonClient.setHeight(0.1f);
         buttonClient.setOnAction(() -> view.switchToScene(clientMenuScene));
@@ -309,7 +362,7 @@ public class MenuSystem {
         return (graphicsDisplay5);
     }
     
-    private GraphicsDisplay createVictoryScene(Scene mainMenuScene) {
+    private GraphicsDisplay createVictoryDisplay(Scene mainMenuScene) {
         ButtonData gameOver = new ButtonData("Game Over");
         gameOver.setWidth(0.5f);
         gameOver.setHeight(0.1f);
@@ -343,6 +396,10 @@ public class MenuSystem {
         playerList.setWidth(0.5f);
         playerList.setHeight(0.2f);
         
+        //TODO implement actual data
+        
+        //TODO implement start button?
+        
         playerList.addTextSource(() -> {
             return "Yes";
         }, 0);
@@ -370,7 +427,7 @@ public class MenuSystem {
 
         return (graphicsDisplay5);
     }
-
+    
     public static void main(String[] args) {
         View view = new View(1920 / 2, 1080 / 2);
 
