@@ -26,7 +26,7 @@ public class MenuSystem {
 
     public void start() throws KeyListenerNotFoundException {
 
-        // TODO Change throw to menucouldnotbecreated or similar
+        // TODO Change throw to menucouldnotbeinitialised or similar
 
         control = new Controller(view);
 
@@ -34,20 +34,24 @@ public class MenuSystem {
         Scene settingScene = new Scene();
         Scene multiplayerMenuScene = new Scene();
         Scene clientMenuScene = new Scene();
-        Scene hostMenuScene = new Scene();
-        mainMenuScene.addDisplay(this.createMainMenu(mainMenuScene, settingScene, multiplayerMenuScene));
+        Scene hostLobbyMenuScene = new Scene();
+        Scene connectionFailedScene = new Scene();
+        Scene victoryScene = new Scene();
+        mainMenuScene.addDisplay(this.createMainMenu(victoryScene, settingScene, multiplayerMenuScene));
         settingScene.addDisplay(this.createSettingMenu(mainMenuScene));
-        multiplayerMenuScene.addDisplay(this.createMultiplayerMenuDisplay(mainMenuScene, clientMenuScene, hostMenuScene));
+        multiplayerMenuScene.addDisplay(this.createMultiplayerMenuDisplay(mainMenuScene, clientMenuScene, hostLobbyMenuScene, connectionFailedScene));
         clientMenuScene.addDisplay(this.createClientMenuDisplay(mainMenuScene, multiplayerMenuScene));
-        hostMenuScene.addDisplay(this.createHostMenuDisplay(multiplayerMenuScene));
-
+        hostLobbyMenuScene.addDisplay(this.createHostLobbyMenuDisplay(multiplayerMenuScene));
+        connectionFailedScene.addDisplay(this.createConnectionFailedDisplay(mainMenuScene));
+        victoryScene.addDisplay(this.createVictoryScene(mainMenuScene));
+        
         // final Font font = new Font("Arial", height / 27);
 
         view.switchToScene(mainMenuScene);
         view.setTitle("Bullet Hell");
     }
 
-    private GraphicsDisplay createMainMenu(Scene mainMenuScene, Scene settingsScene, Scene multiplayerMenuScene) {
+    private GraphicsDisplay createMainMenu(Scene victoryScene, Scene settingsScene, Scene multiplayerMenuScene) {
 
         ButtonData label1 = new ButtonData("Welcome to the main page");
         label1.setWidth(0.5f);
@@ -88,7 +92,7 @@ public class MenuSystem {
                 logger.info("Starting game");
                 view.switchToGameScene();
                 control.startSinglePlayer();
-                view.switchToScene(mainMenuScene);
+                view.switchToScene(victoryScene);
                 logger.info("Finished the game");
             });
             x.start();
@@ -149,9 +153,11 @@ public class MenuSystem {
         return graphicsDisplay;
     }
     
-    private GraphicsDisplay createMultiplayerMenuDisplay(Scene mainMenuScene, Scene clientMenuScene, Scene hostMenuScene) {
+    private GraphicsDisplay createMultiplayerMenuDisplay(Scene mainMenuScene, Scene clientMenuScene, Scene hostMenuScene, Scene connectionFailedScene) {
 
         ButtonData multi = new ButtonData("Multiplayer");
+        multi.setWidth(0.5f);
+        multi.setHeight(0.1f);
 
         ButtonData buttonHost = new ButtonData("Host");
         buttonHost.setWidth(0.5f);
@@ -162,7 +168,13 @@ public class MenuSystem {
             // start the game
             Thread x = new Thread(() -> {
                 view.switchToScene(hostMenuScene);
-                control.host();
+                try {
+                    control.host();
+                } catch (Exception ex) {
+                    view.switchToScene(connectionFailedScene);
+                }
+                
+                
             });
             x.start();
         });
@@ -196,6 +208,8 @@ public class MenuSystem {
     
     private GraphicsDisplay createClientMenuDisplay(Scene mainMenuScene, Scene multiplayerMenuScene) throws KeyListenerNotFoundException {
         ButtonData client = new ButtonData("Please type in the IP and Port of the host and press connect");
+        client.setWidth(0.5f);
+        client.setHeight(0.1f);
 
         TextFieldData ipAndPort = new TextFieldData("localhost", view.getAllKeyListener("LOCALHOST"));
         ipAndPort.setWidth(0.5f);
@@ -236,10 +250,96 @@ public class MenuSystem {
         return (graphicsDisplay4);
     }
     
-    private GraphicsDisplay createHostMenuDisplay(Scene multiplayerMenuScene) {
-        ButtonData host = new ButtonData("Hosting...");
+    private GraphicsDisplay createConnectionFailedDisplay(Scene mainMenuScene) {
+        ButtonData failureMessage = new ButtonData("Connection to host failed");
+        failureMessage.setWidth(0.5f);
+        failureMessage.setHeight(0.1f);
+        
+        ButtonData returnButton = new ButtonData("Return");
+        returnButton.setWidth(0.5f);
+        returnButton.setHeight(0.1f);
+        
+        returnButton.setOnAction(() -> {
+            view.switchToScene(mainMenuScene);
+        });
+        
+        GraphicsDisplay connectionFailedDisplay = new GraphicsDisplay();
+        failureMessage.setPosition(0f, 0.3f);
+        connectionFailedDisplay.addButton(failureMessage);
+        returnButton.setPosition(0f, -0.3f);
+        connectionFailedDisplay.addButton(returnButton);
+        
+        return connectionFailedDisplay;
+    }
+    
+    private GraphicsDisplay createClientLobbyMenuDisplay(Scene clientMenuScene) {
+        ButtonData host = new ButtonData("Clienting...");
+        host.setWidth(0.5f);
+        host.setHeight(0.2f);
 
-        TextListData playerList = new TextListData(2);
+        TextListData playerList = new TextListData(4);
+        playerList.setWidth(0.5f);
+        playerList.setHeight(0.2f);
+        
+        playerList.addTextSource(() -> {
+            return "Yes";
+        }, 0);
+        playerList.addTextSource(() -> {
+            return "No";
+        }, 1);
+        
+        ButtonData backToMulti = new ButtonData("Go back");
+        backToMulti.setWidth(0.5f);
+        backToMulti.setHeight(0.1f);
+        backToMulti.setBackgroundColour(0.09f, 1f, 0.06f);
+        backToMulti.setOnAction(() -> {
+            control.disconnect();
+            view.switchToScene(clientMenuScene);
+        });
+
+        // Layout 1 - children are laid out in vertical column
+        GraphicsDisplay graphicsDisplay5 = new GraphicsDisplay();
+        playerList.setPosition(0f, -0.6f);
+        graphicsDisplay5.addButton(playerList);
+        host.setPosition(0f, -0.2f);
+        graphicsDisplay5.addButton(host);
+        backToMulti.setPosition(0f, 0.2f);
+        graphicsDisplay5.addButton(backToMulti);
+
+        return (graphicsDisplay5);
+    }
+    
+    private GraphicsDisplay createVictoryScene(Scene mainMenuScene) {
+        ButtonData gameOver = new ButtonData("Game Over");
+        gameOver.setWidth(0.5f);
+        gameOver.setHeight(0.1f);
+        
+        ButtonData menuReturn = new ButtonData("Return to menu");
+        menuReturn.setWidth(0.5f);
+        menuReturn.setHeight(0.1f);
+        
+        menuReturn.setOnAction(() -> {
+            view.switchToScene(mainMenuScene);
+        });
+        
+        GraphicsDisplay victoryDisplay = new GraphicsDisplay();
+        
+        gameOver.setPosition(0, -0.3f);
+        victoryDisplay.addButton(gameOver);
+        
+        menuReturn.setPosition(0, 0.3f);
+        victoryDisplay.addButton(menuReturn);
+        
+        return victoryDisplay;
+        
+    }
+    
+    private GraphicsDisplay createHostLobbyMenuDisplay(Scene multiplayerMenuScene) {
+        ButtonData host = new ButtonData("Hosting...");
+        host.setWidth(0.5f);
+        host.setHeight(0.1f);
+
+        TextListData playerList = new TextListData(4);
         playerList.setWidth(0.5f);
         playerList.setHeight(0.2f);
         
@@ -261,9 +361,9 @@ public class MenuSystem {
 
         // Layout 1 - children are laid out in vertical column
         GraphicsDisplay graphicsDisplay5 = new GraphicsDisplay();
-        playerList.setPosition(0f, -0.6f);
+        playerList.setPosition(0f, -0.2f);
         graphicsDisplay5.addButton(playerList);
-        host.setPosition(0f, -0.2f);
+        host.setPosition(0f, -0.6f);
         graphicsDisplay5.addButton(host);
         backToMulti.setPosition(0f, 0.2f);
         graphicsDisplay5.addButton(backToMulti);

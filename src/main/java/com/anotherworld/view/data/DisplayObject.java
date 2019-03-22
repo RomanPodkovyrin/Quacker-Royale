@@ -156,6 +156,9 @@ public abstract class DisplayObject {
     }
     
     private float getScale(int axis) {
+        if (points.getM() == 0 || points.getN() == 0) {
+            return 1;
+        }
         float min = points.getValue(axis, 0);
         float max = points.getValue(axis, 0);
         for (int j = 1; j < points.getN(); j++) {

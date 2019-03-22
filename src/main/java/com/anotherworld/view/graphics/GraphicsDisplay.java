@@ -65,7 +65,6 @@ public class GraphicsDisplay {
 
     /**
      * Returns draws the objects it contains to the screen.
-     * 
      * @param programme
      * @param mouseState
      */
