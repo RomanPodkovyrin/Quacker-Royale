@@ -57,20 +57,21 @@ public abstract class Job {
     public abstract void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session);
 
     /**
-     * Sets all te given data to the variables
+     * Sets all te given data to the variables.
      *
      * @param ai The AI player who is doing the job
      * @param players The other players on the board
      * @param balls All the balls on the boards
      * @param platform The platform
      */
-    protected void setData(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session){
+    protected void setData(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         this.ai = ai;
         this.players = players;
         this.balls = balls;
         this.platform = platform;
         this.session = session;
     }
+
     /**
      * Sets the Job state to SUCCESS.
      */

@@ -1,11 +1,8 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.network.GameClient;
-import com.anotherworld.network.LobbyClient;
-import com.anotherworld.network.LobbyServer;
+import com.anotherworld.network.*;
 import com.anotherworld.network.NetworkController;
-import com.anotherworld.network.Server;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
 import com.anotherworld.tools.PropertyReader;

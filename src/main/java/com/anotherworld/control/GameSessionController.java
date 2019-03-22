@@ -78,9 +78,7 @@ public class GameSessionController {
 
         this.network = network;
 
-        if (network != null) {
-            network.setKeyListener(keyListener);
-        }
+
 
         // Starting the main loop
         mainLoop();

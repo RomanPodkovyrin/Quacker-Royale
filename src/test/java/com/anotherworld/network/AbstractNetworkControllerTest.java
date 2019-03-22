@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.Test;
 
-public class NetworkControllerTest {
+public class AbstractNetworkControllerTest {
 
     @Test
     public void networkingTest() {
