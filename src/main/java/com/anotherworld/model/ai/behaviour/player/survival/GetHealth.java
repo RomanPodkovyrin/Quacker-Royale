@@ -1,19 +1,16 @@
 package com.anotherworld.model.ai.behaviour.player.survival;
 
-import com.anotherworld.model.ai.AITools;
+import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.Ball;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
-
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,7 +37,7 @@ public class GetHealth extends Job {
             if (powerUP.getPowerUpType().equals(PowerUpType.HEAL)) {
                 Matrix destination = powerUP.getCoordinates();
                 logger.trace("Getting Heal power up from: " + destination);
-                AITools.moveTo(ai,destination);
+                BlackBoard.moveTo(ai,destination);
                 succeed();
                 return;
             }
