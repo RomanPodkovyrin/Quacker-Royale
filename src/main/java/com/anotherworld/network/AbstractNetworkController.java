@@ -1,12 +1,17 @@
 package com.anotherworld.network;
 
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.tools.datapool.*;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListener;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
+
 
 public abstract class AbstractNetworkController {
     protected GameClient client;
@@ -19,34 +24,6 @@ public abstract class AbstractNetworkController {
     protected GameSessionData gameSessionData;
     protected static Logger logger = LogManager.getLogger(NetworkController.class);
     protected int hostSendRate = 0;
-//
-//    /**
-//     * Created when playing a single player game.
-//     */
-//    public AbstractNetworkController() {
-//
-//    }
-//
-//    /**
-//     * Created for client.
-//     * @param client - the client connection
-//     * @param settings - the game representation for the player
-//     */
-//    public AbstractNetworkController(GameClient client, GameSettings settings) {
-//        this.client = client;
-//        setUpGameSettings(settings);
-//
-//    }
-//
-//    /**
-//     * Created for server.
-//     * @param server - the server connection
-//     * @param settings - the game representation for the player
-//     */
-//    public AbstractNetworkController(Server server, GameSettings settings) {
-//        this.server = server;
-//        setUpGameSettings(settings);
-//    }
 
     /**
      * Takes all the game objects from the class and saves their references int NetworkController class.
@@ -66,27 +43,20 @@ public abstract class AbstractNetworkController {
 
     }
 
-//    public boolean isClient() {
-//        return client != null;
-//    }
-//
-//    public boolean isServer() {
-//        return server != null;
-//    }
 
 
     /**
      * The Network control for the client.
      */
-    public abstract void clientControl(KeyListener keyListener) ;
+    public abstract void clientControl(KeyListener keyListener);
 
     /**
      * Stops all the threads for game networking.
      */
-    public abstract void stopNetworking() ;
+    public abstract void stopNetworking();
 
     /**
      * Network control for the server.
      */
-    public abstract void hostControl() ;
+    public abstract void hostControl();
 }

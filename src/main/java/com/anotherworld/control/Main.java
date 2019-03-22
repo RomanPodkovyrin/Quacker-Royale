@@ -3,8 +3,14 @@ package com.anotherworld.control;
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
-import com.anotherworld.network.*;
-import com.anotherworld.network.NetworkController;
+import com.anotherworld.network.AbstractNetworkController;
+import com.anotherworld.network.GameClient;
+import com.anotherworld.network.LobbyClient;
+import com.anotherworld.network.LobbyServer;
+import com.anotherworld.network.NetworkControllerClient;
+import com.anotherworld.network.NetworkControllerServer;
+import com.anotherworld.network.NetworkControllerSinglePlayer;
+import com.anotherworld.network.Server;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.MenuDemo;
 import com.anotherworld.tools.PropertyReader;
@@ -68,6 +74,9 @@ public class Main {
         this.view = view;
     }
 
+    /**
+     * Used to initialise the game main class for the game.
+     */
     public Main() {
         PropertyReader propertyFileLogic = null;
         try {
@@ -103,7 +112,7 @@ public class Main {
             } else {
                 GLFW.glfwInit();
                 GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-                view = new View((int)(mode.width() ), (int)(mode.height() ));
+                view = new View((int)(mode.width()), (int)(mode.height()));
             }
             // Starts the game itself
             logger.trace("The game session started");
@@ -201,7 +210,6 @@ public class Main {
         }
         logger.trace("Host started the game");
 
-        settings.setServer(server);
         NetworkControllerServer network = new NetworkControllerServer(server, settings);
         startTheGame(settings,network);
     }
@@ -220,7 +228,8 @@ public class Main {
             throw new NoHostFound();
 
         } catch (IOException e) {
-
+            //TODO What ?
+            e.printStackTrace();
         }
 
         logger.trace("Connecting to lobby host " + serverIP);
@@ -290,7 +299,6 @@ public class Main {
         logger.trace("Setting up the game session");
         GameSettings settings = new GameSettings(myPlayer,allPlayers,new ArrayList<>(),allBalls,platforms,walls,session);
 
-        settings.setClient(client);
 
         NetworkControllerClient network = new NetworkControllerClient(client, settings);
         startTheGame(settings,network);

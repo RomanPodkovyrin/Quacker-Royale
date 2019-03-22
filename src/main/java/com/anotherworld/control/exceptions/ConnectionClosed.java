@@ -6,6 +6,6 @@ public class ConnectionClosed extends Exception {
     }
 
     public String toString() {
-        return "Host has canceled the game" ;
+        return "Host has canceled the game";
     }
 }

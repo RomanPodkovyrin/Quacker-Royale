@@ -1,7 +1,11 @@
 package com.anotherworld.network;
 
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.tools.datapool.*;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListener;
 
@@ -10,6 +14,11 @@ import java.util.ArrayList;
 
 public class NetworkControllerClient extends AbstractNetworkController {
 
+    /**
+     * C
+     * @param client
+     * @param settings
+     */
     public NetworkControllerClient(GameClient client, GameSettings settings){
         this.client = client;
         setUpGameSettings(settings);
