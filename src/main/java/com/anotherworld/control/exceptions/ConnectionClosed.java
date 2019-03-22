@@ -1,4 +1,4 @@
-package com.anotherworld.control;
+package com.anotherworld.control.exceptions;
 
 public class ConnectionClosed extends Exception {
     public ConnectionClosed() {

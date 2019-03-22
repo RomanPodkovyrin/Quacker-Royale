@@ -1,6 +1,7 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
+import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
 import com.anotherworld.network.*;
 import com.anotherworld.network.NetworkController;
@@ -35,6 +36,7 @@ public class Main {
     private ArrayList<String> playersIPaddresses = new ArrayList<>();
     private static Logger logger = LogManager.getLogger(Main.class);
     private boolean runTheHostGame = false;
+    private boolean cancelTheGame = false;
 
     private int defaultSinglePlayerAI;
     private int defaultSinglePlayerPlayers;
@@ -48,7 +50,7 @@ public class Main {
     /**
      * The main should only be used for testing.
      *
-     * @param args - command name arguments are not used
+     * @param args - command line arguments are not used
      */
     public static void main(String []args) {
         Main main = new Main();
@@ -116,9 +118,33 @@ public class Main {
     }
 
     /**
+     * When the server is up and running. Host can call this method to start the game.
+     * @return true can start the game, false can not
+     */
+    public boolean hostStartTheGame() {
+        if (playersIPaddresses.size() == defaultNumberClients) {
+            runTheHostGame = true;
+        }
+        return runTheHostGame;
+    }
+
+    public void hostCancelTheGame() {
+        cancelTheGame = true;
+    }
+
+
+    public ArrayList<String> getPlayersIPaddresses() {
+        return playersIPaddresses;
+    }
+
+    /**
      * Host the game, called when player wants to host multiplayer game.
      */
-    public void host() {
+    public void host() throws ConnectionClosed {
+        cancelTheGame = false;
+        // Sets waits for the host to start the game
+        runTheHostGame = false;
+        //TODO think about how to cancel it
         logger.info("User starting the server");
 
         logger.trace("Multiplayer lobby is created and started");
@@ -134,6 +160,7 @@ public class Main {
             server  = new Server(defaultNumberClients, settings);
             server.start();
         } catch (SocketException e) {
+            // Throw them back?
             e.printStackTrace();
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -141,6 +168,10 @@ public class Main {
 
         logger.trace("Lobby server is waiting for all players to connect");
         while (!lobbyServer.isReady()) {
+            if (cancelTheGame) {
+                throw new ConnectionClosed();
+                //TODO tell clients to close?
+            }
 
             try {
                 Thread.sleep(1);
@@ -153,8 +184,15 @@ public class Main {
                 + "\nLobby server is ready to play");
 
         logger.trace("Waiting for Host to start the game");
+
+
+        //TODO when ready for the proper lobby implementation remove this
         runTheHostGame = true;
         while (!runTheHostGame) {
+            if (cancelTheGame) {
+                throw new ConnectionClosed();
+                //TODO tell clients to Close?
+            }
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {

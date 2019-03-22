@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
  *
  * @author roman
  */
+@Deprecated
 public class NetworkController {
     private GameClient client;
     private Server server;
