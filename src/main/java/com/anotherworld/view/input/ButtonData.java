@@ -2,18 +2,20 @@ package com.anotherworld.view.input;
 
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
+import com.anotherworld.view.data.Supplier;
 import com.anotherworld.view.data.TextDisplayData;
-import com.anotherworld.view.data.TextSource;
 
 import java.util.Optional;
 
 public class ButtonData implements RectangleDisplayData, TextDisplayData {
 
-    private float x = 0;
-    private float y = 0;
-    private float width = 0;
-    private float height = 0;
-    private TextSource text;
+    private static Supplier<Float> ZERO = () -> 0f;
+    
+    private Supplier<Float> x = ZERO;
+    private Supplier<Float> y = ZERO;
+    private Supplier<Float> width = ZERO;
+    private Supplier<Float> height = ZERO;
+    private Supplier<String> text;
     private float backgroundR;
     private float backgroundG;
     private float backgroundB;
@@ -26,10 +28,10 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     public ButtonData(String text) {
         this(() -> {
             return text;
-        }, true);
+        }, false);
     }
     
-    public ButtonData(TextSource text, boolean transparentBackground){
+    public ButtonData(Supplier<String> text, boolean transparentBackground){
         this.textR = 1;
         this.textG = 1;
         this.textB = 1;
@@ -60,16 +62,20 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     }
     
     public void setWidth(float width) {
+        this.width = () -> width;
+    }
+    
+    public void setWidth(Supplier<Float> width) {
         this.width = width;
     }
     
     public void setHeight(float height) {
-        this.height = height;
+        this.height = () -> height;
     }
     
     public void setPosition(float x, float y) {
-        this.x = x;
-        this.y = y;
+        this.x = () -> x;
+        this.y = () -> y;
     }
     
     public void setText(String text) {
@@ -80,12 +86,12 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     
     @Override
     public float getXCoordinate() {
-        return x;
+        return x.get();
     }
 
     @Override
     public float getYCoordinate() {
-        return y;
+        return y.get();
     }
 
     @Override
@@ -100,16 +106,16 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
 
     @Override
     public float getWidth() {
-        return width;
+        return width.get();
     }
 
     @Override
     public float getHeight() {
-        return height;
+        return height.get();
     }
     
     public String getText() {
-        return text.getText();
+        return text.get();
     }
 
     public void setOnAction(ButtonListener action) {

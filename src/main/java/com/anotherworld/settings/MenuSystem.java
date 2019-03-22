@@ -3,12 +3,15 @@ package com.anotherworld.settings;
 import com.anotherworld.control.Controller;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
+import com.anotherworld.view.data.Supplier;
 import com.anotherworld.view.data.TextListData;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.Scene;
 
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.TextFieldData;
+
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -52,8 +55,6 @@ public class MenuSystem {
         hostLobbyMenuScene.addDisplay(this.createHostLobbyMenuDisplay(multiplayerMenuScene));
         connectionFailedScene.addDisplay(this.createConnectionFailedDisplay(mainMenuScene));
         victoryScene.addDisplay(this.createVictoryDisplay(mainMenuScene));
-        
-        // final Font font = new Font("Arial", height / 27);
 
         view.switchToScene(mainMenuScene);
         view.setTitle("Quacker Royal");
@@ -61,67 +62,43 @@ public class MenuSystem {
 
     private GraphicsDisplay createMainMenu(Scene victoryScene, Scene creditScene, Scene settingsScene, Scene multiplayerMenuScene) {
         logger.debug("Creating main menu display");
-        ButtonData label1 = new ButtonData("Welcome to the main page");
-        label1.setWidth(0.5f);
-        label1.setHeight(0.1f);
-        ButtonData settings = new ButtonData("Settings");
-        settings.setWidth(0.5f);
-        settings.setHeight(0.1f);
-        settings.setBackgroundColour(0.09f, 1f, 0.06f);
-
-        settings.setOnAction(() -> view.switchToScene(settingsScene));
-
-        ButtonData buttonSinglePlayer = new ButtonData("SinglePlayer");
-        buttonSinglePlayer.setWidth(0.5f);
-        buttonSinglePlayer.setHeight(0.1f);
-        buttonSinglePlayer.setBackgroundColour(0.09f, 1f, 0.06f);
-
-        ButtonData buttonMultiPlayer = new ButtonData("Multiplayer");
-        buttonMultiPlayer.setWidth(0.5f);
-        buttonMultiPlayer.setHeight(0.1f);
-        buttonMultiPlayer.setBackgroundColour(0.09f, 1f, 0.06f);
-
-        ButtonData credits = new ButtonData("Credits");
-        credits.setWidth(0.5f);
-        credits.setHeight(0.1f);
-        credits.setBackgroundColour(0.09f, 1f, 0.06f);
-        credits.setOnAction(() -> view.switchToScene(creditScene));
         
-        ButtonData quit = new ButtonData("Exit");
-        quit.setWidth(0.5f);
-        quit.setHeight(0.1f);
-        quit.setBackgroundColour(0.09f, 1f, 0.06f);
-        quit.setOnAction(() -> view.close());
+        ArrayList<ButtonData> buttons = new ArrayList<>();
+        
+        ButtonData label1 = new ButtonData("Quacker Royal");
 
-        buttonMultiPlayer.setOnAction(() -> view.switchToScene(multiplayerMenuScene));
-
-        // Layout 1 - children are laid out in vertical column
-        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
-        label1.setPosition(0f, -((float)5 / 7));
-        graphicsDisplay.addButton(label1);
-        buttonSinglePlayer.setPosition(0f, -((float)3 / 7));
-        graphicsDisplay.addButton(buttonSinglePlayer);
-        buttonMultiPlayer.setPosition(0f, -((float)1 / 7));
-        graphicsDisplay.addButton(buttonMultiPlayer);
-        settings.setPosition(0f, ((float)1 / 7));
-        graphicsDisplay.addButton(settings);
-        credits.setPosition(0f, ((float)3 / 7));
-        graphicsDisplay.addButton(credits);
-        quit.setPosition(0f, ((float)5 / 7));
-        graphicsDisplay.addButton(quit);
-
-        buttonSinglePlayer.setOnAction(() -> {
+        ButtonData singlePlayer = new ButtonData("SinglePlayer");
+        singlePlayer.setOnAction(() -> {
             logger.trace("Single player button pressed");
             Thread x = new Thread(() -> {
-                logger.debug("Queueing switch to game view");
-                view.switchToGameScene();
                 logger.trace("Starting singleplayer");
                 control.startSinglePlayer();
                 logger.trace("Queueing switch to victory scene");
                 view.switchToScene(victoryScene);
             });
+            logger.debug("Queueing switch to game view");
+            view.switchToGameScene();
             x.start();
         });
+        buttons.add(singlePlayer);
+
+        ButtonData multiPlayer = new ButtonData("Multiplayer");
+        multiPlayer.setOnAction(() -> view.switchToScene(multiplayerMenuScene));
+        buttons.add(multiPlayer);
+        
+        ButtonData settings = new ButtonData("Settings");
+        settings.setOnAction(() -> view.switchToScene(settingsScene));
+        buttons.add(settings);
+
+        ButtonData credits = new ButtonData("Credits");
+        credits.setOnAction(() -> view.switchToScene(creditScene));
+        buttons.add(credits);
+        
+        ButtonData quit = new ButtonData("Exit");
+        quit.setOnAction(() -> view.close());
+        
+        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
+        layoutButtons(graphicsDisplay, buttons, label1, quit);
 
         return (graphicsDisplay);
 
@@ -130,60 +107,40 @@ public class MenuSystem {
     private GraphicsDisplay createSettingMenu(Scene mainMenuScene, Scene audioSettingsScene, Scene videoSettingsScene, Scene keyBindingScene) {
         logger.debug("Creating settings menu display");
         
-        ButtonData setting = new ButtonData("Settings");
-        setting.setWidth(0.5f);
-        setting.setHeight(0.1f);
-
-        ButtonData backToMenu = new ButtonData("Return to Menu");
-        backToMenu.setWidth(0.5f);
-        backToMenu.setHeight(0.1f);
-        backToMenu.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMenu.setOnAction(() -> view.switchToScene(mainMenuScene));
+        ArrayList<ButtonData> buttons = new ArrayList<>();
+        
+        ButtonData settings = new ButtonData("Settings");
 
         ButtonData audioSettings = new ButtonData("Audio Settings");
-        audioSettings.setWidth(0.5f);
-        audioSettings.setHeight(0.1f);
-        audioSettings.setBackgroundColour(0.09f, 1f, 0.06f);
         audioSettings.setOnAction(() -> view.switchToScene(audioSettingsScene));
+        buttons.add(audioSettings);
 
         ButtonData videoSettings = new ButtonData("Video Settings");
-        videoSettings.setWidth(0.5f);
-        videoSettings.setHeight(0.1f);
-        videoSettings.setBackgroundColour(0.09f, 1f, 0.06f);
         videoSettings.setOnAction(() -> view.switchToScene(videoSettingsScene));
+        buttons.add(videoSettings);
 
         ButtonData keyBindings = new ButtonData("Key Bindings");
-        keyBindings.setWidth(0.5f);
-        keyBindings.setHeight(0.1f);
-        keyBindings.setBackgroundColour(0.09f, 1f, 0.06f);
         keyBindings.setOnAction(() -> view.switchToScene(keyBindingScene));
+        buttons.add(keyBindings);
 
-        // Layout 2 - children are laid out in vertical column
+        ButtonData backToMenu = new ButtonData("Menu");
+        backToMenu.setOnAction(() -> view.switchToScene(mainMenuScene));
+        
         GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
-        setting.setPosition(0f, -0.6f);
-        graphicsDisplay.addButton(setting);
-        audioSettings.setPosition(0f, -0.3f);
-        graphicsDisplay.addButton(audioSettings);
-        videoSettings.setPosition(0f, 0f);
-        graphicsDisplay.addButton(videoSettings);
-        keyBindings.setPosition(0f, 0.3f);
-        graphicsDisplay.addButton(keyBindings);
-        backToMenu.setPosition(0f, 0.6f);
-        graphicsDisplay.addButton(backToMenu);
+        
+        layoutButtons(graphicsDisplay, buttons, settings, backToMenu);
+        
         return graphicsDisplay;
     }
     
     private GraphicsDisplay createAudioSettings(Scene settingsMenuScene) {
         logger.debug("Creating audio settings menu display");
         
+        ArrayList<ButtonData> buttons = new ArrayList<>();
+        
         ButtonData audioTitle = new ButtonData("Audio Settings");
-        audioTitle.setWidth(0.5f);
-        audioTitle.setHeight(0.1f);
 
         ButtonData musicButton = new ButtonData("Music: On");
-        musicButton.setWidth(0.5f);
-        musicButton.setHeight(0.1f);
-        musicButton.setBackgroundColour(0.09f, 1f, 0.06f);
         musicButton.setOnAction(() -> {
             logger.info("Music button pressed");
             musicButton.setText("Music: " + (musicButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
@@ -193,12 +150,9 @@ public class MenuSystem {
                 Controller.musicSetting(false);
             }
         });
+        buttons.add(musicButton);
 
         ButtonData sfxButton = new ButtonData("SFX: On");
-        sfxButton.setWidth(0.5f);
-        sfxButton.setHeight(0.1f);
-        sfxButton.setBackgroundColour(0.09f, 1f, 0.06f);
-
         sfxButton.setOnAction(() -> {
             sfxButton.setText("SFX: " + (sfxButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
             if (sfxButton.getText().split(" ")[1].equals("On")) {
@@ -207,23 +161,15 @@ public class MenuSystem {
                 Controller.sfxSetting(false);
             }
         });
+        buttons.add(sfxButton);
 
-        ButtonData backToSettings = new ButtonData("Return to Settings");
-        backToSettings.setWidth(0.5f);
-        backToSettings.setHeight(0.1f);
-        backToSettings.setBackgroundColour(0.09f, 1f, 0.06f);
+        ButtonData backToSettings = new ButtonData("Settings");
         backToSettings.setOnAction(() -> view.switchToScene(settingsMenuScene));
         
         
         GraphicsDisplay audioSettings = new GraphicsDisplay();
-        audioTitle.setPosition(0f, -0.6f);
-        audioSettings.addButton(audioTitle);
-        musicButton.setPosition(0f, -0.2f);
-        audioSettings.addButton(musicButton);
-        sfxButton.setPosition(0f, 0.2f);
-        audioSettings.addButton(sfxButton);
-        backToSettings.setPosition(0f, 0.6f);
-        audioSettings.addButton(backToSettings);
+        
+        layoutButtons(audioSettings, buttons, audioTitle, backToSettings);
         
         return audioSettings;
     }
@@ -454,6 +400,31 @@ public class MenuSystem {
         graphicsDisplay5.addButton(backToMulti);
 
         return (graphicsDisplay5);
+    }
+    
+    private void layoutButtons(GraphicsDisplay display, ArrayList<ButtonData> buttons, ButtonData title, ButtonData returnButton) {
+        buttons.add(0, title);
+        buttons.add(returnButton);
+        layoutButtons(display, buttons, 0, 0, 2, 2, 0.1f);
+    }
+    
+    private void layoutButtons(GraphicsDisplay display, ArrayList<ButtonData> buttons, float x, float y, float width, float height, float buttonHeight) {
+        float ySpacing = 2f / (buttons.size() + 1);
+        Supplier<Float> maxWidth = () -> {
+            float max = 0f;
+            for (ButtonData button : buttons) {
+                max = Math.max(button.getText().length() * buttonHeight, max);
+            }
+            return (max / 2) + buttonHeight;
+        };
+        
+        for (int i = 0; i < buttons.size(); i++) {
+            ButtonData button = buttons.get(i);
+            button.setHeight(buttonHeight);
+            button.setWidth(maxWidth);
+            button.setPosition(x, y + (-height / 2) + ySpacing * (i + 1));
+            display.addButton(button);
+        }
     }
     
     public static void main(String[] args) {

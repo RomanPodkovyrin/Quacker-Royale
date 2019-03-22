@@ -16,25 +16,25 @@ public class TextListData {
     private float textR = 1;
     private float textG = 1;
     private float textB = 1;
-    private final TextSource[] textSources;
+    private final ArrayList<Supplier<String>> textSources;
 
     public TextListData (int size) {
-        textSources = new TextSource[size];
+        textSources = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            textSources[i] = () -> {
+            textSources.add(i, () -> {
                 return "";
-            };
+            });
         }
     }
     
     public ArrayList<ButtonData> getButtons() {
         ArrayList<ButtonData> buttons = new ArrayList<>();
         int i = 0;
-        for (TextSource ts : textSources) {
-            ButtonData button = new ButtonData(ts.getText());
+        for (Supplier<String> ts : textSources) {
+            ButtonData button = new ButtonData(ts.get());
             button.setWidth(width);
-            button.setHeight(height / textSources.length);
-            button.setPosition(x, (height / (2 * textSources.length)) + (y - height) + (height * i) / textSources.length);
+            button.setHeight(height / textSources.size());
+            button.setPosition(x, (height / (2 * textSources.size())) + (y - height) + (height * i) / textSources.size());
             button.setBackgroundColour(backgroundR, backgroundG, backgroundB);
             button.setTextColour(textR, textG, textB);
             buttons.add(button);
@@ -44,8 +44,9 @@ public class TextListData {
         return buttons;
     }
     
-    public void addTextSource(TextSource ts, int index) {
-        textSources[index] = ts;
+    public void addTextSource(Supplier<String> ts, int index) {
+        textSources.remove(index);
+        textSources.add(index, ts);
     }
     
     public void setBackgroundColour(float r, float g, float b) {
