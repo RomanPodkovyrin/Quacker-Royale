@@ -40,11 +40,13 @@ public class MenuSystem {
         Scene audioSettingsScene = new Scene();
         Scene videoSettingsScene = new Scene();
         Scene keyBindingScene = new Scene();
-        mainMenuScene.addDisplay(this.createMainMenu(victoryScene, settingScene, multiplayerMenuScene));
+        Scene creditScene = new Scene();
+        mainMenuScene.addDisplay(this.createMainMenu(victoryScene, creditScene, settingScene, multiplayerMenuScene));
         settingScene.addDisplay(this.createSettingMenu(mainMenuScene, audioSettingsScene, videoSettingsScene, keyBindingScene));
         audioSettingsScene.addDisplay(this.createAudioSettings(settingScene));
         //TODO set video settings scene
         //TODO set key binding scene
+        //TODO set credit scene and load from file
         multiplayerMenuScene.addDisplay(this.createMultiplayerMenuDisplay(mainMenuScene, clientMenuScene, hostLobbyMenuScene, connectionFailedScene));
         clientMenuScene.addDisplay(this.createClientMenuDisplay(mainMenuScene, multiplayerMenuScene));
         hostLobbyMenuScene.addDisplay(this.createHostLobbyMenuDisplay(multiplayerMenuScene));
@@ -54,52 +56,69 @@ public class MenuSystem {
         // final Font font = new Font("Arial", height / 27);
 
         view.switchToScene(mainMenuScene);
-        view.setTitle("Bullet Hell");
+        view.setTitle("Quacker Royal");
     }
 
-    private GraphicsDisplay createMainMenu(Scene victoryScene, Scene settingsScene, Scene multiplayerMenuScene) {
-
+    private GraphicsDisplay createMainMenu(Scene victoryScene, Scene creditScene, Scene settingsScene, Scene multiplayerMenuScene) {
+        logger.debug("Creating main menu display");
         ButtonData label1 = new ButtonData("Welcome to the main page");
         label1.setWidth(0.5f);
         label1.setHeight(0.1f);
-        ButtonData button1 = new ButtonData("Go to settings");
-        button1.setWidth(0.5f);
-        button1.setHeight(0.1f);
-        button1.setBackgroundColour(0.09f, 1f, 0.06f);
+        ButtonData settings = new ButtonData("Settings");
+        settings.setWidth(0.5f);
+        settings.setHeight(0.1f);
+        settings.setBackgroundColour(0.09f, 1f, 0.06f);
 
-        button1.setOnAction(() -> view.switchToScene(settingsScene));
+        settings.setOnAction(() -> view.switchToScene(settingsScene));
 
-        ButtonData buttonSinglePlayer = new ButtonData("Play SinglePlayer");
+        ButtonData buttonSinglePlayer = new ButtonData("SinglePlayer");
         buttonSinglePlayer.setWidth(0.5f);
         buttonSinglePlayer.setHeight(0.1f);
         buttonSinglePlayer.setBackgroundColour(0.09f, 1f, 0.06f);
 
-        ButtonData buttonMultiPlayer = new ButtonData("Play MultiPlayer");
+        ButtonData buttonMultiPlayer = new ButtonData("Multiplayer");
         buttonMultiPlayer.setWidth(0.5f);
         buttonMultiPlayer.setHeight(0.1f);
         buttonMultiPlayer.setBackgroundColour(0.09f, 1f, 0.06f);
+
+        ButtonData credits = new ButtonData("Credits");
+        credits.setWidth(0.5f);
+        credits.setHeight(0.1f);
+        credits.setBackgroundColour(0.09f, 1f, 0.06f);
+        credits.setOnAction(() -> view.switchToScene(creditScene));
+        
+        ButtonData quit = new ButtonData("Exit");
+        quit.setWidth(0.5f);
+        quit.setHeight(0.1f);
+        quit.setBackgroundColour(0.09f, 1f, 0.06f);
+        quit.setOnAction(() -> view.close());
 
         buttonMultiPlayer.setOnAction(() -> view.switchToScene(multiplayerMenuScene));
 
         // Layout 1 - children are laid out in vertical column
         GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
-        label1.setPosition(0f, -0.6f);
+        label1.setPosition(0f, -((float)5 / 7));
         graphicsDisplay.addButton(label1);
-        buttonSinglePlayer.setPosition(0f, -0.2f);
+        buttonSinglePlayer.setPosition(0f, -((float)3 / 7));
         graphicsDisplay.addButton(buttonSinglePlayer);
-        buttonMultiPlayer.setPosition(0f, 0.2f);
+        buttonMultiPlayer.setPosition(0f, -((float)1 / 7));
         graphicsDisplay.addButton(buttonMultiPlayer);
-        button1.setPosition(0f, 0.6f);
-        graphicsDisplay.addButton(button1);
+        settings.setPosition(0f, ((float)1 / 7));
+        graphicsDisplay.addButton(settings);
+        credits.setPosition(0f, ((float)3 / 7));
+        graphicsDisplay.addButton(credits);
+        quit.setPosition(0f, ((float)5 / 7));
+        graphicsDisplay.addButton(quit);
 
         buttonSinglePlayer.setOnAction(() -> {
-            // start the game
+            logger.trace("Single player button pressed");
             Thread x = new Thread(() -> {
-                logger.info("Starting game");
+                logger.debug("Queueing switch to game view");
                 view.switchToGameScene();
+                logger.trace("Starting singleplayer");
                 control.startSinglePlayer();
+                logger.trace("Queueing switch to victory scene");
                 view.switchToScene(victoryScene);
-                logger.info("Finished the game");
             });
             x.start();
         });
@@ -109,6 +128,8 @@ public class MenuSystem {
     }
 
     private GraphicsDisplay createSettingMenu(Scene mainMenuScene, Scene audioSettingsScene, Scene videoSettingsScene, Scene keyBindingScene) {
+        logger.debug("Creating settings menu display");
+        
         ButtonData setting = new ButtonData("Settings");
         setting.setWidth(0.5f);
         setting.setHeight(0.1f);
@@ -153,6 +174,7 @@ public class MenuSystem {
     }
     
     private GraphicsDisplay createAudioSettings(Scene settingsMenuScene) {
+        logger.debug("Creating audio settings menu display");
         
         ButtonData audioTitle = new ButtonData("Audio Settings");
         audioTitle.setWidth(0.5f);
@@ -207,7 +229,8 @@ public class MenuSystem {
     }
     
     private GraphicsDisplay createMultiplayerMenuDisplay(Scene mainMenuScene, Scene clientMenuScene, Scene hostMenuScene, Scene connectionFailedScene) {
-
+        logger.debug("Creating multiplayer menu display");
+        
         ButtonData multi = new ButtonData("Multiplayer");
         multi.setWidth(0.5f);
         multi.setHeight(0.1f);
@@ -260,6 +283,7 @@ public class MenuSystem {
     }
     
     private GraphicsDisplay createClientMenuDisplay(Scene mainMenuScene, Scene multiplayerMenuScene) throws KeyListenerNotFoundException {
+        logger.debug("Creating client menu display");
         ButtonData client = new ButtonData("Please type in the IP and Port of the host and press connect");
         client.setWidth(0.5f);
         client.setHeight(0.1f);
@@ -304,6 +328,7 @@ public class MenuSystem {
     }
     
     private GraphicsDisplay createConnectionFailedDisplay(Scene mainMenuScene) {
+        logger.debug("Creating connection failure display");
         ButtonData failureMessage = new ButtonData("Connection to host failed");
         failureMessage.setWidth(0.5f);
         failureMessage.setHeight(0.1f);
@@ -326,6 +351,7 @@ public class MenuSystem {
     }
     
     private GraphicsDisplay createClientLobbyMenuDisplay(Scene clientMenuScene) {
+        logger.debug("Creating client lobby display");
         ButtonData host = new ButtonData("Clienting...");
         host.setWidth(0.5f);
         host.setHeight(0.2f);
@@ -363,6 +389,7 @@ public class MenuSystem {
     }
     
     private GraphicsDisplay createVictoryDisplay(Scene mainMenuScene) {
+        logger.debug("Creating victory display");
         ButtonData gameOver = new ButtonData("Game Over");
         gameOver.setWidth(0.5f);
         gameOver.setHeight(0.1f);
@@ -388,6 +415,7 @@ public class MenuSystem {
     }
     
     private GraphicsDisplay createHostLobbyMenuDisplay(Scene multiplayerMenuScene) {
+        logger.debug("Creating host lobby display");
         ButtonData host = new ButtonData("Hosting...");
         host.setWidth(0.5f);
         host.setHeight(0.1f);

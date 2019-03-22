@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Button extends RectangleDisplayObject implements Clickable {
+    
     private final ButtonData buttonData;
 
     private List<ButtonListener> listeners;
@@ -33,6 +34,11 @@ public class Button extends RectangleDisplayObject implements Clickable {
 
     public void addButtonListener(ButtonListener listener) {
         listeners.add(listener);
+    }
+    
+    @Override
+    public boolean shouldDraw() {
+        return !buttonData.hasTransparentBackground();
     }
 
     @Override

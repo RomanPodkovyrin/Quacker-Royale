@@ -17,6 +17,7 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     private float backgroundR;
     private float backgroundG;
     private float backgroundB;
+    private boolean transparentBackground;
     private float textR;
     private float textG;
     private float textB;
@@ -25,16 +26,17 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     public ButtonData(String text) {
         this(() -> {
             return text;
-        });
+        }, true);
     }
     
-    public ButtonData(TextSource text){
+    public ButtonData(TextSource text, boolean transparentBackground){
         this.textR = 1;
         this.textG = 1;
         this.textB = 1;
         this.backgroundR = 1;
         this.backgroundG = 1;
         this.backgroundB = 1;
+        this.transparentBackground = transparentBackground;
         this.text = text;
         action = Optional.empty();
     }
@@ -136,6 +138,10 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     
     public float getBackgroundB() {
         return backgroundB;
+    }
+
+    public boolean hasTransparentBackground() {
+        return transparentBackground;
     }
 
 }

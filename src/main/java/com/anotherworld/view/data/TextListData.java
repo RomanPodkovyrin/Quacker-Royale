@@ -41,8 +41,6 @@ public class TextListData {
             i++;
         }
         
-        
-        
         return buttons;
     }
     
