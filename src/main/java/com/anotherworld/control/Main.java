@@ -1,6 +1,7 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
+import com.anotherworld.control.exceptions.NoHostFound;
 import com.anotherworld.network.*;
 import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
@@ -14,6 +15,7 @@ import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ public class Main {
     public static void main(String []args) {
         Main main = new Main();
         GameSettings settings = new GameSettings(2,1,1);
-        main.startTheGame(settings, new NetworkController());
+        main.startTheGame(settings, new NetworkControllerSinglePlayer());
         MenuDemo viewMenu = new MenuDemo();
 
     }
@@ -88,7 +90,7 @@ public class Main {
      * @param network - networking which tells whether player is a server or a client. if a single player just
      *                pass new NetworkController()
      */
-    private void startTheGame(GameSettings settings, NetworkController network) {
+    private void startTheGame(GameSettings settings, AbstractNetworkController network) {
 
         try {
             // Starts the render
@@ -162,7 +164,7 @@ public class Main {
         logger.trace("Host started the game");
 
         settings.setServer(server);
-        NetworkController network = new NetworkController(server, settings);
+        NetworkControllerServer network = new NetworkControllerServer(server, settings);
         startTheGame(settings,network);
     }
 
@@ -171,13 +173,16 @@ public class Main {
      *
      * @param serverIP the host ip address to connect to
      */
-    public void connect(String serverIP) {
+    public void connect(String serverIP) throws NoHostFound {
         logger.trace("Starting the Lobby client");
         LobbyClient lobbyClient = new LobbyClient(serverIP);
         try {
             lobbyClient.sendMyIp();
+        } catch (ConnectException e) {
+            throw new NoHostFound();
+
         } catch (IOException e) {
-            e.printStackTrace();
+
         }
 
         logger.trace("Connecting to lobby host " + serverIP);
@@ -193,6 +198,7 @@ public class Main {
             client = new GameClient(serverIP);
             client.start();
         } catch (SocketException e) {
+            //TODO one of those has to be game cancelled exception
             e.printStackTrace();
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -248,13 +254,13 @@ public class Main {
 
         settings.setClient(client);
 
-        NetworkController network = new NetworkController(client, settings);
+        NetworkControllerClient network = new NetworkControllerClient(client, settings);
         startTheGame(settings,network);
     }
 
     public void startSinglePlayer() {
         GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
-        startTheGame(settings, new NetworkController());
+        startTheGame(settings, new NetworkControllerSinglePlayer());
     }
 
     /**

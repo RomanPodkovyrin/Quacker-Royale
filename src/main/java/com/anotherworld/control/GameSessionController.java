@@ -2,6 +2,7 @@ package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -28,7 +29,7 @@ public class GameSessionController {
     private View view;
     private Thread viewThread;
     private KeyListener keyListener;
-    private NetworkController network;
+    private AbstractNetworkController network;
 
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
 
@@ -50,7 +51,7 @@ public class GameSessionController {
      * @param network - Networking for the current game
      * @throws KeyListenerNotFoundException
      */
-    public GameSessionController(View view, GameSettings settings, NetworkController network) throws KeyListenerNotFoundException {
+    public GameSessionController(View view, GameSettings settings, AbstractNetworkController network) throws KeyListenerNotFoundException {
 
         this.settings = settings;
 
