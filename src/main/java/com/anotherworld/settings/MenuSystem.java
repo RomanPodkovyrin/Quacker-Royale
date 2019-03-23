@@ -1,6 +1,7 @@
 package com.anotherworld.settings;
 
 import com.anotherworld.control.Controller;
+import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
@@ -225,7 +226,7 @@ public class MenuSystem {
                 try {
                     control.connect(ipAndPort.getText());
                     view.switchToDisplay(mainMenuDisplay);
-                } catch (NoHostFound e) {
+                } catch (NoHostFound | ConnectionClosed e) {
                     view.switchToDisplay(connectionFailedDisplay);
                 }
                 logger.info("Finished the game");
