@@ -3,13 +3,12 @@ package com.anotherworld.model.physics;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Wall;
-import com.anotherworld.model.movable.AbstractMovable;
-import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.PropertyReader;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.MovableData;
+import com.anotherworld.tools.datapool.PlayerData;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,13 +22,15 @@ public class Physics {
     private static final String RATE = "ACCELERATE";
     private static final String FALLING = "FALLINGSPEED";
     private static final String FILE = "physics.properties";
+    private static final float CHARGE_RATE = 1.5f;
+    private static final int FIRST = 0, SECOND = 1, AVERAGE = 2;
     static float friction;
     static float rate;
     static float fallingSpeed;
 
     /**
      * This method is to setup the attributes of the Physics class such as
-     * friction and rate
+     * friction and rate.
      */
     public static void setUp() {
         PropertyReader property;
@@ -45,23 +46,41 @@ public class Physics {
     }
 
     /**
-     * To make the object move
+     * To make the object move. And the way object move is by adding up the
+     * product of speed and velocity of the object on its original coordination.
      * 
      * @param object
      *            the object to move
      */
-    public static void move(AbstractMovable object) {
+    public static void move(MovableData object) {
         float newXCoordinate = object.getXCoordinate() + object.getXVelocity()
                 * object.getSpeed();
         float newYCoordinate = object.getYCoordinate() + object.getYVelocity()
                 * object.getSpeed();
         object.setCoordinates(newXCoordinate, newYCoordinate);
-        logger.debug((object instanceof Player ? "Player "
-                + ((Player) object).getCharacterID() : "Ball ")
+        logger.debug((object instanceof PlayerData ? "Player "
+                + object.getObjectID() : "Ball ")
                 + "location updated successfully");
     }
 
-    public static boolean checkCollision(Player object, Matrix coordinates, float  radius) {
+    /**
+     * To check for collision between a player and coordinate of an item as well
+     * as its radius.
+     * 
+     * @param object
+     *            The player who is used in checking for collision
+     * 
+     * @param coordinates
+     *            The coordinate of the item
+     * 
+     * @param radius
+     *            The radius of the item.
+     * 
+     * @return boolean Indicates if the object is collided with the item.
+     */
+
+    public static boolean checkCollision(PlayerData object, Matrix coordinates,
+            float radius) {
         float xDistance = (object.getXCoordinate() - coordinates.getX());
         float yDistance = (object.getYCoordinate() - coordinates.getY());
 
@@ -69,31 +88,39 @@ public class Physics {
         float distanceSquared = xDistance * xDistance + yDistance * yDistance;
 
         boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
-        
+
         return isOverlapping;
     }
+
     /**
      * To check collision of the objects.
      *
      * @param objectA
      *            the first object to check
+     * 
      * @param objectB
      *            the second object to check
      */
-    public static boolean checkCollision(AbstractMovable objectA,
-            AbstractMovable objectB) {
-        float xDistance = (objectA.getXCoordinate() - objectB.getXCoordinate());
-        float yDistance = (objectA.getYCoordinate() - objectB.getYCoordinate());
+    public static boolean checkCollision(MovableData objectA,
+            MovableData objectB) {
+        float xDistance = objectA.getXCoordinate()
+                + (objectA.getXVelocity() * objectA.getSpeed())
+                - objectB.getXCoordinate()
+                + (objectB.getXVelocity() * objectB.getSpeed());
+        float yDistance = objectA.getYCoordinate()
+                + (objectA.getYVelocity() * objectA.getSpeed())
+                - objectB.getYCoordinate()
+                + (objectB.getYVelocity() * objectB.getSpeed());
 
         float sumOfRadii = objectA.getRadius() + objectB.getRadius();
         float distanceSquared = xDistance * xDistance + yDistance * yDistance;
 
         boolean isOverlapping = distanceSquared < sumOfRadii * sumOfRadii;
-        logger.debug((objectA instanceof Ball ? "Ball" : "Player "
-                + ((Player) objectA).getCharacterID())
+        logger.debug((objectA instanceof BallData ? "Ball" : "Player "
+                + objectA.getObjectID())
                 + " and "
-                + (objectB instanceof Ball ? "Ball" : "Player "
-                        + ((Player) objectB).getCharacterID())
+                + (objectB instanceof BallData ? "Ball" : "Player "
+                        + objectB.getObjectID())
                 + " are "
                 + ((!isOverlapping) ? "not" : "") + " colliding");
         return isOverlapping;
@@ -108,10 +135,11 @@ public class Physics {
      * 
      * @param ball
      *            the ball to check for collisions
+     * 
      * @param wall
      *            the wall to check for collisions
      */
-    public static boolean bouncedWall(Ball ball, Wall wall) {
+    public static boolean bouncedWall(BallData ball, Wall wall) {
         float circleR = ball.getRadius();
         float circleX = ball.getXCoordinate();
         float circleY = ball.getYCoordinate();
@@ -160,11 +188,12 @@ public class Physics {
      * 
      * @param objectA
      *            An object which is collided.
+     * 
      * @param objectB
      *            An object which is collided.
      */
-    public static ArrayList<Matrix> calculateCollision(AbstractMovable objectA,
-            AbstractMovable objectB) {
+    public static ArrayList<Matrix> calculateCollision(MovableData objectA,
+            MovableData objectB) {
         Matrix pointA = new Matrix(objectA.getXCoordinate()
                 + (objectA.getXVelocity() * objectA.getSpeed()),
                 objectA.getYCoordinate()
@@ -180,8 +209,42 @@ public class Physics {
         float radiusB = objectB.getRadius();
 
         Matrix midpointBetweenCircles = new Matrix(
-                (pointA.getX() + pointB.getX()) / 2, //MAGIC NUMBER
-                (pointA.getY() + pointB.getY()) / 2);//MAGIC NUMBER
+                (pointA.getX() + pointB.getX()) / AVERAGE,
+                (pointA.getY() + pointB.getY()) / AVERAGE);
+
+        Matrix objectAOffSet = new Matrix((float) (radiusA * Math.cos(Math.PI
+                + angleBetweenCircles)), (float) (radiusA * Math.sin(Math.PI
+                + angleBetweenCircles)));
+        Matrix objectBOffSet = new Matrix(
+                (float) (radiusB * Math.cos(angleBetweenCircles)),
+                (float) (radiusB * Math.sin(angleBetweenCircles)));
+
+        ArrayList<Matrix> safeCoordinateAb = new ArrayList<>();
+        safeCoordinateAb.add(new Matrix(midpointBetweenCircles.getX()
+                + objectAOffSet.getX(), midpointBetweenCircles.getY()
+                + objectAOffSet.getY()));
+        safeCoordinateAb.add(new Matrix(midpointBetweenCircles.getX()
+                + objectBOffSet.getX(), midpointBetweenCircles.getY()
+                + objectBOffSet.getY()));
+
+        return safeCoordinateAb;
+    }
+
+    public static ArrayList<Matrix> calculateCollisionA(MovableData objectA,
+            MovableData objectB) {
+        Matrix pointA = new Matrix(objectA.getXCoordinate(),
+                objectA.getYCoordinate());
+        Matrix pointB = new Matrix(objectB.getXCoordinate(),
+                objectB.getYCoordinate());
+        double angleBetweenCircles = Math.atan2(pointB.getY() - pointA.getY(),
+                pointB.getX() - pointA.getX());
+
+        float radiusA = objectA.getRadius();
+        float radiusB = objectB.getRadius();
+
+        Matrix midpointBetweenCircles = new Matrix(
+                (pointA.getX() + pointB.getX()) / AVERAGE,
+                (pointA.getY() + pointB.getY()) / AVERAGE);
 
         Matrix objectAOffSet = new Matrix((float) (radiusA * Math.cos(Math.PI
                 + angleBetweenCircles)), (float) (radiusA * Math.sin(Math.PI
@@ -209,92 +272,107 @@ public class Physics {
      * 
      * @param objectA
      *            the first object in the collision
+     * 
      * @param objectB
      *            the second object in the collision
      */
-    public static void collided(AbstractMovable objectA, AbstractMovable objectB) {
+    public static void collided(MovableData objectA, MovableData objectB) {
+        ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
+        Matrix safe;
 
-        Matrix coordA = objectA.getCoordinates();
-        Matrix coordB = objectB.getCoordinates();
+        Matrix coordA = newCoordinate.get(0);
+        Matrix coordB = newCoordinate.get(1);
         Matrix n = coordA.sub(coordB);
         n.normalizeThis();
+        Matrix m = coordB.sub(coordA);
+        m.normalizeThis();
+        float angle = MatrixMath.vectorAngle(n);
+        float angle1 = MatrixMath.vectorAngle(m);
 
-        float newVeloA = MatrixMath.innerProduct(objectA.getVelocity(), n);
-        float newVeloB = MatrixMath.innerProduct(objectB.getVelocity(), n);
-        float optimisedP = Math.min((newVeloA - newVeloB), 0);
-        Matrix veloA = new Matrix(objectA.getXVelocity()
-                - (optimisedP * n.getX()), objectA.getYVelocity()
-                - (optimisedP * n.getY()));
-        Matrix veloB = new Matrix(objectB.getXVelocity()
-                + (optimisedP * n.getX()), objectB.getYVelocity()
-                + (optimisedP * n.getY()));
-
+        Matrix midpointBetweenCircles = new Matrix(
+                (objectA.getXCoordinate() + objectB.getXCoordinate()) / AVERAGE,
+                (objectA.getYCoordinate() + objectB.getYCoordinate()) / AVERAGE);
+        Matrix ap = new Matrix(objectA.getXCoordinate()
+                - midpointBetweenCircles.getX(), objectA.getYCoordinate()
+                - midpointBetweenCircles.getY());
+        Matrix bp = new Matrix(objectB.getXCoordinate()
+                - midpointBetweenCircles.getX(), objectB.getYCoordinate()
+                - midpointBetweenCircles.getY());
+        Matrix veloA = new Matrix(objectA.getXVelocity() + (angle * ap.getX()),
+                objectA.getYVelocity() + (angle * ap.getY()));
+        Matrix veloB = new Matrix(
+                objectB.getXVelocity() + (angle1 * bp.getX()),
+                objectB.getYVelocity() + (angle1 * bp.getY()));
         veloA.normalizeThis();
         veloB.normalizeThis();
-        if (objectA instanceof Ball) {
+        if (objectA instanceof BallData) {
 
             objectA.setVelocity(veloA.getX(), veloA.getY());
             objectA.setAngle((float) MatrixMath.vectorAngle(veloA));
 
-            if (objectB instanceof Ball) {
+            if (objectB instanceof BallData) {
                 objectB.setVelocity(veloB.getX(), veloB.getY());
                 objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
             }
         }
-        ArrayList<Matrix> newCoordinate = calculateCollision(objectA, objectB);
-        Matrix safe;
         boolean specialCase = false;
-        if (objectA instanceof Player) {
-            if (((Player) objectA).getState().equals(ObjectState.DASHING)) {
+        if (objectA instanceof PlayerData) {
+            if ((objectA.getState().equals(ObjectState.DASHING))) {
                 {
                     objectB.setVelocity(veloB.getX(), veloB.getY());
                     objectB.setAngle((float) MatrixMath.vectorAngle(veloB));
-                    safe = newCoordinate.get(1);//MAGIC NUMBER
+                    safe = newCoordinate.get(SECOND);
                     objectB.setCoordinates(safe.getX(), safe.getY());
-                    if (!(objectB instanceof Ball)) {
+                    if (!(objectB instanceof BallData)) {
                         specialCase = true;
                     }
                 }
             }
-        } else if (objectB instanceof Player) {
-            if (((Player) objectB).getState().equals(ObjectState.DASHING)) {
+        } else if (objectB instanceof PlayerData) {
+            if ((objectB.getState().equals(ObjectState.DASHING))) {
                 {
                     objectA.setVelocity(veloA.getX(), veloA.getY());
                     objectA.setAngle((float) MatrixMath.vectorAngle(veloA));
-                    safe = newCoordinate.get(0);//MAGIC NUMBER
+                    safe = newCoordinate.get(FIRST);
                     objectA.setCoordinates(safe.getX(), safe.getY());
-                    if (!(objectA instanceof Ball)) {
+                    if (!(objectA instanceof BallData)) {
                         specialCase = true;
                     }
                 }
             }
         }
         if (!specialCase) {
-            safe = newCoordinate.get(0);//MAGIC NUMBER
+            safe = newCoordinate.get(FIRST);
             objectA.setCoordinates(safe.getX(), safe.getY());
-            safe = newCoordinate.get(1);//MAGIC NUMBER
+            safe = newCoordinate.get(SECOND);
+            objectB.setCoordinates(safe.getX(), safe.getY());
+        }
+        else{
+            newCoordinate = calculateCollisionA(objectA, objectB);
+            safe = newCoordinate.get(SECOND);
             objectB.setCoordinates(safe.getX(), safe.getY());
         }
         logger.debug("Completed collision event between "
-                + (objectA instanceof Ball ? "Ball" : "Player "
-                        + ((Player) objectA).getCharacterID())
+                + (objectA instanceof BallData ? "Ball" : "Player "
+                        + objectA.getObjectID())
                 + " and "
-                + (objectB instanceof Ball ? "Ball" : "Player "
-                        + ((Player) objectB).getCharacterID()));
+                + (objectB instanceof BallData ? "Ball" : "Player "
+                        + objectB.getObjectID()));
     }
 
     /**
      * This method allows player to increase his speed depends on the internal
-     * value of himself (charge level) And it add into 1 and multiply the
+     * value of himself (charge level) And it add into 1 (1 is to make sure the
+     * player still have the speed without any charge) and multiply the
      * defaultPlayerSpeed by the amplifying value. Finally, set speed of the
      * player by the result of the multiplication.
-     * 5
+     * 
      * @param player
      *            The player who is about to dash.
      */
-    public static void charge(Player player) {
+    public static void charge(PlayerData player) {
         int charge = player.getChargeLevel();
-        float speedIncreases = 1 + (1.5f * charge); //MAGIC NUMBER
+        float speedIncreases = 1 + (CHARGE_RATE * charge);
 
         float speed = GameSettings.getDefaultPlayerSpeed() * speedIncreases;
 

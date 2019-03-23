@@ -10,8 +10,6 @@ public class PlatformData implements RectangleDisplayData, Serializable {
 
     private int stage = 3;
 
-    private static final int MAXSTAGE = 4;
-
     private static final float xShrink = 10;
     private static final float yShrink = 10;
 
@@ -46,10 +44,6 @@ public class PlatformData implements RectangleDisplayData, Serializable {
 
     public void setStage(int stage) {
         this.stage = stage;
-    }
-
-    public static int getMaxStage() {
-        return MAXSTAGE;
     }
 
     public static float getxShrink() {

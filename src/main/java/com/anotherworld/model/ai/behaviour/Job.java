@@ -3,6 +3,9 @@ package com.anotherworld.model.ai.behaviour;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 
 import java.util.ArrayList;
 
@@ -18,10 +21,11 @@ public abstract class Job {
 
     protected JobState state;
 
-    protected Player ai;
-    protected ArrayList<Player> players;
-    protected ArrayList<Ball> balls;
+    protected PlayerData ai;
+    protected ArrayList<PlayerData> players;
+    protected ArrayList<BallData> balls;
     protected Platform platform;
+    protected GameSessionData session;
 
     /**
      * Call when need to initialise a new Job.
@@ -50,7 +54,23 @@ public abstract class Job {
      * @param balls All the balls on the boards
      * @param platform The platform
      */
-    public abstract void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform);
+    public abstract void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session);
+
+    /**
+     * Sets all te given data to the variables.
+     *
+     * @param ai The AI player who is doing the job
+     * @param players The other players on the board
+     * @param balls All the balls on the boards
+     * @param platform The platform
+     */
+    protected void setData(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
+        this.ai = ai;
+        this.players = players;
+        this.balls = balls;
+        this.platform = platform;
+        this.session = session;
+    }
 
     /**
      * Sets the Job state to SUCCESS.

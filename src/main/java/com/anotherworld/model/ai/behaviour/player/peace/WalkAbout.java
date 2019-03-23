@@ -1,14 +1,17 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour.player.peace;
 
 import static com.anotherworld.tools.maths.Maths.getRandom;
 
+import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.Ball;
-import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
+
 import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -57,12 +60,8 @@ public class WalkAbout extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
-        this.ai = ai;
-        this.players = players;
-        this.balls = balls;
-        this.platform = platform;
-
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
+        setData(ai,players,balls,platform,session);
 
         logger.trace("Starting WalkAbout Job");
 
@@ -90,10 +89,7 @@ public class WalkAbout extends Job {
      * Moves ai in the direction of the set coordinates.
      */
     private void move() {
-        Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
-        vector.normalizeThis();
-        ai.setXVelocity(vector.getX() * ai.getSpeed());
-        ai.setYVelocity(vector.getY() * ai.getSpeed());
+        BlackBoard.moveTo(ai,destination);
         logger.trace("Walking about: Moving to " + destination);
 
         if (!platform.isOnPlatform(destination)) {

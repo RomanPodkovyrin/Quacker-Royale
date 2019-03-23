@@ -1,12 +1,14 @@
 package com.anotherworld.model.ai.behaviour.player;
 
+import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.Ball;
-import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,13 +23,17 @@ public class CheckIfSaveToGo extends Job {
 
     private static Logger logger = LogManager.getLogger(CheckIfSaveToGo.class);
 
-    private ArrayList<Ball> possibleDangerBalls = new ArrayList<>();
-    private ArrayList<Ball> dangerBalls = new ArrayList<>();
-    private ArrayList<Ball> imminentDangerBalls = new ArrayList<>();
-    private Matrix aiPosition;
+    // All the balls classed on their danger levels
+    private ArrayList<BallData> possibleDangerBalls = new ArrayList<>();
+    private ArrayList<BallData> dangerBalls = new ArrayList<>();
+    private ArrayList<BallData> imminentDangerBalls = new ArrayList<>();
 
     //The allowed safe distance between the ball and the player
     private float safeDistance = 2;
+
+    public CheckIfSaveToGo(){
+
+    }
 
     @Override
     public void reset() {
@@ -35,16 +41,24 @@ public class CheckIfSaveToGo extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
-        aiPosition = ai.getCoordinates();
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         this.ai = ai;
         this.players = players;
         this.balls = balls;
         this.platform = platform;
+        this.session = session;
+
+        Matrix aiPosition = ai.getCoordinates();
 
         logger.trace("Starting the Job");
 
-        sortBallLevels();
+        if (ai.isTimeStopper() || ai.isShielded()) {
+            succeed();
+            logger.trace("AI is invulnerable move on");
+            return;
+        }
+
+        BlackBoard.sortBallLevels(ai,balls,dangerBalls,possibleDangerBalls,imminentDangerBalls);
         if (imminentDangerBalls.isEmpty()) {
             succeed();
             logger.trace("All good no bad balls");
@@ -52,22 +66,21 @@ public class CheckIfSaveToGo extends Job {
 
             // looks forward in future
             Matrix lookAhead = new Matrix(ai.getXCoordinate() + ai.getXVelocity(),ai.getYCoordinate() + ai.getYVelocity());
-            Ball firstBall = imminentDangerBalls.get(0);
+            BallData firstBall = imminentDangerBalls.get(0);
 
-            Matrix neigbhour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),aiPosition);
+            Matrix neighbour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),aiPosition);
 
-            // Already int the danger zone at the current moment
-            if (MatrixMath.distanceAB(aiPosition,neigbhour) <= ai.getRadius() + firstBall.getRadius() + safeDistance) {
-                logger.trace("Withing the danger zone need to move out");
+            // Already in the danger zone at the current moment
+            if (MatrixMath.distanceAB(aiPosition,neighbour) <= ai.getRadius() + firstBall.getRadius() + safeDistance) {
+                logger.trace("Within the danger zone need to move out");
                 succeed();
                 return;
             }
 
-
-            Matrix lookAheadNeigbhour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),lookAhead);
+            Matrix lookAheadNeighbour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),lookAhead);
 
             // In danger in the look ahead
-            if (MatrixMath.distanceAB(lookAhead,lookAheadNeigbhour) <= ai.getRadius() + firstBall.getRadius() + safeDistance + 2) {
+            if (MatrixMath.distanceAB(lookAhead,lookAheadNeighbour) <= ai.getRadius() + firstBall.getRadius() + (Math.pow(safeDistance,2))) {
                 ai.setVelocity(0,0);
                 logger.trace("AI stopped danger ahead");
                 fail();
@@ -77,47 +90,5 @@ public class CheckIfSaveToGo extends Job {
             logger.trace("Optimal distance from danger balls");
             succeed();
         }
-
-
-    }
-
-    private void sortBallLevels() {
-        //Clears old lists
-        dangerBalls.clear();
-        possibleDangerBalls.clear();
-        imminentDangerBalls.clear();
-
-        for (Ball ball: balls) {
-
-            if (ball.isDangerous()) {
-                possibleDangerBalls.add(ball);
-
-                if (canAffect(ball)) {
-                    dangerBalls.add(ball);
-
-                    if (isClose(ball)) {
-                        imminentDangerBalls.add(ball);
-
-                    }
-                }
-            }
-        }
-        logger.trace("Possibly Dangerous Balls: " + possibleDangerBalls.size());
-        logger.trace("Dangerous Balls: " + dangerBalls.size());
-        logger.trace("Imminently Dangerous Balls: " + imminentDangerBalls.size());
-
-    }
-
-    private boolean canAffect(Ball ball) {
-        Matrix ballPosition = ball.getCoordinates();
-        Matrix ballDirection = ball.getVelocity();
-        return MatrixMath.isPerpendicular(ballDirection,ballPosition,aiPosition);
-    }
-
-    private boolean isClose(Ball ball) {
-        Matrix ballPosition =  ball.getCoordinates();
-        Matrix ballDirection = ball.getVelocity();
-
-        return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),aiPosition) <= ai.getRadius() + ball.getRadius() +  4;
     }
 }

@@ -1,8 +1,6 @@
 package com.anotherworld.network;
 
 import com.anotherworld.model.logic.GameSession;
-import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
@@ -25,9 +23,11 @@ import org.apache.logging.log4j.Logger;
  *
  * @author roman
  */
+@Deprecated
 public class NetworkController {
     private GameClient client;
     private Server server;
+    
     private GameKeyListener keyListener;
 
     private ArrayList<PlayerData> allPlayers;
@@ -91,15 +91,6 @@ public class NetworkController {
     public boolean isServer() {
         return server != null;
     }
-
-    public void setKeyListener(GameKeyListener keyListener) {
-        this.keyListener = keyListener;
-    }
-
-    public void sendKeyPress() {
-
-    }
-
 
     /**
      * The Network control for the client.

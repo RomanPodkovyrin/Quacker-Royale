@@ -1,8 +1,9 @@
 package com.anotherworld.model.ai.behaviour;
 
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.Ball;
-import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,12 +57,12 @@ public class RepeatSuccess extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
         logger.debug("Starting RepeatSuccess Job");
 
         if (job.isRunning()) {
-            job.act(ai, players, balls, platform);
+            job.act(ai, players, balls, platform, session);
         }
 
         if (job.isFailure()) {

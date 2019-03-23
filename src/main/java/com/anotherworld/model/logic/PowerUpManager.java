@@ -1,13 +1,16 @@
 package com.anotherworld.model.logic;
 
 import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.model.physics.Physics;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
+import com.anotherworld.view.data.PowerUpDisplayData;
 
 import java.util.LinkedList;
 import java.util.Optional;
@@ -33,15 +36,20 @@ public class PowerUpManager {
         LinkedList<PowerUpData> output = new LinkedList<>();
         Random random = new Random();
 
-        for (long i = totalTime; i > 0; i--) {
+        for (long i = totalTime; i > 0; i-=5) {
 
             float generationProbability = (float) Math.random();
 
-            if (generationProbability < .1) { //TODO: Magic Number
-                float x  = platform.getxSize() * (random.nextFloat() * 2 - 1);
-                float y  = platform.getySize() * (random.nextFloat() * 2 - 1);
+            if (generationProbability < .7) { //TODO: Magic Number
+                float x  = platform.getXCoordinate() +
+                           (platform.getxSize() - (PlatformData.getxShrink() * (platform.getStage()-1))) *
+                           ((float) Math.random());
+                float y  = platform.getYCoordinate() +
+                           (platform.getySize() - (PlatformData.getyShrink()* (platform.getStage()-1))) *
+                           ((float) Math.random());
 
                 Matrix coordinates = new Matrix(x,y);
+
                 int choice = random.nextInt(PowerUpType.values().length);
                 PowerUpType type = PowerUpType.values()[choice];
 
@@ -58,11 +66,14 @@ public class PowerUpManager {
      * @param data the game session data which holds all the power ups.
      */
     public static void spawnPowerUp(GameSessionData data) {
-        PowerUpData currentPowerUp;
-        if ((currentPowerUp = data.getPowerUpSchedule().peek()) != null) {
-            if (currentPowerUp.getSpawnTime() == data.getTimeLeft()) {
+        PowerUpData nextPowerUp;
+        PowerUpData currentPowerUp = data.getCurrentPowerUp();
+        nextPowerUp = data.getPowerUpSchedule().peek();
+        if (nextPowerUp != null) {
+            if (nextPowerUp.getSpawnTime() == data.getTimeLeft()) {
                 data.getPowerUpSchedule().pop();
-                data.setCurrentPowerUp(Optional.of(currentPowerUp));
+                if (currentPowerUp != null) currentPowerUp.setState(ObjectState.INACTIVE);
+                data.setCurrentPowerUp(nextPowerUp);
             }
         }
     }
@@ -73,25 +84,28 @@ public class PowerUpManager {
      * @param player The player collecting the powerup
      * @param data The game session data which holds all the information.
      */
-    public static void collect(Player player, GameSessionData data) {
-        Optional<PowerUpData> pu = data.getCurrentPowerUp();
-        if (pu.isPresent()) {
-            PowerUpData powerUp = pu.get();
+    public static void collect(PlayerData player, GameSessionData data) {
+        PowerUpData powerUp = data.getCurrentPowerUp();
+        if (powerUp != null) {
             if (Physics.checkCollision(player, powerUp.getCoordinates(), powerUp.getRadius())) {
                 //Apply effects
                 switch (powerUp.getPowerUpType()) {
                     case HEAL:
+                        System.out.println(player.getObjectID() + " was healed");
                         player.setHealth(GameSettings.getDefaultPlayerHealth());
                         //TODO: Play heal sound effect
                         break;
 
                     case TIME_STOP:
+                        System.out.println(player.getObjectID() + " stopped time");
                         player.setTimeStopper(true);
                         data.setTimeStopped(true);
+                        data.setTimeStopCounter(3); // TODO: Yet another magic number
                         //TODO: Play time stop sound effect
                         break;
 
                     case SHIELD:
+                        System.out.println(player.getObjectID() + " has a shield");
                         player.setShielded(true);
                         //TODO: Play shield pickup sound effect
                         break;
@@ -100,10 +114,11 @@ public class PowerUpManager {
                         break;
                 }
 
+                powerUp.setState(ObjectState.INACTIVE);
+
                 //Delete the current power up
-                data.setCurrentPowerUp(Optional.empty());
+                data.setCurrentPowerUp(null);
             }
         }
     }
-
 }

@@ -18,12 +18,12 @@ public class Maths {
     }
 
     /**
-     * prevents form the nan error when used in ai
-     * @param a
-     * @param b
-     * @return
+     * prevents form the nan error when used in ai.
+     * @param a value a to be divided by b
+     * @param b value b which is going to divide a
+     * @return a / b
      */
-    public static float floatDivision(float a,float b ) {
+    public static float floatDivision(float a,float b) {
         if (b == 0f) {
             b = 0.0f;
             return  b;

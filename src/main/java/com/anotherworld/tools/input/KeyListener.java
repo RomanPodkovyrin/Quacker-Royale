@@ -14,7 +14,7 @@ public class KeyListener {
     private final Long window;
 
     private ArrayList<Integer> trackedKeys;
-
+    
     public KeyListener(ArrayList<Integer> trackedKeys, Long window) {
         logger.debug("Creating keylistener for window " + window);
         this.trackedKeys = trackedKeys;

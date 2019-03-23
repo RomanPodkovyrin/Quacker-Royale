@@ -2,9 +2,10 @@ package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
-import com.anotherworld.network.NetworkController;
+import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
@@ -13,11 +14,13 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 /**
  * Controller object that connects the View and the Model of the game.
  * @author Alfi S
  */
 public class GameSessionController {
+
 
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
 
@@ -25,29 +28,28 @@ public class GameSessionController {
 
     // FPS here means the number of game logic computation as second
     // desired FPS
-    private final static int    MAX_FPS = 60;
+    private final static int MAX_FPS = 60;
     // maximum number of frames which are allowed to be dropped
     private final static int MAX_FRAME_DROP = 5;
     // the time between frames
-    private final static int    FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
-
+    private final static int FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
 
 
     private GameSession session;
     private GameSettings settings;
     private View view;
     private GameKeyListener keyListener;
-    private NetworkController network;
+    private AbstractNetworkController network;
 
 
     /**
-     *
+     * Used to Start the game session.
      * @param view - The view for the current game
      * @param settings - GameSettings which represents the current game
      * @param network - Networking for the current game
-     * @throws KeyListenerNotFoundException
+     * @throws KeyListenerNotFoundException - if key listener could not be found
      */
-    public GameSessionController(View view, GameSettings settings, NetworkController network) throws KeyListenerNotFoundException {
+    public GameSessionController(View view, GameSettings settings, AbstractNetworkController network) throws KeyListenerNotFoundException {
 
         this.settings = settings;
 
@@ -56,7 +58,6 @@ public class GameSessionController {
 
         // Starting the background music and effects threads
         AudioControl.setUp();
-        AudioControl.playBackGroundMusic();
 
         // Sleeping the main thread for 1 second to register the key inputs.
         try {
@@ -72,9 +73,7 @@ public class GameSessionController {
 
         this.network = network;
 
-        if (network != null) {
-            network.setKeyListener(keyListener);
-        }
+
 
         // Starting the main loop
         mainLoop();
@@ -95,9 +94,21 @@ public class GameSessionController {
         // Time in ms to sleep
         int sleepTime = 0;
 
+        boolean keyDown = false;
+
 
 
         while (view.gameRunning() && session.isRunning()) {
+
+            // music and effect mute unmute control
+            if (keyListener.getKeyPresses().contains(Input.MUTE)) {
+                if (!keyDown) {
+                    AudioControl.muteUnmute();
+                    keyDown = true;
+                }
+            } else {
+                keyDown = false;
+            }
 
             // if client check if there are game objects to update
             network.clientControl(keyListener);
@@ -180,7 +191,8 @@ public class GameSessionController {
         view.updateGameObjects(players,
                                settings.getBalls(),
                                settings.getPlatform(),
-                               settings.getWall());
+                               settings.getWall(),
+                               settings.getGameSession());
     }
 
     // TODO need key listener which would be sending the client key preses to host

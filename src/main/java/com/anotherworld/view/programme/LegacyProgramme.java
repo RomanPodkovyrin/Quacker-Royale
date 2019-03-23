@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL46.glEnd;
 import static org.lwjgl.opengl.GL46.glVertex4f;
 
 import com.anotherworld.view.data.DisplayObject;
-import com.anotherworld.view.data.Points2d;
+import com.anotherworld.view.data.primatives.Points2d;
 
 public class LegacyProgramme extends Programme {
 

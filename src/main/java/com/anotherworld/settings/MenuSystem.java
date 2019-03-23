@@ -1,6 +1,7 @@
 package com.anotherworld.settings;
 
 import com.anotherworld.control.Controller;
+import com.anotherworld.control.exceptions.NoHostFound;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
@@ -50,7 +51,7 @@ public class MenuSystem {
         //TODO set key binding scene
         //TODO set credit scene and load from file
         this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay).enactLayout(multiplayerMenuDisplay);
-        this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay).enactLayout(clientMenuDisplay);
+        this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay).enactLayout(clientMenuDisplay);
         this.createHostLobbyMenuDisplay(multiplayerMenuDisplay).enactLayout(hostLobbyMenuDisplay);
         this.createConnectionFailedDisplay(mainMenuDisplay).enactLayout(connectionFailedDisplay);
         this.createVictoryDisplay(mainMenuDisplay).enactLayout(victoryDisplay);
@@ -183,6 +184,7 @@ public class MenuSystem {
                 try {
                     control.host();
                 } catch (Exception ex) { //TODO custom exception
+                    //TODO switch to better display
                     view.switchToDisplay(connectionFailedDisplay);
                 }
                 
@@ -204,7 +206,7 @@ public class MenuSystem {
         
     }
     
-    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay) throws KeyListenerNotFoundException {
+    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay connectionFailedDisplay) throws KeyListenerNotFoundException {
         logger.debug("Creating client menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -220,8 +222,12 @@ public class MenuSystem {
             Thread x = new Thread(() -> {
                 logger.info("Starting game");
                 view.switchToGameScene();
-                control.connect(ipAndPort.getText());
-                view.switchToDisplay(mainMenuDisplay);
+                try {
+                    control.connect(ipAndPort.getText());
+                    view.switchToDisplay(mainMenuDisplay);
+                } catch (NoHostFound e) {
+                    view.switchToDisplay(connectionFailedDisplay);
+                }
                 logger.info("Finished the game");
             });
             x.start();

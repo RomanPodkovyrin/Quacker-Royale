@@ -1,4 +1,4 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour.player.survival;
 
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Matrix;
@@ -6,6 +6,9 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.maths.Maths;
 import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
@@ -30,23 +33,19 @@ public class AvoidEdge extends Job {
     }
 
     @Override
-    public void act(Player ai, ArrayList<Player> players, ArrayList<Ball> balls, Platform platform) {
+    public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
-        this.ai = ai;
-        this.players = players;
-        this.balls = balls;
-        this.platform = platform;
         float distanceFromEdge = ai.getRadius();
         logger.debug("Running AvoidEdge");
 
         // get x y Matrix of the Platform
         Matrix platformCoordinates = new Matrix(platform.getXCoordinate(),platform.getYCoordinate());
 
-        // Generates the vector matrix from players location to teh center of the platform
+        // Generates the vector matrix from players location to the center of the platform
         Matrix vectorFromPlatformCenter = MatrixMath.pointsVector(platformCoordinates,ai.getCoordinates());
         Matrix toCenter = MatrixMath.pointsVector(ai.getCoordinates(),platformCoordinates);
-        toCenter = new Matrix(Maths.floatDivision(toCenter.getX(), Math.abs(toCenter.getX())) * ai.getSpeed(),
-                Maths.floatDivision(toCenter.getY(), Math.abs(toCenter.getY())) * ai.getSpeed());
+        toCenter = new Matrix(Maths.floatDivision(toCenter.getX(), Math.abs(toCenter.getX())),
+                Maths.floatDivision(toCenter.getY(), Math.abs(toCenter.getY())));
 
         // Checks if the AI is near the horizontal edge
         if (Math.abs(vectorFromPlatformCenter.getX()) >= platform.getXSize() - distanceFromEdge) {

@@ -1,15 +1,28 @@
 package com.anotherworld.network;
 
-import com.anotherworld.tools.datapool.*;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
-import java.io.*;
-import java.net.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * This class allows clients to get game objects from server and send the key presses to the server
+ * This class allows clients to get game objects from server and send the key presses to the server.
  *
  * @author Antons Lebedjko
  */
@@ -29,7 +42,7 @@ public class GameClient extends Thread {
     private boolean stopClient = false;
 
     /**
-     * Used to set up a connection with the server and wait until host informs that game can start
+     * Used to set up a connection with the server and wait until host informs that game can start.
      *
      * @param serverIP The ip address of the host player, to which clients should connect
      */
@@ -42,12 +55,12 @@ public class GameClient extends Thread {
     }
 
     /**
-     * A run method for the thread which receives the objects from the host player
+     * A run method for the thread which receives the objects from the host player.
      */
     public void run() {
         getInitialObjectsOfTheGame();
         sendDataToServer("Initial objects have been received. Let's start!!!!");
-        while(!stopClient) {
+        while (!stopClient) {
             try {
                 getObjectFromServer();
             } catch (IOException e) {
@@ -59,7 +72,7 @@ public class GameClient extends Thread {
     }
 
     /**
-     * Used to send strings to the host player
+     * Used to send strings to the host player.
      *
      * @param msg Any message in a String format
      */
@@ -75,7 +88,7 @@ public class GameClient extends Thread {
     }
 
     /**
-     * Used to send the key presses of the client
+     * Used to send the key presses of the client.
      *
      * @param input ArrayList of the buttons pressed on a keyboard
      */
@@ -95,7 +108,7 @@ public class GameClient extends Thread {
     }
 
     /**
-     * Waits until server informs game can be started. Also, client receives his ID
+     * Waits until server informs game can be started. Also, client receives his ID.
      */
     public void waitForGameToStart() {
         byte[] data = new byte[16];
@@ -111,17 +124,17 @@ public class GameClient extends Thread {
     }
 
     /**
-     * Method which receives all the possible objects from a host player
+     * Method which receives all the possible objects from a host player.
      */
     public void getObjectFromServer() throws ClassNotFoundException, IOException {
-        byte incomingData[] = new byte[1024];
+        byte [] incomingData = new byte[10000];
         DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
         try {
             socket.receive(incomingPacket);
         } catch (IOException e) {
             logger.error("Client socket has been closed.");
         }
-        byte data[] = incomingPacket.getData();
+        byte [] data = incomingPacket.getData();
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
         ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
         Object object = objectInputStream.readObject();
@@ -148,11 +161,11 @@ public class GameClient extends Thread {
     }
 
     /**
-     * Waits to receive initial objects of the game from a host player
+     * Waits to receive initial objects of the game from a host player.
      */
-    public void getInitialObjectsOfTheGame(){
+    public void getInitialObjectsOfTheGame() {
         try {
-            for(int i = 0; i < numberOfInitialObjects; i++){
+            for (int i = 0; i < numberOfInitialObjects; i++) {
                 getObjectFromServer();
             }
         } catch (ClassNotFoundException e) {
@@ -163,6 +176,8 @@ public class GameClient extends Thread {
     }
 
     /**
+     * BallData getter.
+     *
      * @return the BallData object
      */
     public ArrayList<BallData> getBallData() {
@@ -170,6 +185,8 @@ public class GameClient extends Thread {
     }
 
     /**
+     * PlayerData getter.
+     *
      * @return the PlayerData object
      */
     public ArrayList<PlayerData> getPlayerData() {
@@ -177,6 +194,8 @@ public class GameClient extends Thread {
     }
 
     /**
+     * GameSessionData getter.
+     *
      * @return the GameSessionData object
      */
     public GameSessionData getGameSessionData() {
@@ -184,6 +203,8 @@ public class GameClient extends Thread {
     }
 
     /**
+     * PlatformData getter.
+     *
      * @return the PlatformData object
      */
     public PlatformData getPlatformData() {
@@ -191,6 +212,8 @@ public class GameClient extends Thread {
     }
 
     /**
+     * WallData getter.
+     *
      * @return the WallData object
      */
     public WallData getWallData() {
@@ -198,6 +221,8 @@ public class GameClient extends Thread {
     }
 
     /**
+     * PlayerData getter.
+     *
      * @return the PlayerData of a client
      */
     public PlayerData getClientPlayer() {
@@ -213,7 +238,7 @@ public class GameClient extends Thread {
     }
 
     /**
-     * Stops the communication with server and closes the socket
+     * Stops the communication with server and closes the socket.
      */
     public void stopClient() {
         stopClient = true;

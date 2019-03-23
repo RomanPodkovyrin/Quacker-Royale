@@ -11,7 +11,7 @@ import com.anotherworld.tools.datapool.MovableData;
 public abstract class AbstractMovable {
     private MovableData movableData;
 
-    public AbstractMovable(MovableData data){
+    public AbstractMovable(MovableData data) {
         this.movableData = data;
 
     }

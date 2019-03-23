@@ -2,7 +2,6 @@ package com.anotherworld.tools.datapool;
 
 import java.io.Serializable;
 import java.util.LinkedList;
-import java.util.Optional;
 
 /**
  * Misc. data about the current GameSession.
@@ -16,7 +15,7 @@ public class GameSessionData implements Serializable {
     private long timeLeft;
 
     // Time stopping mechanic in the game
-    private long timeStopCounter;
+    private int timeStopCounter;
     private boolean timeStopped;
 
     // Ordered list of player rankings.
@@ -24,7 +23,7 @@ public class GameSessionData implements Serializable {
 
     // Power up elements of the game
     private LinkedList<PowerUpData> powerUpSchedule;
-    Optional<PowerUpData> currentPowerUp;
+    PowerUpData currentPowerUp;
 
     public GameSessionData(long totalGameTime) {
         this.timeLeft        = totalGameTime;
@@ -34,7 +33,7 @@ public class GameSessionData implements Serializable {
         this.timeStopped     = false;
         this.rankings        = new LinkedList<>();
         this.powerUpSchedule = new LinkedList<>();
-        this.currentPowerUp  = Optional.empty();
+        this.currentPowerUp  = null;
     }
 
     public void copyObject(GameSessionData data) {
@@ -45,7 +44,8 @@ public class GameSessionData implements Serializable {
         this.timeStopped     = data.timeStopped;
         this.rankings        = data.rankings;
         this.powerUpSchedule = data.powerUpSchedule;
-        this.currentPowerUp  = data.currentPowerUp;
+        if (data.currentPowerUp != null)
+            this.currentPowerUp.copyObject(data.currentPowerUp);
     }
 
     public long getTimeLeft() {
@@ -68,8 +68,12 @@ public class GameSessionData implements Serializable {
         this.timeLeft--;
     }
 
-    public long getTimeStopCounter() {
+    public int getTimeStopCounter() {
         return this.timeStopCounter;
+    }
+
+    public void setTimeStopCounter(int timeStopCounter) {
+        this.timeStopCounter = timeStopCounter;
     }
 
     public void decrementTimeStopCounter() {
@@ -96,11 +100,11 @@ public class GameSessionData implements Serializable {
         this.powerUpSchedule = schedule;
     }
 
-    public Optional<PowerUpData> getCurrentPowerUp() {
+    public PowerUpData getCurrentPowerUp() {
         return this.currentPowerUp;
     }
 
-    public void setCurrentPowerUp(Optional<PowerUpData> powerUp) {
+    public void setCurrentPowerUp(PowerUpData powerUp) {
         this.currentPowerUp = powerUp;
     }
 }

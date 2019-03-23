@@ -20,7 +20,7 @@ public class AITest {
 //        ArrayList<Ball> b = new ArrayList<>(Arrays.asList(new Ball(3,3,ObjectState.IDLE),
 //                new Ball(4,2,ObjectState.IDLE),
 //                new Ball(1,1,ObjectState.IDLE)));
-//        //System.out.println(aiControl.sortObject(b).toString());
+//        //System.out.println(aiControl.sortBalls(b).toString());
 //        System.out.println(b.toString());
     }
 }
