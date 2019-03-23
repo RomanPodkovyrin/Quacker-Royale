@@ -23,6 +23,7 @@ public class LobbyClient {
     private String myID;
     private int port;
     private static Logger logger = LogManager.getLogger(LobbyClient.class);
+    private boolean conectedToHost = false;
 
     /**
      * Used to set up a connection with the lobby server.
@@ -44,10 +45,11 @@ public class LobbyClient {
      */
     public void sendMyIp() throws IOException {
         client = new Socket(serverIp, port);
-        System.out.println("Just connected to " + client.getRemoteSocketAddress());
+        logger.trace("Just connected to " + client.getRemoteSocketAddress());
         OutputStream outToServer = client.getOutputStream();
         DataOutputStream out = new DataOutputStream(outToServer);
         out.writeUTF("Hello from " + client.getLocalSocketAddress());
+        conectedToHost = true;
     }
 
     /**
@@ -58,7 +60,30 @@ public class LobbyClient {
         InputStream inFromServer = client.getInputStream();
         DataInputStream in = new DataInputStream(inFromServer);
         myID = in.readUTF();
+        if (myID.equals("Host has cancelled the lobby")) {
+            //cancel game
+        }
         logger.trace("My ID is now: " + myID);
         client.close();
+    }
+
+    /**
+     * Cancels connection with the lobby host.
+     */
+    public void cancelConnection() throws IOException {
+        if (conectedToHost) {
+            OutputStream outToServer = client.getOutputStream();
+            DataOutputStream out = new DataOutputStream(outToServer);
+            out.writeUTF("cancel connection");
+            client.close();
+            logger.trace("lobby client has cancelled the connection with lobby host. Closed the socket");
+        } else {
+            client = new Socket(serverIp, port);
+            OutputStream outToServer = client.getOutputStream();
+            DataOutputStream out = new DataOutputStream(outToServer);
+            out.writeUTF("cancel connection");
+            client.close();
+            logger.trace("lobby client has cancelled the connection with lobby host. Closed the socket");
+        }
     }
 }

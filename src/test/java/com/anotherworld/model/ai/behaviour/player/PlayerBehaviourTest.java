@@ -47,7 +47,7 @@ public class PlayerBehaviourTest {
 
         // Create balls
         balls.clear();
-        balls.add(new BallData("ball " ,false,80,10, ObjectState.IDLE,1f,3.0f));
+        balls.add(new BallData("ball " ,false,80,40, ObjectState.IDLE,1f,3.0f));
 
         session = new GameSessionData(10);
     }
@@ -268,7 +268,7 @@ public class PlayerBehaviourTest {
     }
 
     @Test
-    public void saveToGoTest() {
+    public void checkIfSaveToGoTest() {
         float delta = 0.00001f;
 
         // Stays stationary because ball is neutral

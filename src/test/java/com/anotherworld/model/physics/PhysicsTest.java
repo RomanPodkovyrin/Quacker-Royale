@@ -1,7 +1,6 @@
 package com.anotherworld.model.physics;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.logic.Wall;
@@ -14,8 +13,6 @@ import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
 
-import java.awt.List;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Test;
@@ -25,6 +22,7 @@ public class PhysicsTest {
     @Test
     public void theCoordinateOfAnobjectShouldUpdate() {
         BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
+
         Matrix coord = a.getCoordinates();
         Physics.move(a);
         assertEquals(coord.getX(), a.getXCoordinate(), 0.0f);
@@ -86,7 +84,6 @@ public class PhysicsTest {
         xVelocity = -Math.abs(xVelocity);
         assertEquals(expected, a.getXCoordinate(), 0.0f);
         assertEquals(xVelocity, a.getXVelocity(), 0.0f);
-
     }
 
     @Test
@@ -122,8 +119,9 @@ public class PhysicsTest {
     }
 
     @Test
-    public void MovingCoordinationOfPlayersToSafeCoordinates() {
+    public void movingCoordinationOfPlayersToSafeCoordinates() {
         BallData a = new BallData(null, false, 91.1f, 52.3f, null, 12.1f, 3.0f);
+
 
         PlayerData steve = new PlayerData("Steve", 90, 91.1f, 52.3f,
                 ObjectState.IDLE, 0f, 3.0f);
@@ -162,6 +160,10 @@ public class PhysicsTest {
         assertEquals(expected.get(1).getX(), a.getXCoordinate(), 0.0f);
         assertEquals(expected.get(1).getY(), a.getYCoordinate(), 0.0f);
         // ball VS dashing player
+
+        PlayerData c = new PlayerData("Steve", 90, 91.1f, 52.3f,
+                ObjectState.DASHING, 0f, 3.0f);
+
         steven.setCoordinates(a.getXCoordinate(), a.getYCoordinate());
         expected = Physics.calculateCollision(a, steven);
         assertEquals(true,Physics.checkCollision(a, steven));

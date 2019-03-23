@@ -23,6 +23,13 @@ public class PowerUpData implements Serializable, PowerUpDisplayData {
         this.spawnTime   = spawnTime;
     }
 
+    public void copyObject(PowerUpData data) {
+        this.coordinates = data.getCoordinates();
+        this.powerUpType = data.getPowerUpType();
+        this.spawnTime = data.getSpawnTime();
+        this.state = data.getState();
+    }
+
     public Matrix getCoordinates() { return this.coordinates; }
     public float  getXCoordinate() { return this.coordinates.getX(); }
     public float  getYCoordinate() { return this.coordinates.getY(); }

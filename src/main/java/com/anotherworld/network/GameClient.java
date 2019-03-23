@@ -127,7 +127,7 @@ public class GameClient extends Thread {
      * Method which receives all the possible objects from a host player.
      */
     public void getObjectFromServer() throws ClassNotFoundException, IOException {
-        byte [] incomingData = new byte[1024];
+        byte [] incomingData = new byte[10000];
         DatagramPacket incomingPacket = new DatagramPacket(incomingData, incomingData.length);
         try {
             socket.receive(incomingPacket);
