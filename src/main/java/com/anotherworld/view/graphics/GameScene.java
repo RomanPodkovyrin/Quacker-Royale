@@ -18,8 +18,8 @@ public class GameScene extends Scene {
      */
     public GameScene() {
         super();
-        camera = new Static2dCamera(80f, 45f, 1.6f, 0.9f);
-        this.displays.add(new GameDisplay(-1f, -1f, 2f, 2f, camera));
+        camera = new Static2dCamera(80f, 45f, 160f, 90f);
+        this.addDisplay(new GameDisplay(-1f, -1f, 2f, 2f, camera));
     }
     
     /**

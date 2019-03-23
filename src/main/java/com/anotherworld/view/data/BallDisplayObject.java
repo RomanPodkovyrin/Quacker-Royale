@@ -2,8 +2,9 @@ package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
 
-import com.anotherworld.view.BallSpriteSheet;
-import com.anotherworld.view.Programme;
+import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.graphics.spritesheet.BallSpriteSheet;
+import com.anotherworld.view.programme.Programme;
 
 /**
  * Manages displaying a ball object.

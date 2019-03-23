@@ -1,4 +1,4 @@
-package com.anotherworld.view.graphics;
+package com.anotherworld.view.data.primatives;
 
 /**
  * The error generated when an illegal matrix operation is attempted.

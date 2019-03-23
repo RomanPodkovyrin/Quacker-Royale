@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.graphics.spritesheet;
 
 public class SpriteSheet {
     
@@ -18,6 +18,10 @@ public class SpriteSheet {
     
     public int getTextureBuffer() {
         return 0;
+    }
+
+    public boolean shouldBeTransformed() {
+        return true;
     }
     
 }

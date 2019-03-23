@@ -6,7 +6,7 @@ import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
-import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.GameKeyListener;
 import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,7 +48,7 @@ public abstract class AbstractNetworkController {
     /**
      * The Network control for the client.
      */
-    public abstract void clientControl(KeyListener keyListener);
+    public abstract void clientControl(GameKeyListener keyListener);
 
     /**
      * Stops all the threads for game networking.

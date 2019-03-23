@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.viewevent;
 
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Jake Stewart
  *
  */
-class UpdateDisplayObjects implements ViewEvent {
+public class UpdateDisplayObjects implements ViewEvent {
     
     private final ArrayList<? extends PlayerDisplayData> playerObjects;
     private final ArrayList<? extends BallDisplayData> ballObjects;
