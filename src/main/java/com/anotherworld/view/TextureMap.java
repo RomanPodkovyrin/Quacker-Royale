@@ -35,7 +35,7 @@ public class TextureMap {
         textureBuffers = new TextureBuffer[3];
         textureBuffers[PLAYER_TEXTURE_BUFFER] = new TextureBuffer(location + "miniDuck.png", 4, 5);
         textureBuffers[BALL_TEXTURE_BUFFER] = new TextureBuffer(location + "NeutralBall/NeutralBall0.png", 1, 1);
-        textureBuffers[TEXT_TEXTURE_BUFFER] = new TextureBuffer(location + "i_guess_this_is_a_font.png", 16, 16);
+        textureBuffers[TEXT_TEXTURE_BUFFER] = new TextureBuffer(location + "tom_font.png", 32, 4);
     }
     
     /**
@@ -75,6 +75,10 @@ public class TextureMap {
 
     public static Matrix getDimensions(int tb) {
         return new Matrix(textureBuffers[tb].getXNumOfTextures(), textureBuffers[tb].getYNumOfTextures());
+    }
+
+    public static Matrix getSpriteDimensions(int tb) {
+        return new Matrix(textureBuffers[tb].getWidth() / textureBuffers[tb].getXNumOfTextures(), textureBuffers[tb].getHeight() / textureBuffers[tb].getYNumOfTextures());
     }
     
 }

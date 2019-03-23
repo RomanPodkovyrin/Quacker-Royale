@@ -2,6 +2,7 @@ package com.anotherworld.settings;
 
 import com.anotherworld.control.Controller;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
+import com.anotherworld.view.FixedSpaceLayout;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.Supplier;
 import com.anotherworld.view.data.TextListData;
@@ -63,9 +64,10 @@ public class MenuSystem {
     private GraphicsDisplay createMainMenu(Scene victoryScene, Scene creditScene, Scene settingsScene, Scene multiplayerMenuScene) {
         logger.debug("Creating main menu display");
         
-        ArrayList<ButtonData> buttons = new ArrayList<>();
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
         
         ButtonData label1 = new ButtonData("Quacker Royal");
+        layout.addButton(label1);
 
         ButtonData singlePlayer = new ButtonData("SinglePlayer");
         singlePlayer.setOnAction(() -> {
@@ -80,25 +82,27 @@ public class MenuSystem {
             view.switchToGameScene();
             x.start();
         });
-        buttons.add(singlePlayer);
+        layout.addButton(singlePlayer);
 
         ButtonData multiPlayer = new ButtonData("Multiplayer");
         multiPlayer.setOnAction(() -> view.switchToScene(multiplayerMenuScene));
-        buttons.add(multiPlayer);
+        layout.addButton(multiPlayer);
         
         ButtonData settings = new ButtonData("Settings");
         settings.setOnAction(() -> view.switchToScene(settingsScene));
-        buttons.add(settings);
+        layout.addButton(settings);
 
         ButtonData credits = new ButtonData("Credits");
         credits.setOnAction(() -> view.switchToScene(creditScene));
-        buttons.add(credits);
+        layout.addButton(credits);
         
         ButtonData quit = new ButtonData("Exit");
         quit.setOnAction(() -> view.close());
+        layout.addButton(quit);
         
         GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
-        layoutButtons(graphicsDisplay, buttons, label1, quit);
+        
+        layout.enactLayout(graphicsDisplay);
 
         return (graphicsDisplay);
 
@@ -107,69 +111,73 @@ public class MenuSystem {
     private GraphicsDisplay createSettingMenu(Scene mainMenuScene, Scene audioSettingsScene, Scene videoSettingsScene, Scene keyBindingScene) {
         logger.debug("Creating settings menu display");
         
-        ArrayList<ButtonData> buttons = new ArrayList<>();
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
         
         ButtonData settings = new ButtonData("Settings");
+        layout.addButton(settings);
 
         ButtonData audioSettings = new ButtonData("Audio Settings");
         audioSettings.setOnAction(() -> view.switchToScene(audioSettingsScene));
-        buttons.add(audioSettings);
+        layout.addButton(audioSettings);
 
         ButtonData videoSettings = new ButtonData("Video Settings");
         videoSettings.setOnAction(() -> view.switchToScene(videoSettingsScene));
-        buttons.add(videoSettings);
+        layout.addButton(videoSettings);
 
         ButtonData keyBindings = new ButtonData("Key Bindings");
         keyBindings.setOnAction(() -> view.switchToScene(keyBindingScene));
-        buttons.add(keyBindings);
+        layout.addButton(keyBindings);
 
         ButtonData backToMenu = new ButtonData("Menu");
         backToMenu.setOnAction(() -> view.switchToScene(mainMenuScene));
+        layout.addButton(backToMenu);
         
         GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
         
-        layoutButtons(graphicsDisplay, buttons, settings, backToMenu);
+        layout.enactLayout(graphicsDisplay);
         
         return graphicsDisplay;
     }
     
     private GraphicsDisplay createAudioSettings(Scene settingsMenuScene) {
         logger.debug("Creating audio settings menu display");
-        
-        ArrayList<ButtonData> buttons = new ArrayList<>();
+
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
         
         ButtonData audioTitle = new ButtonData("Audio Settings");
+        layout.addButton(audioTitle);
 
         ButtonData musicButton = new ButtonData("Music: On");
         musicButton.setOnAction(() -> {
             logger.info("Music button pressed");
-            musicButton.setText("Music: " + (musicButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
+            musicButton.setText("MUSIC: " + (musicButton.getText().split(" ")[1].equals("ON") ? "OFF" : "ON"));
             if (musicButton.getText().split(" ")[1].equals("On")) {
                 Controller.musicSetting(true);
             } else {
                 Controller.musicSetting(false);
             }
         });
-        buttons.add(musicButton);
+        layout.addButton(musicButton);
 
         ButtonData sfxButton = new ButtonData("SFX: On");
         sfxButton.setOnAction(() -> {
-            sfxButton.setText("SFX: " + (sfxButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
-            if (sfxButton.getText().split(" ")[1].equals("On")) {
+            sfxButton.setText("SFX: " + (sfxButton.getText().split(" ")[1].equals("ON") ? "OFF" : "ON"));
+            if (sfxButton.getText().split(" ")[1].equals("ON")) {
                 Controller.sfxSetting(true);
             } else {
                 Controller.sfxSetting(false);
             }
         });
-        buttons.add(sfxButton);
+        layout.addButton(sfxButton);
 
         ButtonData backToSettings = new ButtonData("Settings");
         backToSettings.setOnAction(() -> view.switchToScene(settingsMenuScene));
+        layout.addButton(backToSettings);
         
         
         GraphicsDisplay audioSettings = new GraphicsDisplay();
         
-        layoutButtons(audioSettings, buttons, audioTitle, backToSettings);
+        layout.enactLayout(audioSettings);
         
         return audioSettings;
     }
@@ -400,31 +408,6 @@ public class MenuSystem {
         graphicsDisplay5.addButton(backToMulti);
 
         return (graphicsDisplay5);
-    }
-    
-    private void layoutButtons(GraphicsDisplay display, ArrayList<ButtonData> buttons, ButtonData title, ButtonData returnButton) {
-        buttons.add(0, title);
-        buttons.add(returnButton);
-        layoutButtons(display, buttons, 0, 0, 2, 2, 0.1f);
-    }
-    
-    private void layoutButtons(GraphicsDisplay display, ArrayList<ButtonData> buttons, float x, float y, float width, float height, float buttonHeight) {
-        float ySpacing = 2f / (buttons.size() + 1);
-        Supplier<Float> maxWidth = () -> {
-            float max = 0f;
-            for (ButtonData button : buttons) {
-                max = Math.max(button.getText().length() * buttonHeight, max);
-            }
-            return (max / 2) + buttonHeight;
-        };
-        
-        for (int i = 0; i < buttons.size(); i++) {
-            ButtonData button = buttons.get(i);
-            button.setHeight(buttonHeight);
-            button.setWidth(maxWidth);
-            button.setPosition(x, y + (-height / 2) + ySpacing * (i + 1));
-            display.addButton(button);
-        }
     }
     
     public static void main(String[] args) {

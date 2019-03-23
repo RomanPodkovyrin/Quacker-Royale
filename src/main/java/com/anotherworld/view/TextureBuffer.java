@@ -56,8 +56,8 @@ public class TextureBuffer {
         IntBuffer y = BufferUtils.createIntBuffer(1);
         IntBuffer comp = BufferUtils.createIntBuffer(1);
         pixels = stbi_load(location, x, y, comp, STBI_rgb_alpha);
-        height = y.get();
         width = x.get();
+        height = y.get();
         this.xNumOfTextures = xNumOfTextures;
         this.yNumOfTextures = yNumOfTextures;
         this.numOfChannels = comp.get();
@@ -76,7 +76,7 @@ public class TextureBuffer {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         
         glTexImage2D(GL_TEXTURE_2D, 0, this.getEncoding(), this.getWidth(), this.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, this.getPixels());
         
