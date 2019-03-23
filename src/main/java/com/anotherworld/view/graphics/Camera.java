@@ -55,7 +55,6 @@ public abstract class Camera {
 
     /**
      * Applies matrix transformations using the camera's position so it is centred on the screen.
-     * @param camera The camera to use for display
      */
     public Matrix2d transform() {
         Matrix2d transformation = (Matrix2d.homScale3d(2 / this.getWidth(), -2 / this.getHeight(), 0));
@@ -63,6 +62,11 @@ public abstract class Camera {
         return transformation;
     }
     
+    /**
+     * Returns a transformation that scales the objects on screen based on their distance to the camera.
+     * @param depth the depth of the camera
+     * @return the transformation
+     */
     public Matrix2d cameraProjectionf(float depth) {
         Matrix2d projection = Matrix2d.genIdentity(4);
         projection.setValue(3, 2, 1 / depth);

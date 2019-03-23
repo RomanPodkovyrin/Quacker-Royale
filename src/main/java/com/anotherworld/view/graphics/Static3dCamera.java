@@ -11,7 +11,6 @@ public class Static3dCamera extends Static2dCamera {
 
     /**
      * Applies matrix transformations using the camera's position so it is centred on the screen.
-     * @param camera The camera to use for display
      * */
     @Override
     public Matrix2d transform() {

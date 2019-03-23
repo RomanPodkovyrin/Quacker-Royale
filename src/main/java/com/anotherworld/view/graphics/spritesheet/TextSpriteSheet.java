@@ -30,6 +30,12 @@ public class TextSpriteSheet extends SpriteSheet {
         return false;
     }
     
+    /**
+     * Returns a set of points that define how text objects should be made to match with textures.
+     * @param text The text to be drawn
+     * @param characterSize The text height
+     * @return The points to draw
+     */
     public static Points2d generateLetterPoints(String text, float characterSize) {
         Points2d points = new Points2d(4, text.length() * 4);
         Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
@@ -52,6 +58,11 @@ public class TextSpriteSheet extends SpriteSheet {
         return points;
     }
     
+    /**
+     * Returns a buffer containing the texture co-ordinates need to map the text to the sprite sheet.
+     * @param text The text to draw
+     * @return the float buffer containing the points
+     */
     public static FloatBuffer generateTexture(String text) {
         text = text.toUpperCase();
         FloatBuffer buffer = BufferUtils.createFloatBuffer(text.length() * 8);

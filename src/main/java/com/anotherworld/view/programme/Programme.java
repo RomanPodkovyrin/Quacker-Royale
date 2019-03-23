@@ -6,7 +6,6 @@ import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
 import com.anotherworld.view.data.DisplayObject;
-import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.data.primatives.Matrix2d;
 import com.anotherworld.view.graphics.Camera;
 import com.anotherworld.view.input.MouseState;
@@ -30,6 +29,11 @@ public abstract class Programme {
     
     private boolean mouseDown;
     
+    /**
+     * Creates a programme that will draw to the selected window.
+     * @param window The window to draw to
+     * @throws ProgrammeUnavailableException If the programme couldn't be created for rendering
+     */
     public Programme(long window) throws ProgrammeUnavailableException {
         matrixStack = new Stack<>();
         this.mouseDown = false;
@@ -247,6 +251,10 @@ public abstract class Programme {
         return new MouseState(x, y, pressed);
     }
 
-    public abstract void updateBuffers(DisplayObject DisplayObject);
+    /**
+     * Updates the stored buffers for the given object.
+     * @param displayObject the object to update
+     */
+    public abstract void updateBuffers(DisplayObject displayObject);
     
 }

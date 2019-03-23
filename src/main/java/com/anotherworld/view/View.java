@@ -21,7 +21,6 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
-import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.BallDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
@@ -229,23 +228,18 @@ public class View implements Runnable {
         }
         attemptDestroy(programme);
     }
-
-    public Programme getProgramme() throws KeyListenerNotFoundException {
-        logger.info("Request for key listener objected");
-        try {
-            if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
-                return this.programme;
-            }
-        } catch (InterruptedException e) {
-            logger.catching(e);
-        }
-        throw new KeyListenerNotFoundException("Timeout of 10 seconds, check if window was initialized");
-    }
-
+    
+    /**
+     * Switches from the current scene to the game scene.
+     */
     public void switchToGameScene() {
         this.switchToScene(new GameScene());
     }
 
+    /**
+     * Switches from the current scene to the selected scene.
+     * @param scene the scene to switch to
+     */
     public void switchToScene(Scene scene) {
         synchronized (eventQueue) {
             System.out.println("Scene switch queued");
@@ -255,6 +249,7 @@ public class View implements Runnable {
 
     private void attemptDestroy() {
         logger.info("Closing window");
+        keyListenerLatch = new CountDownLatch(1);
         if (currentScene != null) {
             currentScene.destoryObjects();
         }
@@ -264,6 +259,7 @@ public class View implements Runnable {
 
     private void attemptDestroy(Programme programme) {
         logger.info("Closing window");
+        keyListenerLatch = new CountDownLatch(1);
         // TODO delete all object for all scenes
         currentScene.destoryObjects();
         programme.destroy();
@@ -272,7 +268,7 @@ public class View implements Runnable {
     }
 
     private void completeEvent(ViewEvent event) {
-        System.out.println(event.getClass());
+        logger.debug("Completing view event of type " + event.getClass());
         if (event.getClass().equals(UpdateDisplayObjects.class) && currentScene.getClass().equals(GameScene.class)) {
             ArrayList<DisplayObject> disObj = new ArrayList<>();
             UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects) event);
@@ -309,13 +305,23 @@ public class View implements Runnable {
         running = false;
     }
 
+    /**
+     * Adds an event to the queue that changes the window title.
+     * @param title The new title for the window
+     */
     public void setTitle(String title) {
         synchronized (eventQueue) {
             eventQueue.add(new ChangeWindowTitle(title));
         }
     }
 
-    public StringKeyListener getAllKeyListener(String start) throws KeyListenerNotFoundException {
+    /**
+     * Returns a key listener that collects text field input.
+     * @param start The initial text field text
+     * @return the key listener
+     * @throws KeyListenerNotFoundException If a keylistener couldn't be created for the window
+     */
+    public StringKeyListener getStringKeyListener(String start) throws KeyListenerNotFoundException {
         logger.info("Request for key listener objected");
         try {
             if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {

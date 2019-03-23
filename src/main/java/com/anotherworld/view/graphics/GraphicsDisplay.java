@@ -2,7 +2,6 @@ package com.anotherworld.view.graphics;
 
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.TextDisplayObject;
-import com.anotherworld.view.data.TextListData;
 import com.anotherworld.view.input.Button;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.Clickable;
@@ -65,8 +64,8 @@ public class GraphicsDisplay {
 
     /**
      * Returns draws the objects it contains to the screen.
-     * @param programme
-     * @param mouseState
+     * @param programme The programme to use for rendering
+     * @param mouseState The current position of the cursor and if the left button is pressed
      */
     public void draw(Programme programme, MouseState mouseState) {
         synchronized (buttonsToAdd) {
@@ -122,6 +121,10 @@ public class GraphicsDisplay {
         return width;
     }
 
+    /**
+     * Queues a button to be added to the display when the display is drawn.
+     * @param object the button to add
+     */
     public void addButton(ButtonData object) {
         synchronized (buttonsToAdd) {
             buttonsToAdd.add(object);

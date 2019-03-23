@@ -5,14 +5,13 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_COMMA;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_BRACKET;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-import static org.lwjgl.glfw.GLFW.glfwGetKey;
+
+import com.anotherworld.tools.input.KeyListener;
 
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.anotherworld.tools.input.KeyListener;
 
 public class StringKeyListener {
 
@@ -26,6 +25,11 @@ public class StringKeyListener {
 
     private boolean[] keyDown;
 
+    /**
+     * Creates a key listener that collects the key input into a string.
+     * @param window the window to collect input from
+     * @param currentString the initial string
+     */
     public StringKeyListener(Long window, String currentString) {
         logger.info("Creating keylistener for window " + window);
         trackedKeys = new ArrayList<>();
@@ -40,6 +44,10 @@ public class StringKeyListener {
         keyDown = new boolean[264];
     }
 
+    /**
+     * Returns the string entered into the text field.
+     * @return the current string
+     */
     public String getCurrentString() {
         ArrayList<Integer> downKeys = keyListener.getPressedKeys();
         for (Integer key : trackedKeys) {

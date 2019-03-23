@@ -5,7 +5,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.glfw.GLFW.glfwGetKey;
 
 import java.util.ArrayList;
 
@@ -24,6 +23,10 @@ public class GameKeyListener {
     private final int right = GLFW_KEY_RIGHT;
     private final int charge = GLFW_KEY_SPACE;
 
+    /**
+     * Creates a game key listener for the parsed window.
+     * @param window the window to check for keyboard input
+     */
     public GameKeyListener(Long window) {
         logger.debug("Creating GameKeyListener for window " + window);
         ArrayList<Integer> trackedKeys = new ArrayList<>();
@@ -35,6 +38,10 @@ public class GameKeyListener {
         keyListener = new KeyListener(trackedKeys, window);
     }
 
+    /**
+     * Returns an array list of keys that are currently pressed.
+     * @return the pressed keys
+     */
     public ArrayList<Input> getKeyPresses() {
         ArrayList<Input> keyPresses = new ArrayList<>();
         ArrayList<Integer> downKeys = keyListener.getPressedKeys();

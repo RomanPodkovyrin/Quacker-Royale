@@ -232,7 +232,7 @@ public class MenuSystem {
         ButtonData client = new ButtonData("Please type in the IP and Port of the host and press connect");
         layout.addButton(client);
 
-        TextFieldData ipAndPort = new TextFieldData("localhost", view.getAllKeyListener("LOCALHOST"));
+        TextFieldData ipAndPort = new TextFieldData("localhost", view.getStringKeyListener("LOCALHOST"));
         layout.addButton(ipAndPort);
 
         ButtonData buttonConnect = new ButtonData("Connect");

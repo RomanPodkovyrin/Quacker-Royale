@@ -12,6 +12,11 @@ public class Button extends RectangleDisplayObject implements Clickable {
 
     private List<ButtonListener> listeners;
 
+    /**
+     * Creates a new button.
+     * @param programme The programme to use for rendering
+     * @param buttonData The data to use for rendering
+     */
     public Button(Programme programme, ButtonData buttonData) {
         super(programme, buttonData);
         this.listeners = new ArrayList<>();
@@ -29,7 +34,7 @@ public class Button extends RectangleDisplayObject implements Clickable {
 
     @Override
     public void release() {
-        
+        //TODO implement this
     }
 
     public void addButtonListener(ButtonListener listener) {

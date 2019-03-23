@@ -25,13 +25,22 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     private float textB;
     private Optional<ButtonListener> action;
     
+    /**
+     * Creates the button data.
+     * @param text The text for the button
+     */
     public ButtonData(String text) {
         this(() -> {
             return text;
         }, false);
     }
     
-    public ButtonData(Supplier<String> text, boolean transparentBackground){
+    /**
+     * Creates button data.
+     * @param text The supplier of text for the button
+     * @param transparentBackground If the button should have a transparent background
+     */
+    public ButtonData(Supplier<String> text, boolean transparentBackground) {
         this.textR = 1;
         this.textG = 1;
         this.textB = 1;
@@ -43,18 +52,33 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
         action = Optional.empty();
     }
     
+    /**
+     * Performs the action if set for the button
+     */
     public void preformAction() {
         if (action.isPresent()) {
             action.get().clicked();
         }
     }
     
+    /**
+     * Sets the background colour for the button.
+     * @param r the red value
+     * @param g the green value
+     * @param b the blue value
+     */
     public void setBackgroundColour(float r, float g, float b) {
         backgroundR = r;
         backgroundG = g;
         backgroundB = b;
     }
     
+    /**
+     * Sets the text colour for the button.
+     * @param r the red value
+     * @param g the green value
+     * @param b the blue value
+     */
     public void setTextColour(float r, float g, float b) {
         textR = r;
         textG = g;
@@ -78,6 +102,10 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
         this.y = () -> y;
     }
     
+    /**
+     * Sets the text for the string.
+     * @param text the new text
+     */
     public void setText(String text) {
         this.text = () -> {
             return text;

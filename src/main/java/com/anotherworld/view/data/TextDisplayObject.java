@@ -15,6 +15,11 @@ public class TextDisplayObject extends DisplayObject {
     
     private String currentText = "";
     
+    /**
+     * Creates an object that displays the text given by the text display data.
+     * @param programme The programme to use for drawing
+     * @param data The text data to display
+     */
     public TextDisplayObject(Programme programme, TextDisplayData data) {
         super(new TextSpriteSheet(), programme, TextSpriteSheet.generateLetterPoints(data.getText(), data.getHeight() / 2), GL_QUADS, data.getTextR(), data.getTextG(), data.getTextB());
         this.data = data;

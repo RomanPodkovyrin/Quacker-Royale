@@ -12,7 +12,6 @@ import static org.lwjgl.opengl.GL46.glTranslatef;
 import static org.lwjgl.opengl.GL46.glVertex4f;
 
 import com.anotherworld.view.data.DisplayObject;
-import com.anotherworld.view.data.TextDisplayObject;
 
 import java.nio.FloatBuffer;
 

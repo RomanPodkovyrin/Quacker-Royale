@@ -19,7 +19,11 @@ public class TextListData {
     private float textB = 1;
     private final ArrayList<Supplier<String>> textSources;
 
-    public TextListData (int size) {
+    /**
+     * Creates a list of buttons to display related data like players in a lobby.
+     * @param size The number of buttons
+     */
+    public TextListData(int size) {
         textSources = new ArrayList<>();
         for (int i = 0; i < size; i++) {
             textSources.add(i, () -> {
@@ -28,9 +32,14 @@ public class TextListData {
         }
     }
     
+    /**
+     * Returns an array list containing the button data for the selected buttons.
+     * @return an array list of the buttons
+     */
     public ArrayList<ButtonData> getButtons() {
         ArrayList<ButtonData> buttons = new ArrayList<>();
         int i = 0;
+        //TODO add methods that allow the buttons to set which one is selected like radio buttons
         for (Supplier<String> ts : textSources) {
             ButtonData button = new ButtonData(ts.get());
             button.setWidth(width);
@@ -50,12 +59,24 @@ public class TextListData {
         textSources.add(index, ts);
     }
     
+    /**
+     * Sets the background colour for the buttons.
+     * @param r the red value
+     * @param g the green value
+     * @param b the blue value
+     */
     public void setBackgroundColour(float r, float g, float b) {
         backgroundR = r;
         backgroundG = g;
         backgroundB = b;
     }
     
+    /**
+     * Sets the text colour for the buttons.
+     * @param r the red value
+     * @param g the green value
+     * @param b the blue value
+     */
     public void setTextColour(float r, float g, float b) {
         textR = r;
         textG = g;

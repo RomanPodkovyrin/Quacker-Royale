@@ -3,7 +3,6 @@ package com.anotherworld.view.programme;
 import static org.lwjgl.opengl.GL46.*;
 
 import com.anotherworld.view.data.DisplayObject;
-import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.data.TexturedDisplayObjectBuffers;
 import com.anotherworld.view.texture.Shader;
 import com.anotherworld.view.texture.TextureMap;
