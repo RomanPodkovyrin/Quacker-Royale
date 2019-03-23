@@ -48,6 +48,9 @@ public class Controller {
     private int defaultMultiPlayerBalls;
     private int defaultNumberClients;
 
+    // Networking
+    private LobbyClient lobbyClient ;
+    boolean waitingForObjects = true;
 
     /**
      * The main should only be used for testing.
@@ -194,6 +197,23 @@ public class Controller {
         startTheGame(settings,network);
     }
 
+    public boolean clientCancel() {
+        if (lobbyClient != null) {
+            try {
+                lobbyClient.cancelConnection();
+            } catch (IOException e) {
+                //TODO dont like it change it
+                e.printStackTrace();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean getServerStarted() {
+        return !waitingForObjects;
+    }
+
     /**
      * Connects to the game lobby on the give ip address.
      *
@@ -201,7 +221,7 @@ public class Controller {
      */
     public void connect(String serverIP) throws NoHostFound, ConnectionClosed {
         logger.trace("Starting the Lobby client");
-        LobbyClient lobbyClient = new LobbyClient(serverIP);
+        lobbyClient = new LobbyClient(serverIP);
         try {
             lobbyClient.sendMyIp();
         } catch (ConnectException e) {
@@ -232,7 +252,7 @@ public class Controller {
         }
 
         // tells whether client got all the objects needed to start the game
-        boolean waitingForObjects = true;
+        waitingForObjects = true;
 
         ArrayList<PlayerData> allPlayers = null;
         ArrayList<BallData> allBalls = null;
