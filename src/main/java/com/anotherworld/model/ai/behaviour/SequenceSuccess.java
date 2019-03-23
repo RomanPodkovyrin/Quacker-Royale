@@ -1,13 +1,11 @@
 package com.anotherworld.model.ai.behaviour;
 
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.Ball;
-import com.anotherworld.model.movable.Player;
-import java.util.ArrayList;
-
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

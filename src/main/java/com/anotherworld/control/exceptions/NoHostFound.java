@@ -5,7 +5,7 @@ public class NoHostFound extends Exception {
 
     }
 
-    public String toString(){
+    public String toString() {
         return "Client could not find and connect to Host";
     }
 }
