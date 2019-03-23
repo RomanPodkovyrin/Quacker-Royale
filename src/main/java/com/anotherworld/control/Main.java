@@ -52,6 +52,9 @@ public class Main {
     private int defaultMultiPlayerBalls;
     private int defaultNumberClients;
 
+    // Networking
+    private LobbyClient lobbyClient;
+
 
     /**
      * The main should only be used for testing.
@@ -78,9 +81,8 @@ public class Main {
      * Used to initialise the game main class for the game.
      */
     public Main() {
-        PropertyReader propertyFileLogic = null;
         try {
-            propertyFileLogic = new PropertyReader("logic.properties");
+            PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
             this.defaultSinglePlayerAI = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_AI"));
             this.defaultSinglePlayerPlayers = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_PLAYERS"));
             this.defaultSinglePlayerBalls = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_BALLS"));
@@ -215,13 +217,30 @@ public class Main {
     }
 
     /**
+     * This method makes client quit the lobby
+     * @return true can quit, false can't quit
+     */
+    public boolean clientCancel() {
+        if (lobbyClient != null) {
+            try {
+                lobbyClient.cancelConnection();
+            } catch (IOException e) {
+                //TODO what? to do if that happends
+                e.printStackTrace();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Connects to the game lobby on the give ip address.
      *
      * @param serverIP the host ip address to connect to
      */
     public void connect(String serverIP) throws NoHostFound, ConnectionClosed {
         logger.trace("Starting the Lobby client");
-        LobbyClient lobbyClient = new LobbyClient(serverIP);
+        lobbyClient = new LobbyClient(serverIP);
         try {
             lobbyClient.sendMyIp();
         } catch (ConnectException e) {
