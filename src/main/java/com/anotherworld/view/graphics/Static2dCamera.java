@@ -50,7 +50,7 @@ public class Static2dCamera extends Camera {
     
     @Override
     public float getDepth() {
-        return 0.5f;
+        return 1.414213562f;
     }
 
     @Override

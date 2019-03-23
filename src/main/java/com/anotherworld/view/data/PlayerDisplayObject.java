@@ -20,6 +20,8 @@ public class PlayerDisplayObject extends DisplayObject {
     private float maxG;
     private float maxB;
     
+    private Programme programme;
+    
     private Optional<Long> timeStartedFalling;
     
     /**
@@ -31,6 +33,7 @@ public class PlayerDisplayObject extends DisplayObject {
         this.displayData = displayData;
         this.setColours();
         this.timeStartedFalling = Optional.empty();
+        this.programme = programme;
     }
     
     private void setColours() {
@@ -44,6 +47,14 @@ public class PlayerDisplayObject extends DisplayObject {
     
     @Override
     public void transform() {
+        if (displayData.getState() == ObjectState.DEAD) {
+            if (!timeStartedFalling.isPresent()) {
+                timeStartedFalling = Optional.of(System.currentTimeMillis());
+            }
+            float timeFalling = System.currentTimeMillis() - timeStartedFalling.get();
+            timeFalling = timeFalling / 1000;
+            programme.scalef(1 / (1 + timeFalling * timeFalling * 4.8f), 1 / (1 + timeFalling * timeFalling * 4.8f), 0);
+        }
         super.transform();
     }
 

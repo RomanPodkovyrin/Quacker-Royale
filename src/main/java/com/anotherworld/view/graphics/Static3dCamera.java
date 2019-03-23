@@ -36,13 +36,6 @@ public class Static3dCamera extends Static2dCamera {
         return (rotation);
     }
     
-    private Matrix2d cameraProjectionf(float depth) {
-        Matrix2d projection = Matrix2d.genIdentity(4);
-        projection.setValue(3, 2, 1 / depth);
-        projection.setValue(2, 2, 0);
-        return (projection);
-    }
-    
     @Override
     public float getY() {
         return super.getY() * 2;

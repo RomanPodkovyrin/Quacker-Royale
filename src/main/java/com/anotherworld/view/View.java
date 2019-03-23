@@ -156,17 +156,23 @@ public class View implements Runnable {
         currentScene = new Scene();
 
         try {
-            programme = new TexturedProgramme(window);
+            programme = new TexturedProgramme("src/main/glsl/com/anotherworld/view/shaders/texture/", window);
         } catch (ProgrammeUnavailableException e1) {
             logger.catching(e1);
             logger.warn("Couldn't start Textured programme renderer");
             try {
-                programme = new LegacyProgramme(window);
+                programme = new TexturedProgramme("src/main/glsl/com/anotherworld/view/shaders/core/", window);
             } catch (ProgrammeUnavailableException e2) {
                 logger.catching(e2);
-                logger.fatal("Couldn't start any rendering engines");
-                attemptDestroy();
-                throw new RuntimeException("Couldn't start any rendering program");
+                logger.warn("Couldn't start core programme renderer");
+                try {
+                    programme = new LegacyProgramme(window);
+                } catch (ProgrammeUnavailableException e3) {
+                    logger.catching(e3);
+                    logger.fatal("Couldn't start any rendering engines");
+                    attemptDestroy();
+                    throw new RuntimeException("Couldn't start any rendering program");
+                }
             }
         }
 

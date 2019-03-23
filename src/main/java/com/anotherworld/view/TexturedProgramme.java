@@ -36,9 +36,9 @@ public class TexturedProgramme extends Programme {
      * @param window the glfw window id
      * @throws ProgrammeUnavailableException If the programme isn't compatible with the system or wasn't found
      */
-    public TexturedProgramme(long window) throws ProgrammeUnavailableException {
+    public TexturedProgramme(String location, long window) throws ProgrammeUnavailableException {
         super(window);
-        init();
+        init(location);
         try {
             textureMap = new TextureMap("res/images/");
         } catch (IOException ex) {
@@ -48,13 +48,13 @@ public class TexturedProgramme extends Programme {
         bufferObjects = new ArrayList<>();
     }
     
-    private void init() throws ProgrammeUnavailableException {
+    private void init(String location) throws ProgrammeUnavailableException {
         logger.info("Creating shaders");
         
         try {
 
-            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/texture/vertex.glsl", GL_VERTEX_SHADER);
-            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/texture/frag.glsl", GL_FRAGMENT_SHADER);
+            this.vertexShader = new Shader(location + "vertex.glsl", GL_VERTEX_SHADER);
+            this.fragShader = new Shader(location + "frag.glsl", GL_FRAGMENT_SHADER);
             
         } catch (IOException e) {
             logger.warn("Couldn't load shader");

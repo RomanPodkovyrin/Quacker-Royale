@@ -63,6 +63,13 @@ public abstract class Camera {
         return transformation;
     }
     
+    public Matrix2d cameraProjectionf(float depth) {
+        Matrix2d projection = Matrix2d.genIdentity(4);
+        projection.setValue(3, 2, 1 / depth);
+        projection.setValue(2, 2, 0);
+        return (projection);
+    }
+
     /**
      * The handedness direction of the camera.
      * @return the handedness vector
