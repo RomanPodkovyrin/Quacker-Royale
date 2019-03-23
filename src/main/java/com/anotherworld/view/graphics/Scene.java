@@ -76,6 +76,10 @@ public class Scene {
         return Math.min(intScale - intValue, Math.max(0, (int)Math.round((floatScale / 2f) * ((float)intScale))));
     }
     
+    protected void clearDisplays() {
+        displays.clear();
+    }
+    
     public void addDisplay(GraphicsDisplay d) {
         displays.add(d);
     }

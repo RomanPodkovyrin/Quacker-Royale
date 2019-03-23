@@ -31,6 +31,8 @@ import com.anotherworld.view.data.RectangleDisplayData;
 import com.anotherworld.view.data.RectangleDisplayObject;
 import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
+import com.anotherworld.view.graphics.GraphicsDisplay;
+import com.anotherworld.view.graphics.MenuScene;
 import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.input.StringKeyListener;
 import com.anotherworld.view.programme.LegacyProgramme;
@@ -38,6 +40,7 @@ import com.anotherworld.view.programme.Programme;
 import com.anotherworld.view.programme.ProgrammeUnavailableException;
 import com.anotherworld.view.programme.TexturedProgramme;
 import com.anotherworld.view.viewevent.ChangeWindowTitle;
+import com.anotherworld.view.viewevent.MenuSwitch;
 import com.anotherworld.view.viewevent.SwitchScene;
 import com.anotherworld.view.viewevent.UpdateDisplayObjects;
 import com.anotherworld.view.viewevent.ViewEvent;
@@ -81,6 +84,8 @@ public class View implements Runnable {
     private Queue<ViewEvent> eventQueue;
 
     private Programme programme;
+    
+    private MenuScene menuScene;
 
     /**
      * Creates the View object initialising it's values.
@@ -95,6 +100,7 @@ public class View implements Runnable {
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
         running = false;
+        menuScene = new MenuScene();
         logger.info("Running view");
     }
 
@@ -233,17 +239,20 @@ public class View implements Runnable {
      * Switches from the current scene to the game scene.
      */
     public void switchToGameScene() {
-        this.switchToScene(new GameScene());
+        synchronized (eventQueue) {
+            eventQueue.add(new SwitchScene(new GameScene()));
+        }
     }
 
     /**
-     * Switches from the current scene to the selected scene.
-     * @param scene the scene to switch to
+     * Switches from the current menu display to the selected scene.
+     * @param display the display to switch to
      */
-    public void switchToScene(Scene scene) {
+    public void switchToDisplay(GraphicsDisplay display) {
         synchronized (eventQueue) {
             System.out.println("Scene switch queued");
-            eventQueue.add(new SwitchScene(scene));
+            eventQueue.add(new MenuSwitch(display));
+            eventQueue.add(new SwitchScene(menuScene));
         }
     }
 
@@ -291,9 +300,15 @@ public class View implements Runnable {
             SwitchScene sceneEvent = (SwitchScene) event;
             currentScene = sceneEvent.getScene();
             logger.debug("Switching scene");
+        } else if (event.getClass().equals(MenuSwitch.class)) {
+            MenuSwitch menuSwitch = (MenuSwitch) event;
+            menuScene.changeMenuDisplay(menuSwitch.getDisplay());
         } else if (event.getClass().equals(ChangeWindowTitle.class)) {
             ChangeWindowTitle windowTitle = (ChangeWindowTitle) event;
             glfwSetWindowTitle(window, windowTitle.getTitle());
+            logger.debug("Window title changed to " + windowTitle.getTitle());
+        } else {
+            logger.warn("Unexpected view event was created " + event.getClass());
         }
     }
     

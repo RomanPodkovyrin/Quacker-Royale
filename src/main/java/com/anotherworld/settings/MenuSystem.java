@@ -4,15 +4,13 @@ import com.anotherworld.control.Controller;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
-import com.anotherworld.view.data.primatives.Supplier;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.graphics.layout.FixedSpaceLayout;
+import com.anotherworld.view.graphics.layout.Layout;
 import com.anotherworld.view.graphics.layout.LobbyLayout;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.TextFieldData;
-
-import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,34 +32,34 @@ public class MenuSystem {
 
         control = new Controller(view);
 
-        Scene mainMenuScene = new Scene();
-        Scene settingScene = new Scene();
-        Scene multiplayerMenuScene = new Scene();
-        Scene clientMenuScene = new Scene();
-        Scene hostLobbyMenuScene = new Scene();
-        Scene connectionFailedScene = new Scene();
-        Scene victoryScene = new Scene();
-        Scene audioSettingsScene = new Scene();
-        Scene videoSettingsScene = new Scene();
-        Scene keyBindingScene = new Scene();
-        Scene creditScene = new Scene();
-        mainMenuScene.addDisplay(this.createMainMenu(victoryScene, creditScene, settingScene, multiplayerMenuScene));
-        settingScene.addDisplay(this.createSettingMenu(mainMenuScene, audioSettingsScene, videoSettingsScene, keyBindingScene));
-        audioSettingsScene.addDisplay(this.createAudioSettings(settingScene));
+        GraphicsDisplay mainMenuDisplay = new GraphicsDisplay();
+        GraphicsDisplay settingsDisplay = new GraphicsDisplay();
+        GraphicsDisplay multiplayerMenuDisplay = new GraphicsDisplay();
+        GraphicsDisplay clientMenuDisplay = new GraphicsDisplay();
+        GraphicsDisplay hostLobbyMenuDisplay = new GraphicsDisplay();
+        GraphicsDisplay connectionFailedDisplay = new GraphicsDisplay();
+        GraphicsDisplay victoryDisplay = new GraphicsDisplay();
+        GraphicsDisplay audioSettingsDisplay = new GraphicsDisplay();
+        GraphicsDisplay videoSettingsDisplay = new GraphicsDisplay();
+        GraphicsDisplay keyBindingDisplay = new GraphicsDisplay();
+        GraphicsDisplay creditDisplay = new GraphicsDisplay();
+        this.createMainMenu(victoryDisplay, creditDisplay, settingsDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
+        this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsDisplay);
+        this.createAudioSettings(settingsDisplay).enactLayout(audioSettingsDisplay);
         //TODO set video settings scene
         //TODO set key binding scene
         //TODO set credit scene and load from file
-        multiplayerMenuScene.addDisplay(this.createMultiplayerMenuDisplay(mainMenuScene, clientMenuScene, hostLobbyMenuScene, connectionFailedScene));
-        clientMenuScene.addDisplay(this.createClientMenuDisplay(mainMenuScene, multiplayerMenuScene));
-        hostLobbyMenuScene.addDisplay(this.createHostLobbyMenuDisplay(multiplayerMenuScene));
-        connectionFailedScene.addDisplay(this.createConnectionFailedDisplay(mainMenuScene));
-        victoryScene.addDisplay(this.createVictoryDisplay(mainMenuScene));
+        this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay).enactLayout(multiplayerMenuDisplay);
+        this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay).enactLayout(clientMenuDisplay);
+        this.createHostLobbyMenuDisplay(multiplayerMenuDisplay).enactLayout(hostLobbyMenuDisplay);
+        this.createConnectionFailedDisplay(mainMenuDisplay).enactLayout(connectionFailedDisplay);
+        this.createVictoryDisplay(mainMenuDisplay).enactLayout(victoryDisplay);
 
-        view.switchToScene(mainMenuScene);
+        view.switchToDisplay(mainMenuDisplay);
         view.setTitle("Quacker Royal");
     }
 
-    private GraphicsDisplay createMainMenu(Scene victoryScene, Scene creditScene, Scene settingsScene, Scene multiplayerMenuScene) {
+    private Layout createMainMenu(GraphicsDisplay victoryDisplay, GraphicsDisplay creditDisplay, GraphicsDisplay settingsDisplay, GraphicsDisplay multiplayerMenuDisplay) {
         logger.debug("Creating main menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -76,7 +74,7 @@ public class MenuSystem {
                 logger.trace("Starting singleplayer");
                 control.startSinglePlayer();
                 logger.trace("Queueing switch to victory scene");
-                view.switchToScene(victoryScene);
+                view.switchToDisplay(victoryDisplay);
             });
             logger.debug("Queueing switch to game view");
             view.switchToGameScene();
@@ -85,30 +83,26 @@ public class MenuSystem {
         layout.addButton(singlePlayer);
 
         ButtonData multiPlayer = new ButtonData("Multiplayer");
-        multiPlayer.setOnAction(() -> view.switchToScene(multiplayerMenuScene));
+        multiPlayer.setOnAction(() -> view.switchToDisplay(multiplayerMenuDisplay));
         layout.addButton(multiPlayer);
         
         ButtonData settings = new ButtonData("Settings");
-        settings.setOnAction(() -> view.switchToScene(settingsScene));
+        settings.setOnAction(() -> view.switchToDisplay(settingsDisplay));
         layout.addButton(settings);
 
         ButtonData credits = new ButtonData("Credits");
-        credits.setOnAction(() -> view.switchToScene(creditScene));
+        credits.setOnAction(() -> view.switchToDisplay(creditDisplay));
         layout.addButton(credits);
         
         ButtonData quit = new ButtonData("Exit");
         quit.setOnAction(() -> view.close());
         layout.addButton(quit);
-        
-        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
-        
-        layout.enactLayout(graphicsDisplay);
 
-        return (graphicsDisplay);
+        return layout;
 
     }
 
-    private GraphicsDisplay createSettingMenu(Scene mainMenuScene, Scene audioSettingsScene, Scene videoSettingsScene, Scene keyBindingScene) {
+    private Layout createSettingMenu(GraphicsDisplay mainMenuDisplay, GraphicsDisplay audioSettingsDisplay, GraphicsDisplay videoSettingsDisplay, GraphicsDisplay keyBindingDisplay) {
         logger.debug("Creating settings menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -117,29 +111,25 @@ public class MenuSystem {
         layout.addButton(settings);
 
         ButtonData audioSettings = new ButtonData("Audio Settings");
-        audioSettings.setOnAction(() -> view.switchToScene(audioSettingsScene));
+        audioSettings.setOnAction(() -> view.switchToDisplay(audioSettingsDisplay));
         layout.addButton(audioSettings);
 
         ButtonData videoSettings = new ButtonData("Video Settings");
-        videoSettings.setOnAction(() -> view.switchToScene(videoSettingsScene));
+        videoSettings.setOnAction(() -> view.switchToDisplay(videoSettingsDisplay));
         layout.addButton(videoSettings);
 
         ButtonData keyBindings = new ButtonData("Key Bindings");
-        keyBindings.setOnAction(() -> view.switchToScene(keyBindingScene));
+        keyBindings.setOnAction(() -> view.switchToDisplay(keyBindingDisplay));
         layout.addButton(keyBindings);
 
         ButtonData backToMenu = new ButtonData("Main Menu");
-        backToMenu.setOnAction(() -> view.switchToScene(mainMenuScene));
+        backToMenu.setOnAction(() -> view.switchToDisplay(mainMenuDisplay));
         layout.addButton(backToMenu);
         
-        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
-        
-        layout.enactLayout(graphicsDisplay);
-        
-        return graphicsDisplay;
+        return layout;
     }
     
-    private GraphicsDisplay createAudioSettings(Scene settingsMenuScene) {
+    private Layout createAudioSettings(GraphicsDisplay settingsMenuDisplay) {
         logger.debug("Creating audio settings menu display");
 
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -171,18 +161,13 @@ public class MenuSystem {
         layout.addButton(sfxButton);
 
         ButtonData backToSettings = new ButtonData("Settings");
-        backToSettings.setOnAction(() -> view.switchToScene(settingsMenuScene));
+        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
         layout.addButton(backToSettings);
         
-        
-        GraphicsDisplay audioSettings = new GraphicsDisplay();
-        
-        layout.enactLayout(audioSettings);
-        
-        return audioSettings;
+        return layout;
     }
     
-    private GraphicsDisplay createMultiplayerMenuDisplay(Scene mainMenuScene, Scene clientMenuScene, Scene hostMenuScene, Scene connectionFailedScene) {
+    private Layout createMultiplayerMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay clientMenuDisplay, GraphicsDisplay hostMenuDisplay, GraphicsDisplay connectionFailedDisplay) {
         logger.debug("Creating multiplayer menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -194,11 +179,11 @@ public class MenuSystem {
         buttonHost.setOnAction(() -> {
             // start the game
             Thread x = new Thread(() -> {
-                view.switchToScene(hostMenuScene);
+                view.switchToDisplay(hostMenuDisplay);
                 try {
                     control.host();
-                } catch (Exception ex) {
-                    view.switchToScene(connectionFailedScene);
+                } catch (Exception ex) { //TODO custom exception
+                    view.switchToDisplay(connectionFailedDisplay);
                 }
                 
                 
@@ -208,23 +193,18 @@ public class MenuSystem {
         layout.addButton(buttonHost);
 
         ButtonData buttonClient = new ButtonData("Connect");
-        buttonClient.setOnAction(() -> view.switchToScene(clientMenuScene));
+        buttonClient.setOnAction(() -> view.switchToDisplay(clientMenuDisplay));
         layout.addButton(buttonClient);
 
         ButtonData backToMenu = new ButtonData("Main menu");
-        backToMenu.setOnAction(() -> view.switchToScene(mainMenuScene));
+        backToMenu.setOnAction(() -> view.switchToDisplay(mainMenuDisplay));
         layout.addButton(backToMenu);
 
-        // Layout 1 - children are laid out in vertical column
-        GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
-        
-        layout.enactLayout(graphicsDisplay);
-
-        return graphicsDisplay;
+        return layout;
         
     }
     
-    private GraphicsDisplay createClientMenuDisplay(Scene mainMenuScene, Scene multiplayerMenuScene) throws KeyListenerNotFoundException {
+    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay) throws KeyListenerNotFoundException {
         logger.debug("Creating client menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -241,7 +221,7 @@ public class MenuSystem {
                 logger.info("Starting game");
                 view.switchToGameScene();
                 control.connect(ipAndPort.getText());
-                view.switchToScene(mainMenuScene);
+                view.switchToDisplay(mainMenuDisplay);
                 logger.info("Finished the game");
             });
             x.start();
@@ -249,18 +229,13 @@ public class MenuSystem {
         layout.addButton(buttonConnect);
 
         ButtonData backToMulti = new ButtonData("Go back");
-        backToMulti.setOnAction(() -> view.switchToScene(multiplayerMenuScene));
+        backToMulti.setOnAction(() -> view.switchToDisplay(multiplayerMenuDisplay));
         layout.addButton(backToMulti);
 
-        // Layout 1 - children are laid out in vertical column
-        GraphicsDisplay graphicsDisplay4 = new GraphicsDisplay();
-        
-        layout.enactLayout(graphicsDisplay4);
-
-        return graphicsDisplay4;
+        return layout;
     }
     
-    private GraphicsDisplay createConnectionFailedDisplay(Scene mainMenuScene) {
+    private Layout createConnectionFailedDisplay(GraphicsDisplay mainMenuDisplay) {
         logger.debug("Creating connection failure display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -270,18 +245,14 @@ public class MenuSystem {
         
         ButtonData returnButton = new ButtonData("Return");
         returnButton.setOnAction(() -> {
-            view.switchToScene(mainMenuScene);
+            view.switchToDisplay(mainMenuDisplay);
         });
         layout.addButton(returnButton);
         
-        GraphicsDisplay connectionFailedDisplay = new GraphicsDisplay();
-        
-        layout.enactLayout(connectionFailedDisplay);
-        
-        return connectionFailedDisplay;
+        return layout;
     }
     
-    private GraphicsDisplay createClientLobbyMenuDisplay(Scene clientMenuScene) {
+    private Layout createClientLobbyMenuDisplay(GraphicsDisplay clientMenuDisplay) {
         logger.debug("Creating client lobby display");
         
         LobbyLayout layout = new LobbyLayout(0.2f);
@@ -304,19 +275,14 @@ public class MenuSystem {
         ButtonData backToMulti = new ButtonData("Go back");
         backToMulti.setOnAction(() -> {
             control.disconnect();
-            view.switchToScene(clientMenuScene);
+            view.switchToDisplay(clientMenuDisplay);
         });
         layout.addButton(backToMulti);
 
-        // Layout 1 - children are laid out in vertical column
-        GraphicsDisplay graphicsDisplay5 = new GraphicsDisplay();
-        
-        layout.enactLayout(graphicsDisplay5);
-
-        return graphicsDisplay5;
+        return layout;
     }
     
-    private GraphicsDisplay createVictoryDisplay(Scene mainMenuScene) {
+    private Layout createVictoryDisplay(GraphicsDisplay mainMenuDisplay) {
         logger.debug("Creating victory display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -326,19 +292,15 @@ public class MenuSystem {
         
         ButtonData menuReturn = new ButtonData("Return to menu");
         menuReturn.setOnAction(() -> {
-            view.switchToScene(mainMenuScene);
+            view.switchToDisplay(mainMenuDisplay);
         });
         layout.addButton(menuReturn);
         
-        GraphicsDisplay victoryDisplay = new GraphicsDisplay();
-        
-        layout.enactLayout(victoryDisplay);
-        
-        return victoryDisplay;
+        return layout;
         
     }
     
-    private GraphicsDisplay createHostLobbyMenuDisplay(Scene multiplayerMenuScene) {
+    private Layout createHostLobbyMenuDisplay(GraphicsDisplay multiplayerMenuDisplay) {
         logger.debug("Creating host lobby display");
         
         LobbyLayout layout = new LobbyLayout(0.2f);
@@ -362,16 +324,11 @@ public class MenuSystem {
         ButtonData backToMulti = new ButtonData("Go back");
         backToMulti.setOnAction(() -> {
             control.disconnect();
-            view.switchToScene(multiplayerMenuScene);
+            view.switchToDisplay(multiplayerMenuDisplay);
         });
         layout.addButton(backToMulti);
 
-        // Layout 1 - children are laid out in vertical column
-        GraphicsDisplay graphicsDisplay5 = new GraphicsDisplay();
-        
-        layout.enactLayout(graphicsDisplay5);
-
-        return graphicsDisplay5;
+        return layout;
     }
     
     public static void main(String[] args) {
