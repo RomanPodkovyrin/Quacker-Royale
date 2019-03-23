@@ -28,6 +28,11 @@ public class BlackBoard {
         return acceptableHealthPercentage;
     }
 
+    /**
+     * Moves ai to a given destination.
+     * @param ai - ai to be moved
+     * @param destination - destination where ai is moving
+     */
     public static void moveTo(PlayerData ai, Matrix destination) {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
 
@@ -35,6 +40,11 @@ public class BlackBoard {
 
     }
 
+    /**
+     * Directs ai in a given direction
+     * @param ai - ai to be directed
+     * @param direction - direction where ai is going to be directed
+     */
     public static void moveIn(PlayerData ai, Matrix direction) {
         ai.setXVelocity(Maths.floatDivision(direction.getX(), Math.abs(direction.getX())));
         ai.setYVelocity(Maths.floatDivision(direction.getY(), Math.abs(direction.getY())));

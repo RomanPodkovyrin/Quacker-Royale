@@ -44,7 +44,7 @@ public class MatrixMath {
         float top =  -((line.getA() * point.getX()) + (line.getB() * point.getY()) - line.getD());
         float bottom = magnitude(line.getOrthogonalVector());
 
-        float d = Maths.floatDivision(top , bottom);
+        float d = Maths.floatDivision(top, bottom);
 
         return d;
     }
