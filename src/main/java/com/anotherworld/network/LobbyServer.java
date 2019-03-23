@@ -69,7 +69,7 @@ public class LobbyServer extends Thread {
     private void getPlayersIP() throws IOException {
         Socket lobbySocket = tcpSocket.accept();
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
-        if (in.readUTF() == "cancel connection") {
+        if (in.readUTF().equals("cancel connection")) {
             for (int i = 0; i < playersIpAddresses.size(); i++) {
                 if (playersIpAddresses.get(i) == lobbySocket.getInetAddress().getHostAddress()) {
                     playersIpAddresses.remove(playersIpAddresses.get(i));
