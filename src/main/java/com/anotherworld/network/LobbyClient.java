@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
+
+import com.anotherworld.control.exceptions.ConnectionClosed;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -56,12 +58,12 @@ public class LobbyClient {
      * Waits for a confirmation message from the host, that everyone has connected.
      * and the game is ready to be started
      */
-    public void waitForGameToStart() throws IOException {
+    public void waitForGameToStart() throws IOException, ConnectionClosed {
         InputStream inFromServer = client.getInputStream();
         DataInputStream in = new DataInputStream(inFromServer);
         myID = in.readUTF();
         if (myID.equals("Host has cancelled the lobby")) {
-            //cancel game
+            throw new ConnectionClosed();
         }
         logger.trace("My ID is now: " + myID);
         client.close();

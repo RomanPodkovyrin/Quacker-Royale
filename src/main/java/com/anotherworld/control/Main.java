@@ -219,7 +219,7 @@ public class Main {
      *
      * @param serverIP the host ip address to connect to
      */
-    public void connect(String serverIP) throws NoHostFound {
+    public void connect(String serverIP) throws NoHostFound, ConnectionClosed {
         logger.trace("Starting the Lobby client");
         LobbyClient lobbyClient = new LobbyClient(serverIP);
         try {
