@@ -77,6 +77,7 @@ public class BlackBoard {
      * @param ai - ai to be moved
      * @param destination - destination where ai is moving
      */
+
     public static void moveTo(PlayerData ai, Matrix destination) {
         Matrix vector = MatrixMath.pointsVector(ai.getCoordinates(), destination);
 

@@ -42,7 +42,9 @@ public abstract class MovableData implements DisplayData, Serializable {
      * Gets the coordinates of the player
      * @return Matrix object with player coordinates
      */
-    public Matrix getCoordinates() { return coordinates; }
+    public Matrix getCoordinates() {
+        return coordinates;
+    }
 
     /**
      * Sets the new coordinates of the player
@@ -117,25 +119,45 @@ public abstract class MovableData implements DisplayData, Serializable {
         this.setVelocity(velocity.getX(), newYVelocity);
     }
 
-    public float getAngle() { return angle; }
+    public float getAngle() {
+        return angle;
+    }
 
-    public void setAngle(float angle) { this.angle = angle; }
+    public void setAngle(float angle) {
+        this.angle = angle;
+    }
 
-    public float getSpeed() { return speed; }
+    public float getSpeed() {
+        return speed;
+    }
 
-    public void setSpeed(float speed) { this.speed = speed; }
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
 
-    public ObjectState getState() { return state; }
+    public ObjectState getState() {
+        return state;
+    }
 
-    public void setState(ObjectState state) { this.state = state; }
+    public void setState(ObjectState state) {
+        this.state = state;
+    }
 
-    public float getRadius() { return radius; }
+    public float getRadius() {
+        return radius;
+    }
 
-    public void setRadius(float radius) { this.radius = radius; }
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
 
-    public String getObjectID() { return objectID; }
+    public String getObjectID() {
+        return objectID;
+    }
 
-    public void setObjectID(String objectID) { this.objectID = objectID; }
+    public void setObjectID(String objectID) {
+        this.objectID = objectID;
+    }
 
 
 }
