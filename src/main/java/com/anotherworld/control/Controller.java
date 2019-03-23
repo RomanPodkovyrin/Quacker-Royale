@@ -12,7 +12,6 @@ import com.anotherworld.network.NetworkControllerServer;
 import com.anotherworld.network.NetworkControllerSinglePlayer;
 import com.anotherworld.network.Server;
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.settings.MenuDemo;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
@@ -29,18 +28,15 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.system.Platform;
 
 /**
  * This class helps to set up the appropriate settings to either start a single player game or a multiplayer.
  * @author roman
  */
-public class Main {
-    private MenuDemo view;
+public class Controller {
+    private View view;
     private ArrayList<String> playersIPaddresses = new ArrayList<>();
-    private static Logger logger = LogManager.getLogger(Main.class);
+    private static Logger logger = LogManager.getLogger(Controller.class);
     private boolean runTheHostGame = false;
     private boolean cancelTheGame = false;
 
@@ -59,26 +55,21 @@ public class Main {
      * @param args - command line arguments are not used
      */
     public static void main(String []args) {
-        Main main = new Main();
+        Controller main = new Controller(new View(1920, 1080));
         GameSettings settings = new GameSettings(2,1,1);
         main.startTheGame(settings, new NetworkControllerSinglePlayer());
-        MenuDemo viewMenu = new MenuDemo();
-
     }
 
     public void setRunTheHostGame(boolean run) {
         this.runTheHostGame = run;
     }
-
-    public void add(MenuDemo view) {
-        this.view = view;
-    }
-
+    
     /**
      * Used to initialise the game main class for the game.
      */
-    public Main() {
+    public Controller(View view) {
         PropertyReader propertyFileLogic = null;
+        this.view = view;
         try {
             propertyFileLogic = new PropertyReader("logic.properties");
             this.defaultSinglePlayerAI = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_AI"));
@@ -93,7 +84,6 @@ public class Main {
 
         // need to set default config files?
     }
-
     /**
      * Starts the game with the given settings and network connection.
      *
@@ -104,16 +94,6 @@ public class Main {
     private void startTheGame(GameSettings settings, AbstractNetworkController network) {
 
         try {
-            // Starts the render
-            View view;
-            logger.trace("Render is initialised");
-            if (Platform.get() == Platform.MACOSX) {
-                view = new View(1920, 1080);
-            } else {
-                GLFW.glfwInit();
-                GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-                view = new View((int)(mode.width()), (int)(mode.height()));
-            }
             // Starts the game itself
             logger.trace("The game session started");
             new GameSessionController(view, settings, network);
@@ -303,7 +283,11 @@ public class Main {
         NetworkControllerClient network = new NetworkControllerClient(client, settings);
         startTheGame(settings,network);
     }
-
+    
+    public void disconnect() {
+        //TODO implement client disconnect and server disconnect
+    }
+    
     public void startSinglePlayer() {
         GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
         startTheGame(settings, new NetworkControllerSinglePlayer());

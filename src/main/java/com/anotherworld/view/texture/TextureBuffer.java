@@ -1,7 +1,6 @@
-package com.anotherworld.view;
+package com.anotherworld.view.texture;
 
 import static org.lwjgl.opengl.GL46.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL46.GL_LINEAR;
 import static org.lwjgl.opengl.GL46.GL_NEAREST;
 import static org.lwjgl.opengl.GL46.GL_RGBA;
 import static org.lwjgl.opengl.GL46.GL_TEXTURE_2D;
@@ -19,8 +18,9 @@ import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 import static org.lwjgl.stb.STBImage.stbi_load;
 
-import com.anotherworld.view.data.Matrix2d;
-import com.anotherworld.view.data.Points2d;
+import com.anotherworld.view.data.primatives.Matrix2d;
+import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -56,8 +56,8 @@ public class TextureBuffer {
         IntBuffer y = BufferUtils.createIntBuffer(1);
         IntBuffer comp = BufferUtils.createIntBuffer(1);
         pixels = stbi_load(location, x, y, comp, STBI_rgb_alpha);
-        height = y.get();
         width = x.get();
+        height = y.get();
         this.xNumOfTextures = xNumOfTextures;
         this.yNumOfTextures = yNumOfTextures;
         this.numOfChannels = comp.get();
@@ -76,7 +76,7 @@ public class TextureBuffer {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         
         glTexImage2D(GL_TEXTURE_2D, 0, this.getEncoding(), this.getWidth(), this.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, this.getPixels());
         
@@ -144,13 +144,15 @@ public class TextureBuffer {
 
     /**
      * The transformation required to move the object co-ords to the texture map co-ords.
-     * @param textureId The texture id
+     * @param spriteSheet The texture id
      * @return The required transformation
      */
-    public Points2d getTextureTransformation(int textureId) {
+    public Points2d getTextureTransformation(SpriteSheet spriteSheet) {
         Matrix2d transformation = Matrix2d.homScale3d(1, 1, 0); //Remove z
-        transformation = Matrix2d.homTranslate3d(textureId % xNumOfTextures, (int)Math.floor(textureId / xNumOfTextures), 0).mult(transformation);
-        transformation = Matrix2d.homScale3d(1 / (float)xNumOfTextures, 1 / (float)yNumOfTextures, 0).mult(transformation);
+        if (spriteSheet.shouldBeTransformed()) {
+            transformation = Matrix2d.homTranslate3d(spriteSheet.getTextureId() % xNumOfTextures, (int)Math.floor(spriteSheet.getTextureId() / xNumOfTextures), 0).mult(transformation);
+            transformation = Matrix2d.homScale3d(1 / (float)xNumOfTextures, 1 / (float)yNumOfTextures, 0).mult(transformation);
+        }
         return transformation;
     }
     

@@ -3,7 +3,8 @@ package com.anotherworld.view.data;
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_STRIP;
 
 import com.anotherworld.tools.datapool.WallData;
-import com.anotherworld.view.Programme;
+import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.programme.Programme;
 
 /**
  * Manages and stores the data needed to display a wall object.

@@ -3,11 +3,10 @@ package com.anotherworld.control;
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.AbstractNetworkController;
-import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.input.Input;
-import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 
@@ -39,8 +38,7 @@ public class GameSessionController {
     private GameSession session;
     private GameSettings settings;
     private View view;
-    private Thread viewThread;
-    private KeyListener keyListener;
+    private GameKeyListener keyListener;
     private AbstractNetworkController network;
 
 
@@ -60,10 +58,6 @@ public class GameSessionController {
 
         // Starting the background music and effects threads
         AudioControl.setUp();
-
-        // Starting the View thread
-        this.viewThread = new Thread(view);
-        viewThread.start();
 
         // Sleeping the main thread for 1 second to register the key inputs.
         try {
@@ -104,7 +98,7 @@ public class GameSessionController {
 
 
 
-        while (viewThread.isAlive() && session.isRunning()) {
+        while (view.gameRunning() && session.isRunning()) {
 
             // music and effect mute unmute control
             if (keyListener.getKeyPresses().contains(Input.MUTE)) {

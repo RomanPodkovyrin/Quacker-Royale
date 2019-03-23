@@ -4,7 +4,7 @@ import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.input.Input;
-import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.GameKeyListener;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class NetworkControllerServer extends AbstractNetworkController {
     }
 
     @Override
-    public void clientControl(KeyListener keyListener) {
+    public void clientControl(GameKeyListener keyListener) {
 
     }
 

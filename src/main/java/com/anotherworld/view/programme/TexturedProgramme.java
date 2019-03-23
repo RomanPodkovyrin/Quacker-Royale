@@ -1,9 +1,11 @@
-package com.anotherworld.view;
+package com.anotherworld.view.programme;
 
 import static org.lwjgl.opengl.GL46.*;
 
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.TexturedDisplayObjectBuffers;
+import com.anotherworld.view.texture.Shader;
+import com.anotherworld.view.texture.TextureMap;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -32,10 +34,12 @@ public class TexturedProgramme extends Programme {
     
     /**
      * Creates the core programme that should be compatible with most systems.
+     * @param window the glfw window id
      * @throws ProgrammeUnavailableException If the programme isn't compatible with the system or wasn't found
      */
-    public TexturedProgramme() throws ProgrammeUnavailableException {
-        init();
+    public TexturedProgramme(String location, long window) throws ProgrammeUnavailableException {
+        super(window);
+        init(location);
         try {
             textureMap = new TextureMap("res/images/");
         } catch (IOException ex) {
@@ -45,13 +49,13 @@ public class TexturedProgramme extends Programme {
         bufferObjects = new ArrayList<>();
     }
     
-    private void init() throws ProgrammeUnavailableException {
+    private void init(String location) throws ProgrammeUnavailableException {
         logger.info("Creating shaders");
         
         try {
 
-            this.vertexShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/texture/vertex.glsl", GL_VERTEX_SHADER);
-            this.fragShader = new Shader("src/main/glsl/com/anotherworld/view/shaders/texture/frag.glsl", GL_FRAGMENT_SHADER);
+            this.vertexShader = new Shader(location + "vertex.glsl", GL_VERTEX_SHADER);
+            this.fragShader = new Shader(location + "frag.glsl", GL_FRAGMENT_SHADER);
             
         } catch (IOException e) {
             logger.warn("Couldn't load shader");
@@ -231,6 +235,28 @@ public class TexturedProgramme extends Programme {
         glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
         glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
+    @Override
+    public void updateBuffers(DisplayObject displayObject) {
+        TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
+        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getVerticesId());
+        glBufferData(GL_ARRAY_BUFFER, displayObject.getVertexBuffer(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
+        glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        
+        if (displayObject.getSpriteSheet().isTextured()) {
+            glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getTextureId().get());
+            glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.getEdgesId());
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getEdgeBuffer(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
 }

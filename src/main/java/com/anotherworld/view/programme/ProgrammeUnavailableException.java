@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.programme;
 
 /**
  * If an attempt to use a programme fails.

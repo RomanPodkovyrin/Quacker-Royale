@@ -14,6 +14,9 @@ import java.io.IOException;
 import org.junit.Test;
 import org.lwjgl.opengl.GL;
 
+import com.anotherworld.view.texture.TextureBuffer;
+import com.anotherworld.view.texture.TextureMap;
+
 public class TextureBufferTest {
 
     /**

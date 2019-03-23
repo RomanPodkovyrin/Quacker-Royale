@@ -1,63 +1,34 @@
 package com.anotherworld.tools.input;
 
+import static org.lwjgl.glfw.GLFW.glfwGetKey;
+
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 public class KeyListener {
 
     private static Logger logger = LogManager.getLogger(KeyListener.class);
-    
+
     private final Long window;
+
+    private ArrayList<Integer> trackedKeys;
     
-    public KeyListener(Long window) {
-        logger.info("Creating keylistener for window " + window);
+    public KeyListener(ArrayList<Integer> trackedKeys, Long window) {
+        logger.debug("Creating keylistener for window " + window);
+        this.trackedKeys = trackedKeys;
         this.window = window;
     }
 
-    public ArrayList<Input> getKeyPresses() {
-        ArrayList<Input> keyPresses = new ArrayList<>();
-
-        if (glfwGetKey(window, GLFW_KEY_UP)    == 1) {
-            keyPresses.add(Input.UP);
+    public ArrayList<Integer> getPressedKeys() {
+        ArrayList<Integer> pressedKeys = new ArrayList<>();
+        for (Integer key : trackedKeys) {
+            if (glfwGetKey(window, key) == 1) {
+                pressedKeys.add(key);
+            }
         }
-        if (glfwGetKey(window, GLFW_KEY_DOWN)  == 1) {
-            keyPresses.add(Input.DOWN);
-        }
-        if (glfwGetKey(window, GLFW_KEY_LEFT)  == 1) {
-            keyPresses.add(Input.LEFT);
-        }
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == 1) {
-            keyPresses.add(Input.RIGHT);
-        }
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == 1) {
-            keyPresses.add(Input.CHARGE);
-        }
-        if (glfwGetKey(window, GLFW_KEY_M) == 1) {
-            keyPresses.add(Input.MUTE);
-        }
-
-        return keyPresses;
+        return pressedKeys;
     }
 
-    /*
-    public boolean isUpPressed() {
-        return glfwGetKey(window, GLFW_KEY_UP) == 1;
-    }
-
-    public boolean isDownPressed() {
-        return glfwGetKey(window, GLFW_KEY_DOWN) == 1;
-    }
-
-    public boolean isLeftPressed() {
-        return glfwGetKey(window, GLFW_KEY_LEFT) == 1;
-    }
-
-    public boolean isRightPressed() {
-        return glfwGetKey(window, GLFW_KEY_RIGHT) == 1;
-    }
-    */
 }

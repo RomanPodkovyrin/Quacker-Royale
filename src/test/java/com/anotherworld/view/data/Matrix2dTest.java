@@ -5,7 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import com.anotherworld.view.graphics.MatrixSizeException;
+import com.anotherworld.view.data.primatives.Matrix2d;
+import com.anotherworld.view.data.primatives.MatrixSizeException;
+import com.anotherworld.view.data.primatives.Points2d;
 
 import org.junit.Test;
 
