@@ -49,7 +49,7 @@ public class Controller {
     private int defaultNumberClients;
 
     // Networking
-    private LobbyClient lobbyClient ;
+    private LobbyClient lobbyClient;
     boolean waitingForObjects = true;
 
     /**
@@ -87,6 +87,7 @@ public class Controller {
 
         // need to set default config files?
     }
+
     /**
      * Starts the game with the given settings and network connection.
      *

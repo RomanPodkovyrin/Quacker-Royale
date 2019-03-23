@@ -54,7 +54,7 @@ public class AI {
     private GameSessionData session;
 
     private int tick = 0;
-    private int maxTick = 2 ;
+    private int maxTick = 2;
     private int step = 1;
 
     /**

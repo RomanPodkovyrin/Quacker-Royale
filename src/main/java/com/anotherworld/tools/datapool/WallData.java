@@ -58,13 +58,21 @@ public class WallData implements RectangleDisplayData, Serializable {
         return yShrink;
     }
 
-    public float getxTargetSize() { return xTargetSize; }
+    public float getxTargetSize() {
+        return xTargetSize;
+    }
 
-    public void setxTargetSize(float xTargetSize) { this.xTargetSize = xTargetSize; }
+    public void setxTargetSize(float xTargetSize) {
+        this.xTargetSize = xTargetSize;
+    }
 
-    public float getyTargetSize() { return yTargetSize; }
+    public float getyTargetSize() {
+        return yTargetSize;
+    }
 
-    public void setyTargetSize(float yTargetSize) { this.yTargetSize = yTargetSize; }
+    public void setyTargetSize(float yTargetSize) {
+        this.yTargetSize = yTargetSize;
+    }
 
     public float getxSize() {
         return xSize;
