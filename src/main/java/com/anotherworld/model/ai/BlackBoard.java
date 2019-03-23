@@ -3,9 +3,13 @@ package com.anotherworld.model.ai;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.model.movable.Player;
+import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.maths.Maths;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,21 +17,61 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-
+//TODO write some proper description
+/**
+ * This class contains useful method for ai.
+ * @author roman
+ */
 public class BlackBoard {
     private static Logger logger = LogManager.getLogger(BlackBoard.class);
-    //TODO clean up this class
+    //TODO magic numbers
     //The allowed safe distance between the ball and the player
     private static float safeDistance = 4;
+    // Player id - ball target
     private static Map<String, String> targetedBalls = new HashMap<>();
-    private static Map<String, String> targetedPlayers = new HashMap<>();
     private static Map<String, AI_State> playersStates = new HashMap<>();
     private static float acceptableHealthPercentage = 0.5f;
+
+    /**
+     * Used to set up BlackBoard values
+     */
+    public static void setUp() {
+        try {
+            PropertyReader aiProperties = new PropertyReader("ai.properties");
+            safeDistance = Integer.parseInt(aiProperties.getValue("SAFE_BALLS_DISTANCE"));
+            acceptableHealthPercentage = Float.parseFloat(aiProperties.getValue("OPTIMAL_HEALTH"));
+        } catch (IOException e) {
+            logger.error("Could not load values, relying on defaults");
+        }
+
+    }
 
     public static float getAcceptableHealthPercentage() {
         return acceptableHealthPercentage;
     }
 
+    public static boolean targetBall(PlayerData ai, BallData ball) {
+        String aiID = ai.getObjectID();
+        String ballID = ball.getObjectID();
+
+        for (Map.Entry<String, String> entry : targetedBalls.entrySet()) {
+            String id = entry.getKey();
+            String targetBall = entry.getValue();
+            if (targetBall.equals(ballID)) {
+                if (id.equals(aiID)) {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        targetedBalls.put(aiID, ballID);
+        return true;
+    }
+
+    public static void stopTargetingBall(PlayerData ai) {
+        targetedBalls.remove(ai.getObjectID());
+    }
     /**
      * Moves ai to a given destination.
      * @param ai - ai to be moved
@@ -41,7 +85,7 @@ public class BlackBoard {
     }
 
     /**
-     * Directs ai in a given direction
+     * Directs ai in a given direction.
      * @param ai - ai to be directed
      * @param direction - direction where ai is going to be directed
      */
@@ -119,24 +163,6 @@ public class BlackBoard {
         Matrix ballDirection = ball.getVelocity();
 
         return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),ai.getCoordinates()) <= ai.getRadius() + ball.getRadius() + safeDistance;
-    }
-
-    /**
-     *
-     * @param targetPlayer target player id
-     * @param ai ai aid
-     * @return
-     */
-    public static boolean isPlayerTargeted(String targetPlayer, String ai) {
-        return !(targetedPlayers.containsKey(targetPlayer) | targetedPlayers.get(targetPlayer).equals(ai));
-    }
-
-    public static void targetThePlayer(String targetPlayer, String ai) {
-        targetedPlayers.put(targetPlayer,ai);
-    }
-
-    public static void stopTargetingPlayer(String targetPlayer, String ai) {
-        targetedPlayers.remove(targetPlayer);
     }
 
     public static void setState(String id, AI_State state) {

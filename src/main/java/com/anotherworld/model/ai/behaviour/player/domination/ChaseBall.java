@@ -64,6 +64,13 @@ public class ChaseBall extends Job {
                     return;
                 }
 
+                // Check if ball is already targeted by someone else
+                if (!BlackBoard.targetBall(ai, ball)) {
+                    logger.trace("Ball " + ball.getObjectID() + " is already targeted by someone");
+                    continue;
+                }
+
+                // Walk to that ball
                 if (vector.getX() != 0) {
                     ai.setXVelocity(Maths.floatDivision(vector.getX(), Math.abs(vector.getX())));
                 }
@@ -74,6 +81,7 @@ public class ChaseBall extends Job {
                 return;
             } else {
                 logger.debug("Finishing ChaseBall with fail: nothing to chase");
+                BlackBoard.stopTargetingBall(ai);
                 fail();
                 return;
             }

@@ -66,19 +66,7 @@ public class GameSettingsTest {
     public void settingTest() {
 
         GameSettings settings = new GameSettings(numberOfPlayers,numberOfAI,numberOfBalls);
-        if (isServer) {
-            try {
-                settings.setServer(new Server(1,settings));
-                assertNotNull(settings.getServer());
-                settings.getServer().stopServer();
 
-            } catch (SocketException e) {
-                e.printStackTrace();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            }
-
-        }
 
 //        if (isClient) {
 //            try {
@@ -93,8 +81,6 @@ public class GameSettingsTest {
 //
 //        }
 
-        assertEquals(isServer,settings.isServer());
-//        assertEquals(isClient, settings.isClient());
         assertEquals(expectedNumberOfPlayers, settings.getPlayers().size());
         assertEquals(expectedNumberOfAI, settings.getAi().size());
         assertEquals(expectedNumberOfBalls,settings.getBalls().size());
