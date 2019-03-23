@@ -180,7 +180,7 @@ public class Controller {
 
 
         //TODO when ready for the proper lobby implementation remove this
-        runTheHostGame = true;
+        runTheHostGame = false;
         while (!runTheHostGame) {
             if (cancelTheGame) {
                 throw new ConnectionClosed();
