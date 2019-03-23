@@ -199,7 +199,11 @@ public class MenuDemo extends Application {
         buttonConnect.setOnAction(e ->{
 
             try {
-                control.connect(ipAndPort.getText());
+                try {
+                    control.connect(ipAndPort.getText());
+                } catch (ConnectionClosed connectionClosed) {
+                    connectionClosed.printStackTrace();
+                }
             } catch (NoHostFound noHostFound) {
                 noHostFound.printStackTrace();
             }
