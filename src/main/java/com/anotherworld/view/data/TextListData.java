@@ -1,5 +1,6 @@
 package com.anotherworld.view.data;
 
+import com.anotherworld.view.data.primatives.Supplier;
 import com.anotherworld.view.input.ButtonData;
 
 import java.util.ArrayList;

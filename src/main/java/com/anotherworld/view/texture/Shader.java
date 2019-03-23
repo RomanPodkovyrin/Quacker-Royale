@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.texture;
 
 import static org.lwjgl.opengl.GL46.glCompileShader;
 import static org.lwjgl.opengl.GL46.glCreateShader;

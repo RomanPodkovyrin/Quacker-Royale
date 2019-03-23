@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.viewevent;
 
 import com.anotherworld.view.graphics.Scene;
 

@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.programme;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
 import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
@@ -6,8 +6,8 @@ import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
 import com.anotherworld.view.data.DisplayObject;
-import com.anotherworld.view.data.Matrix2d;
 import com.anotherworld.view.data.TextDisplayObject;
+import com.anotherworld.view.data.primatives.Matrix2d;
 import com.anotherworld.view.graphics.Camera;
 import com.anotherworld.view.input.MouseState;
 

@@ -1,7 +1,8 @@
 package com.anotherworld.view.data;
 
-import com.anotherworld.view.Programme;
-import com.anotherworld.view.SpriteSheet;
+import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
+import com.anotherworld.view.programme.Programme;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;

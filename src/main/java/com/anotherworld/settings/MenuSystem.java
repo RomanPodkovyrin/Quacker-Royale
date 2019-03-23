@@ -2,13 +2,13 @@ package com.anotherworld.settings;
 
 import com.anotherworld.control.Controller;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
-import com.anotherworld.view.FixedSpaceLayout;
 import com.anotherworld.view.View;
-import com.anotherworld.view.data.Supplier;
 import com.anotherworld.view.data.TextListData;
+import com.anotherworld.view.data.primatives.Supplier;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.Scene;
-
+import com.anotherworld.view.graphics.layout.FixedSpaceLayout;
+import com.anotherworld.view.graphics.layout.LobbyLayout;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.TextFieldData;
 
@@ -128,7 +128,7 @@ public class MenuSystem {
         keyBindings.setOnAction(() -> view.switchToScene(keyBindingScene));
         layout.addButton(keyBindings);
 
-        ButtonData backToMenu = new ButtonData("Menu");
+        ButtonData backToMenu = new ButtonData("Main Menu");
         backToMenu.setOnAction(() -> view.switchToScene(mainMenuScene));
         layout.addButton(backToMenu);
         
@@ -150,8 +150,8 @@ public class MenuSystem {
         ButtonData musicButton = new ButtonData("Music: On");
         musicButton.setOnAction(() -> {
             logger.info("Music button pressed");
-            musicButton.setText("MUSIC: " + (musicButton.getText().split(" ")[1].equals("ON") ? "OFF" : "ON"));
-            if (musicButton.getText().split(" ")[1].equals("On")) {
+            musicButton.setText("Music: " + (musicButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
+            if (musicButton.getText().split(" ")[1].equals("ON")) {
                 Controller.musicSetting(true);
             } else {
                 Controller.musicSetting(false);
@@ -161,7 +161,7 @@ public class MenuSystem {
 
         ButtonData sfxButton = new ButtonData("SFX: On");
         sfxButton.setOnAction(() -> {
-            sfxButton.setText("SFX: " + (sfxButton.getText().split(" ")[1].equals("ON") ? "OFF" : "ON"));
+            sfxButton.setText("SFX: " + (sfxButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
             if (sfxButton.getText().split(" ")[1].equals("ON")) {
                 Controller.sfxSetting(true);
             } else {
@@ -185,15 +185,12 @@ public class MenuSystem {
     private GraphicsDisplay createMultiplayerMenuDisplay(Scene mainMenuScene, Scene clientMenuScene, Scene hostMenuScene, Scene connectionFailedScene) {
         logger.debug("Creating multiplayer menu display");
         
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
         ButtonData multi = new ButtonData("Multiplayer");
-        multi.setWidth(0.5f);
-        multi.setHeight(0.1f);
+        layout.addButton(multi);
 
         ButtonData buttonHost = new ButtonData("Host");
-        buttonHost.setWidth(0.5f);
-        buttonHost.setHeight(0.1f);
-        buttonHost.setBackgroundColour(0.09f, 1f, 0.06f);
-
         buttonHost.setOnAction(() -> {
             // start the game
             Thread x = new Thread(() -> {
@@ -208,48 +205,37 @@ public class MenuSystem {
             });
             x.start();
         });
+        layout.addButton(buttonHost);
 
         ButtonData buttonClient = new ButtonData("Connect");
-        buttonClient.setWidth(0.5f);
-        buttonClient.setHeight(0.1f);
         buttonClient.setOnAction(() -> view.switchToScene(clientMenuScene));
-        buttonClient.setBackgroundColour(0.09f, 1f, 0.06f);
+        layout.addButton(buttonClient);
 
-        ButtonData backToMenu2 = new ButtonData("Go to main page");
-        backToMenu2.setWidth(0.5f);
-        backToMenu2.setHeight(0.1f);
-        backToMenu2.setBackgroundColour(0.09f, 1f, 0.06f);
-        backToMenu2.setOnAction(() -> view.switchToScene(mainMenuScene));
+        ButtonData backToMenu = new ButtonData("Main menu");
+        backToMenu.setOnAction(() -> view.switchToScene(mainMenuScene));
+        layout.addButton(backToMenu);
 
         // Layout 1 - children are laid out in vertical column
         GraphicsDisplay graphicsDisplay = new GraphicsDisplay();
-        multi.setPosition(0f, -0.6f);
-        graphicsDisplay.addButton(multi);
-        buttonHost.setPosition(0f, -0.2f);
-        graphicsDisplay.addButton(buttonHost);
-        buttonClient.setPosition(0f, 0.2f);
-        graphicsDisplay.addButton(buttonClient);
-        backToMenu2.setPosition(0f, 0.6f);
-        graphicsDisplay.addButton(backToMenu2);
+        
+        layout.enactLayout(graphicsDisplay);
 
-        return (graphicsDisplay);
+        return graphicsDisplay;
         
     }
     
     private GraphicsDisplay createClientMenuDisplay(Scene mainMenuScene, Scene multiplayerMenuScene) throws KeyListenerNotFoundException {
         logger.debug("Creating client menu display");
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
         ButtonData client = new ButtonData("Please type in the IP and Port of the host and press connect");
-        client.setWidth(0.5f);
-        client.setHeight(0.1f);
+        layout.addButton(client);
 
         TextFieldData ipAndPort = new TextFieldData("localhost", view.getAllKeyListener("LOCALHOST"));
-        ipAndPort.setWidth(0.5f);
-        ipAndPort.setHeight(0.1f);
+        layout.addButton(ipAndPort);
 
         ButtonData buttonConnect = new ButtonData("Connect");
-        buttonConnect.setWidth(0.5f);
-        buttonConnect.setHeight(0.1f);
-        buttonConnect.setBackgroundColour(0.09f, 1f, 0.06f);
         buttonConnect.setOnAction(() -> {
             Thread x = new Thread(() -> {
                 logger.info("Starting game");
@@ -260,59 +246,52 @@ public class MenuSystem {
             });
             x.start();
         });
+        layout.addButton(buttonConnect);
 
         ButtonData backToMulti = new ButtonData("Go back");
-        backToMulti.setWidth(0.5f);
-        backToMulti.setHeight(0.1f);
-        backToMulti.setBackgroundColour(0.09f, 1f, 0.06f);
         backToMulti.setOnAction(() -> view.switchToScene(multiplayerMenuScene));
+        layout.addButton(backToMulti);
 
         // Layout 1 - children are laid out in vertical column
         GraphicsDisplay graphicsDisplay4 = new GraphicsDisplay();
-        client.setPosition(0f, -0.6f);
-        graphicsDisplay4.addButton(client);
-        ipAndPort.setPosition(0f, -0.2f);
-        graphicsDisplay4.addButton(ipAndPort);
-        buttonConnect.setPosition(0f, 0.2f);
-        graphicsDisplay4.addButton(buttonConnect);
-        backToMulti.setPosition(0f, 0.6f);
-        graphicsDisplay4.addButton(backToMulti);
+        
+        layout.enactLayout(graphicsDisplay4);
 
-        return (graphicsDisplay4);
+        return graphicsDisplay4;
     }
     
     private GraphicsDisplay createConnectionFailedDisplay(Scene mainMenuScene) {
         logger.debug("Creating connection failure display");
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
         ButtonData failureMessage = new ButtonData("Connection to host failed");
-        failureMessage.setWidth(0.5f);
-        failureMessage.setHeight(0.1f);
+        layout.addButton(failureMessage);
         
         ButtonData returnButton = new ButtonData("Return");
-        returnButton.setWidth(0.5f);
-        returnButton.setHeight(0.1f);
-        
         returnButton.setOnAction(() -> {
             view.switchToScene(mainMenuScene);
         });
+        layout.addButton(returnButton);
         
         GraphicsDisplay connectionFailedDisplay = new GraphicsDisplay();
-        failureMessage.setPosition(0f, 0.3f);
-        connectionFailedDisplay.addButton(failureMessage);
-        returnButton.setPosition(0f, -0.3f);
-        connectionFailedDisplay.addButton(returnButton);
+        
+        layout.enactLayout(connectionFailedDisplay);
         
         return connectionFailedDisplay;
     }
     
     private GraphicsDisplay createClientLobbyMenuDisplay(Scene clientMenuScene) {
         logger.debug("Creating client lobby display");
+        
+        LobbyLayout layout = new LobbyLayout(0.2f);
+        
         ButtonData host = new ButtonData("Clienting...");
-        host.setWidth(0.5f);
-        host.setHeight(0.2f);
+        layout.addButton(host);
 
         TextListData playerList = new TextListData(4);
         playerList.setWidth(0.5f);
-        playerList.setHeight(0.2f);
+        playerList.setHeight(0.4f);
         
         playerList.addTextSource(() -> {
             return "Yes";
@@ -320,49 +299,40 @@ public class MenuSystem {
         playerList.addTextSource(() -> {
             return "No";
         }, 1);
+        layout.addList(playerList);
         
         ButtonData backToMulti = new ButtonData("Go back");
-        backToMulti.setWidth(0.5f);
-        backToMulti.setHeight(0.1f);
-        backToMulti.setBackgroundColour(0.09f, 1f, 0.06f);
         backToMulti.setOnAction(() -> {
             control.disconnect();
             view.switchToScene(clientMenuScene);
         });
+        layout.addButton(backToMulti);
 
         // Layout 1 - children are laid out in vertical column
         GraphicsDisplay graphicsDisplay5 = new GraphicsDisplay();
-        playerList.setPosition(0f, -0.6f);
-        graphicsDisplay5.addButton(playerList);
-        host.setPosition(0f, -0.2f);
-        graphicsDisplay5.addButton(host);
-        backToMulti.setPosition(0f, 0.2f);
-        graphicsDisplay5.addButton(backToMulti);
+        
+        layout.enactLayout(graphicsDisplay5);
 
-        return (graphicsDisplay5);
+        return graphicsDisplay5;
     }
     
     private GraphicsDisplay createVictoryDisplay(Scene mainMenuScene) {
         logger.debug("Creating victory display");
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
         ButtonData gameOver = new ButtonData("Game Over");
-        gameOver.setWidth(0.5f);
-        gameOver.setHeight(0.1f);
+        layout.addButton(gameOver);
         
         ButtonData menuReturn = new ButtonData("Return to menu");
-        menuReturn.setWidth(0.5f);
-        menuReturn.setHeight(0.1f);
-        
         menuReturn.setOnAction(() -> {
             view.switchToScene(mainMenuScene);
         });
+        layout.addButton(menuReturn);
         
         GraphicsDisplay victoryDisplay = new GraphicsDisplay();
         
-        gameOver.setPosition(0, -0.3f);
-        victoryDisplay.addButton(gameOver);
-        
-        menuReturn.setPosition(0, 0.3f);
-        victoryDisplay.addButton(menuReturn);
+        layout.enactLayout(victoryDisplay);
         
         return victoryDisplay;
         
@@ -370,14 +340,13 @@ public class MenuSystem {
     
     private GraphicsDisplay createHostLobbyMenuDisplay(Scene multiplayerMenuScene) {
         logger.debug("Creating host lobby display");
+        
+        LobbyLayout layout = new LobbyLayout(0.2f);
+        
         ButtonData host = new ButtonData("Hosting...");
-        host.setWidth(0.5f);
-        host.setHeight(0.1f);
+        layout.addButton(host);
 
         TextListData playerList = new TextListData(4);
-        playerList.setWidth(0.5f);
-        playerList.setHeight(0.2f);
-        
         //TODO implement actual data
         
         //TODO implement start button?
@@ -388,26 +357,21 @@ public class MenuSystem {
         playerList.addTextSource(() -> {
             return "No";
         }, 1);
+        layout.addList(playerList);
         
         ButtonData backToMulti = new ButtonData("Go back");
-        backToMulti.setWidth(0.5f);
-        backToMulti.setHeight(0.1f);
-        backToMulti.setBackgroundColour(0.09f, 1f, 0.06f);
         backToMulti.setOnAction(() -> {
             control.disconnect();
             view.switchToScene(multiplayerMenuScene);
         });
+        layout.addButton(backToMulti);
 
         // Layout 1 - children are laid out in vertical column
         GraphicsDisplay graphicsDisplay5 = new GraphicsDisplay();
-        playerList.setPosition(0f, -0.2f);
-        graphicsDisplay5.addButton(playerList);
-        host.setPosition(0f, -0.6f);
-        graphicsDisplay5.addButton(host);
-        backToMulti.setPosition(0f, 0.2f);
-        graphicsDisplay5.addButton(backToMulti);
+        
+        layout.enactLayout(graphicsDisplay5);
 
-        return (graphicsDisplay5);
+        return graphicsDisplay5;
     }
     
     public static void main(String[] args) {

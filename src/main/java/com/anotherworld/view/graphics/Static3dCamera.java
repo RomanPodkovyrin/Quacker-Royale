@@ -1,7 +1,7 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.data.Matrix2d;
-import com.anotherworld.view.data.Points2d;
+import com.anotherworld.view.data.primatives.Matrix2d;
+import com.anotherworld.view.data.primatives.Points2d;
 
 public class Static3dCamera extends Static2dCamera {
     

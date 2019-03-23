@@ -1,7 +1,7 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.data.Matrix2d;
-import com.anotherworld.view.data.Points2d;
+import com.anotherworld.view.data.primatives.Matrix2d;
+import com.anotherworld.view.data.primatives.Points2d;
 
 /**
  * Stores the information that defines where the camera is looking.

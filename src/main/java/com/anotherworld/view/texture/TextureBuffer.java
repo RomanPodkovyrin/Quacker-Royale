@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.texture;
 
 import static org.lwjgl.opengl.GL46.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL46.GL_NEAREST;
@@ -18,8 +18,9 @@ import static org.lwjgl.stb.STBImage.STBI_rgb_alpha;
 import static org.lwjgl.stb.STBImage.stbi_failure_reason;
 import static org.lwjgl.stb.STBImage.stbi_load;
 
-import com.anotherworld.view.data.Matrix2d;
-import com.anotherworld.view.data.Points2d;
+import com.anotherworld.view.data.primatives.Matrix2d;
+import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

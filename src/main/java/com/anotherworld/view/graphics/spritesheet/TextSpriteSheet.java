@@ -1,7 +1,8 @@
-package com.anotherworld.view;
+package com.anotherworld.view.graphics.spritesheet;
 
 import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.view.data.Points2d;
+import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.texture.TextureMap;
 
 import java.nio.FloatBuffer;
 

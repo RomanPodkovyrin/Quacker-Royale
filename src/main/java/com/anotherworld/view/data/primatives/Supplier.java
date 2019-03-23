@@ -1,4 +1,4 @@
-package com.anotherworld.view.data;
+package com.anotherworld.view.data.primatives;
 
 public interface Supplier<E> {
 

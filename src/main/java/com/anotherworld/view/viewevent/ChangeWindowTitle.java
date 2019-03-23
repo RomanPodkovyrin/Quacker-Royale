@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.viewevent;
 
 public class ChangeWindowTitle implements ViewEvent {
 

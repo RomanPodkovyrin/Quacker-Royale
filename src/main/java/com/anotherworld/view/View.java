@@ -34,6 +34,14 @@ import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.input.StringKeyListener;
+import com.anotherworld.view.programme.LegacyProgramme;
+import com.anotherworld.view.programme.Programme;
+import com.anotherworld.view.programme.ProgrammeUnavailableException;
+import com.anotherworld.view.programme.TexturedProgramme;
+import com.anotherworld.view.viewevent.ChangeWindowTitle;
+import com.anotherworld.view.viewevent.SwitchScene;
+import com.anotherworld.view.viewevent.UpdateDisplayObjects;
+import com.anotherworld.view.viewevent.ViewEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

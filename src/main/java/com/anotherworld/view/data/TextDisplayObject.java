@@ -2,8 +2,8 @@ package com.anotherworld.view.data;
 
 import static org.lwjgl.opengl.GL46.GL_QUADS;
 
-import com.anotherworld.view.Programme;
-import com.anotherworld.view.TextSpriteSheet;
+import com.anotherworld.view.graphics.spritesheet.TextSpriteSheet;
+import com.anotherworld.view.programme.Programme;
 
 import java.nio.FloatBuffer;
 

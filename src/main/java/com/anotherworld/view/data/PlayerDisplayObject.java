@@ -3,8 +3,9 @@ package com.anotherworld.view.data;
 import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
 
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.view.PlayerSpriteSheet;
-import com.anotherworld.view.Programme;
+import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.graphics.spritesheet.PlayerSpriteSheet;
+import com.anotherworld.view.programme.Programme;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.viewevent;
 
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.view.data.BallDisplayData;

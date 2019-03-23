@@ -1,6 +1,6 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.data.Points2d;
+import com.anotherworld.view.data.primatives.Points2d;
 
 /**
  * Creates a static camera to view the game.

@@ -1,9 +1,10 @@
-package com.anotherworld.view;
+package com.anotherworld.view.graphics.layout;
 
 import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.view.data.Supplier;
+import com.anotherworld.view.data.primatives.Supplier;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.input.ButtonData;
+import com.anotherworld.view.texture.TextureMap;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.programme;
 
 import static org.lwjgl.opengl.GL46.glBegin;
 import static org.lwjgl.opengl.GL46.glColor4f;

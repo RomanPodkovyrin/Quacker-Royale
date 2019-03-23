@@ -1,7 +1,7 @@
 package com.anotherworld.view.input;
 
-import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.RectangleDisplayObject;
+import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
 import java.util.List;

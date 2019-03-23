@@ -2,8 +2,8 @@ package com.anotherworld.view.input;
 
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
-import com.anotherworld.view.data.Supplier;
 import com.anotherworld.view.data.TextDisplayData;
+import com.anotherworld.view.data.primatives.Supplier;
 
 import java.util.Optional;
 

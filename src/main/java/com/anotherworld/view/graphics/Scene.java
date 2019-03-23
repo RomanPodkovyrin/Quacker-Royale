@@ -2,8 +2,8 @@ package com.anotherworld.view.graphics;
 
 import static org.lwjgl.opengl.GL46.glViewport;
 
-import com.anotherworld.view.Programme;
 import com.anotherworld.view.input.MouseState;
+import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
 

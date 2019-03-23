@@ -1,6 +1,5 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.data.TextListData;
@@ -8,6 +7,7 @@ import com.anotherworld.view.input.Button;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.Clickable;
 import com.anotherworld.view.input.MouseState;
+import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
 
@@ -125,12 +125,6 @@ public class GraphicsDisplay {
     public void addButton(ButtonData object) {
         synchronized (buttonsToAdd) {
             buttonsToAdd.add(object);
-        }
-    }
-
-    public void addButton(TextListData object) {
-        for (ButtonData b : object.getButtons()) {
-            buttonsToAdd.add(b);
         }
     }
 
