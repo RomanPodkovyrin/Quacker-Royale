@@ -62,6 +62,17 @@ public class MenuSystem {
 
         view.switchToDisplay(mainMenuDisplay);
         view.setTitle("Quacker Royal");
+        
+        while (view.windowOpen()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        thread.cancleWait();
+        
     }
 
     private Layout createMainMenu(GraphicsDisplay victoryDisplay, GraphicsDisplay creditDisplay, GraphicsDisplay settingsDisplay, GraphicsDisplay multiplayerMenuDisplay) {
@@ -239,7 +250,10 @@ public class MenuSystem {
         layout.addButton(buttonConnect);
 
         ButtonData backToMulti = new ButtonData("Go back");
-        backToMulti.setOnAction(() -> view.switchToDisplay(multiplayerMenuDisplay));
+        backToMulti.setOnAction(() -> {
+            thread.cancleWait();
+            view.switchToDisplay(multiplayerMenuDisplay);
+        });
         layout.addButton(backToMulti);
 
         return layout;
@@ -284,7 +298,7 @@ public class MenuSystem {
         
         ButtonData backToMulti = new ButtonData("Go back");
         backToMulti.setOnAction(() -> {
-            //TODO client disconnect
+            control.clientCancel();
             view.switchToDisplay(clientMenuDisplay);
         });
         layout.addButton(backToMulti);
@@ -331,7 +345,7 @@ public class MenuSystem {
         }, 1);
         layout.addList(playerList);
         
-        thread = new ClientLobbyWaitThread(() -> false, () -> view.switchToGameScene());
+        thread = new ClientLobbyWaitThread(() -> control.getServerStarted(), () -> view.switchToGameScene());
         
         ButtonData startGame = new ButtonData("Start game");
         startGame.setOnAction(() -> {

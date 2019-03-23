@@ -40,5 +40,9 @@ public class ClientLobbyWaitThread implements Runnable {
         waitingForGame = true;
         gameStarted = false;
     }
+    
+    public void cancleWait() {
+        waitingForGame = false;
+    }
 
 }
