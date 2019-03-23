@@ -347,4 +347,8 @@ public class View implements Runnable {
         throw new KeyListenerNotFoundException("Timeout of 10 seconds, check if window was initialized");
     }
 
+    public boolean windowOpen() {
+        return running;
+    }
+
 }

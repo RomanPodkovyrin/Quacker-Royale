@@ -305,10 +305,6 @@ public class Controller {
         startTheGame(settings,network);
     }
     
-    public void disconnect() {
-        //TODO implement client disconnect and server disconnect
-    }
-    
     public void startSinglePlayer() {
         GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
         startTheGame(settings, new NetworkControllerSinglePlayer());
