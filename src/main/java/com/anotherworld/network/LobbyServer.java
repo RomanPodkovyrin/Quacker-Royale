@@ -124,6 +124,9 @@ public class LobbyServer extends Thread {
         return playersIpAddresses;
     }
 
+    /**
+     * Informs all the clients that lobby has been cancelled.
+     */
     public void cancelLobby() throws IOException {
         for (int i = 0; i < clientSockets.size(); i++) {
             DataOutputStream out = new DataOutputStream(clientSockets.get(i));
