@@ -8,7 +8,7 @@ import java.util.Properties;
 
 /**
  * This class can be used to retrieve or edit contents of the
- * property files
+ * property files.
  *
  * @author Roman P
  */
@@ -18,8 +18,9 @@ public class PropertyReader {
     private Properties propertyFile;
 
     /**
+     * Class used to initialize the  property reader for the given file.
      * @param filename the name of the Property file if the format something.properties
-     * @throws IOException
+     * @throws IOException - If no file is find throws an exception
      */
     public PropertyReader(String filename) throws IOException {
         this.fullFilePath = System.getProperty("user.dir") + filePath + filename;
@@ -34,19 +35,36 @@ public class PropertyReader {
         return fullFilePath;
     }
 
-    public String getValue(String key) throws IOException{
+    /**
+     * Used to get a specified value from the properties file.
+     * @param key - the key of the value
+     * @return - the value
+     * @throws IOException - Throws exception if the file is no longer present
+     */
+    public String getValue(String key) throws IOException {
 
         propertyFile.load(new FileInputStream(new File(this.fullFilePath)));
         return this.propertyFile.getProperty(key);
     }
 
-    public void setValue(String key , String value) throws IOException {
+    /**
+     * Sets the given key to the given value.
+     * @param key The key to be set
+     * @param value the value to be set
+     * @throws IOException - if file is no longer available
+     */
+    public void setValue(String key, String value) throws IOException {
 
         propertyFile.load(new FileInputStream(new File(this.fullFilePath)));
         this.propertyFile.setProperty(key,value);
         this.propertyFile.store(new FileWriter(this.fullFilePath),null);
     }
 
+    /**
+     * Used to delete the given value by it key.
+     * @param key - the key to be deleted
+     * @throws IOException - if file is no longer available
+     */
     public void deleteValue(String key) throws IOException {
 
         propertyFile.load(new FileInputStream(new File(this.fullFilePath)));

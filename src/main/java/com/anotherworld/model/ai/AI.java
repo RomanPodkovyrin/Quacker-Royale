@@ -6,24 +6,33 @@ import com.anotherworld.model.ai.behaviour.Repeat;
 import com.anotherworld.model.ai.behaviour.Selector;
 import com.anotherworld.model.ai.behaviour.Sequence;
 import com.anotherworld.model.ai.behaviour.SequenceSuccess;
-import com.anotherworld.model.ai.behaviour.player.*;
+
+import com.anotherworld.model.ai.behaviour.player.CheckIfSaveToGo;
 
 import com.anotherworld.model.ai.behaviour.player.domination.ChaseBall;
 import com.anotherworld.model.ai.behaviour.player.domination.GetPowerUPs;
-import com.anotherworld.model.ai.behaviour.player.peace.WalkAbout;
-import com.anotherworld.model.ai.behaviour.player.survival.*;
-import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.Ball;
-import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
-import java.util.ArrayList;
 
+import com.anotherworld.model.ai.behaviour.player.peace.WalkAbout;
+
+import com.anotherworld.model.ai.behaviour.player.survival.AvoidBall;
+import com.anotherworld.model.ai.behaviour.player.survival.AvoidEdge;
+import com.anotherworld.model.ai.behaviour.player.survival.AvoidNeutralPlayer;
+import com.anotherworld.model.ai.behaviour.player.survival.CheckHealth;
+import com.anotherworld.model.ai.behaviour.player.survival.CheckShieldandTimePowerUP;
+import com.anotherworld.model.ai.behaviour.player.survival.GetHealth;
+
+import com.anotherworld.model.logic.Platform;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
+import java.util.ArrayList;
 import javafx.util.Pair;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+
 
 /**
  * This class sets up all the jobs for AIs and takes care of running AI when told to do so.
@@ -120,13 +129,6 @@ public class AI {
         ArrayList<Job> domination = new ArrayList<>();
         domination.add(new Inverter(new GetPowerUPs()));
         domination.add(new Inverter(new ChaseBall()));
-//        domination.add((new ChasePlayer()));
-
-//        ArrayList<Job> ballAim = new ArrayList<>();
-//        ballAim.add(new NeutralBallCheck());
-//        ballAim.add(new AimBall());
-
-//        domination.add(new SequenceSuccess(ballAim));
         return  domination;
 
     }
@@ -183,7 +185,7 @@ public class AI {
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform, session);
                 }
             }
-        tick = tick + 1;
+            tick = tick + 1;
         } else if (tick == 7) {
             tick = 0;
         } else {

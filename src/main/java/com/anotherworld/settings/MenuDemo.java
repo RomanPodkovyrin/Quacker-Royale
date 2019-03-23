@@ -2,6 +2,8 @@ package com.anotherworld.settings;
 
 import com.anotherworld.control.Main;
 
+import com.anotherworld.control.exceptions.ConnectionClosed;
+import com.anotherworld.control.exceptions.NoHostFound;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -195,7 +197,12 @@ public class MenuDemo extends Application {
                 .rgb(9, 100, 6), CornerRadii.EMPTY, Insets.EMPTY)));
         buttonConnect.setFont(font);
         buttonConnect.setOnAction(e ->{
-            control.connect(ipAndPort.getText());
+
+            try {
+                control.connect(ipAndPort.getText());
+            } catch (NoHostFound noHostFound) {
+                noHostFound.printStackTrace();
+            }
         });
 
         Button backToMulti = new Button("Go back");
@@ -246,7 +253,11 @@ public class MenuDemo extends Application {
                 screenSize.getHeight(), Color.BLACK);
 
         buttonHost.setOnAction(e -> {
-            control.host();
+            try {
+                control.host();
+            } catch (ConnectionClosed connectionClosed) {
+                connectionClosed.printStackTrace();
+            }
             window.setScene(scene5);
 
 

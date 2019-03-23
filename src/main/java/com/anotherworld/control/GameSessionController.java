@@ -2,6 +2,7 @@ package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.network.NetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -22,14 +23,6 @@ import org.apache.logging.log4j.Logger;
 public class GameSessionController {
 
 
-
-    private GameSession session;
-    private GameSettings settings;
-    private View view;
-    private Thread viewThread;
-    private KeyListener keyListener;
-    private NetworkController network;
-
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
 
     // Game Loop variables
@@ -43,14 +36,22 @@ public class GameSessionController {
     private final static int FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
 
 
+    private GameSession session;
+    private GameSettings settings;
+    private View view;
+    private Thread viewThread;
+    private KeyListener keyListener;
+    private AbstractNetworkController network;
+
+
     /**
-     *
+     * Used to Start the game session.
      * @param view - The view for the current game
      * @param settings - GameSettings which represents the current game
      * @param network - Networking for the current game
-     * @throws KeyListenerNotFoundException
+     * @throws KeyListenerNotFoundException - if key listener could not be found
      */
-    public GameSessionController(View view, GameSettings settings, NetworkController network) throws KeyListenerNotFoundException {
+    public GameSessionController(View view, GameSettings settings, AbstractNetworkController network) throws KeyListenerNotFoundException {
 
         this.settings = settings;
 
@@ -78,9 +79,7 @@ public class GameSessionController {
 
         this.network = network;
 
-        if (network != null) {
-            network.setKeyListener(keyListener);
-        }
+
 
         // Starting the main loop
         mainLoop();
@@ -108,7 +107,7 @@ public class GameSessionController {
         while (viewThread.isAlive() && session.isRunning()) {
 
             // music and effect mute unmute control
-            if(keyListener.getKeyPresses().contains(Input.MUTE)) {
+            if (keyListener.getKeyPresses().contains(Input.MUTE)) {
                 if (!keyDown) {
                     AudioControl.muteUnmute();
                     keyDown = true;
@@ -167,13 +166,6 @@ public class GameSessionController {
 
         }
 
-
-//        AudioControl.win();
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         shutDownSequence();
     }
 
