@@ -45,20 +45,34 @@ public class MenuSystem {
         GraphicsDisplay videoSettingsDisplay = new GraphicsDisplay();
         GraphicsDisplay keyBindingDisplay = new GraphicsDisplay();
         GraphicsDisplay creditDisplay = new GraphicsDisplay();
+        GraphicsDisplay clientLobbyDisplay = new GraphicsDisplay();
+        ClientLobbyWaitThread thread = new ClientLobbyWaitThread(() -> false, () -> logger.warn("Lobby error"));
         this.createMainMenu(victoryDisplay, creditDisplay, settingsDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
         this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsDisplay);
         this.createAudioSettings(settingsDisplay).enactLayout(audioSettingsDisplay);
         //TODO set video settings scene
         //TODO set key binding scene
         //TODO set credit scene and load from file
+        this.createClientLobbyMenuDisplay(clientMenuDisplay);
         this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay).enactLayout(multiplayerMenuDisplay);
-        this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay).enactLayout(clientMenuDisplay);
-        this.createHostLobbyMenuDisplay(multiplayerMenuDisplay).enactLayout(hostLobbyMenuDisplay);
+        this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay, clientLobbyDisplay, thread).enactLayout(clientMenuDisplay);
+        this.createHostLobbyMenuDisplay(multiplayerMenuDisplay, thread).enactLayout(hostLobbyMenuDisplay);
         this.createConnectionFailedDisplay(mainMenuDisplay).enactLayout(connectionFailedDisplay);
         this.createVictoryDisplay(mainMenuDisplay).enactLayout(victoryDisplay);
 
         view.switchToDisplay(mainMenuDisplay);
         view.setTitle("Quacker Royal");
+        
+        while (view.windowOpen()) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        
+        thread.cancleWait();
+        
     }
 
     private Layout createMainMenu(GraphicsDisplay victoryDisplay, GraphicsDisplay creditDisplay, GraphicsDisplay settingsDisplay, GraphicsDisplay multiplayerMenuDisplay) {
@@ -207,7 +221,7 @@ public class MenuSystem {
         
     }
     
-    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay connectionFailedDisplay) throws KeyListenerNotFoundException {
+    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay clientLobbyDisplay, ClientLobbyWaitThread thread) throws KeyListenerNotFoundException {
         logger.debug("Creating client menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -221,22 +235,25 @@ public class MenuSystem {
         ButtonData buttonConnect = new ButtonData("Connect");
         buttonConnect.setOnAction(() -> {
             Thread x = new Thread(() -> {
-                logger.info("Starting game");
-                view.switchToGameScene();
                 try {
+                    view.switchToDisplay(clientLobbyDisplay);
                     control.connect(ipAndPort.getText());
-                    view.switchToDisplay(mainMenuDisplay);
                 } catch (NoHostFound | ConnectionClosed e) {
                     view.switchToDisplay(connectionFailedDisplay);
                 }
-                logger.info("Finished the game");
             });
             x.start();
+            thread.reset();
+            Thread y = new Thread(thread);
+            y.start();
         });
         layout.addButton(buttonConnect);
 
         ButtonData backToMulti = new ButtonData("Go back");
-        backToMulti.setOnAction(() -> view.switchToDisplay(multiplayerMenuDisplay));
+        backToMulti.setOnAction(() -> {
+            thread.cancleWait();
+            view.switchToDisplay(multiplayerMenuDisplay);
+        });
         layout.addButton(backToMulti);
 
         return layout;
@@ -281,7 +298,7 @@ public class MenuSystem {
         
         ButtonData backToMulti = new ButtonData("Go back");
         backToMulti.setOnAction(() -> {
-            control.disconnect();
+            control.clientCancel();
             view.switchToDisplay(clientMenuDisplay);
         });
         layout.addButton(backToMulti);
@@ -307,7 +324,7 @@ public class MenuSystem {
         
     }
     
-    private Layout createHostLobbyMenuDisplay(GraphicsDisplay multiplayerMenuDisplay) {
+    private Layout createHostLobbyMenuDisplay(GraphicsDisplay multiplayerMenuDisplay, ClientLobbyWaitThread thread) {
         logger.debug("Creating host lobby display");
         
         LobbyLayout layout = new LobbyLayout(0.2f);
@@ -328,9 +345,18 @@ public class MenuSystem {
         }, 1);
         layout.addList(playerList);
         
+        thread = new ClientLobbyWaitThread(() -> control.getServerStarted(), () -> view.switchToGameScene());
+        
+        ButtonData startGame = new ButtonData("Start game");
+        startGame.setOnAction(() -> {
+            control.hostStartTheGame();
+            view.switchToGameScene();
+        });
+        layout.addButton(startGame);
+        
         ButtonData backToMulti = new ButtonData("Go back");
         backToMulti.setOnAction(() -> {
-            control.disconnect();
+            control.hostCancelTheGame();
             view.switchToDisplay(multiplayerMenuDisplay);
         });
         layout.addButton(backToMulti);
