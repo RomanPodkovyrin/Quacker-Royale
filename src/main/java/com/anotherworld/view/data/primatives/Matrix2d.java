@@ -1,6 +1,4 @@
-package com.anotherworld.view.data;
-
-import com.anotherworld.view.graphics.MatrixSizeException;
+package com.anotherworld.view.data.primatives;
 
 /**
  * Creates and manipulates a 2d matrix.

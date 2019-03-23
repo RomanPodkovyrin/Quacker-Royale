@@ -2,7 +2,8 @@ package com.anotherworld.view.graphics;
 
 import static org.lwjgl.opengl.GL46.glViewport;
 
-import com.anotherworld.view.Programme;
+import com.anotherworld.view.input.MouseState;
+import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
 
@@ -28,9 +29,13 @@ public class Scene {
      * Draws the current scene to the window.
      * @param width The width of the window in pixels
      * @param height The height of the window in pixels
+     * @param programme The display programme to use
      */
     public void draw(int width, int height, Programme programme) {
         logger.debug("Drawing Scene");
+        
+        MouseState ms = programme.getCursorPosition();
+        
         for (int i = 0; i < displays.size(); i++) {
             logger.trace("Drawing scene: " + i);
             GraphicsDisplay display = displays.get(i);
@@ -39,8 +44,13 @@ public class Scene {
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
             glViewport(x, y, w, h);
-            display.draw(programme);
+            display.draw(programme, translateMouseState(ms));
         }
+    }
+    
+    private MouseState translateMouseState(MouseState mouseState) {
+        //TODO Translate the mouse state
+        return mouseState;
     }
     
     /**
@@ -64,6 +74,14 @@ public class Scene {
     private int convertScale(float floatScale, int intScale, int intValue) {
         logger.trace("Converting scale " + floatScale);
         return Math.min(intScale - intValue, Math.max(0, (int)Math.round((floatScale / 2f) * ((float)intScale))));
+    }
+    
+    protected void clearDisplays() {
+        displays.clear();
+    }
+    
+    public void addDisplay(GraphicsDisplay d) {
+        displays.add(d);
     }
 
     /**

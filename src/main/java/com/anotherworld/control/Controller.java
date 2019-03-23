@@ -7,7 +7,6 @@ import com.anotherworld.network.LobbyServer;
 import com.anotherworld.network.NetworkController;
 import com.anotherworld.network.Server;
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.settings.MenuDemo;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
@@ -22,18 +21,15 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.system.Platform;
 
 /**
  * This class helps to set up the appropriate settings to either start a single player game or a multiplayer.
  * @author roman
  */
-public class Main {
-    private MenuDemo view;
+public class Controller {
+    private View view;
     private ArrayList<String> playersIPaddresses = new ArrayList<>();
-    private static Logger logger = LogManager.getLogger(Main.class);
+    private static Logger logger = LogManager.getLogger(Controller.class);
     private boolean runTheHostGame = false;
 
     /**
@@ -42,23 +38,17 @@ public class Main {
      * @param args - command name arguments are not used
      */
     public static void main(String []args) {
-        Main main = new Main();
+        Controller main = new Controller(new View(1920, 1080));
         GameSettings settings = new GameSettings(2,1,1);
         main.startTheGame(settings, new NetworkController());
-        MenuDemo viewMenu = new MenuDemo();
-
     }
 
     public void setRunTheHostGame(boolean run) {
         this.runTheHostGame = run;
     }
 
-    public void add(MenuDemo view) {
+    public Controller(View view) {
         this.view = view;
-    }
-
-    public Main() {
-        // need to set default config files?
     }
 
     /**
@@ -71,16 +61,6 @@ public class Main {
     private void startTheGame(GameSettings settings, NetworkController network) {
 
         try {
-            // Starts the render
-            View view;
-            logger.trace("Render is initialised");
-            if (Platform.get() == Platform.MACOSX) {
-                view = new View(1920, 1080);
-            } else {
-                GLFW.glfwInit();
-                GLFWVidMode mode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
-                view = new View((int)(mode.width() * 0.8), (int)(mode.height() * 0.8));
-            }
             // Starts the game itself
             logger.trace("The game session started");
             new GameSessionController(view, settings, network);
@@ -235,7 +215,11 @@ public class Main {
         NetworkController network = new NetworkController(client, settings);
         startTheGame(settings,network);
     }
-
+    
+    public void disconnect() {
+        //TODO implement client disconnect and server disconnect
+    }
+    
     public void startSinglePlayer() {
         GameSettings settings = new GameSettings(4,3,6);
         startTheGame(settings, new NetworkController());

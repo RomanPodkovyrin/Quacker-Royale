@@ -1,6 +1,7 @@
-package com.anotherworld.view;
+package com.anotherworld.view.graphics.spritesheet;
 
 import com.anotherworld.view.data.BallDisplayData;
+import com.anotherworld.view.texture.TextureMap;
 
 public class BallSpriteSheet extends SpriteSheet {
     

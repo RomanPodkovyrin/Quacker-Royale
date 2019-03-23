@@ -1,6 +1,7 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.data.Points2d;
+import com.anotherworld.view.data.primatives.Matrix2d;
+import com.anotherworld.view.data.primatives.Points2d;
 
 /**
  * Stores the information that defines where the camera is looking.
@@ -50,7 +51,29 @@ public abstract class Camera {
      * @return the depth
      */
     public abstract float getDepth();
+
+
+    /**
+     * Applies matrix transformations using the camera's position so it is centred on the screen.
+     */
+    public Matrix2d transform() {
+        Matrix2d transformation = (Matrix2d.homScale3d(2 / this.getWidth(), -2 / this.getHeight(), 0));
+        transformation = transformation.mult(Matrix2d.homTranslate3d(-this.getX(), -this.getY(), -this.getZ()));
+        return transformation;
+    }
     
+    /**
+     * Returns a transformation that scales the objects on screen based on their distance to the camera.
+     * @param depth the depth of the camera
+     * @return the transformation
+     */
+    public Matrix2d cameraProjectionf(float depth) {
+        Matrix2d projection = Matrix2d.genIdentity(4);
+        projection.setValue(3, 2, 1 / depth);
+        projection.setValue(2, 2, 0);
+        return (projection);
+    }
+
     /**
      * The handedness direction of the camera.
      * @return the handedness vector

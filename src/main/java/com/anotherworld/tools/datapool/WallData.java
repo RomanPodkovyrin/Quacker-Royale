@@ -123,10 +123,5 @@ public class WallData implements RectangleDisplayData, Serializable {
     public ObjectState getState() {
         return null;
     }
-
-    @Override
-    public Matrix getVelocity() {
-        return new Matrix(0, 0);
-    }
     
 }

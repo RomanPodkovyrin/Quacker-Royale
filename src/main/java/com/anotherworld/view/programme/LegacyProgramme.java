@@ -1,4 +1,4 @@
-package com.anotherworld.view;
+package com.anotherworld.view.programme;
 
 import static org.lwjgl.opengl.GL46.glBegin;
 import static org.lwjgl.opengl.GL46.glColor4f;
@@ -10,8 +10,13 @@ import com.anotherworld.view.data.Points2d;
 
 public class LegacyProgramme extends Programme {
 
-    public LegacyProgramme() throws ProgrammeUnavailableException {
-        super();
+    /**
+     * Creates a rendering programme using the most basic parts of opengl.
+     * @param window The glfw window id
+     * @throws ProgrammeUnavailableException If the programme couldn't be initialised
+     */
+    public LegacyProgramme(long window) throws ProgrammeUnavailableException {
+        super(window);
     }
     
     @Override
@@ -59,6 +64,10 @@ public class LegacyProgramme extends Programme {
 
     @Override
     public void updateObjectColour(DisplayObject displayObject) {
+    }
+
+    @Override
+    public void updateBuffers(DisplayObject textDisplayObject) {
     }
 
 }
