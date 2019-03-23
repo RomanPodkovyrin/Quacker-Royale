@@ -15,51 +15,52 @@ import org.apache.logging.log4j.Logger;
 public class GameKeyListener {
 
     private static Logger logger = LogManager.getLogger(GameKeyListener.class);
-    
-    private final Long window;
-    
+
+    private KeyListener keyListener;
+
+    private final int up = GLFW_KEY_UP;
+    private final int left = GLFW_KEY_LEFT;
+    private final int down = GLFW_KEY_DOWN;
+    private final int right = GLFW_KEY_RIGHT;
+    private final int charge = GLFW_KEY_SPACE;
+
     public GameKeyListener(Long window) {
-        logger.info("Creating keylistener for window " + window);
-        this.window = window;
+        logger.debug("Creating GameKeyListener for window " + window);
+        ArrayList<Integer> trackedKeys = new ArrayList<>();
+        trackedKeys.add(up);
+        trackedKeys.add(left);
+        trackedKeys.add(right);
+        trackedKeys.add(down);
+        trackedKeys.add(charge);
+        keyListener = new KeyListener(trackedKeys, window);
     }
 
     public ArrayList<Input> getKeyPresses() {
         ArrayList<Input> keyPresses = new ArrayList<>();
-
-        if (glfwGetKey(window, GLFW_KEY_UP) == 1) {
-            keyPresses.add(Input.UP);
-        }
-        if (glfwGetKey(window, GLFW_KEY_DOWN)  == 1) {
-            keyPresses.add(Input.DOWN);
-        }
-        if (glfwGetKey(window, GLFW_KEY_LEFT)  == 1) {
-            keyPresses.add(Input.LEFT);
-        }
-        if (glfwGetKey(window, GLFW_KEY_RIGHT) == 1) {
-            keyPresses.add(Input.RIGHT);
-        }
-        if (glfwGetKey(window, GLFW_KEY_SPACE) == 1) {
-            keyPresses.add(Input.CHARGE);
+        ArrayList<Integer> downKeys = keyListener.getPressedKeys();
+        for (Integer key : downKeys) {
+            switch (key) {
+                case up:
+                    keyPresses.add(Input.UP);
+                    break;
+                case down:
+                    keyPresses.add(Input.DOWN);
+                    break;
+                case left:
+                    keyPresses.add(Input.LEFT);
+                    break;
+                case right:
+                    keyPresses.add(Input.RIGHT);
+                    break;
+                case charge:
+                    keyPresses.add(Input.CHARGE);
+                    break;
+                default:
+                    logger.warn("Unexpected key tracked by game");
+            }
         }
 
         return keyPresses;
     }
 
-    /*
-    public boolean isUpPressed() {
-        return glfwGetKey(window, GLFW_KEY_UP) == 1;
-    }
-
-    public boolean isDownPressed() {
-        return glfwGetKey(window, GLFW_KEY_DOWN) == 1;
-    }
-
-    public boolean isLeftPressed() {
-        return glfwGetKey(window, GLFW_KEY_LEFT) == 1;
-    }
-
-    public boolean isRightPressed() {
-        return glfwGetKey(window, GLFW_KEY_RIGHT) == 1;
-    }
-    */
 }

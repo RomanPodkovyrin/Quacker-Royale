@@ -418,7 +418,7 @@ public class MenuSystem {
         viewThread.start();
         logger.info("Starting menu");
         MenuSystem ms = new MenuSystem(view, new Controller(view));
-        try {
+        try { //TODO Change this to logging
             ms.start();
         } catch (KeyListenerNotFoundException e) {
             e.printStackTrace();

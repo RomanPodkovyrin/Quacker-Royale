@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
-import com.anotherworld.tools.input.StringKeyListener;
+import com.anotherworld.tools.input.KeyListener;
 import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.BallDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
@@ -33,6 +33,7 @@ import com.anotherworld.view.data.RectangleDisplayObject;
 import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.Scene;
+import com.anotherworld.view.input.StringKeyListener;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -86,7 +87,7 @@ public class View implements Runnable {
         this.width = width;
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
-        running = true;
+        running = false;
         logger.info("Running view");
     }
 
@@ -243,6 +244,7 @@ public class View implements Runnable {
         if (currentScene != null) {
             currentScene.destoryObjects();
         }
+        running = false;
         glfwTerminate();
     }
 
@@ -251,6 +253,7 @@ public class View implements Runnable {
         // TODO delete all object for all scenes
         currentScene.destoryObjects();
         programme.destroy();
+        running = false;
         glfwTerminate();
     }
 
@@ -273,21 +276,29 @@ public class View implements Runnable {
                 disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
             }
             ((GameScene) currentScene).updateGameObjects(disObj);
-            System.out.println("Adding Objects");
+            logger.debug("Adding Objects");
         } else if (event.getClass().equals(SwitchScene.class)) {
             SwitchScene sceneEvent = (SwitchScene) event;
             currentScene = sceneEvent.getScene();
-            System.out.println("Switching scene");
+            logger.debug("Switching scene");
+        } else if (event.getClass().equals(ChangeWindowTitle.class)) {
+            ChangeWindowTitle windowTitle = (ChangeWindowTitle) event;
+            glfwSetWindowTitle(window, windowTitle.getTitle());
         }
+    }
+    
+    public boolean gameRunning() {
+        return running && currentScene.getClass().equals(GameScene.class);
     }
 
     public void close() {
         running = false;
     }
 
-    public void setTitle(String string) {
-        // TODO fix this
-        // glfwSetWindowTitle(window, string);
+    public void setTitle(String title) {
+        synchronized (eventQueue) {
+            eventQueue.add(new ChangeWindowTitle(title));
+        }
     }
 
     public StringKeyListener getAllKeyListener(String start) throws KeyListenerNotFoundException {

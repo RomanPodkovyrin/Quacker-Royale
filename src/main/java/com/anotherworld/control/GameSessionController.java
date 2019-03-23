@@ -97,7 +97,7 @@ public class GameSessionController {
 
 
 
-        while (session.isRunning()) {
+        while (view.gameRunning() && session.isRunning()) {
 
             // if client check if there are game objects to update
             network.clientControl(keyListener);

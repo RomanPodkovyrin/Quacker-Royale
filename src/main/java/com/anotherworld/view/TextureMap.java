@@ -7,12 +7,12 @@ import static org.lwjgl.opengl.GL46.glUniform1i;
 import static org.lwjgl.opengl.GL46.glUniform2f;
 import static org.lwjgl.opengl.GL46.glUniformMatrix4fv;
 
+import com.anotherworld.model.ai.tools.Matrix;
+
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
-
-import com.anotherworld.model.ai.tools.Matrix;
 
 /**
  * Creates and manages a map of different textures.

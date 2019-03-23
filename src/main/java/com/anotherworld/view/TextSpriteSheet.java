@@ -52,6 +52,7 @@ public class TextSpriteSheet extends SpriteSheet {
     }
     
     public static FloatBuffer generateTexture(String text) {
+        text = text.toUpperCase();
         FloatBuffer buffer = BufferUtils.createFloatBuffer(text.length() * 8);
         Matrix dimensions = TextureMap.getDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
         for (int i = 0; i < text.length(); i++) {

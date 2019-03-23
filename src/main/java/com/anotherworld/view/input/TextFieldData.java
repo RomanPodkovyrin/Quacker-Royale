@@ -1,6 +1,6 @@
 package com.anotherworld.view.input;
 
-import com.anotherworld.tools.input.StringKeyListener;
+import com.anotherworld.tools.input.KeyListener;
 
 import java.util.Optional;
 

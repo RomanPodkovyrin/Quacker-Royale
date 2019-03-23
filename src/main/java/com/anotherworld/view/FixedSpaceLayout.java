@@ -1,5 +1,6 @@
 package com.anotherworld.view;
 
+import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.view.data.Supplier;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.input.ButtonData;
@@ -22,16 +23,17 @@ public class FixedSpaceLayout extends Layout {
     public void enactLayout(GraphicsDisplay display) {
         float ySpacing = 2f / (buttons.size() + 1);
         Supplier<Float> maxWidth = () -> {
+            Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
+            float buttonWidth = buttonHeight * X_SCALE_ADJUSTMENT * (dimensions.getX() / dimensions.getY());
             float max = 0f;
             for (ButtonData button : buttons) {
-                max = Math.max((float)button.getText().length() * buttonHeight * X_SCALE_ADJUSTMENT, max);
+                max = Math.max((float)button.getText().length() * buttonWidth, max);
             }
-            return max + buttonHeight * X_SCALE_ADJUSTMENT;
+            return max + buttonWidth;
         };
         
         for (int i = 0; i < buttons.size(); i++) {
             ButtonData button = buttons.get(i);
-            button.setText(button.getText().toUpperCase());
             button.setHeight(buttonHeight);
             button.setWidth(maxWidth);
             button.setPosition(this.getX() * X_SCALE_ADJUSTMENT, this.getY() + (-this.getHeight() / 2) + ySpacing * (i + 1));

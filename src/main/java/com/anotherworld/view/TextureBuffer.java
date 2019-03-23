@@ -1,7 +1,6 @@
 package com.anotherworld.view;
 
 import static org.lwjgl.opengl.GL46.GL_CLAMP_TO_EDGE;
-import static org.lwjgl.opengl.GL46.GL_LINEAR;
 import static org.lwjgl.opengl.GL46.GL_NEAREST;
 import static org.lwjgl.opengl.GL46.GL_RGBA;
 import static org.lwjgl.opengl.GL46.GL_TEXTURE_2D;
