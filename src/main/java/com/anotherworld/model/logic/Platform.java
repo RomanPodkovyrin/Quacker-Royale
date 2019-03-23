@@ -20,22 +20,49 @@ public class Platform {
         this.platformData = platformData;
     }
 
-    public float getXCoordinate() { return platformData.getXCoordinate(); }
-    public float getYCoordinate() { return platformData.getYCoordinate(); }
+    public float getXCoordinate() {
+        return platformData.getXCoordinate();
+    }
 
-    public float getXSize() { return platformData.getxSize(); }
-    private void setXSize(float xSize) { platformData.setxSize(xSize); }
+    public float getYCoordinate() {
+        return platformData.getYCoordinate();
+    }
 
-    public float getYSize() { return platformData.getySize(); }
-    private void setYSize(float ySize) { platformData.setySize(ySize); }
+    public float getXSize() {
+        return platformData.getxSize();
+    }
 
-    private float getXTargetSize() { return platformData.getxTargetSize(); }
-    private float getYTargetSize() { return platformData.getyTargetSize(); }
+    private void setXSize(float xSize) {
+        platformData.setxSize(xSize);
+    }
 
-    private float getXShrink() { return PlatformData.getxShrink(); }
-    private float getYShrink() { return PlatformData.getyShrink(); }
+    public float getYSize() {
+        return platformData.getySize();
+    }
 
-    int getStage() { return platformData.getStage(); }
+    private void setYSize(float ySize) {
+        platformData.setySize(ySize);
+    }
+
+    private float getXTargetSize() {
+        return platformData.getxTargetSize();
+    }
+
+    private float getYTargetSize() {
+        return platformData.getyTargetSize();
+    }
+
+    private float getXShrink() {
+        return PlatformData.getxShrink();
+    }
+
+    private float getYShrink() {
+        return PlatformData.getyShrink();
+    }
+
+    int getStage() {
+        return platformData.getStage();
+    }
 
     /**
      * Called when the platform needs to shrink.
@@ -50,12 +77,13 @@ public class Platform {
     }
 
     void shrink() {
-        if (getXSize() > getXTargetSize() &&
-            getYSize() > getYTargetSize()) {
+        if (getXSize() > getXTargetSize()
+                && getYSize() > getYTargetSize()) {
             setXSize(getXSize() - SIZE_DECREASE);
             setYSize(getYSize() - SIZE_DECREASE);
         }
     }
+
     /**
      * checks whether the the given coordinates are on the platform.
      * @param x the x coordinate

@@ -70,13 +70,21 @@ public class PlatformData implements RectangleDisplayData, Serializable {
         this.ySize = ySize;
     }
 
-    public float getxTargetSize() { return xTargetSize; }
+    public float getxTargetSize() {
+        return xTargetSize;
+    }
 
-    public void setxTargetSize(float xTargetSize) { this.xTargetSize = xTargetSize; }
+    public void setxTargetSize(float xTargetSize) {
+        this.xTargetSize = xTargetSize;
+    }
 
-    public float getyTargetSize() { return yTargetSize; }
+    public float getyTargetSize() {
+        return yTargetSize;
+    }
 
-    public void setyTargetSize(float yTargetSize) { this.yTargetSize = yTargetSize; }
+    public void setyTargetSize(float yTargetSize) {
+        this.yTargetSize = yTargetSize;
+    }
 
     public float getWidth() {
         return xSize * 2;
@@ -118,11 +126,6 @@ public class PlatformData implements RectangleDisplayData, Serializable {
     @Override
     public ObjectState getState() {
         return null;
-    }
-
-    @Override
-    public Matrix getVelocity() {
-        return new Matrix(0, 0);
     }
     
 }

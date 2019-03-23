@@ -1,11 +1,20 @@
-package com.anotherworld.view;
+package com.anotherworld.view.programme;
+
+import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT;
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
+import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
 import com.anotherworld.view.data.DisplayObject;
-import com.anotherworld.view.data.Matrix2d;
-import com.anotherworld.view.data.Points2d;
+import com.anotherworld.view.data.primatives.Matrix2d;
 import com.anotherworld.view.graphics.Camera;
+import com.anotherworld.view.input.MouseState;
 
+import java.nio.DoubleBuffer;
+import java.nio.IntBuffer;
 import java.util.Stack;
+
+import org.lwjgl.BufferUtils;
 
 /**
  * Stores information about how the game will be rendered, changes opengl options to use it and renders all of the game.
@@ -16,8 +25,19 @@ public abstract class Programme {
     
     private Stack<Matrix2d> matrixStack;
     
-    public Programme() throws ProgrammeUnavailableException {
+    private final long window;
+    
+    private boolean mouseDown;
+    
+    /**
+     * Creates a programme that will draw to the selected window.
+     * @param window The window to draw to
+     * @throws ProgrammeUnavailableException If the programme couldn't be created for rendering
+     */
+    public Programme(long window) throws ProgrammeUnavailableException {
         matrixStack = new Stack<>();
+        this.mouseDown = false;
+        this.window = window;
     }
 
     /**
@@ -52,31 +72,7 @@ public abstract class Programme {
      * @param camera The camera to use for display
      */
     public void transform(Camera camera) {
-        this.cameraProjectionf(camera.getDepth());
-        this.scalef(1 / camera.getWidth(), -1 / camera.getHeight(), 1);
-        this.cameraRotation(camera);
-        this.translatef(-camera.getX(), -camera.getY(), -camera.getZ());
-    }
-    
-    private void cameraRotation(Camera camera) {
-        Points2d n = camera.getViewDirection().normalise();
-        Points2d v = camera.getHandedness().normalise();
-        Points2d u = camera.getUpDirection().normalise();
-        Matrix2d rotation = new Matrix2d(4, 4);
-        for (int i = 0; i < 3; i++) {
-            rotation.setValue(0, i, v.getValue(i, 0));
-            rotation.setValue(1, i, u.getValue(i, 0));
-            rotation.setValue(2, i, n.getValue(i, 0));
-        }
-        rotation.setValue(3, 3, 1f);
-        this.multiplyCurrent(rotation);
-    }
-
-    private void cameraProjectionf(float depth) {
-        Matrix2d projection = this.getIdentity();
-        projection.setValue(3, 2, 1 / depth);
-        projection.setValue(2, 2, 0);
-        this.multiplyCurrent(projection);
+        this.multiplyCurrent(camera.transform());
     }
 
     /**
@@ -222,5 +218,43 @@ public abstract class Programme {
      * @param displayObject the object to update
      */
     public abstract void updateObjectColour(DisplayObject displayObject);
+
+    /**
+     * Returns the cursors current position.
+     * @return A mouse state containing the position
+     */
+    public MouseState getCursorPosition() {
+        DoubleBuffer cursorX = BufferUtils.createDoubleBuffer(1);
+        DoubleBuffer cursorY = BufferUtils.createDoubleBuffer(1);
+        
+        glfwGetCursorPos(window, cursorX, cursorY);
+        
+        IntBuffer width = BufferUtils.createIntBuffer(1);
+        IntBuffer height = BufferUtils.createIntBuffer(1);
+        
+        glfwGetWindowSize(window, width, height);
+        float x = -1 + (2 * (float)cursorX.get() / ((float)width.get()));
+        float y = -1 + (2 * (float)cursorY.get() / ((float)height.get()));
+        
+        boolean pressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1;
+        
+        if (pressed) {
+            if (!mouseDown) {
+                mouseDown = true;
+            } else {
+                pressed = false;
+            }
+        } else {
+            mouseDown = false;
+        }
+        
+        return new MouseState(x, y, pressed);
+    }
+
+    /**
+     * Updates the stored buffers for the given object.
+     * @param displayObject the object to update
+     */
+    public abstract void updateBuffers(DisplayObject displayObject);
     
 }

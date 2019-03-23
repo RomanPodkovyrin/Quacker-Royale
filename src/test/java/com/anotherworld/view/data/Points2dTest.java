@@ -15,6 +15,8 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import com.anotherworld.view.data.primatives.Points2d;
+
 public class Points2dTest {
 
     private static final float TEST_ERROR = 0.0001f;

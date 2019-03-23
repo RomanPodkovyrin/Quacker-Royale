@@ -1,4 +1,4 @@
-package com.anotherworld.view.data;
+package com.anotherworld.view.data.primatives;
 
 /**
  * Stores an array of points that define an object.
@@ -92,7 +92,7 @@ public class Points2d {
      * @param t The thickness of the wall
      * @return The wall's points
      */
-    protected static final Points2d genWall(float w, float h, float t) {
+    public static final Points2d genWall(float w, float h, float t) {
         Points2d points = new Points2d(4, 10);
         points.setValue(0, 0, -w / 2 - t);
         points.setValue(1, 0, h / 2 + t);
@@ -126,7 +126,7 @@ public class Points2d {
      * @param h The height of the rectangle
      * @return The points of the rectangle
      */
-    protected static final Points2d genRectangle(float w, float h) {
+    public static final Points2d genRectangle(float w, float h) {
         Points2d points = new Points2d(4, 4);
         points.setValue(0, 0, -w / 2);
         points.setValue(1, 0, h / 2);
@@ -149,7 +149,7 @@ public class Points2d {
      * @param h The height of the rectangle
      * @return The points of the rectangle
      */
-    protected static final Points2d gen3DRectangle(float w, float h) {
+    public static final Points2d gen3DRectangle(float w, float h) {
         Points2d points = new Points2d(4, 4);
         points.setValue(0, 0, -w / 2);
         points.setValue(2, 0, h / 2);
@@ -171,7 +171,7 @@ public class Points2d {
      * @param r The radius of the circle
      * @return The points of the circle
      */
-    protected static final Points2d gen3DCircle(float r) {
+    public static final Points2d gen3DCircle(float r) {
         Points2d points = new Points2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);
@@ -189,7 +189,7 @@ public class Points2d {
      * @param r The radius of the circle
      * @return The points of the circle
      */
-    protected static final Points2d genCircle(float r) {
+    public static final Points2d genCircle(float r) {
         Points2d points = new Points2d(4, 38);
         points.setValue(0, 0, 0f);
         points.setValue(1, 0, 0f);

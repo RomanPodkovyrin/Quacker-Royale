@@ -46,28 +46,63 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
         super.copyObject(data);
     }
 
-    public int getHealth() { return health; }
-    public void setHealth(int health) { this.health = health; }
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
     
     public int getMaxHealth() {
         return this.maxHealth;
     }
 
-    public int getChargeLevel() { return this.chargeLevel; }
-    public void setChargeLevel(int chargeLevel) { this.chargeLevel = chargeLevel; }
+    public int getChargeLevel() {
+        return this.chargeLevel;
+    }
 
-    public long getTimeStartedCharging() { return this.timeStartedCharging; }
-    public void setTimeStartedCharging(long timeStartedCharging) { this.timeStartedCharging = timeStartedCharging; }
+    public void setChargeLevel(int chargeLevel) {
+        this.chargeLevel = chargeLevel;
+    }
 
-    public int getStunTimer() { return this.stunTimer; }
-    public void setStunTimer(int stunTimer) { this.stunTimer = stunTimer; }
+    public long getTimeStartedCharging() {
+        return this.timeStartedCharging;
+    }
 
-    public boolean isDeadByFalling() { return this.deadByFalling; }
-    public void setDeadByFalling(boolean deadByFalling) { this.deadByFalling = deadByFalling; }
+    public void setTimeStartedCharging(long timeStartedCharging) {
+        this.timeStartedCharging = timeStartedCharging;
+    }
 
-    public boolean isShielded() { return this.shielded; }
-    public void setShielded(boolean shielded) { this.shielded = shielded; }
+    public int getStunTimer() {
+        return this.stunTimer;
+    }
 
-    public boolean isTimeStopper() { return this.timeStopper; }
-    public void setTimeStopper(boolean timeStopper) { this.timeStopper = timeStopper; }
+    public void setStunTimer(int stunTimer) {
+        this.stunTimer = stunTimer;
+    }
+
+    public boolean isDeadByFalling() {
+        return this.deadByFalling;
+    }
+
+    public void setDeadByFalling(boolean deadByFalling) {
+        this.deadByFalling = deadByFalling;
+    }
+
+    public boolean isShielded() {
+        return this.shielded;
+    }
+
+    public void setShielded(boolean shielded) {
+        this.shielded = shielded;
+    }
+
+    public boolean isTimeStopper() {
+        return this.timeStopper;
+    }
+
+    public void setTimeStopper(boolean timeStopper) {
+        this.timeStopper = timeStopper;
+    }
 }

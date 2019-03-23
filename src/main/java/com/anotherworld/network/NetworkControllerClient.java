@@ -6,8 +6,8 @@ import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
+import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.Input;
-import com.anotherworld.tools.input.KeyListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class NetworkControllerClient extends AbstractNetworkController {
     }
 
     @Override
-    public void clientControl(KeyListener keyListener) {
+    public void clientControl(GameKeyListener keyListener) {
         // send the given key presses to the host
         ArrayList<Input> keyPresses = keyListener.getKeyPresses();
 

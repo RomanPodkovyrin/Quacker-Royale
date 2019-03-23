@@ -41,16 +41,18 @@ public class AvoidNeutralPlayer extends Job {
             if (!Player.isDead(player)) {
 
                 // Checks the distance between the player and the ai
+                // TODO magic number
                 if (MatrixMath.distanceAB(player.getCoordinates(), ai.getCoordinates()) <= player.getRadius() + ai.getRadius() + 0.5) {
-                    fail();
-                    logger.debug("Avoiding player " + player.getObjectID());
-                    Matrix vector = MatrixMath.pointsVector(player.getCoordinates(),ai.getCoordinates());
-                    Line line = new Line(player.getCoordinates(), vector);
-                    Matrix orthogonal = line.getOrthogonalVector();
-
-                    // Tells ai to move orthogonaly
-                    BlackBoard.moveIn(ai,orthogonal);
-                    return;
+                    //TODO do i need it, it makes ai look silly
+//                    fail();
+//                    logger.debug("Avoiding player " + player.getObjectID());
+//                    Matrix vector = MatrixMath.pointsVector(player.getCoordinates(),ai.getCoordinates());
+//                    Line line = new Line(player.getCoordinates(), vector);
+//                    Matrix orthogonal = line.getOrthogonalVector();
+//
+//                    // Tells ai to move orthogonaly
+//                    BlackBoard.moveIn(ai,orthogonal);
+//                    return;
                 }
             }
         }

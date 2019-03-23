@@ -23,9 +23,12 @@ import com.anotherworld.model.ai.behaviour.player.survival.GetHealth;
 
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import javafx.util.Pair;
 
@@ -51,6 +54,8 @@ public class AI {
     private GameSessionData session;
 
     private int tick = 0;
+    private int maxTick = 2;
+    private int step = 1;
 
     /**
      * Used to set up the AI handler.
@@ -65,6 +70,17 @@ public class AI {
         this.balls = balls;
         this.platform = platform;
         this.session = session;
+        try {
+            PropertyReader  aiProperties = new PropertyReader("ai.properties");
+            maxTick = Integer.parseInt(aiProperties.getValue("AI_RATE"));
+            if (maxTick == 0) {
+                step = 0;
+            }
+        } catch (IOException e) {
+            logger.error("Could not read the ai properties file, relying on default values");
+        }
+
+
 
         // Gives all AIs their individual jobs
         for (PlayerData ai : ais) {
@@ -185,11 +201,11 @@ public class AI {
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform, session);
                 }
             }
-            tick = tick + 1;
-        } else if (tick == 7) {
+            tick = tick + step;
+        } else if (tick == maxTick) {
             tick = 0;
         } else {
-            tick = tick + 1;
+            tick = tick + step;
         }
     }
 

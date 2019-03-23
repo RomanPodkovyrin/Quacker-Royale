@@ -1,6 +1,6 @@
 package com.anotherworld.network;
 
-import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.GameKeyListener;
 
 public class NetworkControllerSinglePlayer extends AbstractNetworkController {
 
@@ -9,7 +9,7 @@ public class NetworkControllerSinglePlayer extends AbstractNetworkController {
     }
 
     @Override
-    public void clientControl(KeyListener keyListener) {
+    public void clientControl(GameKeyListener keyListener) {
 
     }
 

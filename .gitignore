@@ -8,6 +8,7 @@ bin/
 /res/config/test.properties
 *.DS_Store
 *.log
+res/images/i_guess_this_is_a_font.png
 
 /.gradle/
 /build/
