@@ -354,7 +354,6 @@ public class View implements Runnable {
         try {
             if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
                 BindableKeyListener bk = new BindableKeyListener(window);
-                //TODO move this logic to view?
                 ArrayList<Integer> downKeys;
                 do {
                     downKeys = bk.getBindableKey();

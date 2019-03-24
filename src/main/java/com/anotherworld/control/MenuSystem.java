@@ -373,26 +373,60 @@ public class MenuSystem {
         layout.addButton(keyBindingsTitle);
         
         ButtonData upButton = new ButtonData(() -> {
-            return "UP: " + getKeyString(KeySettings.getUp());  
+            return "UP: " + KeySettings.getKeyString(KeySettings.getUp());  
         }, false);
         
         upButton.setOnAction(() -> {
-            logger.info("key button pressed");
+            logger.info("up key button pressed");
             KeySettings.setUp(view.getBindableKey());
         });
         layout.addButton(upButton);
+        
+        ButtonData downButton = new ButtonData(() -> {
+            return "DOWN: " + KeySettings.getKeyString(KeySettings.getDown());  
+        }, false);
+        
+        downButton.setOnAction(() -> {
+            logger.info("down key button pressed");
+            KeySettings.setDown(view.getBindableKey());
+        });
+        layout.addButton(downButton);
+        
+        ButtonData leftButton = new ButtonData(() -> {
+            return "LEFT: " + KeySettings.getKeyString(KeySettings.getLeft());  
+        }, false);
+        
+        leftButton.setOnAction(() -> {
+            logger.info("left key button pressed");
+            KeySettings.setLeft(view.getBindableKey());
+        });
+        layout.addButton(leftButton);
+        
+        ButtonData rightButton = new ButtonData(() -> {
+            return "RIGHT: " + KeySettings.getKeyString(KeySettings.getRight());  
+        }, false);
+        
+        rightButton.setOnAction(() -> {
+            logger.info("key button pressed");
+            KeySettings.setRight(view.getBindableKey());
+        });
+        layout.addButton(rightButton);
+        
+        ButtonData chargeButton = new ButtonData(() -> {
+            return "CHARGE: " + KeySettings.getKeyString(KeySettings.getCharge());  
+        }, false);
+        
+        chargeButton.setOnAction(() -> {
+            logger.info("charge key button pressed");
+            KeySettings.setCharge(view.getBindableKey());
+        });
+        layout.addButton(chargeButton);
 
         ButtonData backToSettings = new ButtonData("Settings");
         backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
         layout.addButton(backToSettings);
         
         return layout;
-    }
-    
-    private String getKeyString(int keyValue) {
-        //TODO convert integer value to readable words
-        //Move to key settings?
-        return "";
     }
     
     public static void main(String[] args) {

@@ -6,6 +6,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
+import static org.lwjgl.glfw.GLFW.*;
 
 import com.anotherworld.tools.PropertyReader;
 
@@ -23,6 +24,44 @@ import org.apache.logging.log4j.Logger;
 public class KeySettings {
     
     private static Optional<PropertyReader> keySettings = Optional.empty();
+    
+    public static String getKeyString(int keyValue) {
+        //TODO convert integer value to readable words
+        switch (keyValue) {
+            case GLFW_KEY_SPACE:
+                return "SPACE";
+            case GLFW_KEY_ESCAPE:
+                return "ESCAPE";
+            case GLFW_KEY_ENTER:
+                return "ENTER";
+            case GLFW_KEY_TAB:
+                return "TAB";
+            case GLFW_KEY_BACKSPACE:
+                return "BACKSPACE";
+            case GLFW_KEY_INSERT:
+                return "INSERT";
+            case GLFW_KEY_DELETE:
+                return "DELETE";
+            case GLFW_KEY_RIGHT:
+                return "RIGHT ARROW";
+            case GLFW_KEY_LEFT:
+                return "LEFT ARROW";
+            case GLFW_KEY_UP:
+                return "UP ARROW";
+            case GLFW_KEY_DOWN:
+                return "DOWN ARROW";
+            case GLFW_KEY_PAGE_UP:
+                return "PAGE UP";
+            case GLFW_KEY_PAGE_DOWN:
+                return "PAGE DOWN";
+            case GLFW_KEY_HOME:
+                return "HOME";
+            case GLFW_KEY_END:
+                return "END";
+            default:
+                return String.valueOf(((char)keyValue));
+        }
+    }
     
     private static Logger logger = LogManager.getLogger(KeySettings.class);
     
