@@ -46,17 +46,17 @@ public class MenuSystem {
         GraphicsDisplay keyBindingDisplay = new GraphicsDisplay();
         GraphicsDisplay creditDisplay = new GraphicsDisplay();
         GraphicsDisplay clientLobbyDisplay = new GraphicsDisplay();
-        ClientLobbyWaitThread thread = new ClientLobbyWaitThread(() -> false, () -> logger.warn("Lobby error"));
+        ClientLobbyWaitThread thread = new ClientLobbyWaitThread(() -> control.getServerStarted(), () -> view.switchToGameScene());
         this.createMainMenu(victoryDisplay, creditDisplay, settingsDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
         this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsDisplay);
         this.createAudioSettings(settingsDisplay).enactLayout(audioSettingsDisplay);
         //TODO set video settings scene
         //TODO set key binding scene
         //TODO set credit scene and load from file
-        this.createClientLobbyMenuDisplay(clientMenuDisplay);
+        this.createClientLobbyMenuDisplay(clientMenuDisplay, thread).enactLayout(clientLobbyDisplay);
         this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay).enactLayout(multiplayerMenuDisplay);
         this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay, clientLobbyDisplay, thread).enactLayout(clientMenuDisplay);
-        this.createHostLobbyMenuDisplay(multiplayerMenuDisplay, thread).enactLayout(hostLobbyMenuDisplay);
+        this.createHostLobbyMenuDisplay(multiplayerMenuDisplay).enactLayout(hostLobbyMenuDisplay);
         this.createConnectionFailedDisplay(mainMenuDisplay).enactLayout(connectionFailedDisplay);
         this.createVictoryDisplay(mainMenuDisplay).enactLayout(victoryDisplay);
 
@@ -276,7 +276,7 @@ public class MenuSystem {
         return layout;
     }
     
-    private Layout createClientLobbyMenuDisplay(GraphicsDisplay clientMenuDisplay) {
+    private Layout createClientLobbyMenuDisplay(GraphicsDisplay clientMenuDisplay, ClientLobbyWaitThread thread) {
         logger.debug("Creating client lobby display");
         
         LobbyLayout layout = new LobbyLayout(0.2f);
@@ -299,6 +299,7 @@ public class MenuSystem {
         ButtonData backToMulti = new ButtonData("Go back");
         backToMulti.setOnAction(() -> {
             control.clientCancel();
+            thread.cancleWait();
             view.switchToDisplay(clientMenuDisplay);
         });
         layout.addButton(backToMulti);
@@ -324,7 +325,7 @@ public class MenuSystem {
         
     }
     
-    private Layout createHostLobbyMenuDisplay(GraphicsDisplay multiplayerMenuDisplay, ClientLobbyWaitThread thread) {
+    private Layout createHostLobbyMenuDisplay(GraphicsDisplay multiplayerMenuDisplay) {
         logger.debug("Creating host lobby display");
         
         LobbyLayout layout = new LobbyLayout(0.2f);
@@ -344,8 +345,6 @@ public class MenuSystem {
             return "No";
         }, 1);
         layout.addList(playerList);
-        
-        thread = new ClientLobbyWaitThread(() -> control.getServerStarted(), () -> view.switchToGameScene());
         
         ButtonData startGame = new ButtonData("Start game");
         startGame.setOnAction(() -> {
