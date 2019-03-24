@@ -18,6 +18,8 @@ import static org.lwjgl.opengl.GL11.glGetError;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.anotherworld.settings.DisplayType;
+import com.anotherworld.settings.ViewSettings;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.GameKeyListener;
@@ -79,17 +81,16 @@ public class View implements Runnable {
     private Programme programme;
     
     private MenuScene menuScene;
+    
+    private DisplayType displayType;
 
     /**
      * Creates the View object initialising it's values.
-     * 
-     * @param width  The screen width
-     * @param height The screen height
      */
-    public View(int width, int height) {
+    public View() {
         logger.info("Creating view");
-        this.height = height;
-        this.width = width;
+        this.height = ViewSettings.getHeight();
+        this.width = ViewSettings.getWidth();
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
         running = false;

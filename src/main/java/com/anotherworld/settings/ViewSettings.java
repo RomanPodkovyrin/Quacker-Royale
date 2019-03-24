@@ -16,18 +16,18 @@ public class ViewSettings {
     
     private static void loadSettings() throws IOException {
         logger.trace("Loading from file");
-        viewSettings = Optional.of(new PropertyReader("keys.properties"));
+        viewSettings = Optional.of(new PropertyReader("display.properties"));
     }
     
-    public int getWidth() {
-        return getValue("WIDTH", (1920 * 3) / 4);
+    public static int getWidth() {
+        return getValue("WIDTH", 1920 / 2);
     }
     
-    public int getHeight() {
-        return getValue("HEIGHT", (1080 * 3) / 4);
+    public static int getHeight() {
+        return getValue("HEIGHT", 1080 / 2);
     }
     
-    public DisplayType getDisplayType() {
+    public static DisplayType getDisplayType() {
         return getDisplayValue(getValue("DISPLAY_TYPE", 1));
     }
     
@@ -44,15 +44,15 @@ public class ViewSettings {
         }
     }
     
-    public boolean setWidth(int value) {
+    public static boolean setWidth(int value) {
         return setValue("WIDTH", value);
     }
     
-    public boolean setHeight(int value) {
+    public static boolean setHeight(int value) {
         return setValue("HEIGHT", value);
     }
     
-    public boolean setDisplayType(DisplayType value) {
+    public static boolean setDisplayType(DisplayType value) {
         return setValue("WIDTH", getIntValue(value));
     }
     

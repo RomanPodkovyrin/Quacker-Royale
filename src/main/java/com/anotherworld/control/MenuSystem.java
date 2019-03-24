@@ -465,7 +465,7 @@ public class MenuSystem {
     }
     
     public static void main(String[] args) {
-        View view = new View(1920 / 2, 1080 / 2);
+        View view = new View();
 
         // Starting the View thread
         Thread viewThread = new Thread(view);
