@@ -51,7 +51,7 @@ sourceSets {
 }
 
 // Declares the location of the main method
-mainClassName = 'com.anotherworld.settings.MenuDemo'
+mainClassName = 'com.anotherworld.control.MenuSystem'
 
 run {
     args += '-xStartOnFirstThread'
@@ -117,7 +117,7 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest-all:1.3'
 }
 
-task testReport { //Tasks to build and run project in right order
+task testReport { //Tasks to build and test project in right order including test reports
     dependsOn 'clean'
     dependsOn 'jacocoTestReport'
     dependsOn 'checkstyleMain'

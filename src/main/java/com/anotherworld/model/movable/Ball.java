@@ -11,6 +11,7 @@ public class Ball {
     public static boolean isDangerous(BallData ballData) {
         return ballData.isDangerous();
     }
+
     public static void setDangerous(BallData ballData, boolean dangerous) {
         ballData.setDangerous(dangerous);
     }
@@ -18,6 +19,7 @@ public class Ball {
     public static int getTimer(BallData ballData) {
         return ballData.getTimer();
     }
+
     public static void setTimer(BallData ballData, int time) {
         ballData.setTimer(time);
     }

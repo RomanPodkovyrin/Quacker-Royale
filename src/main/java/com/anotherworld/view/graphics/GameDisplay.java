@@ -1,7 +1,7 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.Programme;
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
 

@@ -69,11 +69,20 @@ public class LobbyServer extends Thread {
     private void getPlayersIP() throws IOException {
         Socket lobbySocket = tcpSocket.accept();
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
-        logger.trace("Received from: " + lobbySocket.getInetAddress().getHostAddress() + " on port " + lobbySocket.getPort());
-        clientSockets.add(lobbySocket.getOutputStream());
-        playersIpAddresses.add(lobbySocket.getInetAddress().getHostAddress());
-        countPlayers();
-        logger.trace("New player has joined the lobby. Now there are " + currentPlayersAmount + " player in lobby");
+        if (in.readUTF().equals("cancel connection")) {
+            for (int i = 0; i < playersIpAddresses.size(); i++) {
+                if (playersIpAddresses.get(i) == lobbySocket.getInetAddress().getHostAddress()) {
+                    playersIpAddresses.remove(playersIpAddresses.get(i));
+                    currentPlayersAmount--;
+                }
+            }
+        } else {
+            logger.trace("Received from: " + lobbySocket.getInetAddress().getHostAddress() + " on port " + lobbySocket.getPort());
+            clientSockets.add(lobbySocket.getOutputStream());
+            playersIpAddresses.add(lobbySocket.getInetAddress().getHostAddress());
+            countPlayers();
+            logger.trace("New player has joined the lobby. Now there are " + currentPlayersAmount + " player in lobby");
+        }
     }
 
     /**
@@ -113,6 +122,18 @@ public class LobbyServer extends Thread {
      */
     public ArrayList<String> getIPs() {
         return playersIpAddresses;
+    }
+
+    /**
+     * Informs all the clients that lobby has been cancelled.
+     */
+    public void cancelLobby() throws IOException {
+        for (int i = 0; i < clientSockets.size(); i++) {
+            DataOutputStream out = new DataOutputStream(clientSockets.get(i));
+            out.writeUTF("Host has cancelled the lobby");
+            clientSockets.get(i).close();
+            logger.trace("Lobby host has cancelled the lobby. Closed lobby client sockets");
+        }
     }
 
     /**

@@ -36,17 +36,17 @@ public class PowerUpManager {
         LinkedList<PowerUpData> output = new LinkedList<>();
         Random random = new Random();
 
-        for (long i = totalTime; i > 0; i-=5) {
+        for (long i = totalTime; i > 0; i -= 5) {
 
             float generationProbability = (float) Math.random();
 
             if (generationProbability < .7) { //TODO: Magic Number
-                float x  = platform.getXCoordinate() +
-                           (platform.getxSize() - (PlatformData.getxShrink() * (platform.getStage()-1))) *
-                           ((float) Math.random());
-                float y  = platform.getYCoordinate() +
-                           (platform.getySize() - (PlatformData.getyShrink()* (platform.getStage()-1))) *
-                           ((float) Math.random());
+                float x  = platform.getXCoordinate()
+                        + (platform.getxSize() - (PlatformData.getxShrink() * (platform.getStage() - 1)))
+                        * ((float) Math.random());
+                float y  = platform.getYCoordinate()
+                        + (platform.getySize() - (PlatformData.getyShrink()* (platform.getStage() - 1)))
+                        * ((float) Math.random());
 
                 Matrix coordinates = new Matrix(x,y);
 

@@ -1,11 +1,11 @@
 package com.anotherworld.view.data;
 
-import com.anotherworld.view.Programme;
-import com.anotherworld.view.SpriteSheet;
+import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
+import com.anotherworld.view.programme.Programme;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,7 +24,7 @@ public abstract class DisplayObject {
     
     private final float yShear;
     
-    private final Points2d points;
+    private Points2d points;
     
     private final int displayType;
     
@@ -157,6 +157,9 @@ public abstract class DisplayObject {
     }
     
     private float getScale(int axis) {
+        if (points.getM() == 0 || points.getN() == 0) {
+            return 1;
+        }
         float min = points.getValue(axis, 0);
         float max = points.getValue(axis, 0);
         for (int j = 1; j < points.getN(); j++) {
@@ -283,6 +286,15 @@ public abstract class DisplayObject {
 
     public Points2d getPoints() {
         return points;
+    }
+    
+    @Override
+    public String toString() {
+        return points.toString();
+    }
+
+    public void updatePoints(Points2d points) {
+        this.points = points;
     }
     
 }

@@ -47,11 +47,14 @@ public class GameSession {
         this.allPlayers.add(currentPlayer);
         ArrayList<PlayerData> aiPlayers = new ArrayList<>();
 
-        for(PlayerData data : players)
+        for (PlayerData data : players) {
             allPlayers.add(data);
+        }
 
-        for(PlayerData data : ais)
+        for (PlayerData data : ais) {
             aiPlayers.add(data);
+
+        }
 
         this.allPlayers.addAll(aiPlayers);
 
@@ -59,7 +62,7 @@ public class GameSession {
         this.livingPlayers.addAll(allPlayers);
 
         this.balls = new ArrayList<>();
-        for(BallData data : balls) {
+        for (BallData data : balls) {
             data.setVelocity(data.getSpeed(), data.getSpeed());
             this.balls.add(data);
         }
@@ -78,9 +81,9 @@ public class GameSession {
 
     /**
      * Checks all the objects and updates their state and location
-     * physics and ai are run during this time
+     * physics and ai are run during this time.
      */
-    public void update(){
+    public void update() {
 
         ai.action();
         updateAllPlayers();
@@ -91,9 +94,11 @@ public class GameSession {
         logger.debug("ticksElapsed: " + gameData.getTicksElapsed());
         if (gameData.getTicksElapsed() % 60 == 0 && gameData.getTimeLeft() > 0) {
             gameData.decrementTimeLeft();
-            if(gameData.isTimeStopped() && gameData.getTimeStopCounter() > 0) {
+            if (gameData.isTimeStopped() && gameData.getTimeStopCounter() > 0) {
                 gameData.decrementTimeStopCounter();
-                if(gameData.getTimeStopCounter() <= 0) gameData.setTimeStopped(false);
+                if (gameData.getTimeStopCounter() <= 0) {
+                    gameData.setTimeStopped(false);
+                }
             }
         }
 
@@ -109,7 +114,7 @@ public class GameSession {
         PowerUpManager.spawnPowerUp(gameData);
 
         // If someone has won, update the rankings one last time.
-        if(!isRunning()) {
+        if (!isRunning()) {
             gameData.getRankings().addFirst(livingPlayers.get(0).getObjectID());
             AudioControl.win();
             try {
@@ -127,10 +132,12 @@ public class GameSession {
      * Updates all ball positions and states, and calculates positions.
      */
     private void updateAllBalls() {
-        for(BallData ball : this.balls) {
+        for (BallData ball : this.balls) {
 
             // Move the ball
-            if (gameData.isTimeStopped()) continue;
+            if (gameData.isTimeStopped()) {
+                continue;
+            }
             Physics.move(ball);
 
 
@@ -150,7 +157,9 @@ public class GameSession {
 
             // Check if a ball has collided with a player.
             for (PlayerData player : this.allPlayers) {
-                if (Player.isDead(player)) continue;
+                if (Player.isDead(player)) {
+                    continue;
+                }
 
                 if (Physics.checkCollision(ball, player)) {
 
@@ -196,15 +205,19 @@ public class GameSession {
         for (PlayerData player : allPlayers) {
 
             Player.decrementStunTimer(player);
-            if (player.getStunTimer() > 0) continue;
+            if (player.getStunTimer() > 0) {
+                continue;
+            }
 
-            if (!gameData.isTimeStopped()){
-                if(player.isTimeStopper())
+            if (!gameData.isTimeStopped()) {
+                if (player.isTimeStopper()) {
                     player.setTimeStopper(false);
+                }
                 Physics.move(player);
             } else {
-                if (player.isTimeStopper())
+                if (player.isTimeStopper()) {
                     Physics.move(player);
+                }
             }
 
             if (!Player.isDead(player)) {
@@ -221,16 +234,18 @@ public class GameSession {
                 // Check if a player has collided with another player.
                 for (PlayerData playerB : this.allPlayers) {
 
-                    if (Player.isDead(playerB)) continue;
+                    if (Player.isDead(playerB)) {
+                        continue;
+                    }
 
-                    if(!player.equals(playerB)
+                    if (!player.equals(playerB)
                             && Physics.checkCollision(player, playerB)) {
                         Physics.collided(player, playerB);
                     }
                 }
 
                 // Kill the player if they fall off the edge of the platform
-                if(!platform.isOnPlatform(player)) {
+                if (!platform.isOnPlatform(player)) {
                     Player.kill(player);
                     player.setDeadByFalling(true);
                     gameData.getRankings().addFirst(player.getObjectID());
@@ -265,23 +280,32 @@ public class GameSession {
                     player.setState(ObjectState.CHARGING);
                 }
 
-                if (timeSpentCharging % 20 == 0) Player.incrementChargeLevel(player);
+                if (timeSpentCharging % 20 == 0) {
+                    Player.incrementChargeLevel(player);
+                }
             }
-        }
-        else {
+        } else {
 
             if (!Player.isDashing(player)) {
-                if (keyPresses.contains(Input.UP)) player.setYVelocity(-1);
-                else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(1);
-                else player.setYVelocity(0);
+                if (keyPresses.contains(Input.UP)) {
+                    player.setYVelocity(-1);
+                } else if (keyPresses.contains(Input.DOWN)) {
+                    player.setYVelocity(1);
+                } else {
+                    player.setYVelocity(0);
+                }
 
-                if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-1);
-                else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(1);
-                else player.setXVelocity(0);
+                if (keyPresses.contains(Input.LEFT)) {
+                    player.setXVelocity(-1);
+                } else if (keyPresses.contains(Input.RIGHT)) {
+                    player.setXVelocity(1);
+                } else {
+                    player.setXVelocity(0);
+                }
             } else {
                 long timeSpentDashing = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
-                if(timeSpentDashing >= 10) {
+                if (timeSpentDashing >= 10) {
                     player.setSpeed(GameSettings.getDefaultPlayerSpeed());
                     player.setState(ObjectState.IDLE);
                     player.setChargeLevel(1);
@@ -304,12 +328,20 @@ public class GameSession {
     }
 
     public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses) {
-        if (keyPresses.contains(Input.UP)) player.setYVelocity(-1);
-        else if (keyPresses.contains(Input.DOWN)) player.setYVelocity(1);
-        else player.setYVelocity(0);
+        if (keyPresses.contains(Input.UP)) {
+            player.setYVelocity(-1);
+        } else if (keyPresses.contains(Input.DOWN)) {
+            player.setYVelocity(1);
+        } else {
+            player.setYVelocity(0);
+        }
 
-        if (keyPresses.contains(Input.LEFT)) player.setXVelocity(-1);
-        else if (keyPresses.contains(Input.RIGHT)) player.setXVelocity(1);
-        else player.setXVelocity(0);
+        if (keyPresses.contains(Input.LEFT)) {
+            player.setXVelocity(-1);
+        } else if (keyPresses.contains(Input.RIGHT)) {
+            player.setXVelocity(1);
+        } else {
+            player.setXVelocity(0);
+        }
     }
 }

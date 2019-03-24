@@ -32,15 +32,29 @@ public class PowerUpData implements Serializable, PowerUpDisplayData {
         this.state       = data.state;
     }
 
-    public Matrix getCoordinates() { return this.coordinates; }
-    public float  getXCoordinate() { return this.coordinates.getX(); }
-    public float  getYCoordinate() { return this.coordinates.getY(); }
+    public Matrix getCoordinates() {
+        return this.coordinates;
+    }
 
-    public float  getRadius() { return this.radius; }
+    public float  getXCoordinate() {
+        return this.coordinates.getX();
+    }
 
-    public PowerUpType getPowerUpType() { return this.powerUpType; }
+    public float  getYCoordinate() {
+        return this.coordinates.getY();
+    }
 
-    public long getSpawnTime() { return this.spawnTime; }
+    public float  getRadius() {
+        return this.radius;
+    }
+
+    public PowerUpType getPowerUpType() {
+        return this.powerUpType;
+    }
+
+    public long getSpawnTime() {
+        return this.spawnTime;
+    }
 
     @Override
     public float getAngle() {
@@ -52,7 +66,9 @@ public class PowerUpData implements Serializable, PowerUpDisplayData {
         return this.state;
     }
 
-    public void setState(ObjectState state) { this.state = state; }
+    public void setState(ObjectState state) {
+        this.state = state;
+    }
 
     @Override
     public Matrix getVelocity() {

@@ -8,7 +8,7 @@ import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
-import com.anotherworld.tools.input.KeyListener;
+import com.anotherworld.tools.input.GameKeyListener;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -23,10 +23,12 @@ import org.apache.logging.log4j.Logger;
  *
  * @author roman
  */
+@Deprecated
 public class NetworkController {
     private GameClient client;
     private Server server;
-    private KeyListener keyListener;
+    
+    private GameKeyListener keyListener;
 
     private ArrayList<PlayerData> allPlayers;
     private ArrayList<BallData> balls;
@@ -90,19 +92,10 @@ public class NetworkController {
         return server != null;
     }
 
-    public void setKeyListener(KeyListener keyListener) {
-        this.keyListener = keyListener;
-    }
-
-    public void sendKeyPress() {
-
-    }
-
-
     /**
      * The Network control for the client.
      */
-    public void clientControl(KeyListener keyListener) {
+    public void clientControl(GameKeyListener keyListener) {
 
         if (isClient()) {
             // send the given key presses to the host

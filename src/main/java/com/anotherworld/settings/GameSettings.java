@@ -7,10 +7,13 @@ import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.logic.PowerUpManager;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.network.GameClient;
-import com.anotherworld.network.Server;
 import com.anotherworld.tools.PropertyReader;
-import com.anotherworld.tools.datapool.*;
+
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,7 +34,7 @@ public class GameSettings {
 
     // Settings regarding the number of players
     private int numberOfPlayers;
-    private int numberofAIPlayers;
+    private int numberOfaiPlayers;
     private int numberOfBall;
 
     // Settings regarding the player defaults
@@ -67,8 +70,6 @@ public class GameSettings {
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser"));
 
     // networking objects
-    private Server server = null;
-    private GameClient client = null;
 
     /**
      * This method allows to create the Game settings object with pregenerated game objects.
@@ -139,13 +140,13 @@ public class GameSettings {
      * This method generates all the game objects with the specified values.
      *
      * @param numberOfPlayers - the total number of players
-     * @param numberOfAIPlayers - number of AI
+     * @param numberOfaiPlayers - number of AI
      * @param numberOfBalls - number of balls
      */
-    public GameSettings(int numberOfPlayers, int numberOfAIPlayers, int numberOfBalls) {
+    public GameSettings(int numberOfPlayers, int numberOfaiPlayers, int numberOfBalls) {
 
         this.numberOfPlayers = numberOfPlayers;
-        this.numberofAIPlayers = numberOfAIPlayers;
+        this.numberOfaiPlayers = numberOfaiPlayers;
         this.numberOfBall = numberOfBalls;
 
         loadAllGameValues();
@@ -287,9 +288,9 @@ public class GameSettings {
     /**
      * Generates the player and randomly generates their location.
      * @param numberOfPlayers - total number of players
-     * @param numberofAIPlayers - number of ai
+     * @param numberofaiplayers - number of ai
      */
-    private void createPlayers(int numberOfPlayers, int numberofAIPlayers) {
+    private void createPlayers(int numberOfPlayers, int numberofaiplayers) {
         PlatformData platform = platforms.get(0);
         int playerHealth = defaultPlayerHealth;
         float playerRadius = defaultPlayerRadius;
@@ -310,9 +311,9 @@ public class GameSettings {
             PlayerData newPlayer = new PlayerData(names.get(i),playerHealth,xRandom,yRandom, ObjectState.IDLE, playerSpeed,playerRadius);
 
             // checks if need to make an AI, current players or other players
-            if (numberofAIPlayers > 0) {
+            if (numberofaiplayers > 0) {
                 ai.add(newPlayer);
-                numberofAIPlayers--;
+                numberofaiplayers--;
             } else {
                 if (i == numberOfPlayers - 1) {
                     currentPlayer = newPlayer;
@@ -352,7 +353,7 @@ public class GameSettings {
         // Platform and walls have to be generated before the ball and
         createPlatform();
         createWall();
-        createPlayers(numberOfPlayers, numberofAIPlayers);
+        createPlayers(numberOfPlayers, numberOfaiPlayers);
         createBalls(numberOfBall);
         createGameSessionData();
     }
@@ -361,50 +362,9 @@ public class GameSettings {
         //TODO: Think of difficulty settings.
     }
 
-    /**
-     *
-     * @return - returns the server of the current game session
-     */
-    public Server getServer() {
-        return server;
-    }
 
     /**
-     * @param server - sets the client of the current game session
-     */
-    public void setServer(Server server) {
-        this.server = server;
-    }
-
-    /**
-     * @return - returns the client of the current game session
-     */
-    public GameClient getClient() {
-        return client;
-    }
-
-    /**
-     * @param client - sets the client of the current game session
-     */
-    public void setClient(GameClient client) {
-        this.client = client;
-    }
-
-    /**
-     * @return tells if current game session is a server
-     */
-    public boolean isServer() {
-        return server != null;
-    }
-
-    /**
-     * @return tells if current game session is a client
-     */
-    public  boolean isClient() {
-        return  client != null;
-    }
-
-    /**
+     * returns (all the players - ai - current player).
      * @return returns (all the players - ai - current player)
      */
     public ArrayList<PlayerData> getPlayers() {
@@ -412,6 +372,7 @@ public class GameSettings {
     }
 
     /**
+     * returns all the ai players.
      * @return returns all the ai players
      */
     public ArrayList<PlayerData> getAi() {
@@ -419,6 +380,7 @@ public class GameSettings {
     }
 
     /**
+     * returns all the balls.
      * @return returns all the balls
      */
     public ArrayList<BallData> getBalls() {
@@ -426,6 +388,7 @@ public class GameSettings {
     }
 
     /**
+     * returns the platform.
      * @return returns the platform
      */
     public ArrayList<PlatformData> getPlatform() {
@@ -433,6 +396,7 @@ public class GameSettings {
     }
 
     /**
+     * returns the game session.
      * @return returns the game session
      */
     public GameSessionData getGameSessionData() {
@@ -440,6 +404,7 @@ public class GameSettings {
     }
 
     /**
+     * returns the wall object.
      * @return returns the wall object
      */
     public ArrayList<WallData> getWall() {
@@ -447,6 +412,7 @@ public class GameSettings {
     }
 
     /**
+     * returns the current player object.
      * @return returns the current player object
      */
     public PlayerData getCurrentPlayer() {
@@ -454,11 +420,15 @@ public class GameSettings {
     }
 
     /**
+     * returns the default player health from properties file.
      * @return returns the default player health from properties file
      */
-    public static int getDefaultPlayerHealth() { return defaultPlayerHealth; }
+    public static int getDefaultPlayerHealth() {
+        return defaultPlayerHealth;
+    }
 
     /**
+     * returns the default player speed from properties file.
      * @return returns the default player speed from properties file
      */
     public static float getDefaultPlayerSpeed() {
@@ -466,6 +436,7 @@ public class GameSettings {
     }
 
     /**
+     * returns the default player max charge from properties file.
      * @return returns the default player max charge from properties file
      */
     public static int getDefaultPlayerMaxCharge() {
@@ -473,6 +444,7 @@ public class GameSettings {
     }
 
     /**
+     * returns the default ball max timer from properties file.
      * @return returns the default ball max timer from properties file
      */
     public static int getBallMaxTimer() {
@@ -480,6 +452,7 @@ public class GameSettings {
     }
 
     /**
+     * returns the default ball time decrement from properties file.
      * @return returns the default ball time decrement from properties file
      */
     public static int getBallTimerDecrement() {
@@ -487,6 +460,7 @@ public class GameSettings {
     }
 
     /**
+     * returns the default ball speed from properties file.
      * @return returns the default ball speed from properties file
      */
     public static float getDefaultBallSpeed() {
@@ -494,6 +468,7 @@ public class GameSettings {
     }
 
     /**
+     * returns the default ball damage from properties file.
      * @return returns the default ball damage from properties file
      */
     public static int getDefaultBallDamage() {
