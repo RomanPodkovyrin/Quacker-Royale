@@ -162,7 +162,7 @@ public class Controller {
         logger.trace("Lobby server is waiting for all players to connect");
         logger.trace("Waiting for Host to start the game");
         runTheHostGame = false;
-        while (!(lobbyServer.isReady() && runTheHostGame)) {
+        while (!(lobbyServer.isReady() && runTheHostGame && server.areClientsReady())) {
             if (cancelTheGame) {
                 throw new ConnectionClosed();
                 //TODO tell clients to close?
