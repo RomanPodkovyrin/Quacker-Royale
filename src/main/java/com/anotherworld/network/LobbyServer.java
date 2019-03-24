@@ -79,6 +79,7 @@ public class LobbyServer extends Thread {
         Socket lobbySocket = tcpSocket.accept();
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
         if (in.readUTF().equals("cancel connection")) {
+            System.out.println("Cancel me ");
             for (int i = 0; i < playersIpAddresses.size(); i++) {
                 if (playersIpAddresses.get(i) == lobbySocket.getInetAddress().getHostAddress()) {
                     logger.info("Player " + playersIpAddresses.get(i) + " Disconnected");
@@ -89,11 +90,11 @@ public class LobbyServer extends Thread {
                 }
             }
         } else {
-            logger.trace("Received from: " + lobbySocket.getInetAddress().getHostAddress() + " on port " + lobbySocket.getPort());
+            logger.info("Received from: " + lobbySocket.getInetAddress().getHostAddress() + " on port " + lobbySocket.getPort());
             clientSockets.add(lobbySocket.getOutputStream());
             playersIpAddresses.add(lobbySocket.getInetAddress().getHostAddress());
             countPlayers();
-            logger.trace("New player has joined the lobby. Now there are " + currentPlayersAmount + " player in lobby");
+            logger.info("New player has joined the lobby. Now there are " + currentPlayersAmount + " player in lobby");
         }
     }
 

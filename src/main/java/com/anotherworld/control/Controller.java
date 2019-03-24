@@ -199,6 +199,7 @@ public class Controller {
     public boolean clientCancel() {
         if (lobbyClient != null) {
             try {
+                logger.info("quit lobby");
                 lobbyClient.cancelConnection();
             } catch (IOException e) {
                 //TODO dont like it change it
@@ -206,6 +207,7 @@ public class Controller {
             }
             return true;
         }
+        logger.info("Can't cancel");
         return false;
     }
 

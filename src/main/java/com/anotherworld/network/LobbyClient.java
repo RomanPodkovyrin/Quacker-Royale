@@ -73,19 +73,12 @@ public class LobbyClient {
      * Cancels connection with the lobby host.
      */
     public void cancelConnection() throws IOException {
-        if (conectedToHost) {
-            OutputStream outToServer = client.getOutputStream();
-            DataOutputStream out = new DataOutputStream(outToServer);
-            out.writeUTF("cancel connection");
-            client.close();
-            logger.trace("lobby client has cancelled the connection with lobby host. Closed the socket");
-        } else {
-            client = new Socket(serverIp, port);
-            OutputStream outToServer = client.getOutputStream();
-            DataOutputStream out = new DataOutputStream(outToServer);
-            out.writeUTF("cancel connection");
-            client.close();
-            logger.trace("lobby client has cancelled the connection with lobby host. Closed the socket");
-        }
+
+        OutputStream outToServer = client.getOutputStream();
+        DataOutputStream out = new DataOutputStream(outToServer);
+        out.writeUTF("cancel connection");
+        client.close();
+        logger.info("lobby client has cancelled the connection with lobby host. Closed the socket");
+
     }
 }
