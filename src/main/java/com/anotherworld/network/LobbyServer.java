@@ -40,6 +40,7 @@ public class LobbyServer extends Thread {
         port = 4446;
         try {
             tcpSocket = new ServerSocket(port);
+            tcpSocket.setSoTimeout(1000);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,6 +60,7 @@ public class LobbyServer extends Thread {
             try {
                 getPlayersIP();
             } catch (IOException e) {
+//                System.out.println("Temp, remove: timout");
                 logger.trace("LobbyServerTimeout");
             }
         }
@@ -75,7 +77,6 @@ public class LobbyServer extends Thread {
      */
     private void getPlayersIP() throws IOException {
         Socket lobbySocket = tcpSocket.accept();
-        lobbySocket.setSoTimeout(100);
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
         if (in.readUTF().equals("cancel connection")) {
             for (int i = 0; i < playersIpAddresses.size(); i++) {
