@@ -1,15 +1,11 @@
 package com.anotherworld.tools.input;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class GameKeyListener {
 
@@ -22,6 +18,7 @@ public class GameKeyListener {
     private final int down = GLFW_KEY_DOWN;
     private final int right = GLFW_KEY_RIGHT;
     private final int charge = GLFW_KEY_SPACE;
+    private final int mute = GLFW_KEY_M;
 
     /**
      * Creates a game key listener for the parsed window.
@@ -35,6 +32,7 @@ public class GameKeyListener {
         trackedKeys.add(right);
         trackedKeys.add(down);
         trackedKeys.add(charge);
+        trackedKeys.add(mute);
         keyListener = new KeyListener(trackedKeys, window);
     }
 
@@ -61,6 +59,9 @@ public class GameKeyListener {
                     break;
                 case charge:
                     keyPresses.add(Input.CHARGE);
+                    break;
+                case mute:
+                    keyPresses.add(Input.MUTE);
                     break;
                 default:
                     logger.warn("Unexpected key tracked by game");
