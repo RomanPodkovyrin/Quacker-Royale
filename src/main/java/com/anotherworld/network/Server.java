@@ -35,6 +35,7 @@ public class Server extends Thread {
     private static Logger logger = LogManager.getLogger(Server.class);
     private DatagramSocket socket;
     private boolean serverIsRunning;
+    private boolean areClientsReady = false;
     private byte[] dataReceived;
     private int numberOfPlayers;
     private int port = 4445;
@@ -64,7 +65,7 @@ public class Server extends Thread {
         balls = settings.getBalls();
         platform = settings.getPlatform().get(0);
         wall = settings.getWall().get(0);
-        gamesession = settings.getGameSession();
+        gamesession = settings.getGameSessionData();
         socket = new DatagramSocket(port);
         dataReceived = new byte[10000];
         this.numberOfPlayers = numberOfClients;
@@ -73,12 +74,16 @@ public class Server extends Thread {
         logger.info("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
     }
 
+    public boolean areClientsReady() {
+        return areClientsReady;
+    }
     /**
      * A run method for the thread which first of all gets all the ports of the clients,
      * sends clients ids, sends the initial objects of the game and after starts to receive
      * all the key presses which clients send while they are playing.
      */
     public void run() {
+        areClientsReady = false;
         serverIsRunning = true;
         //get the ports of all the players before while starts
         for (int i = 0; i < numberOfPlayers; i++) {
@@ -96,6 +101,7 @@ public class Server extends Thread {
         }
         sendInitialObjectsToClients();
         checkIfClientsHaveReceivedInitialObjects();
+        areClientsReady = true;
         while (serverIsRunning) {
             DatagramPacket packet = new DatagramPacket(this.dataReceived, this.dataReceived.length);
             try {

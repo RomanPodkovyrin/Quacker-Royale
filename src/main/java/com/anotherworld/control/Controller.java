@@ -160,7 +160,9 @@ public class Controller {
         }
 
         logger.trace("Lobby server is waiting for all players to connect");
-        while (!lobbyServer.isReady()) {
+        logger.trace("Waiting for Host to start the game");
+        runTheHostGame = false;
+        while (!(lobbyServer.isReady() && runTheHostGame)) {
             if (cancelTheGame) {
                 throw new ConnectionClosed();
                 //TODO tell clients to close?
@@ -173,26 +175,22 @@ public class Controller {
             }
             playersIPaddresses = lobbyServer.getIPs();
         }
-        logger.trace("Lobby server: " + playersIPaddresses.size() + " players connected"
+        logger.info("Lobby server: " + playersIPaddresses.size() + " players connected"
                 + "\nLobby server is ready to play");
 
-        logger.trace("Waiting for Host to start the game");
+        lobbyServer.canStartTheGame();
 
-
-        //TODO when ready for the proper lobby implementation remove this
-        runTheHostGame = false;
-        while (!runTheHostGame) {
-            if (cancelTheGame) {
-                throw new ConnectionClosed();
-                //TODO tell clients to Close?
-            }
+        while (server.areClientsReady()) {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-        logger.trace("Host started the game");
+
+
+
+        logger.info("Host started the game");
 
         NetworkControllerServer network = new NetworkControllerServer(server, settings);
         startTheGame(settings,network);
@@ -237,7 +235,7 @@ public class Controller {
         try {
             lobbyClient.waitForGameToStart();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new ConnectionClosed();
         }
 
         logger.trace("Starting the game client");

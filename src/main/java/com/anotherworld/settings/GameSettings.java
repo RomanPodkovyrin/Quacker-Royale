@@ -65,7 +65,7 @@ public class GameSettings {
     private ArrayList<BallData> balls = new ArrayList<>();
     private ArrayList<PlatformData> platforms = new ArrayList<>();
     private ArrayList<WallData> walls = new ArrayList<>();
-    private GameSessionData gameSession;
+    private GameSessionData gameSessionData;
 
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser"));
 
@@ -80,10 +80,10 @@ public class GameSettings {
      * @param balls - all the balls
      * @param platforms -platform
      * @param walls - wall
-     * @param gameSession - game session
+     * @param gameSessionData - game session
      */
     public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
-                        ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSession) {
+                        ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSessionData) {
         this.currentPlayer = currentPlayer;
         logger.info("GameSettings current player: " + currentPlayer);
         this.players = players;
@@ -96,8 +96,8 @@ public class GameSettings {
         logger.info("GameSettings platform: " + platforms);
         this.walls = walls;
         logger.info("GameSettings wall: " + walls);
-        this.gameSession = gameSession;
-        logger.info("GameSettings session: " + gameSession);
+        this.gameSessionData = gameSessionData;
+        logger.info("GameSettings session: " + gameSessionData);
 
         // load all the default values
         loadAllGameValues();
@@ -329,11 +329,11 @@ public class GameSettings {
     /**
      * Creates the game session and gives it game time.
      */
-    private void createGameSession() {
+    private void createGameSessionData() {
         // TODO magic number
-        this.gameSession = new GameSessionData(60);
-        gameSession.setPowerUpSchedule(
-            PowerUpManager.generatePowerUpSchedule(gameSession.getTimeLeft(), platforms.get(0))
+        this.gameSessionData = new GameSessionData(60);
+        gameSessionData.setPowerUpSchedule(
+            PowerUpManager.generatePowerUpSchedule(gameSessionData.getTimeLeft(), platforms.get(0))
         );
     }
 
@@ -342,8 +342,8 @@ public class GameSettings {
      * @return created game session
      */
     public GameSession createSession() {
-        // TODO give the gameSessionData into gameSession
-        return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0),gameSession);
+        // TODO give the gameSessionData into gameSessionData
+        return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0), gameSessionData);
     }
 
     /**
@@ -355,7 +355,7 @@ public class GameSettings {
         createWall();
         createPlayers(numberOfPlayers, numberOfaiPlayers);
         createBalls(numberOfBall);
-        createGameSession();
+        createGameSessionData();
     }
 
     public void changeDifficulty() {
@@ -399,8 +399,8 @@ public class GameSettings {
      * returns the game session.
      * @return returns the game session
      */
-    public GameSessionData getGameSession() {
-        return gameSession;
+    public GameSessionData getGameSessionData() {
+        return gameSessionData;
     }
 
     /**
