@@ -20,6 +20,7 @@ public class LobbyServer extends Thread {
     private ServerSocket tcpSocket;
     private int port;
     private boolean allPlayersJoined;
+    private boolean canStart = false;
     private ArrayList<String> playersIpAddresses;
     private ArrayList<OutputStream> clientSockets;
     private int currentPlayersAmount;
@@ -44,15 +45,27 @@ public class LobbyServer extends Thread {
         }
     }
 
+    public void canStartTheGame() {
+        canStart = true;
+    }
+
     /**
      * A run method for the thread which waits for all clients to connect,
      * after that it will inform them that the game can start.
      */
     public void run() {
+        canStart = false;
         while (!allPlayersJoined) {
             try {
                 getPlayersIP();
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        while (!canStart) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
