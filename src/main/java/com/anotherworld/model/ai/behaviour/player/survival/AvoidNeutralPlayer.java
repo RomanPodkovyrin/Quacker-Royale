@@ -1,9 +1,6 @@
 package com.anotherworld.model.ai.behaviour.player.survival;
 
-import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.ai.tools.Line;
-import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Player;

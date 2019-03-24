@@ -47,7 +47,6 @@ public class AIController {
     private static Logger logger = LogManager.getLogger(AIController.class);
 
     private ArrayList<Pair<PlayerData,ArrayList<PlayerData>>> aiPlayers = new ArrayList<>();
-    private ArrayList<PlayerData> allPlayers;
     private ArrayList<BallData> balls;
     private ArrayList<Job> jobs = new ArrayList<>();
     private Platform platform;
@@ -66,7 +65,7 @@ public class AIController {
      * @param platform the current platform
      */
     public AIController(ArrayList<PlayerData> ais, ArrayList<PlayerData> allPlayers, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
-        this.allPlayers = allPlayers;
+        ArrayList<PlayerData> allPlayers1 = allPlayers;
         this.balls = balls;
         this.platform = platform;
         this.session = session;

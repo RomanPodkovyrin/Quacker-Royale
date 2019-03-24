@@ -3,7 +3,6 @@ package com.anotherworld.model.ai;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -63,10 +62,7 @@ public class BlackBoard {
             String id = entry.getKey();
             String targetBall = entry.getValue();
             if (targetBall.equals(ballID)) {
-                if (id.equals(aiID)) {
-                    return true;
-                }
-                return false;
+                return id.equals(aiID);
             }
         }
 
@@ -158,7 +154,7 @@ public class BlackBoard {
      * @param ball the ball to be checked
      * @return  true - can affect false cannot
      */
-    public static boolean canAffect(PlayerData ai, BallData ball) {
+    private static boolean canAffect(PlayerData ai, BallData ball) {
         Matrix ballPosition = ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
         return MatrixMath.isPerpendicular(ballDirection,ballPosition,ai.getCoordinates());
@@ -169,7 +165,7 @@ public class BlackBoard {
      * @param ball the ball to be checked
      * @return  true - too close, false at a safe distance
      */
-    public static boolean isClose(PlayerData ai, BallData ball) {
+    private static boolean isClose(PlayerData ai, BallData ball) {
         Matrix ballPosition =  ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
 

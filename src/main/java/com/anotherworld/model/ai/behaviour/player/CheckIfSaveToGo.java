@@ -42,11 +42,7 @@ public class CheckIfSaveToGo extends Job {
 
     @Override
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
-        this.ai = ai;
-        this.players = players;
-        this.balls = balls;
-        this.platform = platform;
-        this.session = session;
+        setData(ai,players,balls,platform,session);
 
         Matrix aiPosition = ai.getCoordinates();
 

@@ -4,7 +4,6 @@ import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;

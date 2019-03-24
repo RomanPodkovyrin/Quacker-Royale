@@ -34,8 +34,7 @@ public abstract class AbstractNetworkController {
      * @param settings - game representations
      */
     protected void setUpGameSettings(GameSettings settings) {
-        ArrayList<PlayerData> temp = new ArrayList<>();
-        temp.addAll(settings.getPlayers());
+        ArrayList<PlayerData> temp = new ArrayList<>(settings.getPlayers());
         temp.add(settings.getCurrentPlayer());
 
         this.allPlayers = temp;
