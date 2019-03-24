@@ -1,13 +1,12 @@
-package com.anotherworld.settings;
+package com.anotherworld.control;
 
-import com.anotherworld.control.Controller;
 import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
+import com.anotherworld.settings.KeySettings;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
 import com.anotherworld.view.graphics.GraphicsDisplay;
-import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.graphics.layout.FixedSpaceLayout;
 import com.anotherworld.view.graphics.layout.Layout;
 import com.anotherworld.view.graphics.layout.LobbyLayout;
@@ -35,7 +34,7 @@ public class MenuSystem {
         control = new Controller(view);
 
         GraphicsDisplay mainMenuDisplay = new GraphicsDisplay();
-        GraphicsDisplay settingsDisplay = new GraphicsDisplay();
+        GraphicsDisplay settingsMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay multiplayerMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay clientMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay hostLobbyMenuDisplay = new GraphicsDisplay();
@@ -47,11 +46,11 @@ public class MenuSystem {
         GraphicsDisplay creditDisplay = new GraphicsDisplay();
         GraphicsDisplay clientLobbyDisplay = new GraphicsDisplay();
         ClientLobbyWaitThread thread = new ClientLobbyWaitThread(() -> control.getServerStarted(), () -> view.switchToGameScene());
-        this.createMainMenu(victoryDisplay, creditDisplay, settingsDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
-        this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsDisplay);
-        this.createAudioSettings(settingsDisplay).enactLayout(audioSettingsDisplay);
+        this.createMainMenu(victoryDisplay, creditDisplay, settingsMenuDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
+        this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsMenuDisplay);
+        this.createAudioSettings(settingsMenuDisplay).enactLayout(audioSettingsDisplay);
         //TODO set video settings scene
-        //TODO set key binding scene
+        this.createKeybindingSettings(settingsMenuDisplay).enactLayout(keyBindingDisplay);
         //TODO set credit scene and load from file
         this.createClientLobbyMenuDisplay(clientMenuDisplay, thread).enactLayout(clientLobbyDisplay);
         this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay).enactLayout(multiplayerMenuDisplay);
@@ -361,6 +360,39 @@ public class MenuSystem {
         layout.addButton(backToMulti);
 
         return layout;
+    }
+    
+    private Layout createKeybindingSettings(GraphicsDisplay settingsMenuDisplay) {
+        logger.debug("Creating key bindings settings menu display");
+
+        //TODO implement key binding logic
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
+        ButtonData keyBindingsTitle = new ButtonData("Key Bindings");
+        layout.addButton(keyBindingsTitle);
+        
+        ButtonData upButton = new ButtonData(() -> {
+            return "UP: " + getKeyString(KeySettings.getUp());  
+        }, false);
+        
+        upButton.setOnAction(() -> {
+            logger.info("key button pressed");
+            KeySettings.setUp(view.getBindableKey());
+        });
+        layout.addButton(upButton);
+
+        ButtonData backToSettings = new ButtonData("Settings");
+        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
+        layout.addButton(backToSettings);
+        
+        return layout;
+    }
+    
+    private String getKeyString(int keyValue) {
+        //TODO convert integer value to readable words
+        //Move to key settings?
+        return "";
     }
     
     public static void main(String[] args) {

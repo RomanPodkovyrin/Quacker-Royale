@@ -1,4 +1,4 @@
-package com.anotherworld.settings;
+package com.anotherworld.control;
 
 import com.anotherworld.view.data.primatives.Supplier;
 import com.anotherworld.view.input.ButtonListener;

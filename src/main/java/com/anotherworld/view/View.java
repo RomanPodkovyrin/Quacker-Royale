@@ -28,6 +28,7 @@ import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.MenuScene;
 import com.anotherworld.view.graphics.Scene;
+import com.anotherworld.view.input.BindableKeyListener;
 import com.anotherworld.view.input.StringKeyListener;
 import com.anotherworld.view.programme.LegacyProgramme;
 import com.anotherworld.view.programme.Programme;
@@ -219,7 +220,7 @@ public class View implements Runnable {
 
             glfwSwapBuffers(window);
 
-            logger.debug("Polling for glfw events");
+            logger.trace("Polling for glfw events");
 
             glfwPollEvents();
 
@@ -346,6 +347,26 @@ public class View implements Runnable {
 
     public boolean windowOpen() {
         return running;
+    }
+
+    public int getBindableKey() {
+        logger.info("Request for bindable key");
+        try {
+            if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
+                BindableKeyListener bk = new BindableKeyListener(window);
+                //TODO move this logic to view?
+                ArrayList<Integer> downKeys;
+                do {
+                    downKeys = bk.getBindableKey();
+                    glfwPollEvents();
+                } while (downKeys.size() == 0);
+                logger.info("Returning " + downKeys.get(0));
+                return downKeys.get(0);
+            }
+        } catch (InterruptedException e) {
+            logger.catching(e);
+        }
+        return -1;
     }
 
 }
