@@ -59,7 +59,7 @@ public class LobbyServer extends Thread {
             try {
                 getPlayersIP();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.trace("LobbyServerTimeout");
             }
         }
         logger.info("Telling clients to start the game");
