@@ -1,13 +1,12 @@
-package com.anotherworld.settings;
+package com.anotherworld.control;
 
-import com.anotherworld.control.Controller;
 import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
+import com.anotherworld.settings.KeySettings;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
 import com.anotherworld.view.graphics.GraphicsDisplay;
-import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.graphics.layout.FixedSpaceLayout;
 import com.anotherworld.view.graphics.layout.Layout;
 import com.anotherworld.view.graphics.layout.LobbyLayout;
@@ -35,7 +34,7 @@ public class MenuSystem {
         control = new Controller(view);
 
         GraphicsDisplay mainMenuDisplay = new GraphicsDisplay();
-        GraphicsDisplay settingsDisplay = new GraphicsDisplay();
+        GraphicsDisplay settingsMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay multiplayerMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay clientMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay hostLobbyMenuDisplay = new GraphicsDisplay();
@@ -46,17 +45,17 @@ public class MenuSystem {
         GraphicsDisplay keyBindingDisplay = new GraphicsDisplay();
         GraphicsDisplay creditDisplay = new GraphicsDisplay();
         GraphicsDisplay clientLobbyDisplay = new GraphicsDisplay();
-        ClientLobbyWaitThread thread = new ClientLobbyWaitThread(() -> false, () -> logger.warn("Lobby error"));
-        this.createMainMenu(victoryDisplay, creditDisplay, settingsDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
-        this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsDisplay);
-        this.createAudioSettings(settingsDisplay).enactLayout(audioSettingsDisplay);
+        ClientLobbyWaitThread thread = new ClientLobbyWaitThread(() -> control.getServerStarted(), () -> view.switchToGameScene());
+        this.createMainMenu(victoryDisplay, creditDisplay, settingsMenuDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
+        this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsMenuDisplay);
+        this.createAudioSettings(settingsMenuDisplay).enactLayout(audioSettingsDisplay);
         //TODO set video settings scene
-        //TODO set key binding scene
+        this.createKeybindingSettings(settingsMenuDisplay).enactLayout(keyBindingDisplay);
         //TODO set credit scene and load from file
-        this.createClientLobbyMenuDisplay(clientMenuDisplay);
+        this.createClientLobbyMenuDisplay(clientMenuDisplay, thread).enactLayout(clientLobbyDisplay);
         this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay).enactLayout(multiplayerMenuDisplay);
         this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay, clientLobbyDisplay, thread).enactLayout(clientMenuDisplay);
-        this.createHostLobbyMenuDisplay(multiplayerMenuDisplay, thread).enactLayout(hostLobbyMenuDisplay);
+        this.createHostLobbyMenuDisplay(multiplayerMenuDisplay).enactLayout(hostLobbyMenuDisplay);
         this.createConnectionFailedDisplay(mainMenuDisplay).enactLayout(connectionFailedDisplay);
         this.createVictoryDisplay(mainMenuDisplay).enactLayout(victoryDisplay);
 
@@ -276,7 +275,7 @@ public class MenuSystem {
         return layout;
     }
     
-    private Layout createClientLobbyMenuDisplay(GraphicsDisplay clientMenuDisplay) {
+    private Layout createClientLobbyMenuDisplay(GraphicsDisplay clientMenuDisplay, ClientLobbyWaitThread thread) {
         logger.debug("Creating client lobby display");
         
         LobbyLayout layout = new LobbyLayout(0.2f);
@@ -299,6 +298,7 @@ public class MenuSystem {
         ButtonData backToMulti = new ButtonData("Go back");
         backToMulti.setOnAction(() -> {
             control.clientCancel();
+            thread.cancleWait();
             view.switchToDisplay(clientMenuDisplay);
         });
         layout.addButton(backToMulti);
@@ -324,7 +324,7 @@ public class MenuSystem {
         
     }
     
-    private Layout createHostLobbyMenuDisplay(GraphicsDisplay multiplayerMenuDisplay, ClientLobbyWaitThread thread) {
+    private Layout createHostLobbyMenuDisplay(GraphicsDisplay multiplayerMenuDisplay) {
         logger.debug("Creating host lobby display");
         
         LobbyLayout layout = new LobbyLayout(0.2f);
@@ -345,8 +345,6 @@ public class MenuSystem {
         }, 1);
         layout.addList(playerList);
         
-        thread = new ClientLobbyWaitThread(() -> control.getServerStarted(), () -> view.switchToGameScene());
-        
         ButtonData startGame = new ButtonData("Start game");
         startGame.setOnAction(() -> {
             control.hostStartTheGame();
@@ -364,8 +362,85 @@ public class MenuSystem {
         return layout;
     }
     
+    private Layout createKeybindingSettings(GraphicsDisplay settingsMenuDisplay) {
+        logger.debug("Creating key bindings settings menu display");
+
+        //TODO implement key binding logic
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
+        ButtonData keyBindingsTitle = new ButtonData("Key Bindings");
+        layout.addButton(keyBindingsTitle);
+        
+        ButtonData muteButton = new ButtonData(() -> {
+            return "MENU: " + KeySettings.getKeyString(KeySettings.getMute());  
+        }, false);
+        
+        muteButton.setOnAction(() -> {
+            logger.info("charge key button pressed");
+            KeySettings.setMute(view.getBindableKey());
+        });
+        layout.addButton(muteButton);
+        
+        ButtonData upButton = new ButtonData(() -> {
+            return "UP: " + KeySettings.getKeyString(KeySettings.getUp());  
+        }, false);
+        
+        upButton.setOnAction(() -> {
+            logger.info("up key button pressed");
+            KeySettings.setUp(view.getBindableKey());
+        });
+        layout.addButton(upButton);
+        
+        ButtonData downButton = new ButtonData(() -> {
+            return "DOWN: " + KeySettings.getKeyString(KeySettings.getDown());  
+        }, false);
+        
+        downButton.setOnAction(() -> {
+            logger.info("down key button pressed");
+            KeySettings.setDown(view.getBindableKey());
+        });
+        layout.addButton(downButton);
+        
+        ButtonData leftButton = new ButtonData(() -> {
+            return "LEFT: " + KeySettings.getKeyString(KeySettings.getLeft());  
+        }, false);
+        
+        leftButton.setOnAction(() -> {
+            logger.info("left key button pressed");
+            KeySettings.setLeft(view.getBindableKey());
+        });
+        layout.addButton(leftButton);
+        
+        ButtonData rightButton = new ButtonData(() -> {
+            return "RIGHT: " + KeySettings.getKeyString(KeySettings.getRight());  
+        }, false);
+        
+        rightButton.setOnAction(() -> {
+            logger.info("key button pressed");
+            KeySettings.setRight(view.getBindableKey());
+        });
+        layout.addButton(rightButton);
+        
+        ButtonData chargeButton = new ButtonData(() -> {
+            return "CHARGE: " + KeySettings.getKeyString(KeySettings.getCharge());  
+        }, false);
+        
+        chargeButton.setOnAction(() -> {
+            logger.info("charge key button pressed");
+            KeySettings.setCharge(view.getBindableKey());
+        });
+        layout.addButton(chargeButton);
+
+        ButtonData backToSettings = new ButtonData("Settings");
+        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
+        layout.addButton(backToSettings);
+        
+        return layout;
+    }
+    
     public static void main(String[] args) {
-        View view = new View(1920 / 1, 1080 / 1);
+        View view = new View(1920 / 2, 1080 / 2);
 
         // Starting the View thread
         Thread viewThread = new Thread(view);
