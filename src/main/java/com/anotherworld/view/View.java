@@ -21,12 +21,14 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.GameKeyListener;
+import com.anotherworld.tools.input.KeyBindings;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.data.*;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.MenuScene;
 import com.anotherworld.view.graphics.Scene;
+import com.anotherworld.view.input.BindableKeyListener;
 import com.anotherworld.view.input.StringKeyListener;
 import com.anotherworld.view.programme.LegacyProgramme;
 import com.anotherworld.view.programme.Programme;
@@ -40,7 +42,6 @@ import com.anotherworld.view.viewevent.ViewEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -66,8 +67,6 @@ public class View implements Runnable {
     private Scene currentScene;
 
     private CountDownLatch keyListenerLatch;
-
-    private volatile GameKeyListener keyListener;
 
     private volatile boolean running;
 
@@ -109,7 +108,7 @@ public class View implements Runnable {
         logger.info("Request for key listener objected");
         try {
             if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
-                return keyListener;
+                return new GameKeyListener(window, new KeyBindings());
             }
         } catch (InterruptedException e) {
             logger.catching(e);
@@ -185,8 +184,6 @@ public class View implements Runnable {
             }
         }
 
-        keyListener = new GameKeyListener(window);
-
         keyListenerLatch.countDown();
 
         int error = glGetError();
@@ -223,7 +220,7 @@ public class View implements Runnable {
 
             glfwSwapBuffers(window);
 
-            logger.debug("Polling for glfw events");
+            logger.trace("Polling for glfw events");
 
             glfwPollEvents();
 
@@ -266,6 +263,7 @@ public class View implements Runnable {
         logger.info("Closing window");
         keyListenerLatch = new CountDownLatch(1);
         // TODO delete all object for all scenes
+        // could use hashmap
         currentScene.destoryObjects();
         programme.destroy();
         running = false;
@@ -349,6 +347,25 @@ public class View implements Runnable {
 
     public boolean windowOpen() {
         return running;
+    }
+
+    public int getBindableKey() {
+        logger.info("Request for bindable key");
+        try {
+            if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
+                BindableKeyListener bk = new BindableKeyListener(window);
+                ArrayList<Integer> downKeys;
+                do {
+                    downKeys = bk.getBindableKey();
+                    glfwPollEvents();
+                } while (downKeys.size() == 0);
+                logger.info("Returning " + downKeys.get(0));
+                return downKeys.get(0);
+            }
+        } catch (InterruptedException e) {
+            logger.catching(e);
+        }
+        return -1;
     }
 
 }

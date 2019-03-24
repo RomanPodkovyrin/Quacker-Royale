@@ -103,6 +103,7 @@ public class GameSessionController {
             // music and effect mute unmute control
             if (keyListener.getKeyPresses().contains(Input.MUTE)) {
                 if (!keyDown) {
+                    System.out.println("Muting unmuting");
                     AudioControl.muteUnmute();
                     keyDown = true;
                 }

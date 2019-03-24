@@ -1,11 +1,5 @@
 package com.anotherworld.tools.input;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,56 +11,49 @@ public class GameKeyListener {
 
     private KeyListener keyListener;
 
-    private final int up = GLFW_KEY_UP;
-    private final int left = GLFW_KEY_LEFT;
-    private final int down = GLFW_KEY_DOWN;
-    private final int right = GLFW_KEY_RIGHT;
-    private final int charge = GLFW_KEY_SPACE;
+    private final KeyBindings keyBindings;
 
     /**
      * Creates a game key listener for the parsed window.
+     * 
      * @param window the window to check for keyboard input
      */
-    public GameKeyListener(Long window) {
-        logger.debug("Creating GameKeyListener for window " + window);
+    public GameKeyListener(Long window, KeyBindings keyBindings) {
+        logger.info("Creating GameKeyListener for window " + window);
         ArrayList<Integer> trackedKeys = new ArrayList<>();
-        trackedKeys.add(up);
-        trackedKeys.add(left);
-        trackedKeys.add(right);
-        trackedKeys.add(down);
-        trackedKeys.add(charge);
+        this.keyBindings = keyBindings;
+        trackedKeys.add(keyBindings.getUp());
+        trackedKeys.add(keyBindings.getLeft());
+        trackedKeys.add(keyBindings.getRight());
+        trackedKeys.add(keyBindings.getDown());
+        trackedKeys.add(keyBindings.getCharge());
+        trackedKeys.add(keyBindings.getMute());
         keyListener = new KeyListener(trackedKeys, window);
     }
 
     /**
      * Returns an array list of keys that are currently pressed.
+     * 
      * @return the pressed keys
      */
     public ArrayList<Input> getKeyPresses() {
         ArrayList<Input> keyPresses = new ArrayList<>();
         ArrayList<Integer> downKeys = keyListener.getPressedKeys();
         for (Integer key : downKeys) {
-            switch (key) {
-                case up:
-                    keyPresses.add(Input.UP);
-                    break;
-                case down:
-                    keyPresses.add(Input.DOWN);
-                    break;
-                case left:
-                    keyPresses.add(Input.LEFT);
-                    break;
-                case right:
-                    keyPresses.add(Input.RIGHT);
-                    break;
-                case charge:
-                    keyPresses.add(Input.CHARGE);
-                    break;
-                default:
-                    logger.warn("Unexpected key tracked by game");
+            if (key == keyBindings.getUp()) {
+                keyPresses.add(Input.UP);
+            } else if (key == keyBindings.getDown()) {
+                keyPresses.add(Input.DOWN);
+            } else if (key == keyBindings.getLeft()) {
+                keyPresses.add(Input.LEFT);
+            } else if (key == keyBindings.getRight()) {
+                keyPresses.add(Input.RIGHT);
+            } else if (key == keyBindings.getCharge()) {
+                keyPresses.add(Input.CHARGE);
+            } else if (key == keyBindings.getMute()) {
+                keyPresses.add(Input.CHARGE);
             }
         }
-
         return keyPresses;
     }
 
