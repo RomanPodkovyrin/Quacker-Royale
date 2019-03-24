@@ -64,11 +64,12 @@ public class LobbyServer extends Thread {
         }
         while (!canStart) {
             try {
-                Thread.sleep(10);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        logger.info("Telling clients to start the game");
         try {
             informAllClientsThatGameCanStart();
         } catch (IOException e) {
