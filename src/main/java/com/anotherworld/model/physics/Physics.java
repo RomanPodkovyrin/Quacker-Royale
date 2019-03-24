@@ -15,7 +15,11 @@ import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * This class allows the game to move objects, detect collisions and response with collisions.
+ *
+ * @author ChiHo Kwan
+ */
 public class Physics {
     private static Logger logger = LogManager.getLogger(Physics.class);
     private static final String FRICTION = "FRICTION";
