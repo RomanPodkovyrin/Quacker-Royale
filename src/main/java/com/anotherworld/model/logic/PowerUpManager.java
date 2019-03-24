@@ -72,9 +72,8 @@ public class PowerUpManager {
         if (nextPowerUp != null) {
             if (nextPowerUp.getSpawnTime() == data.getTimeLeft()) {
                 data.getPowerUpSchedule().pop();
-                if (currentPowerUp != null) {
-                    currentPowerUp.setState(ObjectState.INACTIVE);
-                }
+                if (currentPowerUp != null) currentPowerUp.setState(ObjectState.INACTIVE);
+                nextPowerUp.setState(ObjectState.ACTIVE);
                 data.setCurrentPowerUp(nextPowerUp);
             }
         }
