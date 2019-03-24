@@ -186,8 +186,6 @@ public class MenuSystem {
 
     private Layout createKeybindingSettings(GraphicsDisplay settingsMenuDisplay) {
         logger.debug("Creating key bindings settings menu display");
-
-        //TODO implement key binding logic
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
         
@@ -263,8 +261,6 @@ public class MenuSystem {
 
     private Layout createViewSettings(GraphicsDisplay settingsMenuDisplay) {
         logger.debug("Creating key bindings settings menu display");
-
-        //TODO implement key binding logic
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
         
@@ -300,7 +296,31 @@ public class MenuSystem {
                     ViewSettings.setDisplayType(DisplayType.WINDOWED);
             }
         });
-        layout.addButton(displayTypeButton);
+        layout.addButton(displayTypeButton)
+        ;
+        ButtonData resolutionButton = new ButtonData(() -> ViewSettings.getWidth() + "X" + ViewSettings.getHeight(), false);
+        
+        resolutionButton.setOnAction(() -> {
+            logger.info("Change display type button pressed");
+            switch (resolutionButton.getText()) {
+                case "1920X1080":
+                    ViewSettings.setWidth(960);
+                    ViewSettings.setHeight(540);
+                    break;
+                case "960X540":
+                    ViewSettings.setWidth(3200);
+                    ViewSettings.setHeight(1800);
+                    break;
+                case "3200X1800":
+                    ViewSettings.setWidth(1920);
+                    ViewSettings.setHeight(1080);
+                    break;
+                default:
+                    ViewSettings.setWidth(1920);
+                    ViewSettings.setHeight(1080);
+            }
+        });
+        layout.addButton(resolutionButton);
 
         ButtonData backToSettings = new ButtonData("Settings");
         backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
@@ -461,8 +481,6 @@ public class MenuSystem {
 
         TextListData playerList = new TextListData(4);
         //TODO implement actual data
-        
-        //TODO implement start button?
         
         playerList.addTextSource(() -> {
             return "Yes";
