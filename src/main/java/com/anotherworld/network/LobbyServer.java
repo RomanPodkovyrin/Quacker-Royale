@@ -80,8 +80,11 @@ public class LobbyServer extends Thread {
         if (in.readUTF().equals("cancel connection")) {
             for (int i = 0; i < playersIpAddresses.size(); i++) {
                 if (playersIpAddresses.get(i) == lobbySocket.getInetAddress().getHostAddress()) {
+                    logger.info("Player " + playersIpAddresses.get(i) + " Disconnected");
                     playersIpAddresses.remove(playersIpAddresses.get(i));
                     currentPlayersAmount--;
+                    allPlayersJoined = false;
+                    canStart = false;
                 }
             }
         } else {

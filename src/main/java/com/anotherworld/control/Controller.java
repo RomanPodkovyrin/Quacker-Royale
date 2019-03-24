@@ -219,7 +219,7 @@ public class Controller {
      * @param serverIP the host ip address to connect to
      */
     public void connect(String serverIP) throws NoHostFound, ConnectionClosed {
-        logger.trace("Starting the Lobby client");
+        logger.info("Starting the Lobby client");
         lobbyClient = new LobbyClient(serverIP);
         try {
             lobbyClient.sendMyIp();
@@ -231,14 +231,14 @@ public class Controller {
             e.printStackTrace();
         }
 
-        logger.trace("Connecting to lobby host " + serverIP);
+        logger.info("Connecting to lobby host " + serverIP);
         try {
             lobbyClient.waitForGameToStart();
         } catch (IOException e) {
             throw new ConnectionClosed();
         }
 
-        logger.trace("Starting the game client");
+        logger.info("Starting the game client");
         GameClient client = null;
         try {
             client = new GameClient(serverIP);
@@ -260,7 +260,7 @@ public class Controller {
         WallData wall = null;
         GameSessionData session  = null;
 
-        logger.trace("Waiting for host to send all the objects needed to start the game");
+        logger.info("Waiting for host to send all the objects needed to start the game");
         while (waitingForObjects) {
             try {
                 Thread.sleep(1);
@@ -276,7 +276,7 @@ public class Controller {
             session = client.getGameSessionData();
 
             if ((allPlayers != null & allBalls != null & myPlayer != null & platform != null & wall != null & session != null)) {
-                logger.trace("Client has received all the objects");
+                logger.info("Client has received all the objects");
                 waitingForObjects = false;
             }
         }
@@ -295,7 +295,7 @@ public class Controller {
         ArrayList<WallData> walls = new ArrayList<>();
         walls.add(wall);
 
-        logger.trace("Setting up the game session");
+        logger.info("Setting up the game session");
         GameSettings settings = new GameSettings(myPlayer,allPlayers,new ArrayList<>(),allBalls,platforms,walls,session);
 
 
