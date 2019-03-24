@@ -19,7 +19,7 @@ public class GameKeyListener {
      * @param window the window to check for keyboard input
      */
     public GameKeyListener(Long window, KeyBindings keyBindings) {
-        logger.debug("Creating GameKeyListener for window " + window);
+        logger.info("Creating GameKeyListener for window " + window);
         ArrayList<Integer> trackedKeys = new ArrayList<>();
         this.keyBindings = keyBindings;
         trackedKeys.add(keyBindings.getUp());
@@ -51,7 +51,6 @@ public class GameKeyListener {
                 keyPresses.add(Input.CHARGE);
             }
         }
-
         return keyPresses;
     }
 

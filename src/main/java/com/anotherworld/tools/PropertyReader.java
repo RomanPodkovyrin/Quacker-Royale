@@ -11,11 +11,13 @@ import java.util.Properties;
  * property files.
  *
  * @author Roman P
+ * @author Jake Stewart
  */
 public class PropertyReader {
     private String fullFilePath;
     private String filePath = "/res/config/";
     private Properties propertyFile;
+    private FileInputStream fileStream;
 
     /**
      * Class used to initialize the  property reader for the given file.
@@ -25,8 +27,12 @@ public class PropertyReader {
     public PropertyReader(String filename) throws IOException {
         this.fullFilePath = System.getProperty("user.dir") + filePath + filename;
         propertyFile = new Properties();
-
-        propertyFile.load(new FileInputStream(new File(this.fullFilePath)));
+        
+        //TODO add logic to create file if none exists?
+        
+        fileStream = new FileInputStream(new File(this.fullFilePath));
+        
+        propertyFile.load(fileStream);
 
     }
 
@@ -71,6 +77,14 @@ public class PropertyReader {
         this.propertyFile.remove(key);
         this.propertyFile.store(new FileWriter(this.fullFilePath), null);
 
+    }
+    
+    /**
+     * Closes the properties file.
+     * @throws IOException If the file couldn't be closed
+     */
+    public void close() throws IOException {
+        fileStream.close();
     }
 
 }

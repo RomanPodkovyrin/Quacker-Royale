@@ -6,39 +6,71 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
 
-public class KeyBindings {
+import com.anotherworld.tools.PropertyReader;
 
-    private final int up;
-    private final int left;
-    private final int down;
-    private final int right;
-    private final int charge;
+import java.io.IOException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+public class KeyBindings {
+    
+    private static Logger logger = LogManager.getLogger(KeyBindings.class);
+
+    private int up;
+    private int left;
+    private int down;
+    private int right;
+    private int charge;
     
     public KeyBindings() {
-        up = GLFW_KEY_UP;
-        left = GLFW_KEY_LEFT;
-        down = GLFW_KEY_DOWN;
-        right = GLFW_KEY_RIGHT;
-        charge = GLFW_KEY_SPACE;
+        logger.trace("Creating key bindings");
+        PropertyReader keySettings;
+        try {
+            logger.trace("Loading from file");
+            keySettings = new PropertyReader("keys.properties");
+            try {
+                up = Integer.parseInt(keySettings.getValue("UP"));
+                left = Integer.parseInt(keySettings.getValue("LEFT"));
+                down = Integer.parseInt(keySettings.getValue("DOWN"));
+                right = Integer.parseInt(keySettings.getValue("RIGHT"));
+                charge = Integer.parseInt(keySettings.getValue("CHARGE"));
+            } catch (IOException e) {
+                logger.warn("Key bindings file couldn't be loaded");
+                up = GLFW_KEY_UP;
+                left = GLFW_KEY_LEFT;
+                down = GLFW_KEY_DOWN;
+                right = GLFW_KEY_RIGHT;
+                charge = GLFW_KEY_SPACE;
+            }
+            keySettings.close();
+        } catch (IOException e) {
+            logger.warn("Key bindings file couldn't be loaded");
+            up = GLFW_KEY_UP;
+            left = GLFW_KEY_LEFT;
+            down = GLFW_KEY_DOWN;
+            right = GLFW_KEY_RIGHT;
+            charge = GLFW_KEY_SPACE;
+        }
     }
     
-    public Integer getUp() {
+    public int getUp() {
         return up;
     }
     
-    public Integer getLeft() {
+    public int getLeft() {
         return left;
     }
     
-    public Integer getDown() {
+    public int getDown() {
         return down;
     }
     
-    public Integer getRight() {
+    public int getRight() {
         return right;
     }
     
-    public Integer getCharge() {
+    public int getCharge() {
         return charge;
     }
 
