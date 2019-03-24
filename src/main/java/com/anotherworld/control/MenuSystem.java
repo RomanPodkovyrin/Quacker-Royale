@@ -2,7 +2,9 @@ package com.anotherworld.control;
 
 import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
+import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.KeySettings;
+import com.anotherworld.settings.ViewSettings;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
@@ -49,7 +51,7 @@ public class MenuSystem {
         this.createMainMenu(victoryDisplay, creditDisplay, settingsMenuDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
         this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsMenuDisplay);
         this.createAudioSettings(settingsMenuDisplay).enactLayout(audioSettingsDisplay);
-        //TODO set video settings scene
+        this.createViewSettings(settingsMenuDisplay).enactLayout(videoSettingsDisplay);
         this.createKeybindingSettings(settingsMenuDisplay).enactLayout(keyBindingDisplay);
         //TODO set credit scene and load from file
         this.createClientLobbyMenuDisplay(clientMenuDisplay, thread).enactLayout(clientLobbyDisplay);
@@ -174,6 +176,151 @@ public class MenuSystem {
             }
         });
         layout.addButton(sfxButton);
+
+        ButtonData backToSettings = new ButtonData("Settings");
+        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
+        layout.addButton(backToSettings);
+        
+        return layout;
+    }
+
+    private Layout createKeybindingSettings(GraphicsDisplay settingsMenuDisplay) {
+        logger.debug("Creating key bindings settings menu display");
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
+        ButtonData keyBindingsTitle = new ButtonData("Key Bindings");
+        layout.addButton(keyBindingsTitle);
+        
+        ButtonData muteButton = new ButtonData(() -> {
+            return "MUTE: " + KeySettings.getKeyString(KeySettings.getMute());  
+        }, false);
+        
+        muteButton.setOnAction(() -> {
+            logger.info("charge key button pressed");
+            KeySettings.setMute(view.getBindableKey());
+        });
+        layout.addButton(muteButton);
+        
+        ButtonData upButton = new ButtonData(() -> {
+            return "UP: " + KeySettings.getKeyString(KeySettings.getUp());  
+        }, false);
+        
+        upButton.setOnAction(() -> {
+            logger.info("up key button pressed");
+            KeySettings.setUp(view.getBindableKey());
+        });
+        layout.addButton(upButton);
+        
+        ButtonData downButton = new ButtonData(() -> {
+            return "DOWN: " + KeySettings.getKeyString(KeySettings.getDown());  
+        }, false);
+        
+        downButton.setOnAction(() -> {
+            logger.info("down key button pressed");
+            KeySettings.setDown(view.getBindableKey());
+        });
+        layout.addButton(downButton);
+        
+        ButtonData leftButton = new ButtonData(() -> {
+            return "LEFT: " + KeySettings.getKeyString(KeySettings.getLeft());  
+        }, false);
+        
+        leftButton.setOnAction(() -> {
+            logger.info("left key button pressed");
+            KeySettings.setLeft(view.getBindableKey());
+        });
+        layout.addButton(leftButton);
+        
+        ButtonData rightButton = new ButtonData(() -> {
+            return "RIGHT: " + KeySettings.getKeyString(KeySettings.getRight());  
+        }, false);
+        
+        rightButton.setOnAction(() -> {
+            logger.info("key button pressed");
+            KeySettings.setRight(view.getBindableKey());
+        });
+        layout.addButton(rightButton);
+        
+        ButtonData chargeButton = new ButtonData(() -> {
+            return "CHARGE: " + KeySettings.getKeyString(KeySettings.getCharge());  
+        }, false);
+        
+        chargeButton.setOnAction(() -> {
+            logger.info("charge key button pressed");
+            KeySettings.setCharge(view.getBindableKey());
+        });
+        layout.addButton(chargeButton);
+
+        ButtonData backToSettings = new ButtonData("Settings");
+        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
+        layout.addButton(backToSettings);
+        
+        return layout;
+    }
+
+    private Layout createViewSettings(GraphicsDisplay settingsMenuDisplay) {
+        logger.debug("Creating key bindings settings menu display");
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
+        ButtonData keyBindingsTitle = new ButtonData("Display Settings");
+        layout.addButton(keyBindingsTitle);
+        
+        ButtonData displayTypeButton = new ButtonData(() -> {
+            switch (ViewSettings.getDisplayType()) {
+                case FULLSCREEN:
+                    return "FULLSCREEN";
+                case WINDOWED:
+                    return "WINDOWED";
+                case BOARDERLESS_WINDOWED:
+                    return "BOARDERLESS WINDOWED";
+                default:
+                    return "UNKNOWN DISPLAY TYPE";
+            }
+        }, false);
+        
+        displayTypeButton.setOnAction(() -> {
+            logger.info("Change display type button pressed");
+            switch (ViewSettings.getDisplayType()) {
+                case FULLSCREEN:
+                    ViewSettings.setDisplayType(DisplayType.WINDOWED);
+                    break;
+                case WINDOWED:
+                    ViewSettings.setDisplayType(DisplayType.BOARDERLESS_WINDOWED);
+                    break;
+                case BOARDERLESS_WINDOWED:
+                    ViewSettings.setDisplayType(DisplayType.FULLSCREEN);
+                    break;
+                default:
+                    ViewSettings.setDisplayType(DisplayType.WINDOWED);
+            }
+        });
+        layout.addButton(displayTypeButton)
+        ;
+        ButtonData resolutionButton = new ButtonData(() -> ViewSettings.getWidth() + "X" + ViewSettings.getHeight(), false);
+        
+        resolutionButton.setOnAction(() -> {
+            logger.info("Change display type button pressed");
+            switch (resolutionButton.getText()) {
+                case "1920X1080":
+                    ViewSettings.setWidth(960);
+                    ViewSettings.setHeight(540);
+                    break;
+                case "960X540":
+                    ViewSettings.setWidth(3200);
+                    ViewSettings.setHeight(1800);
+                    break;
+                case "3200X1800":
+                    ViewSettings.setWidth(1920);
+                    ViewSettings.setHeight(1080);
+                    break;
+                default:
+                    ViewSettings.setWidth(1920);
+                    ViewSettings.setHeight(1080);
+            }
+        });
+        layout.addButton(resolutionButton);
 
         ButtonData backToSettings = new ButtonData("Settings");
         backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
@@ -335,8 +482,6 @@ public class MenuSystem {
         TextListData playerList = new TextListData(4);
         //TODO implement actual data
         
-        //TODO implement start button?
-        
         playerList.addTextSource(() -> {
             return "Yes";
         }, 0);
@@ -362,85 +507,8 @@ public class MenuSystem {
         return layout;
     }
     
-    private Layout createKeybindingSettings(GraphicsDisplay settingsMenuDisplay) {
-        logger.debug("Creating key bindings settings menu display");
-
-        //TODO implement key binding logic
-        
-        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
-        
-        ButtonData keyBindingsTitle = new ButtonData("Key Bindings");
-        layout.addButton(keyBindingsTitle);
-        
-        ButtonData muteButton = new ButtonData(() -> {
-            return "MENU: " + KeySettings.getKeyString(KeySettings.getMute());  
-        }, false);
-        
-        muteButton.setOnAction(() -> {
-            logger.info("charge key button pressed");
-            KeySettings.setMute(view.getBindableKey());
-        });
-        layout.addButton(muteButton);
-        
-        ButtonData upButton = new ButtonData(() -> {
-            return "UP: " + KeySettings.getKeyString(KeySettings.getUp());  
-        }, false);
-        
-        upButton.setOnAction(() -> {
-            logger.info("up key button pressed");
-            KeySettings.setUp(view.getBindableKey());
-        });
-        layout.addButton(upButton);
-        
-        ButtonData downButton = new ButtonData(() -> {
-            return "DOWN: " + KeySettings.getKeyString(KeySettings.getDown());  
-        }, false);
-        
-        downButton.setOnAction(() -> {
-            logger.info("down key button pressed");
-            KeySettings.setDown(view.getBindableKey());
-        });
-        layout.addButton(downButton);
-        
-        ButtonData leftButton = new ButtonData(() -> {
-            return "LEFT: " + KeySettings.getKeyString(KeySettings.getLeft());  
-        }, false);
-        
-        leftButton.setOnAction(() -> {
-            logger.info("left key button pressed");
-            KeySettings.setLeft(view.getBindableKey());
-        });
-        layout.addButton(leftButton);
-        
-        ButtonData rightButton = new ButtonData(() -> {
-            return "RIGHT: " + KeySettings.getKeyString(KeySettings.getRight());  
-        }, false);
-        
-        rightButton.setOnAction(() -> {
-            logger.info("key button pressed");
-            KeySettings.setRight(view.getBindableKey());
-        });
-        layout.addButton(rightButton);
-        
-        ButtonData chargeButton = new ButtonData(() -> {
-            return "CHARGE: " + KeySettings.getKeyString(KeySettings.getCharge());  
-        }, false);
-        
-        chargeButton.setOnAction(() -> {
-            logger.info("charge key button pressed");
-            KeySettings.setCharge(view.getBindableKey());
-        });
-        layout.addButton(chargeButton);
-
-        ButtonData backToSettings = new ButtonData("Settings");
-        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
-        layout.addButton(backToSettings);
-        
-        return layout;
-    }
-    
     public static void main(String[] args) {
-        View view = new View(1920 / 2, 1080 / 2);
+        View view = new View();
 
         // Starting the View thread
         Thread viewThread = new Thread(view);

@@ -58,7 +58,7 @@ public class Controller {
      * @param args - command line arguments are not used
      */
     public static void main(String []args) {
-        Controller main = new Controller(new View(1920, 1080));
+        Controller main = new Controller(new View());
         GameSettings settings = new GameSettings(2,1,1);
         main.startTheGame(settings, new NetworkControllerSinglePlayer());
     }
