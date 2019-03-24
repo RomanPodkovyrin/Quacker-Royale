@@ -38,8 +38,13 @@ public class TextSpriteSheet extends SpriteSheet {
      */
     public static Points2d generateLetterPoints(String text, float characterSize) {
         Points2d points = new Points2d(4, text.length() * 4);
-        Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
-        float characterWidth = characterSize * (dimensions.getX() / dimensions.getY());
+        float characterWidth;
+        try {
+            Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
+            characterWidth = characterSize * (dimensions.getX() / dimensions.getY());
+        } catch (Exception ex) {
+            characterWidth = characterSize;
+        }
         float xOff = characterWidth * text.length();
         xOff /= 2;
         for (int i = 0; i < text.length(); i++) {

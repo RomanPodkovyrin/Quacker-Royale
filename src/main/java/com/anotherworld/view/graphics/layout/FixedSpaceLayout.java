@@ -24,8 +24,13 @@ public class FixedSpaceLayout extends Layout {
     public void enactLayout(GraphicsDisplay display) {
         float ySpacing = 2f / (buttons.size() + 1);
         Supplier<Float> maxWidth = () -> {
-            Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
-            float buttonWidth = buttonHeight * X_SCALE_ADJUSTMENT * (dimensions.getX() / dimensions.getY());
+            float buttonWidth;
+            try {
+                Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
+                buttonWidth = buttonHeight * X_SCALE_ADJUSTMENT * (dimensions.getX() / dimensions.getY());
+            } catch (Exception ex) {
+                buttonWidth = buttonHeight;
+            }
             float max = 0f;
             for (ButtonData button : buttons) {
                 max = Math.max((float)button.getText().length() * buttonWidth, max);
