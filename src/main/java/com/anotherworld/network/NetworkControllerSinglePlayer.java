@@ -2,6 +2,10 @@ package com.anotherworld.network;
 
 import com.anotherworld.tools.input.GameKeyListener;
 
+/**
+ * This class controls single player of the session.
+ * @author roman
+ */
 public class NetworkControllerSinglePlayer extends AbstractNetworkController {
 
     public NetworkControllerSinglePlayer() {

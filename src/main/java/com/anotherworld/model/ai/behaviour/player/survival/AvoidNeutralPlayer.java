@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
  * This class makes AIController go around the player if one of them is abstraction the way.
  * @author roman
  */
+@Deprecated
 public class AvoidNeutralPlayer extends Job {
 
     private static Logger logger = LogManager.getLogger(AvoidNeutralPlayer.class);

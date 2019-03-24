@@ -50,7 +50,7 @@ public class Controller {
 
     // Networking
     private LobbyClient lobbyClient;
-    boolean waitingForObjects = true;
+    private boolean waitingForObjects = true;
 
     /**
      * The main should only be used for testing.
@@ -193,6 +193,10 @@ public class Controller {
         startTheGame(settings,network);
     }
 
+    /**
+     * Client quits game lobby.
+     * @return true can quit, false can't quit.
+     */
     public boolean clientCancel() {
         if (lobbyClient != null) {
             try {

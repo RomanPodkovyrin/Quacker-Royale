@@ -19,11 +19,6 @@ public class ControllerTest {
         control.startSinglePlayer();
         control.hostStartTheGame();
 
-        Controller.musicSetting(false);
-        Controller.musicSetting(true);
-        Controller.sfxSetting(false);
-        Controller.sfxSetting(true);
-
     }
 
 

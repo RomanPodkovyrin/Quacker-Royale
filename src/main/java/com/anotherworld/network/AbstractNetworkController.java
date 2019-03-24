@@ -12,7 +12,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-
+/**
+ * Abstract networking class.
+ * @author roman
+ */
 public abstract class AbstractNetworkController {
     protected GameClient client;
     protected Server server;

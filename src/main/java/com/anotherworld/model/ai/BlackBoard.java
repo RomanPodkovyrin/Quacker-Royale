@@ -29,11 +29,10 @@ public class BlackBoard {
     private static float safeDistance = 4;
     // Player id - ball target
     private static Map<String, String> targetedBalls = new HashMap<>();
-    private static Map<String, AI_State> playersStates = new HashMap<>();
     private static float acceptableHealthPercentage = 0.5f;
 
     /**
-     * Used to set up BlackBoard values
+     * Used to set up BlackBoard values.
      */
     public static void setUp() {
         try {
@@ -50,6 +49,12 @@ public class BlackBoard {
         return acceptableHealthPercentage;
     }
 
+    /**
+     * Targets the the given ball by the given ai.
+     * @param ai - ai which targets the balls
+     * @param ball - the ball which is targeted
+     * @return - true can target or already targeted by this ai, false targeted by someone else
+     */
     public static boolean targetBall(PlayerData ai, BallData ball) {
         String aiID = ai.getObjectID();
         String ballID = ball.getObjectID();
@@ -69,9 +74,14 @@ public class BlackBoard {
         return true;
     }
 
+    /**
+     * Stops targeting what ever ball is being targeted by this ai.
+     * @param ai - ai which stops targeting the ball
+     */
     public static void stopTargetingBall(PlayerData ai) {
         targetedBalls.remove(ai.getObjectID());
     }
+
     /**
      * Moves ai to a given destination.
      * @param ai - ai to be moved
@@ -166,19 +176,4 @@ public class BlackBoard {
         return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),ai.getCoordinates()) <= ai.getRadius() + ball.getRadius() + safeDistance;
     }
 
-    public static void setState(String id, AI_State state) {
-        playersStates.put(id,state);
-    }
-
-    public static AI_State getState(String id) {
-        return playersStates.get(id);
-    }
-
-    public static void main() {
-
-    }
-
-    public enum AI_State {
-        NORMAL,INVULNERABLE
-    }
 }
