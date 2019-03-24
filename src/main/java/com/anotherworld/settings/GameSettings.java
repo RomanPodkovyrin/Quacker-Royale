@@ -140,7 +140,7 @@ public class GameSettings {
      * This method generates all the game objects with the specified values.
      *
      * @param numberOfPlayers - the total number of players
-     * @param numberOfaiPlayers - number of AI
+     * @param numberOfaiPlayers - number of AIController
      * @param numberOfBalls - number of balls
      */
     public GameSettings(int numberOfPlayers, int numberOfaiPlayers, int numberOfBalls) {
@@ -310,7 +310,7 @@ public class GameSettings {
             // Creates the player object
             PlayerData newPlayer = new PlayerData(names.get(i),playerHealth,xRandom,yRandom, ObjectState.IDLE, playerSpeed,playerRadius);
 
-            // checks if need to make an AI, current players or other players
+            // checks if need to make an AIController, current players or other players
             if (numberofaiplayers > 0) {
                 ai.add(newPlayer);
                 numberofaiplayers--;

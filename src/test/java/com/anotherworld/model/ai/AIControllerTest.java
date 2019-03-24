@@ -8,7 +8,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AITest {
+public class AIControllerTest {
 
     @Test
     public void SortTest(){
@@ -16,7 +16,7 @@ public class AITest {
 //        Ball[] balls = {new Ball(1,1,ObjectState.IDLE),
 //                new Ball(2,2,ObjectState.IDLE),
 //                new Ball(3,3,ObjectState.IDLE)};
-//        AI aiControl = new AI(ai,null,balls,null);
+//        AIController aiControl = new AIController(ai,null,balls,null);
 //        ArrayList<Ball> b = new ArrayList<>(Arrays.asList(new Ball(3,3,ObjectState.IDLE),
 //                new Ball(4,2,ObjectState.IDLE),
 //                new Ball(1,1,ObjectState.IDLE)));

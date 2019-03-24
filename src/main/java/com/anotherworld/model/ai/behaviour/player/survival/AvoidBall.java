@@ -16,9 +16,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Makes sure that the AI player stays away from the Dangerous balls.
- *  success - AI is safe no need to avoid balls
- *  fail - AI is not safe need to avoid balls
+ * Makes sure that the AIController player stays away from the Dangerous balls.
+ *  success - AIController is safe no need to avoid balls
+ *  fail - AIController is not safe need to avoid balls
  * @author Roman
  */
 public class AvoidBall extends Job {
@@ -49,7 +49,7 @@ public class AvoidBall extends Job {
 
         logger.trace("Starting the AvoidBall Job");
 
-        //Sorts the balls based on their distance to the AI
+        //Sorts the balls based on their distance to the AIController
         BlackBoard.sortBalls(this.ai, this.balls);
 
 
@@ -66,7 +66,7 @@ public class AvoidBall extends Job {
     }
 
     /**
-     * Points the AI players in the opposite direction of the dangerous ball.
+     * Points the AIController players in the opposite direction of the dangerous ball.
      */
     private void moveAway() {
         // loads the first value which is the closest balls
@@ -77,7 +77,7 @@ public class AvoidBall extends Job {
             ballPosition = imminentDangerBalls.get(0).getCoordinates();
             ballDirection = imminentDangerBalls.get(0).getVelocity();
         } else {
-            logger.error("AI is safe computation error");
+            logger.error("AIController is safe computation error");
             succeed();
             return;
         }
@@ -85,7 +85,7 @@ public class AvoidBall extends Job {
         // Getting the neighbour in the ball direction vector
         Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ballPosition, ballDirection),ai.getCoordinates());
 
-        // Vector from AI to the closes point
+        // Vector from AIController to the closes point
         Matrix direction = MatrixMath.pointsVector(ai.getCoordinates(), neighbour);
 
         // Check if vectors are zero
@@ -104,9 +104,9 @@ public class AvoidBall extends Job {
     }
 
     /**
-     * Checks if the AI in danger of the balls.
+     * Checks if the AIController in danger of the balls.
      *
-     * @return true if the ball is headed AI's way or falls if ball is headed in the direction of the AI
+     * @return true if the ball is headed AIController's way or falls if ball is headed in the direction of the AIController
      */
     private boolean isAIsafe() {
         // sorts balls into danger categories
@@ -131,7 +131,7 @@ public class AvoidBall extends Job {
         }
 
         boolean save =  imminentDangerBalls.isEmpty() || tooFar;
-        logger.trace("AI is " + (save ? "Save" : "in Danger"));
+        logger.trace("AIController is " + (save ? "Save" : "in Danger"));
         return save;
     }
 

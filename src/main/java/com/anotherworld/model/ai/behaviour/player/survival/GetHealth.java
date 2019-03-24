@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * Looks if health power up. And directs AI towards it. Fail if no power up, Succeed if health power up is present.
+ * Looks if health power up. And directs AIController towards it. Fail if no power up, Succeed if health power up is present.
  * @author roman
  */
 public class GetHealth extends Job {

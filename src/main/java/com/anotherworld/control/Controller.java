@@ -63,10 +63,7 @@ public class Controller {
         main.startTheGame(settings, new NetworkControllerSinglePlayer());
     }
 
-    public void setRunTheHostGame(boolean run) {
-        this.runTheHostGame = run;
-    }
-    
+
     /**
      * Used to initialise the game main class for the game.
      */

@@ -38,13 +38,13 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * This class sets up all the jobs for AIs and takes care of running AI when told to do so.
+ * This class sets up all the jobs for AIs and takes care of running AIController when told to do so.
  *
  * @author Roman P
  */
-public class AI {
+public class AIController {
 
-    private static Logger logger = LogManager.getLogger(AI.class);
+    private static Logger logger = LogManager.getLogger(AIController.class);
 
     private ArrayList<Pair<PlayerData,ArrayList<PlayerData>>> aiPlayers = new ArrayList<>();
     private ArrayList<PlayerData> allPlayers;
@@ -58,14 +58,14 @@ public class AI {
     private int step = 1;
 
     /**
-     * Used to set up the AI handler.
+     * Used to set up the AIController handler.
      *
      * @param ais All the ai players
      * @param allPlayers the rest of the allPlayers on the map(user and ai controlled)
      * @param balls all the balls on the map
      * @param platform the current platform
      */
-    public AI(ArrayList<PlayerData> ais, ArrayList<PlayerData> allPlayers, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
+    public AIController(ArrayList<PlayerData> ais, ArrayList<PlayerData> allPlayers, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
         this.allPlayers = allPlayers;
         this.balls = balls;
         this.platform = platform;
@@ -84,7 +84,7 @@ public class AI {
 
         // Gives all AIs their individual jobs
         for (PlayerData ai : ais) {
-            // Gives the AI representation of other players(AIs and human players)
+            // Gives the AIController representation of other players(AIs and human players)
             aiPlayers.add(new Pair<>(ai, removePlayer(allPlayers,ai)));
 
             // Setting up domination and peace combined list
@@ -92,7 +92,7 @@ public class AI {
             dominationAndPeace.add(new SequenceSuccess(getDomination()));
             dominationAndPeace.add(new SequenceSuccess(getPeace()));
 
-            // Setting up the extra check if the given action can be done to avoid the ball
+            // Setting up the extra check if the given makeDecision can be done to avoid the ball
             ArrayList<Job> extra = new ArrayList<>();
             extra.add(new SequenceSuccess(dominationAndPeace));
             extra.add(new CheckIfSaveToGo());
@@ -108,11 +108,11 @@ public class AI {
             job.start();
 
         }
-        logger.debug("AI initialisation is done");
+        logger.debug("AIController initialisation is done");
     }
 
     /**
-     * Sets up the jobs which keep AI alive.
+     * Sets up the jobs which keep AIController alive.
      *
      * @return ArrayList of survival jobs
      */
@@ -136,7 +136,7 @@ public class AI {
     }
 
     /**
-     * Sets up the jobs which make AI aggressive towards other players.
+     * Sets up the jobs which make AIController aggressive towards other players.
      *
      * @return ArrayList of domination jobs
      */
@@ -150,7 +150,7 @@ public class AI {
     }
 
     /**
-     * Sets up the jobs which makes AI do peaceful jobs.
+     * Sets up the jobs which makes AIController do peaceful jobs.
      *
      * @return ArrayList of peace jobs
      */
@@ -182,11 +182,11 @@ public class AI {
     }
 
     /**
-     * Is called when AI needs to make a decision based
+     * Is called when AIController needs to make a decision based
      * on the current state of the game session.
      */
-    public void action() {
-        logger.debug("AI action called.");
+    public void makeDecision() {
+        logger.debug("AIController makeDecision called.");
 
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
@@ -196,7 +196,7 @@ public class AI {
                     logger.debug(pair.getKey().getObjectID() + " is dead");
                     pair.getKey().setVelocity(0,0);
                 } else {
-                    logger.debug(pair.getKey().getObjectID() + " Starting AI");
+                    logger.debug(pair.getKey().getObjectID() + " Starting AIController");
 
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform, session);
                 }

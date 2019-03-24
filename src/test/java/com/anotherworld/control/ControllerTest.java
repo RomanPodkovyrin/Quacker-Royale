@@ -10,15 +10,14 @@ public class ControllerTest {
 
     @Test
     public void ControllerTest() {
-        Controller control = new Controller(new View(100,100));
+        Controller control = new Controller(new View());
         assertTrue(!control.clientCancel());
         assertTrue(!control.getServerStarted());
         assertTrue(!control.hostStartTheGame());
         control.hostCancelTheGame();
         assertNotNull(control.getPlayersIPaddresses());
         control.startSinglePlayer();
-        control.setRunTheHostGame(true);
-        control.setRunTheHostGame(false);
+        control.hostStartTheGame();
 
         Controller.musicSetting(false);
         Controller.musicSetting(true);

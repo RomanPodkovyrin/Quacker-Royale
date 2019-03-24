@@ -38,7 +38,7 @@ public class PlayerBehaviourTest {
 
 
         // Create players
-        currentAI = new PlayerData("AI",100,80,45, ObjectState.IDLE, 1f,1f);
+        currentAI = new PlayerData("AIController",100,80,45, ObjectState.IDLE, 1f,1f);
         currentAI.setVelocity(0,0);
         otherPlayers.clear();
         otherPlayers.add(new PlayerData("player",100,50,30, ObjectState.IDLE, 1f,1f));

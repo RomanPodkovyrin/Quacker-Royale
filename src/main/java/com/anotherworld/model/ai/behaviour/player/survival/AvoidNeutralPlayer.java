@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * This class makes AI go around the player if one of them is abstraction the way.
+ * This class makes AIController go around the player if one of them is abstraction the way.
  * @author roman
  */
 public class AvoidNeutralPlayer extends Job {

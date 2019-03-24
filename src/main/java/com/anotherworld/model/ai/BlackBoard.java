@@ -96,9 +96,9 @@ public class BlackBoard {
     }
 
     /**
-     * Sorts balls based on their distance from the AI player.
+     * Sorts balls based on their distance from the AIController player.
      *
-     * @param objects The object to be sorted based on the distance from the AI
+     * @param objects The object to be sorted based on the distance from the AIController
      * @return returns an ArrayList of Balls starting with the closes one
      */
     public static ArrayList<BallData> sortBalls(PlayerData ai, ArrayList<BallData> objects) {
@@ -112,8 +112,8 @@ public class BlackBoard {
      * Takes all the balls and sorts them based on their danger class.
      * <p>
      * possibleDangerBalls  - Balls that are dangerous
-     * dangerBalls          - Balls that are dangerous and perpendicular to the AI player
-     * imminentDangerBalls  - Balls that are dangerous, perpendicular and close to the AI player
+     * dangerBalls          - Balls that are dangerous and perpendicular to the AIController player
+     * imminentDangerBalls  - Balls that are dangerous, perpendicular and close to the AIController player
      * </p>
      */
     public static void sortBallLevels(PlayerData ai, ArrayList<BallData> balls, ArrayList<BallData> dangerBalls, ArrayList<BallData> possibleDangerBalls, ArrayList<BallData> imminentDangerBalls) {
@@ -155,7 +155,7 @@ public class BlackBoard {
     }
 
     /**
-     * Checks whether the the ball is to close to the AI.
+     * Checks whether the the ball is to close to the AIController.
      * @param ball the ball to be checked
      * @return  true - too close, false at a safe distance
      */
