@@ -47,7 +47,7 @@ public class LobbyClient {
      */
     public void sendMyIp() throws IOException {
         client = new Socket(serverIp, port);
-        logger.trace("Just connected to " + client.getRemoteSocketAddress());
+        logger.info("Just connected to " + client.getRemoteSocketAddress());
         OutputStream outToServer = client.getOutputStream();
         DataOutputStream out = new DataOutputStream(outToServer);
         out.writeUTF("Hello from " + client.getLocalSocketAddress());
