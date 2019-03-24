@@ -181,6 +181,108 @@ public class MenuSystem {
         
         return layout;
     }
+
+    private Layout createKeybindingSettings(GraphicsDisplay settingsMenuDisplay) {
+        logger.debug("Creating key bindings settings menu display");
+
+        //TODO implement key binding logic
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
+        ButtonData keyBindingsTitle = new ButtonData("Key Bindings");
+        layout.addButton(keyBindingsTitle);
+        
+        ButtonData muteButton = new ButtonData(() -> {
+            return "MUTE: " + KeySettings.getKeyString(KeySettings.getMute());  
+        }, false);
+        
+        muteButton.setOnAction(() -> {
+            logger.info("charge key button pressed");
+            KeySettings.setMute(view.getBindableKey());
+        });
+        layout.addButton(muteButton);
+        
+        ButtonData upButton = new ButtonData(() -> {
+            return "UP: " + KeySettings.getKeyString(KeySettings.getUp());  
+        }, false);
+        
+        upButton.setOnAction(() -> {
+            logger.info("up key button pressed");
+            KeySettings.setUp(view.getBindableKey());
+        });
+        layout.addButton(upButton);
+        
+        ButtonData downButton = new ButtonData(() -> {
+            return "DOWN: " + KeySettings.getKeyString(KeySettings.getDown());  
+        }, false);
+        
+        downButton.setOnAction(() -> {
+            logger.info("down key button pressed");
+            KeySettings.setDown(view.getBindableKey());
+        });
+        layout.addButton(downButton);
+        
+        ButtonData leftButton = new ButtonData(() -> {
+            return "LEFT: " + KeySettings.getKeyString(KeySettings.getLeft());  
+        }, false);
+        
+        leftButton.setOnAction(() -> {
+            logger.info("left key button pressed");
+            KeySettings.setLeft(view.getBindableKey());
+        });
+        layout.addButton(leftButton);
+        
+        ButtonData rightButton = new ButtonData(() -> {
+            return "RIGHT: " + KeySettings.getKeyString(KeySettings.getRight());  
+        }, false);
+        
+        rightButton.setOnAction(() -> {
+            logger.info("key button pressed");
+            KeySettings.setRight(view.getBindableKey());
+        });
+        layout.addButton(rightButton);
+        
+        ButtonData chargeButton = new ButtonData(() -> {
+            return "CHARGE: " + KeySettings.getKeyString(KeySettings.getCharge());  
+        }, false);
+        
+        chargeButton.setOnAction(() -> {
+            logger.info("charge key button pressed");
+            KeySettings.setCharge(view.getBindableKey());
+        });
+        layout.addButton(chargeButton);
+
+        ButtonData backToSettings = new ButtonData("Settings");
+        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
+        layout.addButton(backToSettings);
+        
+        return layout;
+    }
+
+    private Layout createViewSettings(GraphicsDisplay settingsMenuDisplay) {
+        logger.debug("Creating key bindings settings menu display");
+
+        //TODO implement key binding logic
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
+        ButtonData keyBindingsTitle = new ButtonData("Display Settings");
+        layout.addButton(keyBindingsTitle);
+        
+        ButtonData displayTypeButton = new ButtonData("WINDOWED");
+        
+        displayTypeButton.setOnAction(() -> {
+            logger.info("charge key button pressed");
+            KeySettings.setMute(view.getBindableKey());
+        });
+        layout.addButton(displayTypeButton);
+
+        ButtonData backToSettings = new ButtonData("Settings");
+        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
+        layout.addButton(backToSettings);
+        
+        return layout;
+    }
     
     private Layout createMultiplayerMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay clientMenuDisplay, GraphicsDisplay hostMenuDisplay, GraphicsDisplay connectionFailedDisplay) {
         logger.debug("Creating multiplayer menu display");
@@ -359,83 +461,6 @@ public class MenuSystem {
         });
         layout.addButton(backToMulti);
 
-        return layout;
-    }
-    
-    private Layout createKeybindingSettings(GraphicsDisplay settingsMenuDisplay) {
-        logger.debug("Creating key bindings settings menu display");
-
-        //TODO implement key binding logic
-        
-        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
-        
-        ButtonData keyBindingsTitle = new ButtonData("Key Bindings");
-        layout.addButton(keyBindingsTitle);
-        
-        ButtonData muteButton = new ButtonData(() -> {
-            return "MENU: " + KeySettings.getKeyString(KeySettings.getMute());  
-        }, false);
-        
-        muteButton.setOnAction(() -> {
-            logger.info("charge key button pressed");
-            KeySettings.setMute(view.getBindableKey());
-        });
-        layout.addButton(muteButton);
-        
-        ButtonData upButton = new ButtonData(() -> {
-            return "UP: " + KeySettings.getKeyString(KeySettings.getUp());  
-        }, false);
-        
-        upButton.setOnAction(() -> {
-            logger.info("up key button pressed");
-            KeySettings.setUp(view.getBindableKey());
-        });
-        layout.addButton(upButton);
-        
-        ButtonData downButton = new ButtonData(() -> {
-            return "DOWN: " + KeySettings.getKeyString(KeySettings.getDown());  
-        }, false);
-        
-        downButton.setOnAction(() -> {
-            logger.info("down key button pressed");
-            KeySettings.setDown(view.getBindableKey());
-        });
-        layout.addButton(downButton);
-        
-        ButtonData leftButton = new ButtonData(() -> {
-            return "LEFT: " + KeySettings.getKeyString(KeySettings.getLeft());  
-        }, false);
-        
-        leftButton.setOnAction(() -> {
-            logger.info("left key button pressed");
-            KeySettings.setLeft(view.getBindableKey());
-        });
-        layout.addButton(leftButton);
-        
-        ButtonData rightButton = new ButtonData(() -> {
-            return "RIGHT: " + KeySettings.getKeyString(KeySettings.getRight());  
-        }, false);
-        
-        rightButton.setOnAction(() -> {
-            logger.info("key button pressed");
-            KeySettings.setRight(view.getBindableKey());
-        });
-        layout.addButton(rightButton);
-        
-        ButtonData chargeButton = new ButtonData(() -> {
-            return "CHARGE: " + KeySettings.getKeyString(KeySettings.getCharge());  
-        }, false);
-        
-        chargeButton.setOnAction(() -> {
-            logger.info("charge key button pressed");
-            KeySettings.setCharge(view.getBindableKey());
-        });
-        layout.addButton(chargeButton);
-
-        ButtonData backToSettings = new ButtonData("Settings");
-        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
-        layout.addButton(backToSettings);
-        
         return layout;
     }
     
