@@ -53,7 +53,7 @@ public class ViewSettings {
     }
     
     public static boolean setDisplayType(DisplayType value) {
-        return setValue("WIDTH", getIntValue(value));
+        return setValue("DISPLAY_TYPE", getIntValue(value));
     }
     
     private static boolean setValue(String fileKey, int value) {

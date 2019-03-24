@@ -2,7 +2,9 @@ package com.anotherworld.control;
 
 import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
+import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.KeySettings;
+import com.anotherworld.settings.ViewSettings;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
@@ -49,7 +51,7 @@ public class MenuSystem {
         this.createMainMenu(victoryDisplay, creditDisplay, settingsMenuDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
         this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsMenuDisplay);
         this.createAudioSettings(settingsMenuDisplay).enactLayout(audioSettingsDisplay);
-        //TODO set video settings scene
+        this.createViewSettings(settingsMenuDisplay).enactLayout(videoSettingsDisplay);
         this.createKeybindingSettings(settingsMenuDisplay).enactLayout(keyBindingDisplay);
         //TODO set credit scene and load from file
         this.createClientLobbyMenuDisplay(clientMenuDisplay, thread).enactLayout(clientLobbyDisplay);
@@ -269,11 +271,34 @@ public class MenuSystem {
         ButtonData keyBindingsTitle = new ButtonData("Display Settings");
         layout.addButton(keyBindingsTitle);
         
-        ButtonData displayTypeButton = new ButtonData("WINDOWED");
+        ButtonData displayTypeButton = new ButtonData(() -> {
+            switch (ViewSettings.getDisplayType()) {
+                case FULLSCREEN:
+                    return "FULLSCREEN";
+                case WINDOWED:
+                    return "WINDOWED";
+                case BOARDERLESS_WINDOWED:
+                    return "BOARDERLESS WINDOWED";
+                default:
+                    return "UNKNOWN DISPLAY TYPE";
+            }
+        }, false);
         
         displayTypeButton.setOnAction(() -> {
-            logger.info("charge key button pressed");
-            KeySettings.setMute(view.getBindableKey());
+            logger.info("Change display type button pressed");
+            switch (ViewSettings.getDisplayType()) {
+                case FULLSCREEN:
+                    ViewSettings.setDisplayType(DisplayType.WINDOWED);
+                    break;
+                case WINDOWED:
+                    ViewSettings.setDisplayType(DisplayType.BOARDERLESS_WINDOWED);
+                    break;
+                case BOARDERLESS_WINDOWED:
+                    ViewSettings.setDisplayType(DisplayType.FULLSCREEN);
+                    break;
+                default:
+                    ViewSettings.setDisplayType(DisplayType.WINDOWED);
+            }
         });
         layout.addButton(displayTypeButton);
 
