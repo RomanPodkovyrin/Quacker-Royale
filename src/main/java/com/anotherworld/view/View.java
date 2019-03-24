@@ -21,6 +21,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.GameKeyListener;
+import com.anotherworld.tools.input.KeyBindings;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.data.*;
 import com.anotherworld.view.graphics.GameScene;
@@ -40,7 +41,6 @@ import com.anotherworld.view.viewevent.ViewEvent;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -66,8 +66,6 @@ public class View implements Runnable {
     private Scene currentScene;
 
     private CountDownLatch keyListenerLatch;
-
-    private volatile GameKeyListener keyListener;
 
     private volatile boolean running;
 
@@ -109,7 +107,7 @@ public class View implements Runnable {
         logger.info("Request for key listener objected");
         try {
             if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
-                return keyListener;
+                return new GameKeyListener(window, new KeyBindings());
             }
         } catch (InterruptedException e) {
             logger.catching(e);
@@ -184,8 +182,6 @@ public class View implements Runnable {
                 }
             }
         }
-
-        keyListener = new GameKeyListener(window);
 
         keyListenerLatch.countDown();
 
@@ -266,6 +262,7 @@ public class View implements Runnable {
         logger.info("Closing window");
         keyListenerLatch = new CountDownLatch(1);
         // TODO delete all object for all scenes
+        // could use hashmap
         currentScene.destoryObjects();
         programme.destroy();
         running = false;
