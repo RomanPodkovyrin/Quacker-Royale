@@ -1,5 +1,6 @@
 package com.anotherworld.control;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
 import com.anotherworld.settings.DisplayType;
@@ -159,9 +160,9 @@ public class MenuSystem {
             logger.info("Music button pressed");
             musicButton.setText("Music: " + (musicButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
             if (musicButton.getText().split(" ")[1].equals("ON")) {
-                Controller.musicSetting(true);
+                AudioControl.setMusicOn(true);
             } else {
-                Controller.musicSetting(false);
+                AudioControl.setMusicOn(false);
             }
         });
         layout.addButton(musicButton);
@@ -170,9 +171,9 @@ public class MenuSystem {
         sfxButton.setOnAction(() -> {
             sfxButton.setText("SFX: " + (sfxButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
             if (sfxButton.getText().split(" ")[1].equals("ON")) {
-                Controller.sfxSetting(true);
+                AudioControl.setEffectsOn(true);
             } else {
-                Controller.sfxSetting(false);
+                AudioControl.setEffectsOn(false);
             }
         });
         layout.addButton(sfxButton);

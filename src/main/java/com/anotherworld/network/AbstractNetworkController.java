@@ -22,7 +22,7 @@ public abstract class AbstractNetworkController {
     protected PlatformData platform;
     protected WallData wall;
     protected GameSessionData gameSessionData;
-    protected static Logger logger = LogManager.getLogger(NetworkController.class);
+    protected static Logger logger = LogManager.getLogger(AbstractNetworkController.class);
     protected int hostSendRate = 0;
 
     /**

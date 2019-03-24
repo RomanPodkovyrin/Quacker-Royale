@@ -307,26 +307,4 @@ public class Controller {
         startTheGame(settings, new NetworkControllerSinglePlayer());
     }
 
-    /**
-     * Toggles the sound effect on and off.
-     * @param on - true is on, false is off
-     * @return - true is on, false is off
-     */
-    public static boolean sfxSetting(boolean on) {
-        logger.info("Toggle soundEffect "  + on);
-        AudioControl.setEffectsOn(on);
-        return on;
-    }
-
-    /**
-     * Toggles the music on and off.
-     * @param on - true is on, false is off
-     * @return - true is on, false is off
-     */
-    public static boolean musicSetting(boolean on) {
-        logger.info("Toggle backgroundMusic "  + on);
-        AudioControl.setMusicOn(on);
-        return on;
-    }
-
 }
