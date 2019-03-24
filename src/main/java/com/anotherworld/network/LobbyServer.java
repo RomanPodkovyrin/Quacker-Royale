@@ -55,17 +55,10 @@ public class LobbyServer extends Thread {
      */
     public void run() {
         canStart = false;
-        while (!allPlayersJoined) {
+        while (!(allPlayersJoined && canStart)) {
             try {
                 getPlayersIP();
             } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        while (!canStart) {
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -82,6 +75,7 @@ public class LobbyServer extends Thread {
      */
     private void getPlayersIP() throws IOException {
         Socket lobbySocket = tcpSocket.accept();
+        lobbySocket.setSoTimeout(100);
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
         if (in.readUTF().equals("cancel connection")) {
             for (int i = 0; i < playersIpAddresses.size(); i++) {
