@@ -6,6 +6,8 @@ production/anotherworld/render/
 .project
 bin/
 /res/config/test.properties
+/res/config/keys.properties
+/res/config/display.properties
 *.DS_Store
 *.log
 res/images/i_guess_this_is_a_font.png

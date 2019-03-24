@@ -41,9 +41,7 @@ public class PowerUpDisplayObject extends DisplayObject {
 
     @Override
     public boolean shouldDraw() {
-        return this.displayData.getState() != ObjectState.INACTIVE
-                && this.displayData.getSpawnTime() > this.gameData.getTimeLeft() - 1;
-
+        return this.displayData.getState() == ObjectState.ACTIVE;
     }
 
     @Override

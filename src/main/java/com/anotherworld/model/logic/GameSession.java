@@ -80,8 +80,7 @@ public class GameSession {
     }
 
     /**
-     * Checks all the objects and updates their state and location
-     * physics and ai are run during this time.
+     * Updates all the objects in the game.
      */
     public void update() {
 
@@ -256,15 +255,19 @@ public class GameSession {
         }
     }
 
+    /**
+     * Updates the current player's velocity based on the given list of inputs.
+     * @param keyPresses The set of key presses determining the movement.
+     */
     public void updatePlayer(ArrayList<Input> keyPresses) {
         updatePlayer(this.currentPlayer, keyPresses, this.gameData);
     }
 
     /**
-     * Updates the current player's velocity based on the given list of inputs.
-     * @param player The playable character to move
-     * @param keyPresses The set of key presses determining the movement
-     * @param gameData game data to access time
+     * Updates a specified player's velocity based on the given list of inputs.
+     * @param player The playable character to move.
+     * @param keyPresses The set of key presses determining the movement.
+     * @param gameData game data to access time.
      */
     public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses, GameSessionData gameData) {
         if (keyPresses.contains(Input.CHARGE)) {
@@ -287,21 +290,7 @@ public class GameSession {
         } else {
 
             if (!Player.isDashing(player)) {
-                if (keyPresses.contains(Input.UP)) {
-                    player.setYVelocity(-1);
-                } else if (keyPresses.contains(Input.DOWN)) {
-                    player.setYVelocity(1);
-                } else {
-                    player.setYVelocity(0);
-                }
-
-                if (keyPresses.contains(Input.LEFT)) {
-                    player.setXVelocity(-1);
-                } else if (keyPresses.contains(Input.RIGHT)) {
-                    player.setXVelocity(1);
-                } else {
-                    player.setXVelocity(0);
-                }
+                updatePlayer(player, keyPresses);
             } else {
                 long timeSpentDashing = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
@@ -318,6 +307,7 @@ public class GameSession {
                     // If the charge button was pressed but not long enough, reset.
                     player.setState(ObjectState.IDLE);
                 } else {
+                    // Otherwise dash forwards.
                     Physics.charge(player);
                     player.setTimeStartedCharging(gameData.getTicksElapsed());
                     player.setState(ObjectState.DASHING);

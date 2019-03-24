@@ -28,9 +28,13 @@ public class PropertyReader {
         this.fullFilePath = System.getProperty("user.dir") + filePath + filename;
         propertyFile = new Properties();
         
-        //TODO add logic to create file if none exists?
+        File file = new File(this.fullFilePath);
         
-        fileStream = new FileInputStream(new File(this.fullFilePath));
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        
+        fileStream = new FileInputStream(file);
         
         propertyFile.load(fileStream);
 

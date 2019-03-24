@@ -69,6 +69,8 @@ public class UpdateDisplayObjects implements ViewEvent {
      * Returns the data for the current game session for the view.
      * @return the game session data
      */
-    public GameSessionData getGameSessionData() { return gameSessionData; }
+    public GameSessionData getGameSessionData() {
+        return gameSessionData;
+    }
 
 }

@@ -58,7 +58,7 @@ public class Controller {
      * @param args - command line arguments are not used
      */
     public static void main(String []args) {
-        Controller main = new Controller(new View(1920, 1080));
+        Controller main = new Controller(new View());
         GameSettings settings = new GameSettings(2,1,1);
         main.startTheGame(settings, new NetworkControllerSinglePlayer());
     }
@@ -162,7 +162,7 @@ public class Controller {
         logger.trace("Lobby server is waiting for all players to connect");
         logger.trace("Waiting for Host to start the game");
         runTheHostGame = false;
-        while (!lobbyServer.isReady() && !runTheHostGame) {
+        while (!(lobbyServer.isReady() && runTheHostGame)) {
             if (cancelTheGame) {
                 throw new ConnectionClosed();
                 //TODO tell clients to close?
@@ -175,12 +175,22 @@ public class Controller {
             }
             playersIPaddresses = lobbyServer.getIPs();
         }
-        logger.trace("Lobby server: " + playersIPaddresses.size() + " players connected"
+        logger.info("Lobby server: " + playersIPaddresses.size() + " players connected"
                 + "\nLobby server is ready to play");
 
+        lobbyServer.canStartTheGame();
+
+        while (server.areClientsReady()) {
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
 
-        logger.trace("Host started the game");
+
+        logger.info("Host started the game");
 
         NetworkControllerServer network = new NetworkControllerServer(server, settings);
         startTheGame(settings,network);
@@ -209,7 +219,7 @@ public class Controller {
      * @param serverIP the host ip address to connect to
      */
     public void connect(String serverIP) throws NoHostFound, ConnectionClosed {
-        logger.trace("Starting the Lobby client");
+        logger.info("Starting the Lobby client");
         lobbyClient = new LobbyClient(serverIP);
         try {
             lobbyClient.sendMyIp();
@@ -221,14 +231,14 @@ public class Controller {
             e.printStackTrace();
         }
 
-        logger.trace("Connecting to lobby host " + serverIP);
+        logger.info("Connecting to lobby host " + serverIP);
         try {
             lobbyClient.waitForGameToStart();
         } catch (IOException e) {
             throw new ConnectionClosed();
         }
 
-        logger.trace("Starting the game client");
+        logger.info("Starting the game client");
         GameClient client = null;
         try {
             client = new GameClient(serverIP);
@@ -250,7 +260,7 @@ public class Controller {
         WallData wall = null;
         GameSessionData session  = null;
 
-        logger.trace("Waiting for host to send all the objects needed to start the game");
+        logger.info("Waiting for host to send all the objects needed to start the game");
         while (waitingForObjects) {
             try {
                 Thread.sleep(1);
@@ -266,7 +276,7 @@ public class Controller {
             session = client.getGameSessionData();
 
             if ((allPlayers != null & allBalls != null & myPlayer != null & platform != null & wall != null & session != null)) {
-                logger.trace("Client has received all the objects");
+                logger.info("Client has received all the objects");
                 waitingForObjects = false;
             }
         }
@@ -285,7 +295,7 @@ public class Controller {
         ArrayList<WallData> walls = new ArrayList<>();
         walls.add(wall);
 
-        logger.trace("Setting up the game session");
+        logger.info("Setting up the game session");
         GameSettings settings = new GameSettings(myPlayer,allPlayers,new ArrayList<>(),allBalls,platforms,walls,session);
 
 

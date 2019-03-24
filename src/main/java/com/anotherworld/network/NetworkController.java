@@ -80,7 +80,7 @@ public class NetworkController {
         balls = settings.getBalls();
         platform = settings.getPlatform().get(0);
         wall = settings.getWall().get(0);
-        gameSessionData = settings.getGameSession();
+        gameSessionData = settings.getGameSessionData();
 
     }
 

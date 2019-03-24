@@ -39,7 +39,7 @@ public abstract class AbstractNetworkController {
         this.balls = settings.getBalls();
         this.platform = settings.getPlatform().get(0);
         this.wall = settings.getWall().get(0);
-        this.gameSessionData = settings.getGameSession();
+        this.gameSessionData = settings.getGameSessionData();
 
     }
 

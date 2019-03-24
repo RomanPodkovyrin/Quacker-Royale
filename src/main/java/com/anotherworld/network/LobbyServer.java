@@ -20,6 +20,7 @@ public class LobbyServer extends Thread {
     private ServerSocket tcpSocket;
     private int port;
     private boolean allPlayersJoined;
+    private boolean canStart = false;
     private ArrayList<String> playersIpAddresses;
     private ArrayList<OutputStream> clientSockets;
     private int currentPlayersAmount;
@@ -44,18 +45,24 @@ public class LobbyServer extends Thread {
         }
     }
 
+    public void canStartTheGame() {
+        canStart = true;
+    }
+
     /**
      * A run method for the thread which waits for all clients to connect,
      * after that it will inform them that the game can start.
      */
     public void run() {
-        while (!allPlayersJoined) {
+        canStart = false;
+        while (!(allPlayersJoined && canStart)) {
             try {
                 getPlayersIP();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.trace("LobbyServerTimeout");
             }
         }
+        logger.info("Telling clients to start the game");
         try {
             informAllClientsThatGameCanStart();
         } catch (IOException e) {
@@ -68,12 +75,16 @@ public class LobbyServer extends Thread {
      */
     private void getPlayersIP() throws IOException {
         Socket lobbySocket = tcpSocket.accept();
+        lobbySocket.setSoTimeout(100);
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
         if (in.readUTF().equals("cancel connection")) {
             for (int i = 0; i < playersIpAddresses.size(); i++) {
                 if (playersIpAddresses.get(i) == lobbySocket.getInetAddress().getHostAddress()) {
+                    logger.info("Player " + playersIpAddresses.get(i) + " Disconnected");
                     playersIpAddresses.remove(playersIpAddresses.get(i));
                     currentPlayersAmount--;
+                    allPlayersJoined = false;
+                    canStart = false;
                 }
             }
         } else {
