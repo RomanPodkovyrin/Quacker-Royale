@@ -90,6 +90,10 @@ public class KeySettings {
         return getKey("CHARGE", GLFW_KEY_SPACE);
     }
     
+    public static int getMute() {
+        return getKey("MUTE", GLFW_KEY_M);
+    }
+    
     private static int getKey(String fileKey, int defaultValue) {
         try {
             if (!keySettings.isPresent()) {
@@ -121,6 +125,10 @@ public class KeySettings {
     
     public static boolean setCharge(int value) {
         return setKey("CHARGE", value);
+    }
+    
+    public static boolean setMute(int value) {
+        return setKey("MUTE", value);
     }
     
     private static boolean keyInUse(int value) {

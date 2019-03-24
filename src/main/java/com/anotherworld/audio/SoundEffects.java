@@ -21,36 +21,15 @@ import org.apache.logging.log4j.Logger;
  */
 public class SoundEffects implements Runnable {
     //File paths and the references from where they have been taken
-    //https://freesound.org/people/qubodup/sounds/332060/
-    private String ballCollidedWithWallSound =  "./res/audio/ball_collided_with_the_wall.au";
-    //https://freesound.org/people/jeckkech/sounds/391658/
-    private String playerCollidedWithBallSound = "./res/audio/player_collided_with_ball.au";
-    //https://freesound.org/people/Autistic%20Lucario/sounds/142608/
-    private String error = "./res/audio/error.wav";
-    //https://freesound.org/people/ProjectsU012/sounds/341695/
-    private String beep = "./res/audio/beep.wav";
-    //https://freesound.org/people/Ekokubza123/sounds/104183/
-    private String punch = "./res/audio/punch.wav";
-    //https://freesound.org/people/Leszek_Szary/sounds/146726/
-    private String jump = "./res/audio/jump.wav";
     //https://freesound.org/people/zmobie/sounds/319783/
     private String ball = "./res/audio/basketball-8.wav";
-    //https://freesound.org/people/plagasul/sounds/85/
-    private String scream = "./res/audio/jeEH.wav";
     //https://freesound.org/people/Reitanna/sounds/242664/
     private String quack ="./res/audio/quack.wav";
     //https://freesound.org/people/FoolBoyMedia/sounds/397434/
     private String win = "./res/audio/crowd-cheer.wav";
 
     //All the files of sound effects
-    private File ballCollidedWithWallFile;
-    private File playerCollidedWithBallFile;
-    private File errorFile;
-    private File beepFile;
-    private File punchFile;
     private File ballFile;
-    private File screamFile;
-    private File jumpFile;
     private File quackFile;
     private File winFile;
 
@@ -69,14 +48,7 @@ public class SoundEffects implements Runnable {
      * Used to load the sound files and initialize the thread.
      */
     public SoundEffects() {
-        ballCollidedWithWallFile = new File(ballCollidedWithWallSound);
-        playerCollidedWithBallFile = new File(playerCollidedWithBallSound);
-        errorFile = new File(error);
-        beepFile = new File(beep);
-        punchFile = new File(punch);
-        jumpFile = new File(jump);
         ballFile = new File(ball);
-        screamFile = new File(scream);
         quackFile = new File(quack);
         winFile = new File(win);
         effect = new Thread(this);

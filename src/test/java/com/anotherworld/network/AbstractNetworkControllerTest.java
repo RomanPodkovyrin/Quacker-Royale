@@ -1,6 +1,7 @@
 package com.anotherworld.network;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.settings.GameSettings;
@@ -31,16 +32,15 @@ public class AbstractNetworkControllerTest {
         Server server;
         try {
 //          client = new GameClient("localhost");
-//          NetworkController networking = new NetworkController(client,settings);
-//          assertEquals(true,networking.isClient());
-//          assertEquals(false,networking.isServer());
-//          System.out.println("R");
-//          networking.stopNetworking();
-            server = new Server(1,settings);
-            NetworkController networking = new NetworkController(server,settings);
-            assertEquals(true,networking.isServer());
-            assertEquals(false,networking.isClient());
-            networking.stopNetworking();
+//          AbstractNetworkController networkingClient = new NetworkControllerClient(client,settings);
+//          networkingClient.stopNetworking();
+
+          server = new Server(1,settings);
+          AbstractNetworkController networkingServer = new NetworkControllerServer(server,settings);
+          networkingServer.stopNetworking();
+
+          AbstractNetworkController networkSinglePlayer = new NetworkControllerSinglePlayer();
+//          as(networkSinglePlayer.clientControl(null));
 
         } catch (SocketException e) {
             e.printStackTrace();

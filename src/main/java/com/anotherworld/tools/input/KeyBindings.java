@@ -14,6 +14,7 @@ public class KeyBindings {
     private final int down;
     private final int right;
     private final int charge;
+    private final int mute;
     
     public KeyBindings() {
         logger.trace("Creating key bindings");
@@ -22,6 +23,7 @@ public class KeyBindings {
         right = KeySettings.getRight();
         down = KeySettings.getDown();
         charge = KeySettings.getCharge();
+        mute = KeySettings.getMute();
     }
     
     public int getUp() {
@@ -42,6 +44,10 @@ public class KeyBindings {
     
     public int getCharge() {
         return charge;
+    }
+    
+    public int getMute() {
+        return mute;
     }
 
 

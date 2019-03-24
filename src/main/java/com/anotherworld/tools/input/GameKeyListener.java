@@ -27,6 +27,7 @@ public class GameKeyListener {
         trackedKeys.add(keyBindings.getRight());
         trackedKeys.add(keyBindings.getDown());
         trackedKeys.add(keyBindings.getCharge());
+        trackedKeys.add(keyBindings.getMute());
         keyListener = new KeyListener(trackedKeys, window);
     }
 
@@ -48,6 +49,8 @@ public class GameKeyListener {
             } else if (key == keyBindings.getRight()) {
                 keyPresses.add(Input.RIGHT);
             } else if (key == keyBindings.getCharge()) {
+                keyPresses.add(Input.CHARGE);
+            } else if (key == keyBindings.getMute()) {
                 keyPresses.add(Input.CHARGE);
             }
         }

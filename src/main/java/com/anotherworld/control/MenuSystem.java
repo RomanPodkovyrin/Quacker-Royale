@@ -372,6 +372,16 @@ public class MenuSystem {
         ButtonData keyBindingsTitle = new ButtonData("Key Bindings");
         layout.addButton(keyBindingsTitle);
         
+        ButtonData muteButton = new ButtonData(() -> {
+            return "MENU: " + KeySettings.getKeyString(KeySettings.getMute());  
+        }, false);
+        
+        muteButton.setOnAction(() -> {
+            logger.info("charge key button pressed");
+            KeySettings.setMute(view.getBindableKey());
+        });
+        layout.addButton(muteButton);
+        
         ButtonData upButton = new ButtonData(() -> {
             return "UP: " + KeySettings.getKeyString(KeySettings.getUp());  
         }, false);
