@@ -60,7 +60,7 @@ public class MenuSystem {
         this.createVictoryDisplay(mainMenuDisplay).enactLayout(victoryDisplay);
 
         view.switchToDisplay(mainMenuDisplay);
-        view.setTitle("Quacker Royal");
+        view.setTitle("Quacker Royale");
         
         while (view.windowOpen()) {
             try {
@@ -79,7 +79,7 @@ public class MenuSystem {
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
         
-        ButtonData label1 = new ButtonData("Quacker Royal");
+        ButtonData label1 = new ButtonData("Quacker Royale");
         layout.addButton(label1);
 
         ButtonData singlePlayer = new ButtonData("SinglePlayer");
