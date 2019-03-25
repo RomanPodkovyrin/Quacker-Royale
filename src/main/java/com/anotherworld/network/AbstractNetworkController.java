@@ -61,4 +61,9 @@ public abstract class AbstractNetworkController {
      * Network control for the server.
      */
     public abstract void hostControl();
+
+    /**
+     * Used to quit the game.
+     */
+    public abstract void quitTheGame();
 }

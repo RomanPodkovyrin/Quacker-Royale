@@ -11,6 +11,7 @@ import com.anotherworld.tools.input.Input;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Controls Client session.
@@ -90,6 +91,16 @@ public class NetworkControllerClient extends AbstractNetworkController {
 
     @Override
     public void hostControl() {
+
+    }
+
+    @Override
+    public void quitTheGame() {
+        try {
+            client.sendKeyPresses(new ArrayList<>(Arrays.asList(Input.QUIT)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 }

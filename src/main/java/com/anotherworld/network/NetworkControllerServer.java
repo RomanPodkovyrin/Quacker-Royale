@@ -1,6 +1,7 @@
 package com.anotherworld.network;
 
 import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.input.GameKeyListener;
@@ -46,13 +47,11 @@ public class NetworkControllerServer extends AbstractNetworkController {
             for (PlayerData player: allPlayers) {
 
                 if (player.getObjectID().equals(id)) {
-//                        if (in.contains(Input.UP)) player.setYVelocity(-player.getSpeed());
-//                        else if (in.contains(Input.DOWN)) player.setYVelocity(player.getSpeed());
-//                        else player.setYVelocity(0);
-//
-//                        if (in.contains(Input.LEFT)) player.setXVelocity(-player.getSpeed());
-//                        else if (in.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
-//                        else player.setXVelocity(0);
+
+                    if (in.contains(Input.QUIT)) {
+                        //The client quit the game
+                        player.setState(ObjectState.DEAD);
+                    }
 
                     GameSession.updatePlayer(player,in, gameSessionData);
                 }
@@ -104,5 +103,17 @@ public class NetworkControllerServer extends AbstractNetworkController {
             hostSendRate++;
         }
 
+    }
+
+    @Override
+    public void quitTheGame() {
+        for (PlayerData player: allPlayers) {
+            player.setState(ObjectState.DEAD);
+        }
+        try {
+            server.sendObjectToClients(allPlayers);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
