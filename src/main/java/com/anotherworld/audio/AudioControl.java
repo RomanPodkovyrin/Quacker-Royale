@@ -93,6 +93,15 @@ public class AudioControl {
     }
 
     /**
+     * Plays the hover sound effect.
+     */
+    public static void playButtonHover() {
+        if (effectsOn) {
+            soundEffects.playButtonHover();
+        }
+    }
+
+    /**
      * Plays the win sound.
      */
     public static  void win() {
