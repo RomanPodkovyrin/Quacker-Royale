@@ -101,6 +101,12 @@ public class GameSessionController {
 
         while (view.gameRunning() && session.isRunning()) {
 
+            //checks if player quit the game
+            if (keyListener.getKeyPresses().contains(Input.QUIT)) {
+                network.quitTheGame();
+                break;
+            }
+
             // music and effect mute unmute control
             if (keyListener.getKeyPresses().contains(Input.MUTE)) {
                 if (!keyDown) {
