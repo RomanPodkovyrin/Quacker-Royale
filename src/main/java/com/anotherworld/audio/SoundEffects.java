@@ -27,8 +27,8 @@ public class SoundEffects implements Runnable {
     private String quack ="./res/audio/quack.wav";
     //https://freesound.org/people/FoolBoyMedia/sounds/397434/
     private String win = "./res/audio/crowd-cheer.wav";
-    //https://freesound.org/people/plasterbrain/sounds/237422/
-    private String hover = ".res/audio/hover.ogg";
+    //https://freesound.org/people/JPolito/sounds/391697/
+    private String hover = "./res/audio/hover.wav";
     //All the files of sound effects
     private File ballFile;
     private File quackFile;

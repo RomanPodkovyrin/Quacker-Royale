@@ -17,6 +17,7 @@ public class AudioControl {
 
     private static Logger logger = LogManager.getLogger(AudioControl.class);
 
+
     /**
      * To be used at the beginning of the game to start background and effects depending on the previous settings.
      */
@@ -97,6 +98,9 @@ public class AudioControl {
      */
     public static void playButtonHover() {
         if (effectsOn) {
+            if (soundEffects == null) {
+                soundEffects = new SoundEffects();
+            }
             soundEffects.playButtonHover();
         }
     }
