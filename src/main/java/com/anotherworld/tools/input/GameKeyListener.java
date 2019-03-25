@@ -51,7 +51,7 @@ public class GameKeyListener {
             } else if (key == keyBindings.getCharge()) {
                 keyPresses.add(Input.CHARGE);
             } else if (key == keyBindings.getMute()) {
-                keyPresses.add(Input.CHARGE);
+                keyPresses.add(Input.MUTE);
             }
         }
         return keyPresses;
