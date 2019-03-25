@@ -131,13 +131,4 @@ public class GraphicsDisplay {
         }
     }
 
-    /**
-     * Deletes the programme buffers it has bound.
-     */
-    public void destroyObjects() {
-        for (DisplayObject d : objects) {
-            d.destroyObject();
-        }
-    }
-
 }

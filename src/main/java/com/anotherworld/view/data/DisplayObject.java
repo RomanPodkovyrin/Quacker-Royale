@@ -7,6 +7,7 @@ import com.anotherworld.view.programme.Programme;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +32,7 @@ public abstract class DisplayObject {
     
     private final Programme programme;
     
-    private final int programmeObjectId;
+    private Optional<Integer> programmeObjectId;
     
     private float r;
     
@@ -72,14 +73,7 @@ public abstract class DisplayObject {
         this.xShear = 1;
         this.yShear = 1;
         this.spriteSheet = spriteSheet;
-        programmeObjectId = programme.initialiseDisplayObject(this);
-    }
-    
-    /**
-     * Cleans opengl of the object's representation.
-     */
-    public void destroyObject() {
-        programme.deleteObject(this);
+        this.programmeObjectId = Optional.empty();
     }
     
     /**
@@ -205,8 +199,12 @@ public abstract class DisplayObject {
         return false;
     }
     
-    public int getProgrammeObjectId() {
+    public Optional<Integer> getProgrammeObjectId() {
         return programmeObjectId;
+    }
+    
+    public void setProgrammeObjectId(int id) {
+        programmeObjectId = Optional.of(id);
     }
     
     /**

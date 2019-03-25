@@ -55,15 +55,6 @@ public class LegacyProgramme extends Programme {
     }
 
     @Override
-    public int initialiseDisplayObject(DisplayObject displayObject) {
-        return 0;
-    }
-
-    @Override
-    public void deleteObject(DisplayObject displayObject) {
-    }
-
-    @Override
     public void updateObjectColour(DisplayObject displayObject) {
     }
 

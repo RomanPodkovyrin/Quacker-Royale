@@ -100,8 +100,7 @@ public class TexturedProgramme extends Programme {
         logger.debug("Loading texture map");
     }
     
-    @Override
-    public int initialiseDisplayObject(DisplayObject displayObject) {
+    private void initialiseDisplayObject(DisplayObject displayObject) {
         
         TexturedDisplayObjectBuffers bufferObject = new TexturedDisplayObjectBuffers();
         
@@ -149,7 +148,7 @@ public class TexturedProgramme extends Programme {
         
         bufferObjects.add(bufferObject);
         
-        return bufferObjects.size() - 1;
+        displayObject.setProgrammeObjectId(bufferObjects.size() - 1);
         
     }
     
@@ -169,6 +168,15 @@ public class TexturedProgramme extends Programme {
     @Override
     public void destroy() {
         this.close();
+        for (TexturedDisplayObjectBuffers bufferObject : bufferObjects) {
+            glDeleteBuffers(bufferObject.getVerticesId());
+            glDeleteBuffers(bufferObject.getEdgesId());
+            glDeleteBuffers(bufferObject.getColourId());
+            if (bufferObject.getTextureId().isPresent()) {
+                glDeleteBuffers(bufferObject.getTextureId().get());
+            }
+            glDeleteBuffers(bufferObject.getVertexArrayObjectId());
+        }
         textureMap.destroy();
         vertexShader.destroy();
         fragShader.destroy();
@@ -183,6 +191,10 @@ public class TexturedProgramme extends Programme {
     @Override
     public void draw(DisplayObject displayObject) {
         if (displayObject.shouldDraw()) {
+            if (!displayObject.getProgrammeObjectId().isPresent()) {
+                this.initialiseDisplayObject(displayObject);
+            }
+            
             FloatBuffer temp = BufferUtils.createFloatBuffer(16);
             float[] matrix = getCurrentMatrix().getPoints();
             temp.put(matrix);
@@ -191,7 +203,7 @@ public class TexturedProgramme extends Programme {
             
             textureMap.loadTexture(programmeId, displayObject.getSpriteSheet(), displayObject.getXShear(), displayObject.getYShear());
             
-            TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
+            TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId().get());
             
             glBindVertexArray(bufferObject.getVertexArrayObjectId());
             glEnableVertexAttribArray(0);
@@ -217,47 +229,38 @@ public class TexturedProgramme extends Programme {
     }
 
     @Override
-    public void deleteObject(DisplayObject displayObject) {
-        TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
-        
-        glDeleteBuffers(bufferObject.getVerticesId());
-        glDeleteBuffers(bufferObject.getEdgesId());
-        glDeleteBuffers(bufferObject.getColourId());
-        if (bufferObject.getTextureId().isPresent()) {
-            glDeleteBuffers(bufferObject.getTextureId().get());
-        }
-        glDeleteBuffers(bufferObject.getVertexArrayObjectId());
-    }
-
-    @Override
     public void updateObjectColour(DisplayObject displayObject) {
-        TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
-        
-        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
-        glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        if (displayObject.getProgrammeObjectId().isPresent()) {
+            TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId().get());
+            
+            glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
+            glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
     }
 
     @Override
     public void updateBuffers(DisplayObject displayObject) {
-        TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId());
-        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getVerticesId());
-        glBufferData(GL_ARRAY_BUFFER, displayObject.getVertexBuffer(), GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
-        glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        if (displayObject.getSpriteSheet().isTextured()) {
-            glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getTextureId().get());
-            glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
+        if (displayObject.getProgrammeObjectId().isPresent()) {
+            TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId().get());
+            glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getVerticesId());
+            glBufferData(GL_ARRAY_BUFFER, displayObject.getVertexBuffer(), GL_STATIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
+            
+            glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getColourId());
+            glBufferData(GL_ARRAY_BUFFER, displayObject.getColourBuffer(), GL_STATIC_DRAW);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+            
+            if (displayObject.getSpriteSheet().isTextured()) {
+                glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getTextureId().get());
+                glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
+                glBindBuffer(GL_ARRAY_BUFFER, 0);
+            }
+            
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.getEdgesId());
+            glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getEdgeBuffer(), GL_STATIC_DRAW);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         }
-        
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.getEdgesId());
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, displayObject.getEdgeBuffer(), GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     }
 
 }

@@ -204,18 +204,6 @@ public abstract class Programme {
     public abstract void draw(DisplayObject object);
 
     /**
-     * Creates the programme buffers for the display object.
-     * @param displayObject the object to initialise for
-     */
-    public abstract int initialiseDisplayObject(DisplayObject displayObject);
-
-    /**
-     * Deletes the programme buffers for the display object.
-     * @param displayObject the object to delete the buffers for
-     */
-    public abstract void deleteObject(DisplayObject displayObject);
-
-    /**
      * Updates the colour of the display object.
      * @param displayObject the object to update
      */

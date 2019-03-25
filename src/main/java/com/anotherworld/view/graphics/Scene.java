@@ -81,14 +81,5 @@ public class Scene {
     public void addDisplay(GraphicsDisplay d) {
         displays.add(d);
     }
-
-    /**
-     * Destroys the opengl buffers of for for the display objects in all of the scenes displays.
-     */
-    public void destoryObjects() {
-        for (GraphicsDisplay d : displays) {
-            d.destroyObjects();
-        }
-    }
     
 }
