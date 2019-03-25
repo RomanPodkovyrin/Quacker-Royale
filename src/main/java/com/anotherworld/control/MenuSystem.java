@@ -276,8 +276,6 @@ public class MenuSystem {
                     return "FULLSCREEN";
                 case WINDOWED:
                     return "WINDOWED";
-                case BOARDERLESS_WINDOWED:
-                    return "BOARDERLESS WINDOWED";
                 default:
                     return "UNKNOWN DISPLAY TYPE";
             }
@@ -290,9 +288,6 @@ public class MenuSystem {
                     displayType.setValue(DisplayType.WINDOWED);
                     break;
                 case WINDOWED:
-                    displayType.setValue(DisplayType.BOARDERLESS_WINDOWED);
-                    break;
-                case BOARDERLESS_WINDOWED:
                     displayType.setValue(DisplayType.FULLSCREEN);
                     break;
                 default:
@@ -301,7 +296,7 @@ public class MenuSystem {
         });
         layout.addButton(displayTypeButton);
         
-        final Wrapper<Integer> height = new Wrapper<>(ViewSettings.getWidth());
+        final Wrapper<Integer> height = new Wrapper<>(ViewSettings.getHeight());
         final Wrapper<Integer> width = new Wrapper<>(ViewSettings.getWidth());
         ButtonData resolutionButton = new ButtonData(() -> width.getValue() + "X" + height.getValue(), false);
         
@@ -333,6 +328,7 @@ public class MenuSystem {
             ViewSettings.setWidth(width.getValue());
             ViewSettings.setHeight(height.getValue());
             ViewSettings.setDisplayType(displayType.getValue());
+            view.reloadWindow();
         });
         layout.addButton(applyChanges);
 

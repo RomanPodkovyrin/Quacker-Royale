@@ -1,10 +1,17 @@
 package com.anotherworld.view;
 
+import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
+import static org.lwjgl.glfw.GLFW.glfwGetMonitors;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowAttrib;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
@@ -38,18 +45,23 @@ import com.anotherworld.view.programme.ProgrammeUnavailableException;
 import com.anotherworld.view.programme.TexturedProgramme;
 import com.anotherworld.view.viewevent.ChangeWindowTitle;
 import com.anotherworld.view.viewevent.MenuSwitch;
+import com.anotherworld.view.viewevent.ReloadWindow;
 import com.anotherworld.view.viewevent.SwitchScene;
 import com.anotherworld.view.viewevent.UpdateDisplayObjects;
 import com.anotherworld.view.viewevent.ViewEvent;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjgl.BufferUtils;
+import org.lwjgl.PointerBuffer;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.Platform;
@@ -64,7 +76,7 @@ public class View implements Runnable {
 
     private static Logger logger = LogManager.getLogger(View.class);
 
-    private Long window;
+    private Optional<Long> window;
 
     private Scene currentScene;
 
@@ -84,17 +96,18 @@ public class View implements Runnable {
     
     private DisplayType displayType;
 
+    private int refreshRate;
+
     /**
      * Creates the View object initialising it's values.
      */
     public View() {
         logger.info("Creating view");
-        this.height = ViewSettings.getHeight();
-        this.width = ViewSettings.getWidth();
         eventQueue = new LinkedList<>();
         keyListenerLatch = new CountDownLatch(1);
         running = false;
         menuScene = new MenuScene();
+        window = Optional.empty();
         logger.info("Running view");
     }
 
@@ -109,7 +122,7 @@ public class View implements Runnable {
         logger.info("Request for key listener objected");
         try {
             if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
-                return new GameKeyListener(window, new KeyBindings());
+                return new GameKeyListener(window.get(), new KeyBindings());
             }
         } catch (InterruptedException e) {
             logger.catching(e);
@@ -148,9 +161,8 @@ public class View implements Runnable {
         running = true;
 
         logger.debug("Creating window");
-        window = glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL);
-
-        glfwSetWindowPos(window, width / 8, height / 8);
+        
+        loadWindow();
 
         if (window == null) {
             logger.fatal("Unable to create game window");
@@ -158,24 +170,24 @@ public class View implements Runnable {
             throw new RuntimeException("Couldn't create glfw window");
         }
 
-        glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(window.get());
 
         GL.createCapabilities();
 
         currentScene = new Scene();
 
         try {
-            programme = new TexturedProgramme("src/main/glsl/com/anotherworld/view/shaders/texture/", window);
+            programme = new TexturedProgramme("src/main/glsl/com/anotherworld/view/shaders/texture/", window.get());
         } catch (ProgrammeUnavailableException e1) {
             logger.catching(e1);
             logger.warn("Couldn't start Textured programme renderer");
             try {
-                programme = new TexturedProgramme("src/main/glsl/com/anotherworld/view/shaders/core/", window);
+                programme = new TexturedProgramme("src/main/glsl/com/anotherworld/view/shaders/core/", window.get());
             } catch (ProgrammeUnavailableException e2) {
                 logger.catching(e2);
                 logger.warn("Couldn't start core programme renderer");
                 try {
-                    programme = new LegacyProgramme(window);
+                    programme = new LegacyProgramme(window.get());
                 } catch (ProgrammeUnavailableException e3) {
                     logger.catching(e3);
                     logger.fatal("Couldn't start any rendering engines");
@@ -194,7 +206,7 @@ public class View implements Runnable {
             error = glGetError();
         }
 
-        while (!glfwWindowShouldClose(window) && running) {
+        while (!glfwWindowShouldClose(window.get()) && running) {
 
             glClear(GL_COLOR_BUFFER_BIT);
 
@@ -219,7 +231,7 @@ public class View implements Runnable {
                 error = glGetError();
             }
 
-            glfwSwapBuffers(window);
+            glfwSwapBuffers(window.get());
 
             logger.trace("Polling for glfw events");
 
@@ -244,7 +256,7 @@ public class View implements Runnable {
      */
     public void switchToDisplay(GraphicsDisplay display) {
         synchronized (eventQueue) {
-            System.out.println("Scene switch queued");
+            logger.info("Scene switch queued");
             eventQueue.add(new MenuSwitch(display));
             eventQueue.add(new SwitchScene(menuScene));
         }
@@ -257,6 +269,7 @@ public class View implements Runnable {
             currentScene.destoryObjects();
         }
         running = false;
+        window = Optional.empty();
         glfwTerminate();
     }
 
@@ -268,6 +281,7 @@ public class View implements Runnable {
         currentScene.destoryObjects();
         programme.destroy();
         running = false;
+        window = Optional.empty();
         glfwTerminate();
     }
 
@@ -303,13 +317,44 @@ public class View implements Runnable {
             menuScene.changeMenuDisplay(menuSwitch.getDisplay());
         } else if (event.getClass().equals(ChangeWindowTitle.class)) {
             ChangeWindowTitle windowTitle = (ChangeWindowTitle) event;
-            glfwSetWindowTitle(window, windowTitle.getTitle());
+            glfwSetWindowTitle(window.get(), windowTitle.getTitle());
             logger.debug("Window title changed to " + windowTitle.getTitle());
+        } else if (event.getClass().equals(ReloadWindow.class)) {
+            loadWindow();
+            logger.debug("Window reloaded");
         } else {
             logger.warn("Unexpected view event was created " + event.getClass());
         }
     }
     
+    private void loadWindow() {
+        this.height = ViewSettings.getHeight();
+        this.width = ViewSettings.getWidth();
+        this.displayType = ViewSettings.getDisplayType();
+        this.refreshRate = ViewSettings.getRefreshRate();
+        if (!window.isPresent()) {
+            window = Optional.of(glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL));
+            glfwSetWindowAttrib(window.get(), GLFW_RESIZABLE, GLFW_FALSE);
+        }
+        PointerBuffer monitors = glfwGetMonitors();
+        if (displayType.equals(DisplayType.WINDOWED)) {
+            glfwSetWindowMonitor(window.get(), NULL, 0, 0, width, height, refreshRate);
+            glfwSetWindowSize(window.get(), width, height);
+        } else {
+            glfwSetWindowMonitor(window.get(), monitors.get(), 0, 0, width, height, refreshRate);
+        }
+        IntBuffer windowHeight = BufferUtils.createIntBuffer(1);
+        IntBuffer windowWidth = BufferUtils.createIntBuffer(1);
+        glfwGetFramebufferSize(window.get(), windowWidth, windowHeight);
+        if (displayType.equals(DisplayType.WINDOWED)) {
+            width = Math.min(windowWidth.get(), width);
+            height = Math.min(windowHeight.get(), height);
+        } else {
+            width = windowWidth.get();
+            height = windowHeight.get();
+        }
+    }
+
     public boolean gameRunning() {
         return running && currentScene.getClass().equals(GameScene.class);
     }
@@ -338,7 +383,7 @@ public class View implements Runnable {
         logger.info("Request for key listener objected");
         try {
             if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
-                return new StringKeyListener(window, start);
+                return new StringKeyListener(window.get(), start);
             }
         } catch (InterruptedException e) {
             logger.catching(e);
@@ -354,7 +399,7 @@ public class View implements Runnable {
         logger.info("Request for bindable key");
         try {
             if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
-                BindableKeyListener bk = new BindableKeyListener(window);
+                BindableKeyListener bk = new BindableKeyListener(window.get());
                 ArrayList<Integer> downKeys;
                 do {
                     downKeys = bk.getBindableKey();
@@ -367,6 +412,13 @@ public class View implements Runnable {
             logger.catching(e);
         }
         return -1;
+    }
+
+    public void reloadWindow() {
+        synchronized (eventQueue) {
+            logger.info("Reload window queued");
+            eventQueue.add(new ReloadWindow());
+        }
     }
 
 }
