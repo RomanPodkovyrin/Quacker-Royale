@@ -5,6 +5,7 @@ import com.anotherworld.control.exceptions.NoHostFound;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.KeySettings;
 import com.anotherworld.settings.ViewSettings;
+import com.anotherworld.tools.Wrapper;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
@@ -267,8 +268,10 @@ public class MenuSystem {
         ButtonData keyBindingsTitle = new ButtonData("Display Settings");
         layout.addButton(keyBindingsTitle);
         
+        final Wrapper<DisplayType> displayType = new Wrapper<>(ViewSettings.getDisplayType());;
+        
         ButtonData displayTypeButton = new ButtonData(() -> {
-            switch (ViewSettings.getDisplayType()) {
+            switch (displayType.getValue()) {
                 case FULLSCREEN:
                     return "FULLSCREEN";
                 case WINDOWED:
@@ -282,48 +285,64 @@ public class MenuSystem {
         
         displayTypeButton.setOnAction(() -> {
             logger.info("Change display type button pressed");
-            switch (ViewSettings.getDisplayType()) {
+            switch (displayType.getValue()) {
                 case FULLSCREEN:
-                    ViewSettings.setDisplayType(DisplayType.WINDOWED);
+                    displayType.setValue(DisplayType.WINDOWED);
                     break;
                 case WINDOWED:
-                    ViewSettings.setDisplayType(DisplayType.BOARDERLESS_WINDOWED);
+                    displayType.setValue(DisplayType.BOARDERLESS_WINDOWED);
                     break;
                 case BOARDERLESS_WINDOWED:
-                    ViewSettings.setDisplayType(DisplayType.FULLSCREEN);
+                    displayType.setValue(DisplayType.FULLSCREEN);
                     break;
                 default:
-                    ViewSettings.setDisplayType(DisplayType.WINDOWED);
+                    displayType.setValue(DisplayType.WINDOWED);
             }
         });
-        layout.addButton(displayTypeButton)
-        ;
-        ButtonData resolutionButton = new ButtonData(() -> ViewSettings.getWidth() + "X" + ViewSettings.getHeight(), false);
+        layout.addButton(displayTypeButton);
+        
+        final Wrapper<Integer> height = new Wrapper<>(ViewSettings.getWidth());
+        final Wrapper<Integer> width = new Wrapper<>(ViewSettings.getWidth());
+        ButtonData resolutionButton = new ButtonData(() -> width.getValue() + "X" + height.getValue(), false);
+        
         
         resolutionButton.setOnAction(() -> {
             logger.info("Change display type button pressed");
             switch (resolutionButton.getText()) {
                 case "1920X1080":
-                    ViewSettings.setWidth(960);
-                    ViewSettings.setHeight(540);
+                    width.setValue(960);
+                    height.setValue(540);
                     break;
                 case "960X540":
-                    ViewSettings.setWidth(3200);
-                    ViewSettings.setHeight(1800);
+                    width.setValue(3200);
+                    height.setValue(1800);
                     break;
                 case "3200X1800":
-                    ViewSettings.setWidth(1920);
-                    ViewSettings.setHeight(1080);
+                    width.setValue(1920);
+                    height.setValue(1080);
                     break;
                 default:
-                    ViewSettings.setWidth(1920);
-                    ViewSettings.setHeight(1080);
+                    width.setValue(1920);
+                    height.setValue(1080);
             }
         });
         layout.addButton(resolutionButton);
 
+        ButtonData applyChanges = new ButtonData("Apply Changes");
+        applyChanges.setOnAction(() -> {
+            ViewSettings.setWidth(width.getValue());
+            ViewSettings.setHeight(height.getValue());
+            ViewSettings.setDisplayType(displayType.getValue());
+        });
+        layout.addButton(applyChanges);
+
         ButtonData backToSettings = new ButtonData("Settings");
-        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
+        backToSettings.setOnAction(() -> {
+            view.switchToDisplay(settingsMenuDisplay);
+            width.setValue(ViewSettings.getWidth());
+            height.setValue(ViewSettings.getHeight());
+            displayType.setValue(ViewSettings.getDisplayType());
+        });
         layout.addButton(backToSettings);
         
         return layout;
