@@ -138,7 +138,7 @@ public class GameClient extends Thread {
         byte [] data = incomingPacket.getData();
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
         ObjectInputStream objectInputStream = null;
-        try{
+        try {
             objectInputStream = new ObjectInputStream(byteInputStream);
             Object object = objectInputStream.readObject();
             if (object instanceof ArrayList<?>) {
@@ -161,8 +161,8 @@ public class GameClient extends Thread {
                 wallData = (WallData) object;
                 logger.trace("WallData object has been received");
             }
-        } catch (StreamCorruptedException e){
-            //
+        } catch (StreamCorruptedException e) {
+            logger.trace("Client received corrupted object from server");
         }
 
 
