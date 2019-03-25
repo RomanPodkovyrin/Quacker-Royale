@@ -32,6 +32,9 @@ public class GameDisplay extends GraphicsDisplay {
         super.transform(programme);
     }
 
+    /**
+     * Destroys the objects used to display the game.
+     */
     public void destroyObjects() {
         for (int i = 0; i < objects.size(); i++) {
             objects.get(i).destroy();

@@ -14,6 +14,10 @@ public class FixedSpaceLayout extends Layout {
     
     private float buttonHeight;
     
+    /**
+     * Creates a layout with a fixed space between each button.
+     * @param buttonHeight The height of each button
+     */
     public FixedSpaceLayout(float buttonHeight) {
         super();
         buttons = new ArrayList<>();

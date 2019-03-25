@@ -1,7 +1,6 @@
 package com.anotherworld.view.data;
 
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
@@ -9,13 +8,16 @@ import com.anotherworld.view.programme.Programme;
 
 public class PowerUpDisplayObject extends DisplayObject {
 
-    private final GameSessionData gameData;
     private final PowerUpData displayData;
 
-    public PowerUpDisplayObject(Programme programme, GameSessionData gameData, int i) {
-        super(programme, Points2d.genCircle(gameData.getPowerUpSchedule().get(i).getRadius()), DrawType.TRIANGLE_FAN);
-        this.gameData = gameData;
-        this.displayData = gameData.getPowerUpSchedule().get(i);
+    /**
+     * Creates a Display Object used to store a power up.
+     * @param programme The programme used to render the powerup
+     * @param displayData The data used to render the power up
+     */
+    public PowerUpDisplayObject(Programme programme, PowerUpData displayData) {
+        super(programme, Points2d.genCircle(displayData.getRadius()), DrawType.TRIANGLE_FAN);
+        this.displayData = displayData;
     }
 
     @Override

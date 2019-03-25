@@ -5,6 +5,7 @@ import com.anotherworld.view.texture.TextureMap;
 
 public class BallSpriteSheet extends SpriteSheet {
     
+    //TODO implement the rest of this
     private final BallDisplayData data;
     
     public BallSpriteSheet(BallDisplayData data) {

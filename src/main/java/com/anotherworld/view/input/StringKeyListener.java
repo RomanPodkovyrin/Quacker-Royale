@@ -6,8 +6,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_COMMA;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_BRACKET;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
-import com.anotherworld.tools.input.KeyListener;
-
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
