@@ -54,7 +54,7 @@ public class NetworkControllerServer extends AbstractNetworkController {
 //                        else if (in.contains(Input.RIGHT)) player.setXVelocity(player.getSpeed());
 //                        else player.setXVelocity(0);
 
-                    GameSession.updatePlayer(player,in);
+                    GameSession.updatePlayer(player,in, gameSessionData);
                 }
             }
 
