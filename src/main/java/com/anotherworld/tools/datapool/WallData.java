@@ -108,7 +108,7 @@ public class WallData implements RectangleDisplayData, Serializable {
     }
 
     /**
-     * Sets the size of the wall that the wall should shrink to on th x axis.
+     * Sets the size of the wall that the wall should shrink to on the y axis.
      * @param yTargetSize target size of the wall on the y axis to set.
      */
     public void setyTargetSize(float yTargetSize) {

@@ -24,8 +24,9 @@ public class Player {
      * @param playerData the player to update.
      */
     public static void decrementStunTimer(PlayerData playerData) {
-        if (playerData.getStunTimer() > 0)
+        if (playerData.getStunTimer() > 0) {
             playerData.setStunTimer(playerData.getStunTimer() - 1);
+        }
     }
 
     /**

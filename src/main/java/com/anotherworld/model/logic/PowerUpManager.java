@@ -42,7 +42,7 @@ public class PowerUpManager {
                         + (platform.getxSize() - (PlatformData.getxShrink() * (platform.getStage() - 1)))
                         * ((float) Math.random());
                 float y  = platform.getYCoordinate()
-                        + (platform.getySize() - (PlatformData.getyShrink()* (platform.getStage() - 1)))
+                        + (platform.getySize() - (PlatformData.getyShrink() * (platform.getStage() - 1)))
                         * ((float) Math.random());
 
                 Matrix coordinates = new Matrix(x,y);
@@ -69,7 +69,9 @@ public class PowerUpManager {
         if (nextPowerUp != null) {
             if (nextPowerUp.getSpawnTime() == data.getTimeLeft()) {
                 data.getPowerUpSchedule().pop();
-                if (currentPowerUp != null) currentPowerUp.setState(ObjectState.INACTIVE);
+                if (currentPowerUp != null) {
+                    currentPowerUp.setState(ObjectState.INACTIVE);
+                }
                 nextPowerUp.setState(ObjectState.ACTIVE);
                 data.setCurrentPowerUp(nextPowerUp);
             }

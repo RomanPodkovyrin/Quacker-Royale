@@ -2,20 +2,28 @@ package com.anotherworld.model.logic;
 
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.ai.AIController;
-import com.anotherworld.model.movable.*;
+import com.anotherworld.model.movable.Ball;
+import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.model.movable.Player;
 import com.anotherworld.model.physics.Physics;
 import com.anotherworld.settings.GameSettings;
-import com.anotherworld.tools.datapool.*;
+import com.anotherworld.tools.datapool.BallData;
+import com.anotherworld.tools.datapool.GameSessionData;
+import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
+
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
+
 
 
 /**
- * A class that models a game session.
+ * A class that models the logic of a game session.
  * @author Alfi S.
  */
 public class GameSession {
@@ -34,6 +42,16 @@ public class GameSession {
 
     private GameSessionData gameData;
 
+    /**
+     * Class constructor for a game session.
+     * @param currentPlayer The current player's PlayerData object.
+     * @param players An ArrayList of other human players.
+     * @param ais An ArrayList of the ai controlled players.
+     * @param balls An ArrayList of balls.
+     * @param platform The platform the players are on.
+     * @param wall The wall surrounding the platform.
+     * @param gameSessionData The information about the game session.
+     */
     public GameSession(PlayerData currentPlayer,
                        ArrayList<PlayerData> players, ArrayList<PlayerData> ais, ArrayList<BallData> balls,
                        PlatformData platform, WallData wall,

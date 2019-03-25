@@ -131,7 +131,7 @@ public class PlatformData implements RectangleDisplayData, Serializable {
     }
 
     /**
-     * Gets the size of the platform that the platform should shrink to on the x axis.
+     * Gets the size of the platform that the platform should shrink to on the y axis.
      * @return target size of the platform on the y axis.
      */
     public float getyTargetSize() {
@@ -139,7 +139,7 @@ public class PlatformData implements RectangleDisplayData, Serializable {
     }
 
     /**
-     * Sets the size of the platform that the platform should shrink to on th x axis.
+     * Sets the size of the platform that the platform should shrink to on the y axis.
      * @param yTargetSize target size of the platform on the y axis to set.
      */
     public void setyTargetSize(float yTargetSize) {
@@ -171,7 +171,7 @@ public class PlatformData implements RectangleDisplayData, Serializable {
     }
 
     /**
-     * Sets the height of the platform
+     * Sets the height of the platform.
      * @param height the height of the platform.
      */
     public void setHeight(float height) {
