@@ -30,6 +30,10 @@ public class ViewSettings {
     public static DisplayType getDisplayType() {
         return getDisplayValue(getValue("DISPLAY_TYPE", 1));
     }
+
+    public static int getRefreshRate() {
+        return getValue("REFRESH_RATE", 60);
+    }
     
     private static int getValue(String fileKey, int defaultValue) {
         try {
@@ -55,6 +59,10 @@ public class ViewSettings {
     public static boolean setDisplayType(DisplayType value) {
         return setValue("DISPLAY_TYPE", getIntValue(value));
     }
+
+    public static boolean getSetRefreshRate(int value) {
+        return setValue("REFRESH_RATE", value);
+    }
     
     private static boolean setValue(String fileKey, int value) {
         try {
@@ -74,8 +82,6 @@ public class ViewSettings {
                 return 0;
             case WINDOWED:
                 return 1;
-            case BOARDERLESS_WINDOWED:
-                return 2;
             default:
                 return 1;
         }
@@ -87,8 +93,6 @@ public class ViewSettings {
                 return DisplayType.FULLSCREEN;
             case 1:
                 return DisplayType.WINDOWED;
-            case 2:
-                return DisplayType.BOARDERLESS_WINDOWED;
             default:
                 return DisplayType.WINDOWED;
         }
