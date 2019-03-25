@@ -12,7 +12,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-
+/**
+ * Abstract networking class.
+ * @author roman
+ */
 public abstract class AbstractNetworkController {
     protected GameClient client;
     protected Server server;
@@ -22,7 +25,7 @@ public abstract class AbstractNetworkController {
     protected PlatformData platform;
     protected WallData wall;
     protected GameSessionData gameSessionData;
-    protected static Logger logger = LogManager.getLogger(NetworkController.class);
+    protected static Logger logger = LogManager.getLogger(AbstractNetworkController.class);
     protected int hostSendRate = 0;
 
     /**
@@ -31,8 +34,7 @@ public abstract class AbstractNetworkController {
      * @param settings - game representations
      */
     protected void setUpGameSettings(GameSettings settings) {
-        ArrayList<PlayerData> temp = new ArrayList<>();
-        temp.addAll(settings.getPlayers());
+        ArrayList<PlayerData> temp = new ArrayList<>(settings.getPlayers());
         temp.add(settings.getCurrentPlayer());
 
         this.allPlayers = temp;

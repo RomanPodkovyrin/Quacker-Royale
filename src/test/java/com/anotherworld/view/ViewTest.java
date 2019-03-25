@@ -13,7 +13,7 @@ public class ViewTest {
     
     @Test
     public void view_None_Runs() throws InterruptedException {
-        View view = new View(192, 108);
+        View view = new View();
         Thread thread = new Thread(view);
         thread.start();
         Thread.sleep(5000);
@@ -23,7 +23,7 @@ public class ViewTest {
     
     @Test
     public void view_TestPlatform_Runs() throws InterruptedException {
-        View view = new View(192, 108);
+        View view = new View();
         Thread thread = new Thread(view);
         thread.start();
         ArrayList<RectangleDisplayData> platform = new ArrayList<>();

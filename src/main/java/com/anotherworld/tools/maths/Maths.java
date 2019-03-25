@@ -1,7 +1,5 @@
 package com.anotherworld.tools.maths;
 
-import java.util.Random;
-
 /**
  * Maths methods.
  *

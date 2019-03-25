@@ -42,11 +42,7 @@ public class CheckIfSaveToGo extends Job {
 
     @Override
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
-        this.ai = ai;
-        this.players = players;
-        this.balls = balls;
-        this.platform = platform;
-        this.session = session;
+        setData(ai,players,balls,platform,session);
 
         Matrix aiPosition = ai.getCoordinates();
 
@@ -54,7 +50,7 @@ public class CheckIfSaveToGo extends Job {
 
         if (ai.isTimeStopper() || ai.isShielded()) {
             succeed();
-            logger.trace("AI is invulnerable move on");
+            logger.trace("AIController is invulnerable move on");
             return;
         }
 
@@ -82,7 +78,7 @@ public class CheckIfSaveToGo extends Job {
             // In danger in the look ahead
             if (MatrixMath.distanceAB(lookAhead,lookAheadNeighbour) <= ai.getRadius() + firstBall.getRadius() + (Math.pow(safeDistance,2))) {
                 ai.setVelocity(0,0);
-                logger.trace("AI stopped danger ahead");
+                logger.trace("AIController stopped danger ahead");
                 fail();
                 return;
             }

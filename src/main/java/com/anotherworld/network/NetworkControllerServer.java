@@ -3,13 +3,17 @@ package com.anotherworld.network;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.GameKeyListener;
-import javafx.util.Pair;
-
+import com.anotherworld.tools.input.Input;
 import java.io.IOException;
 import java.util.ArrayList;
+import javafx.util.Pair;
 
+
+/**
+ * Class which controls the server side of the session.
+ * @author roman
+ */
 public class NetworkControllerServer extends AbstractNetworkController {
 
     public NetworkControllerServer(Server server, GameSettings settings) {

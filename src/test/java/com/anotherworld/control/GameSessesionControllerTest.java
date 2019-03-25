@@ -12,7 +12,7 @@ public class GameSessesionControllerTest {
     public void testControler() {
         GameSettings settings = new GameSettings(1,0,3);
         try {
-            GameSessionController controller = new GameSessionController(new View(100,100),settings,new NetworkControllerSinglePlayer());
+            GameSessionController controller = new GameSessionController(new View(),settings,new NetworkControllerSinglePlayer());
         } catch (KeyListenerNotFoundException e) {
             e.printStackTrace();
         }

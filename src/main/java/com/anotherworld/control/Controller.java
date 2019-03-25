@@ -1,6 +1,5 @@
 package com.anotherworld.control;
 
-import com.anotherworld.audio.AudioControl;
 import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
 import com.anotherworld.network.AbstractNetworkController;
@@ -50,7 +49,7 @@ public class Controller {
 
     // Networking
     private LobbyClient lobbyClient;
-    boolean waitingForObjects = true;
+    private boolean waitingForObjects = true;
 
     /**
      * The main should only be used for testing.
@@ -63,10 +62,7 @@ public class Controller {
         main.startTheGame(settings, new NetworkControllerSinglePlayer());
     }
 
-    public void setRunTheHostGame(boolean run) {
-        this.runTheHostGame = run;
-    }
-    
+
     /**
      * Used to initialise the game main class for the game.
      */
@@ -196,6 +192,10 @@ public class Controller {
         startTheGame(settings,network);
     }
 
+    /**
+     * Client quits game lobby.
+     * @return true can quit, false can't quit.
+     */
     public boolean clientCancel() {
         if (lobbyClient != null) {
             try {
@@ -308,28 +308,6 @@ public class Controller {
     public void startSinglePlayer() {
         GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
         startTheGame(settings, new NetworkControllerSinglePlayer());
-    }
-
-    /**
-     * Toggles the sound effect on and off.
-     * @param on - true is on, false is off
-     * @return - true is on, false is off
-     */
-    public static boolean sfxSetting(boolean on) {
-        logger.info("Toggle soundEffect "  + on);
-        AudioControl.setEffectsOn(on);
-        return on;
-    }
-
-    /**
-     * Toggles the music on and off.
-     * @param on - true is on, false is off
-     * @return - true is on, false is off
-     */
-    public static boolean musicSetting(boolean on) {
-        logger.info("Toggle backgroundMusic "  + on);
-        AudioControl.setMusicOn(on);
-        return on;
     }
 
 }

@@ -3,7 +3,6 @@ package com.anotherworld.model.ai;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -29,11 +28,10 @@ public class BlackBoard {
     private static float safeDistance = 4;
     // Player id - ball target
     private static Map<String, String> targetedBalls = new HashMap<>();
-    private static Map<String, AI_State> playersStates = new HashMap<>();
     private static float acceptableHealthPercentage = 0.5f;
 
     /**
-     * Used to set up BlackBoard values
+     * Used to set up BlackBoard values.
      */
     public static void setUp() {
         try {
@@ -50,6 +48,12 @@ public class BlackBoard {
         return acceptableHealthPercentage;
     }
 
+    /**
+     * Targets the the given ball by the given ai.
+     * @param ai - ai which targets the balls
+     * @param ball - the ball which is targeted
+     * @return - true can target or already targeted by this ai, false targeted by someone else
+     */
     public static boolean targetBall(PlayerData ai, BallData ball) {
         String aiID = ai.getObjectID();
         String ballID = ball.getObjectID();
@@ -58,10 +62,7 @@ public class BlackBoard {
             String id = entry.getKey();
             String targetBall = entry.getValue();
             if (targetBall.equals(ballID)) {
-                if (id.equals(aiID)) {
-                    return true;
-                }
-                return false;
+                return id.equals(aiID);
             }
         }
 
@@ -69,9 +70,14 @@ public class BlackBoard {
         return true;
     }
 
+    /**
+     * Stops targeting what ever ball is being targeted by this ai.
+     * @param ai - ai which stops targeting the ball
+     */
     public static void stopTargetingBall(PlayerData ai) {
         targetedBalls.remove(ai.getObjectID());
     }
+
     /**
      * Moves ai to a given destination.
      * @param ai - ai to be moved
@@ -96,9 +102,9 @@ public class BlackBoard {
     }
 
     /**
-     * Sorts balls based on their distance from the AI player.
+     * Sorts balls based on their distance from the AIController player.
      *
-     * @param objects The object to be sorted based on the distance from the AI
+     * @param objects The object to be sorted based on the distance from the AIController
      * @return returns an ArrayList of Balls starting with the closes one
      */
     public static ArrayList<BallData> sortBalls(PlayerData ai, ArrayList<BallData> objects) {
@@ -112,8 +118,8 @@ public class BlackBoard {
      * Takes all the balls and sorts them based on their danger class.
      * <p>
      * possibleDangerBalls  - Balls that are dangerous
-     * dangerBalls          - Balls that are dangerous and perpendicular to the AI player
-     * imminentDangerBalls  - Balls that are dangerous, perpendicular and close to the AI player
+     * dangerBalls          - Balls that are dangerous and perpendicular to the AIController player
+     * imminentDangerBalls  - Balls that are dangerous, perpendicular and close to the AIController player
      * </p>
      */
     public static void sortBallLevels(PlayerData ai, ArrayList<BallData> balls, ArrayList<BallData> dangerBalls, ArrayList<BallData> possibleDangerBalls, ArrayList<BallData> imminentDangerBalls) {
@@ -148,37 +154,22 @@ public class BlackBoard {
      * @param ball the ball to be checked
      * @return  true - can affect false cannot
      */
-    public static boolean canAffect(PlayerData ai, BallData ball) {
+    private static boolean canAffect(PlayerData ai, BallData ball) {
         Matrix ballPosition = ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
         return MatrixMath.isPerpendicular(ballDirection,ballPosition,ai.getCoordinates());
     }
 
     /**
-     * Checks whether the the ball is to close to the AI.
+     * Checks whether the the ball is to close to the AIController.
      * @param ball the ball to be checked
      * @return  true - too close, false at a safe distance
      */
-    public static boolean isClose(PlayerData ai, BallData ball) {
+    private static boolean isClose(PlayerData ai, BallData ball) {
         Matrix ballPosition =  ball.getCoordinates();
         Matrix ballDirection = ball.getVelocity();
 
         return MatrixMath.distanceToNearestPoint(new Line(ballPosition,ballDirection),ai.getCoordinates()) <= ai.getRadius() + ball.getRadius() + safeDistance;
     }
 
-    public static void setState(String id, AI_State state) {
-        playersStates.put(id,state);
-    }
-
-    public static AI_State getState(String id) {
-        return playersStates.get(id);
-    }
-
-    public static void main() {
-
-    }
-
-    public enum AI_State {
-        NORMAL,INVULNERABLE
-    }
 }

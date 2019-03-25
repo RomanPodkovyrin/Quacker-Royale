@@ -1,9 +1,6 @@
 package com.anotherworld.model.ai.behaviour.player.survival;
 
-import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.ai.tools.Line;
-import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.Player;
@@ -17,9 +14,10 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * This class makes AI go around the player if one of them is abstraction the way.
+ * This class makes AIController go around the player if one of them is abstraction the way.
  * @author roman
  */
+@Deprecated
 public class AvoidNeutralPlayer extends Job {
 
     private static Logger logger = LogManager.getLogger(AvoidNeutralPlayer.class);

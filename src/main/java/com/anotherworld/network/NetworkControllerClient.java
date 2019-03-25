@@ -12,14 +12,18 @@ import com.anotherworld.tools.input.Input;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Controls Client session.
+ * @author roman
+ */
 public class NetworkControllerClient extends AbstractNetworkController {
 
     /**
-     * C
-     * @param client
-     * @param settings
+     * Initialises the Class which controls client.
+     * @param client - the client class to control
+     * @param settings - gamesettings to handle for this session
      */
-    public NetworkControllerClient(GameClient client, GameSettings settings){
+    public NetworkControllerClient(GameClient client, GameSettings settings) {
         this.client = client;
         setUpGameSettings(settings);
 

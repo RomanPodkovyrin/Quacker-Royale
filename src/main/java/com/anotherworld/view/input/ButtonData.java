@@ -53,7 +53,7 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     }
     
     /**
-     * Performs the action if set for the button
+     * Performs the makeDecision if set for the button
      */
     public void preformAction() {
         if (action.isPresent()) {
