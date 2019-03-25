@@ -113,7 +113,7 @@ public class PhysicsTest {
                 ObjectState.IDLE, 0f, 3.0f);
         steve.setChargeLevel(3);
         Physics.charge(steve);
-        float expectedSpeed = GameSettings.getDefaultPlayerSpeed() * (1 + 3);
+        float expectedSpeed = GameSettings.getDefaultPlayerSpeed() * (1 + 3 * 1.5f);
         assertEquals(expectedSpeed, steve.getSpeed(), 0.0f);
         assertEquals(3, steve.getChargeLevel(), 0);
     }
