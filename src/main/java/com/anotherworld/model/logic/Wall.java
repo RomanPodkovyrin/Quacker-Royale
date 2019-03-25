@@ -61,7 +61,7 @@ public class Wall {
     }
 
     /**
-     * Called when the wall needs to shrink.
+     * When the wall needs to shrink, the stage and target sizes are updated.
      */
     public void nextStage() {
         int stage = getStage();
@@ -72,6 +72,9 @@ public class Wall {
         }
     }
 
+    /**
+     * Smoothly shrinks the size of the wall.
+     */
     public void shrink() {
         if (getXSize() > getXTargetSize() && getYSize() > getYTargetSize()) {
             setXSize(getXSize() - SIZE_DECREASE);

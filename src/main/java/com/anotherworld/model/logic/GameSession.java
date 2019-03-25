@@ -255,7 +255,7 @@ public class GameSession {
     }
 
     /**
-     * Updates the current player's velocity based on the given list of inputs.
+     * Updates the current player's movement and actions based on the given list of inputs.
      * @param keyPresses The set of key presses determining the movement.
      */
     public void updatePlayer(ArrayList<Input> keyPresses) {
@@ -263,9 +263,9 @@ public class GameSession {
     }
 
     /**
-     * Updates a specified player's velocity based on the given list of inputs.
-     * @param player The playable character to move.
-     * @param keyPresses The set of key presses determining the movement.
+     * Updates the movement and actions of a specified player based on given list of inputs.
+     * @param player The playable character to act.
+     * @param keyPresses The set of key presses determining the action.
      * @param gameData game data to access time.
      */
     public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses, GameSessionData gameData) {
@@ -316,6 +316,11 @@ public class GameSession {
         }
     }
 
+    /**
+     * Updates the velocity of a player based on a given list of inputs.
+     * @param player The player to be moved.
+     * @param keyPresses The set of key presses determining the movement.
+     */
     public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses) {
         if (keyPresses.contains(Input.UP)) {
             player.setYVelocity(-1);

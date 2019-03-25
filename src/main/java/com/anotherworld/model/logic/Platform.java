@@ -65,7 +65,7 @@ public class Platform {
     }
 
     /**
-     * Called when the platform needs to shrink.
+     * When the platform needs to shrink, the stage and target sizes are updated.
      */
     void nextStage(){
         int stage = getStage();
@@ -76,6 +76,9 @@ public class Platform {
         }
     }
 
+    /**
+     * Smoothly shrinks the size of the platform.
+     */
     void shrink() {
         if (getXSize() > getXTargetSize()
                 && getYSize() > getYTargetSize()) {

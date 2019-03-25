@@ -2,7 +2,6 @@ package com.anotherworld.model.logic;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.model.physics.Physics;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.GameSessionData;
@@ -10,10 +9,8 @@ import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
-import com.anotherworld.view.data.PowerUpDisplayData;
 
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.Random;
 
 /**

@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Controller object that connects the View and the Model of the game.
- * @author Alfi S
+ * @author Alfi S.
  */
 public class GameSessionController {
 
@@ -82,7 +82,9 @@ public class GameSessionController {
     }
 
 
-
+    /**
+     * The main game loop.
+     */
     private void mainLoop() {
         render();
         
@@ -166,7 +168,9 @@ public class GameSessionController {
     }
 
 
-
+    /**
+     * Safely shuts down the system.
+     */
     private void shutDownSequence() {
 
         logger.info("Initialising Shut down sequence");
