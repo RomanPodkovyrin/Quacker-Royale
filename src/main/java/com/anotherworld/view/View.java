@@ -351,6 +351,9 @@ public class View implements Runnable {
             logger.debug("Adding Objects");
         } else if (event.getClass().equals(SwitchScene.class)) {
             SwitchScene sceneEvent = (SwitchScene) event;
+            if (currentScene.getClass().equals(GameScene.class)) {
+                ((GameScene)currentScene).destroyObjects();
+            }
             currentScene = sceneEvent.getScene();
             logger.debug("Switching scene");
         } else if (event.getClass().equals(MenuSwitch.class)) {

@@ -295,5 +295,9 @@ public abstract class DisplayObject {
     public void updatePoints(Points2d points) {
         this.points = points;
     }
+
+    public void destroy() {
+        programme.destory(this);
+    }
     
 }

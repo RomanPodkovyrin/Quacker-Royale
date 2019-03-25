@@ -31,5 +31,11 @@ public class GameDisplay extends GraphicsDisplay {
     public void transform(Programme programme) {
         super.transform(programme);
     }
+
+    public void destroyObjects() {
+        for (int i = 0; i < objects.size(); i++) {
+            objects.get(i).destroy();
+        }
+    }
     
 }

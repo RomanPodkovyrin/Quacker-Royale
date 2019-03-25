@@ -250,5 +250,7 @@ public abstract class Programme {
     public void setViewport(int x, int y, int w, int h) {
         glViewport(x, y, w, h);
     }
+
+    public abstract void destory(DisplayObject displayObject);
     
 }

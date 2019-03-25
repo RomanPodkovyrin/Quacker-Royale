@@ -62,4 +62,8 @@ public class LegacyProgramme extends Programme {
     public void updateBuffers(DisplayObject textDisplayObject) {
     }
 
+    @Override
+    public void destory(DisplayObject displayObject) {
+    }
+
 }
