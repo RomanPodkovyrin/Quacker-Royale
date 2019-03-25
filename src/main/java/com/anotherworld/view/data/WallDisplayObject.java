@@ -1,8 +1,7 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL46.GL_TRIANGLE_STRIP;
-
 import com.anotherworld.tools.datapool.WallData;
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.programme.Programme;
 
@@ -26,7 +25,7 @@ public class WallDisplayObject extends DisplayObject {
      * @param displayData The wall to display
      */
     public WallDisplayObject(Programme programme, WallData displayData) {
-        super(programme, Points2d.genWall(displayData.getWidth(), displayData.getHeight(), 1), GL_TRIANGLE_STRIP, 0f, 0.6f, 1f);
+        super(programme, Points2d.genWall(displayData.getWidth(), displayData.getHeight(), 1), DrawType.TRIANGLE_STRIP, 0f, 0.6f, 1f);
         this.displayData = displayData;
         this.maxWidth = displayData.getWidth();
         this.maxHeight = displayData.getHeight();

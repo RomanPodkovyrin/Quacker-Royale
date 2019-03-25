@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL46.glEnd;
 import static org.lwjgl.opengl.GL46.glVertex4f;
 
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
 
 public class LegacyProgramme extends Programme {
@@ -45,7 +46,7 @@ public class LegacyProgramme extends Programme {
     public void draw(DisplayObject object) {
         Points2d points = object.getPoints();
         glColor4f(object.getR(), object.getG(), object.getB(), 1f);
-        glBegin(object.getDisplayType());
+        glBegin(DrawType.convertToInt(object.getDisplayType()));
         points = this.getCurrentMatrix().mult(points);
         for (int j = 0; j < points.getN(); j++) {
             glVertex4f(points.getValue(0, j), points.getValue(1, j), points.getValue(2, j), points.getValue(3, j));
@@ -54,20 +55,15 @@ public class LegacyProgramme extends Programme {
     }
 
     @Override
-    public int initialiseDisplayObject(DisplayObject displayObject) {
-        return 0;
-    }
-
-    @Override
-    public void deleteObject(DisplayObject displayObject) {
-    }
-
-    @Override
     public void updateObjectColour(DisplayObject displayObject) {
     }
 
     @Override
     public void updateBuffers(DisplayObject textDisplayObject) {
+    }
+
+    @Override
+    public void destory(DisplayObject displayObject) {
     }
 
 }

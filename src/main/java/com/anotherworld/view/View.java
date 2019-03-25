@@ -5,6 +5,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetMonitors;
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
@@ -27,6 +28,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.ViewSettings;
+import com.anotherworld.tools.Wrapper;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.GameKeyListener;
@@ -38,6 +40,7 @@ import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.MenuScene;
 import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.input.BindableKeyListener;
+import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.StringKeyListener;
 import com.anotherworld.view.programme.LegacyProgramme;
 import com.anotherworld.view.programme.Programme;
@@ -55,6 +58,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -97,6 +101,8 @@ public class View implements Runnable {
     private DisplayType displayType;
 
     private int refreshRate;
+    
+    private boolean enableFrameCounter;
 
     /**
      * Creates the View object initialising it's values.
@@ -108,6 +114,7 @@ public class View implements Runnable {
         running = false;
         menuScene = new MenuScene();
         window = Optional.empty();
+        enableFrameCounter = true;
         logger.info("Running view");
     }
 
@@ -146,6 +153,10 @@ public class View implements Runnable {
         synchronized (eventQueue) {
             eventQueue.add(new UpdateDisplayObjects(playerObjects, ballObjects, rectangleObjects, wallObjects, gameSessionData));
         }
+    }
+    
+    public boolean shouldShowFramerate() {
+        return enableFrameCounter;
     }
 
     @Override
@@ -205,6 +216,17 @@ public class View implements Runnable {
             logger.error("Initialise GL error " + error);
             error = glGetError();
         }
+        
+        Wrapper<Integer> currentFrameRate = new Wrapper<>(0);
+        
+        Optional<Double> lastDraw = Optional.empty();
+        
+        TextDisplayData frameCounterData = new ButtonData(() -> {
+            return Integer.toString(currentFrameRate.getValue());
+        }, true);
+        //TODO draw this a different way
+        
+        TextDisplayObject frameCounterButton = new TextDisplayObject(programme, frameCounterData);
 
         while (!glfwWindowShouldClose(window.get()) && running) {
 
@@ -221,6 +243,10 @@ public class View implements Runnable {
             programme.loadIdentity();
 
             currentScene.draw(width, height, programme);
+            
+            if (this.shouldShowFramerate()) {
+                programme.draw(frameCounterButton);
+            }
 
             glFlush();
 
@@ -232,6 +258,13 @@ public class View implements Runnable {
             }
 
             glfwSwapBuffers(window.get());
+            
+            double currentDraw = glfwGetTime();
+            if (lastDraw.isPresent()) {
+                currentFrameRate.setValue((int)(1d / (currentDraw - lastDraw.get())));
+            }
+            
+            lastDraw = Optional.of(currentDraw);
 
             logger.trace("Polling for glfw events");
 
@@ -265,9 +298,6 @@ public class View implements Runnable {
     private void attemptDestroy() {
         logger.info("Closing window");
         keyListenerLatch = new CountDownLatch(1);
-        if (currentScene != null) {
-            currentScene.destoryObjects();
-        }
         running = false;
         window = Optional.empty();
         glfwTerminate();
@@ -278,11 +308,22 @@ public class View implements Runnable {
         keyListenerLatch = new CountDownLatch(1);
         // TODO delete all object for all scenes
         // could use hashmap
-        currentScene.destoryObjects();
         programme.destroy();
         running = false;
         window = Optional.empty();
         glfwTerminate();
+    }
+    
+    private void waitForExit() {
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        while (threadSet.size() > 3) {
+            for (Thread thread : threadSet) {
+                for (StackTraceElement trace : thread.getStackTrace()) {
+                    System.out.println(trace.toString());
+                }
+                System.out.println();
+            }
+        }
     }
 
     private void completeEvent(ViewEvent event) {
@@ -310,6 +351,9 @@ public class View implements Runnable {
             logger.debug("Adding Objects");
         } else if (event.getClass().equals(SwitchScene.class)) {
             SwitchScene sceneEvent = (SwitchScene) event;
+            if (currentScene.getClass().equals(GameScene.class)) {
+                ((GameScene)currentScene).destroyObjects();
+            }
             currentScene = sceneEvent.getScene();
             logger.debug("Switching scene");
         } else if (event.getClass().equals(MenuSwitch.class)) {

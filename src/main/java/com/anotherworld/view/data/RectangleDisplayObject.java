@@ -1,7 +1,6 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
-
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.programme.Programme;
 
@@ -25,7 +24,7 @@ public class RectangleDisplayObject extends DisplayObject {
      * @param displayData The rectangle to display
      */
     public RectangleDisplayObject(Programme programme, RectangleDisplayData displayData) {
-        super(programme, Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), GL_TRIANGLE_FAN, 0.6f, 0.4f, 0f);
+        super(programme, Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), DrawType.TRIANGLE_FAN, 0.6f, 0.4f, 0f);
         this.displayData = displayData;
         this.maxWidth = displayData.getWidth();
         this.maxHeight = displayData.getHeight();
