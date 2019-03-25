@@ -178,7 +178,8 @@ public class Server extends Thread {
         try {
             socket.receive(packet);
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
+            //TODO
         }
         String received = new String(packet.getData(), 0, packet.getLength());
         return received;
