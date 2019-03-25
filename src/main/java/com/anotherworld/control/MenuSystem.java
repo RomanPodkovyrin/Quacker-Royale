@@ -321,13 +321,36 @@ public class MenuSystem {
                     height.setValue(1080);
             }
         });
+        
         layout.addButton(resolutionButton);
+        final Wrapper<Integer> frameRate = new Wrapper<>(ViewSettings.getRefreshRate());
+        ButtonData frameRateButton = new ButtonData(() -> "Refresh rate: " + frameRate.getValue(), false);
+        
+        
+        frameRateButton.setOnAction(() -> {
+            logger.info("Change display type button pressed");
+            switch (frameRate.getValue()) {
+                case 30:;
+                    frameRate.setValue(60);
+                    break;
+                case 60:
+                    frameRate.setValue(120);
+                    break;
+                case 120:
+                    frameRate.setValue(30);
+                    break;
+                default:
+                    frameRate.setValue(60);
+            }
+        });
+        layout.addButton(frameRateButton);
 
         ButtonData applyChanges = new ButtonData("Apply Changes");
         applyChanges.setOnAction(() -> {
             ViewSettings.setWidth(width.getValue());
             ViewSettings.setHeight(height.getValue());
             ViewSettings.setDisplayType(displayType.getValue());
+            ViewSettings.getSetRefreshRate(frameRate.getValue());
             view.reloadWindow();
         });
         layout.addButton(applyChanges);
