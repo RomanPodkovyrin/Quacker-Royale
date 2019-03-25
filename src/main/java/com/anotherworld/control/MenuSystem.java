@@ -56,8 +56,8 @@ public class MenuSystem {
         this.createKeybindingSettings(settingsMenuDisplay).enactLayout(keyBindingDisplay);
         //TODO set credit scene and load from file
         this.createClientLobbyMenuDisplay(clientMenuDisplay, thread).enactLayout(clientLobbyDisplay);
-        this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay).enactLayout(multiplayerMenuDisplay);
-        this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay, clientLobbyDisplay, thread).enactLayout(clientMenuDisplay);
+        this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay, victoryDisplay).enactLayout(multiplayerMenuDisplay);
+        this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay, clientLobbyDisplay, victoryDisplay, thread).enactLayout(clientMenuDisplay);
         this.createHostLobbyMenuDisplay(multiplayerMenuDisplay).enactLayout(hostLobbyMenuDisplay);
         this.createConnectionFailedDisplay(mainMenuDisplay).enactLayout(connectionFailedDisplay);
         this.createVictoryDisplay(mainMenuDisplay).enactLayout(victoryDisplay);
@@ -367,7 +367,7 @@ public class MenuSystem {
         return layout;
     }
     
-    private Layout createMultiplayerMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay clientMenuDisplay, GraphicsDisplay hostMenuDisplay, GraphicsDisplay connectionFailedDisplay) {
+    private Layout createMultiplayerMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay clientMenuDisplay, GraphicsDisplay hostMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay victoryDisplay) {
         logger.debug("Creating multiplayer menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -382,6 +382,7 @@ public class MenuSystem {
                 view.switchToDisplay(hostMenuDisplay);
                 try {
                     control.host();
+                    view.switchToDisplay(victoryDisplay);
                 } catch (Exception ex) { //TODO custom exception
                     //TODO switch to better display
                     view.switchToDisplay(connectionFailedDisplay);
@@ -405,7 +406,7 @@ public class MenuSystem {
         
     }
     
-    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay clientLobbyDisplay, ClientLobbyWaitThread thread) throws KeyListenerNotFoundException {
+    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay clientLobbyDisplay, GraphicsDisplay victoryDisplay, ClientLobbyWaitThread thread) throws KeyListenerNotFoundException {
         logger.debug("Creating client menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -422,6 +423,7 @@ public class MenuSystem {
                 try {
                     view.switchToDisplay(clientLobbyDisplay);
                     control.connect(ipAndPort.getText());
+                    view.switchToDisplay(victoryDisplay);
                 } catch (NoHostFound | ConnectionClosed e) {
                     view.switchToDisplay(connectionFailedDisplay);
                 }
@@ -530,8 +532,9 @@ public class MenuSystem {
         
         ButtonData startGame = new ButtonData("Start game");
         startGame.setOnAction(() -> {
-            control.hostStartTheGame();
-            view.switchToGameScene();
+            if (control.hostStartTheGame()) {
+                view.switchToGameScene();
+            }
         });
         layout.addButton(startGame);
         
