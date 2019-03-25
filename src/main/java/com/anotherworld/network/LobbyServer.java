@@ -85,6 +85,8 @@ public class LobbyServer extends Thread {
             for (int i = 0; i < playersIpAddresses.size(); i++) {
                 if (playersIpAddresses.get(i) == lobbySocket.getInetAddress().getHostAddress()) {
                     logger.info("Player " + playersIpAddresses.get(i) + " Disconnected");
+                    DataOutputStream out = new DataOutputStream(clientSockets.get(i));
+                    out.writeUTF("cancelled");
                     playersIpAddresses.remove(playersIpAddresses.get(i));
                     currentPlayersAmount--;
                     allPlayersJoined = false;
