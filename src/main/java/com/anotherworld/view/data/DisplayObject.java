@@ -1,5 +1,6 @@
 package com.anotherworld.view.data;
 
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 import com.anotherworld.view.programme.Programme;
@@ -26,7 +27,7 @@ public abstract class DisplayObject {
     
     private Points2d points;
     
-    private final int displayType;
+    private final DrawType displayType;
     
     private final Programme programme;
     
@@ -40,15 +41,15 @@ public abstract class DisplayObject {
     
     private SpriteSheet spriteSheet;
 
-    public DisplayObject(Programme programme, Points2d points, int displayType) {
+    public DisplayObject(Programme programme, Points2d points, DrawType displayType) {
         this(new SpriteSheet(), programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
 
-    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, int displayType) {
+    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, DrawType displayType) {
         this(spriteSheet, programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
     
-    public DisplayObject(Programme programme, Points2d points, int displayType, float r, float g, float b) {
+    public DisplayObject(Programme programme, Points2d points, DrawType displayType, float r, float g, float b) {
         this(new SpriteSheet(), programme, points, displayType, r, g, b);
     }
     
@@ -61,7 +62,7 @@ public abstract class DisplayObject {
      * @param g How green the object is 0 to 1
      * @param b How blue the object is 0 to 1
      */
-    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, int displayType, float r, float g, float b) {
+    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, DrawType displayType, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
         this.r = r;
@@ -85,7 +86,7 @@ public abstract class DisplayObject {
      * Returns the display mode needed to correctly display the object's points.
      * @return The opengl display mode
      */
-    public int getDisplayType() {
+    public DrawType getDisplayType() {
         return displayType;
     }
     

@@ -1,7 +1,6 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
-
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.graphics.spritesheet.BallSpriteSheet;
 import com.anotherworld.view.programme.Programme;
@@ -20,7 +19,7 @@ public class BallDisplayObject extends DisplayObject {
      * @param displayData The ball to display
      */
     public BallDisplayObject(Programme programme, BallDisplayData displayData) {
-        super(new BallSpriteSheet(displayData), programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius() * 2, displayData.getRadius() * 2) : Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
+        super(new BallSpriteSheet(displayData), programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius() * 2, displayData.getRadius() * 2) : Points2d.genCircle(displayData.getRadius()), DrawType.TRIANGLE_FAN);
         this.displayData = displayData;
     }
     

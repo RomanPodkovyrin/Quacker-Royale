@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL46.*;
 
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.TexturedDisplayObjectBuffers;
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.texture.Shader;
 import com.anotherworld.view.texture.TextureMap;
 
@@ -199,7 +200,7 @@ public class TexturedProgramme extends Programme {
     
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferObject.getEdgesId());
             
-            glDrawElements(displayObject.getDisplayType(), displayObject.getNumberOfPoints(), GL_UNSIGNED_INT, 0);
+            glDrawElements(DrawType.convertToInt(displayObject.getDisplayType()), displayObject.getNumberOfPoints(), GL_UNSIGNED_INT, 0);
             
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     

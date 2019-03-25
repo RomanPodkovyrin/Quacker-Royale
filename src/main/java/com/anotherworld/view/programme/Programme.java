@@ -5,6 +5,8 @@ import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
+import static org.lwjgl.opengl.GL46.glViewport;
+
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.primatives.Matrix2d;
 import com.anotherworld.view.graphics.Camera;
@@ -256,5 +258,9 @@ public abstract class Programme {
      * @param displayObject the object to update
      */
     public abstract void updateBuffers(DisplayObject displayObject);
+
+    public void setViewport(int x, int y, int w, int h) {
+        glViewport(x, y, w, h);
+    }
     
 }

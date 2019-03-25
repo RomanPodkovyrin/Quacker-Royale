@@ -1,10 +1,9 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
-
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PowerUpData;
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.programme.Programme;
 
@@ -14,7 +13,7 @@ public class PowerUpDisplayObject extends DisplayObject {
     private final PowerUpData displayData;
 
     public PowerUpDisplayObject(Programme programme, GameSessionData gameData, int i) {
-        super(programme, Points2d.genCircle(gameData.getPowerUpSchedule().get(i).getRadius()), GL_TRIANGLE_FAN);
+        super(programme, Points2d.genCircle(gameData.getPowerUpSchedule().get(i).getRadius()), DrawType.TRIANGLE_FAN);
         this.gameData = gameData;
         this.displayData = gameData.getPowerUpSchedule().get(i);
     }

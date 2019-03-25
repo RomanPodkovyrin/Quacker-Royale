@@ -470,6 +470,8 @@ public class MenuSystem {
         
         ButtonData host = new ButtonData("Clienting...");
         layout.addButton(host);
+        
+        //TODO implement actual data
 
         TextListData playerList = new TextListData(4);
         playerList.setWidth(0.5f);

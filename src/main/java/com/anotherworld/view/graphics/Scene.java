@@ -1,7 +1,5 @@
 package com.anotherworld.view.graphics;
 
-import static org.lwjgl.opengl.GL46.glViewport;
-
 import com.anotherworld.view.input.MouseState;
 import com.anotherworld.view.programme.Programme;
 
@@ -43,7 +41,7 @@ public class Scene {
             int y = convertCoord(display.getY(), height);
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
-            glViewport(x, y, w, h);
+            programme.setViewport(x, y, w, h);
             display.draw(programme, translateMouseState(ms));
         }
     }

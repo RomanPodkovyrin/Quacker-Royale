@@ -97,6 +97,8 @@ public class View implements Runnable {
     private DisplayType displayType;
 
     private int refreshRate;
+    
+    private boolean enableFrameCounter;
 
     /**
      * Creates the View object initialising it's values.
@@ -108,6 +110,7 @@ public class View implements Runnable {
         running = false;
         menuScene = new MenuScene();
         window = Optional.empty();
+        enableFrameCounter = true;
         logger.info("Running view");
     }
 
