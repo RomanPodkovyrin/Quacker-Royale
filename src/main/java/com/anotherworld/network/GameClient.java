@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.Inet4Address;
@@ -136,28 +137,35 @@ public class GameClient extends Thread {
         }
         byte [] data = incomingPacket.getData();
         ByteArrayInputStream byteInputStream = new ByteArrayInputStream(data);
-        ObjectInputStream objectInputStream = new ObjectInputStream(byteInputStream);
-        Object object = objectInputStream.readObject();
-        if (object instanceof ArrayList<?>) {
-            logger.trace("ArrayList has been received");
-            ArrayList<?> ballOrPlayer = ((ArrayList<?>)object);
-            if (ballOrPlayer.get(0) instanceof PlayerData) {
-                playerData = (ArrayList<PlayerData>) ballOrPlayer;
-                logger.trace("Player data object has been received");
-            } else if (ballOrPlayer.get(0) instanceof BallData) {
-                ballData = (ArrayList<BallData>) ballOrPlayer;
-                logger.trace("Ball object received.");
+        ObjectInputStream objectInputStream = null;
+        try{
+            objectInputStream = new ObjectInputStream(byteInputStream);
+            Object object = objectInputStream.readObject();
+            if (object instanceof ArrayList<?>) {
+                logger.trace("ArrayList has been received");
+                ArrayList<?> ballOrPlayer = ((ArrayList<?>)object);
+                if (ballOrPlayer.get(0) instanceof PlayerData) {
+                    playerData = (ArrayList<PlayerData>) ballOrPlayer;
+                    logger.trace("Player data object has been received");
+                } else if (ballOrPlayer.get(0) instanceof BallData) {
+                    ballData = (ArrayList<BallData>) ballOrPlayer;
+                    logger.trace("Ball object received.");
+                }
+            } else if (object instanceof GameSessionData) {
+                gameSessionData = (GameSessionData) object;
+                logger.trace("GameSessionData object has been received");
+            } else if (object instanceof PlatformData) {
+                platformData = (PlatformData) object;
+                logger.trace("PlatformData object has been received");
+            } else if (object instanceof WallData) {
+                wallData = (WallData) object;
+                logger.trace("WallData object has been received");
             }
-        } else if (object instanceof GameSessionData) {
-            gameSessionData = (GameSessionData) object;
-            logger.trace("GameSessionData object has been received");
-        } else if (object instanceof PlatformData) {
-            platformData = (PlatformData) object;
-            logger.trace("PlatformData object has been received");
-        } else if (object instanceof WallData) {
-            wallData = (WallData) object;
-            logger.trace("WallData object has been received");
+        } catch (StreamCorruptedException e){
+            //
         }
+
+
     }
 
     /**
