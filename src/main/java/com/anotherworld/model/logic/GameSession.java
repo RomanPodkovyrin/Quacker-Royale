@@ -114,12 +114,7 @@ public class GameSession {
         // If someone has won, update the rankings one last time.
         if (!isRunning()) {
             gameData.getRankings().addFirst(livingPlayers.get(0).getObjectID());
-            AudioControl.win();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             System.out.println(gameData.getRankings().toString());
         }
 

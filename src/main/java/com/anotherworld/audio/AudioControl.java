@@ -33,6 +33,9 @@ public class AudioControl {
             backgroundMusic.muteSound();
         }
 
+        if (soundEffects != null) {
+            soundEffects.stopSoundEffects();
+        }
         soundEffects = new SoundEffects();
 
 
@@ -108,9 +111,17 @@ public class AudioControl {
     /**
      * Plays the win sound.
      */
-    public static  void win() {
+    public static void win() {
         if (effectsOn) {
+            soundEffects = new SoundEffects();
             soundEffects.win();
+        }
+    }
+
+    public static void lose() {
+        if (effectsOn) {
+            soundEffects = new SoundEffects();
+            soundEffects.loseSound();
         }
     }
 

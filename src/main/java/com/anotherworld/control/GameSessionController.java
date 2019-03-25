@@ -168,6 +168,26 @@ public class GameSessionController {
 
         }
 
+        try {
+            String firstPlace = settings.getGameSessionData().getRankings().get(0);
+
+            if (firstPlace.equals(settings.getCurrentPlayer().getObjectID())) {
+                AudioControl.win();
+
+            } else {
+                AudioControl.lose();
+            }
+
+//            try {
+//                Thread.sleep(3000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
+        } catch (IndexOutOfBoundsException e) {
+
+        }
+
         shutDownSequence();
     }
 
@@ -181,7 +201,7 @@ public class GameSessionController {
         //stop the music
         AudioControl.stopBackgroundMusic();
         logger.trace("Music stopped");
-        AudioControl.stopSoundEffects();
+//        AudioControl.stopSoundEffects();
         logger.trace("Stopped SoundEffects");
 
         network.stopNetworking();
