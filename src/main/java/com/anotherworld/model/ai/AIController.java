@@ -89,7 +89,7 @@ public class AIController {
             // Setting up domination and peace combined list
             ArrayList<Job> dominationAndPeace = new ArrayList<>();
             dominationAndPeace.add(new SequenceSuccess(getDomination()));
-            dominationAndPeace.add(new SequenceSuccess(getPeace()));
+            dominationAndPeace.add(getPeace());
 
             // Setting up the extra check if the given makeDecision can be done to avoid the ball
             ArrayList<Job> extra = new ArrayList<>();
@@ -119,7 +119,7 @@ public class AIController {
         // Set up of the survival instincts
         ArrayList<Job> survival = new ArrayList<>();
         survival.add(new AvoidEdge());
-        survival.add(new AvoidNeutralPlayer());
+//        survival.add(new AvoidNeutralPlayer());
 
         ArrayList<Job> powerCheck = new ArrayList<>();
         powerCheck.add(new CheckShieldandTimePowerUP());
@@ -153,12 +153,12 @@ public class AIController {
      *
      * @return ArrayList of peace jobs
      */
-    private ArrayList<Job> getPeace() {
+    private Job getPeace() {
         // Setting up peace
-        ArrayList<Job> peace = new ArrayList<>();
-        peace.add(new WalkAbout());
+//        ArrayList<Job> peace = new ArrayList<>();
+//        peace.add(new WalkAbout());
 
-        return peace;
+        return new WalkAbout();
     }
 
     /**
