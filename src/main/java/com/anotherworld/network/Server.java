@@ -74,9 +74,15 @@ public class Server extends Thread {
         logger.info("Server Ip address: " + Inet4Address.getLocalHost().getHostAddress());
     }
 
+    /**
+     * Used to get the status whether clients are ready to start the game or not.
+     *
+     * @return the status whether clients are ready to start the game.
+     */
     public boolean areClientsReady() {
         return areClientsReady;
     }
+
     /**
      * A run method for the thread which first of all gets all the ports of the clients,
      * sends clients ids, sends the initial objects of the game and after starts to receive
@@ -178,8 +184,7 @@ public class Server extends Thread {
         try {
             socket.receive(packet);
         } catch (IOException e) {
-//            e.printStackTrace();
-            //TODO
+            logger.trace("Failed to get a string from a client");
         }
         String received = new String(packet.getData(), 0, packet.getLength());
         return received;
