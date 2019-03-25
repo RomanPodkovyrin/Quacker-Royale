@@ -27,6 +27,7 @@ public class LobbyClient {
     private DataOutputStream out;
     private OutputStream outToServer;
     private DataInputStream in;
+    private InputStream inFromServer;
     private static Logger logger = LogManager.getLogger(LobbyClient.class);
     private boolean conectedToHost = false;
 
@@ -50,7 +51,6 @@ public class LobbyClient {
      */
     public void sendMyIp() throws IOException {
         client = new Socket(serverIp, port);
-//        client.setSoTimeout(1000);
         logger.info("Just connected to " + client.getRemoteSocketAddress());
         outToServer = client.getOutputStream();
         out = new DataOutputStream(outToServer);
@@ -63,7 +63,7 @@ public class LobbyClient {
      * and the game is ready to be started
      */
     public void waitForGameToStart() throws IOException, ConnectionClosed {
-        InputStream inFromServer = client.getInputStream();
+        inFromServer = client.getInputStream();
         in = new DataInputStream(inFromServer);
         myID = in.readUTF();
         if (myID.equals("Host has cancelled the lobby")) {
@@ -77,28 +77,15 @@ public class LobbyClient {
      * Cancels connection with the lobby host.
      */
     public void cancelConnection() throws IOException {
-
-//        outToServer = client.getOutputStream();
-//        out = new DataOutputStream(outToServer);
-        if (in != null) {
-            in.close();
-//            in.skip(1000);
-        }
+        outToServer = client.getOutputStream();
+        out = new DataOutputStream(outToServer);
+        out.writeUTF("cancel connection");
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        client = new Socket(serverIp, port);
-//        client.setSoTimeout(1000);
-//        logger.info("Just connected to " + client.getRemoteSocketAddress());
-        outToServer = client.getOutputStream();
-        out = new DataOutputStream(outToServer);
-
-        out.writeUTF("cancel connection");
-
         client.close();
         logger.info("lobby client has cancelled the connection with lobby host. Closed the socket");
-
     }
 }
