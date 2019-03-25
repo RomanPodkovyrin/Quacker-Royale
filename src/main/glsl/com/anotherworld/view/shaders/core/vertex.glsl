@@ -1,13 +1,13 @@
 #version 120
-in vec4 position;
-in vec4 colour;
-in vec2 texture;
+attribute vec4 position;
+attribute vec4 colour;
+attribute vec2 texture;
 
 uniform mat4 Transformation;
 uniform vec2 Shear;
 
-out vec4 ourColour;
-out vec2 texCoord;
+varying vec4 ourColour;
+varying vec2 texCoord;
 
 void main() {
     gl_Position = Transformation * position;
