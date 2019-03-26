@@ -2,7 +2,6 @@ package com.anotherworld.model.logic;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.model.physics.Physics;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.GameSessionData;
@@ -10,10 +9,8 @@ import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
-import com.anotherworld.view.data.PowerUpDisplayData;
 
 import java.util.LinkedList;
-import java.util.Optional;
 import java.util.Random;
 
 /**
@@ -45,7 +42,7 @@ public class PowerUpManager {
                         + (platform.getxSize() - (PlatformData.getxShrink() * (platform.getStage() - 1)))
                         * ((float) Math.random());
                 float y  = platform.getYCoordinate()
-                        + (platform.getySize() - (PlatformData.getyShrink()* (platform.getStage() - 1)))
+                        + (platform.getySize() - (PlatformData.getyShrink() * (platform.getStage() - 1)))
                         * ((float) Math.random());
 
                 Matrix coordinates = new Matrix(x,y);
@@ -72,7 +69,9 @@ public class PowerUpManager {
         if (nextPowerUp != null) {
             if (nextPowerUp.getSpawnTime() == data.getTimeLeft()) {
                 data.getPowerUpSchedule().pop();
-                if (currentPowerUp != null) currentPowerUp.setState(ObjectState.INACTIVE);
+                if (currentPowerUp != null) {
+                    currentPowerUp.setState(ObjectState.INACTIVE);
+                }
                 nextPowerUp.setState(ObjectState.ACTIVE);
                 data.setCurrentPowerUp(nextPowerUp);
             }
