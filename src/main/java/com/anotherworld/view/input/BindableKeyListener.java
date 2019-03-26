@@ -7,8 +7,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT_BRACKET;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
 
-import com.anotherworld.tools.input.KeyListener;
-
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +20,10 @@ public class BindableKeyListener {
     
     private KeyListener keyListener;
     
+    /**
+     * Creates a key listener that checks for keys that the programme can safely bind for the game.
+     * @param window The window to listen for keys in
+     */
     public BindableKeyListener(Long window) {
         logger.info("Creating keylistener for window " + window);
         trackedKeys = new ArrayList<>();

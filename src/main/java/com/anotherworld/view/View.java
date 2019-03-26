@@ -26,6 +26,7 @@ import static org.lwjgl.opengl.GL11.glGetError;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.ViewSettings;
 import com.anotherworld.tools.Wrapper;
@@ -306,11 +307,11 @@ public class View implements Runnable {
     private void attemptDestroy(Programme programme) {
         logger.info("Closing window");
         keyListenerLatch = new CountDownLatch(1);
-        // TODO delete all object for all scenes
-        // could use hashmap
         programme.destroy();
         running = false;
         window = Optional.empty();
+        AudioControl.stopBackgroundMusic();
+        AudioControl.stopSoundEffects();
         glfwTerminate();
     }
     
@@ -345,7 +346,7 @@ public class View implements Runnable {
                 disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getGameSessionData().getPowerUpSchedule().size(); i++) {
-                disObj.add(new PowerUpDisplayObject(programme, updateEvent.getGameSessionData(), i));
+                disObj.add(new PowerUpDisplayObject(programme, updateEvent.getGameSessionData().getPowerUpSchedule().get(i)));
             }
             ((GameScene)currentScene).updateGameObjects(disObj);
             logger.debug("Adding Objects");
@@ -439,6 +440,10 @@ public class View implements Runnable {
         return running;
     }
 
+    /**
+     * Takes control and waits for the user to press a key that can be bound or escape to exit.
+     * @return the bindable key
+     */
     public int getBindableKey() {
         logger.info("Request for bindable key");
         try {
@@ -458,6 +463,9 @@ public class View implements Runnable {
         return -1;
     }
 
+    /**
+     * Adds an event to the queue to reload the window.
+     */
     public void reloadWindow() {
         synchronized (eventQueue) {
             logger.info("Reload window queued");

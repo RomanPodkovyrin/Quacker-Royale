@@ -11,11 +11,16 @@ import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
 import com.anotherworld.view.graphics.GraphicsDisplay;
+import com.anotherworld.view.graphics.layout.CreditLayout;
 import com.anotherworld.view.graphics.layout.FixedSpaceLayout;
 import com.anotherworld.view.graphics.layout.Layout;
 import com.anotherworld.view.graphics.layout.LobbyLayout;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.TextFieldData;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,7 +60,7 @@ public class MenuSystem {
         this.createAudioSettings(settingsMenuDisplay).enactLayout(audioSettingsDisplay);
         this.createViewSettings(settingsMenuDisplay).enactLayout(videoSettingsDisplay);
         this.createKeybindingSettings(settingsMenuDisplay).enactLayout(keyBindingDisplay);
-        //TODO set credit scene and load from file
+        this.createCreditDisplay(mainMenuDisplay).enactLayout(creditDisplay);
         this.createClientLobbyMenuDisplay(clientMenuDisplay, thread).enactLayout(clientLobbyDisplay);
         this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay, victoryDisplay).enactLayout(multiplayerMenuDisplay);
         this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay, clientLobbyDisplay, victoryDisplay, thread).enactLayout(clientMenuDisplay);
@@ -548,6 +553,31 @@ public class MenuSystem {
         });
         layout.addButton(backToMulti);
 
+        return layout;
+    }
+    
+    private Layout createCreditDisplay(GraphicsDisplay mainMenu) {
+        CreditLayout layout = new CreditLayout();
+        
+        ButtonData returnButton = new ButtonData("Main Menu");
+        returnButton.setOnAction(() -> view.switchToDisplay(mainMenu));
+        
+        layout.setReturn(returnButton);
+        
+        //TODO load real data
+        String text = "";
+        try {
+            text = new String(Files.readAllBytes(Paths.get("licence")));
+        } catch (IOException ex) {
+            logger.catching(ex);
+            logger.warn("Couldn't load credits from file");
+            text = "Couldn't load credits";
+        }
+        
+        ButtonData credits = new ButtonData(text);
+        
+        layout.setCredits(credits);
+        
         return layout;
     }
     

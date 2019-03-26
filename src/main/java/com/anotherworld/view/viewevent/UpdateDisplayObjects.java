@@ -21,6 +21,14 @@ public class UpdateDisplayObjects implements ViewEvent {
     private final ArrayList<? extends WallData> wallObjects;
     private final GameSessionData gameSessionData;
 
+    /**
+     * Creates a view event to update the game scene's display objects.
+     * @param playerObjects The new player data objects
+     * @param ballObjects The new ball data objects
+     * @param rectangleObjects The new rectangle data objects
+     * @param wallObjects The new wall objects
+     * @param gameSessionData The new game session data
+     */
     public UpdateDisplayObjects(ArrayList<? extends PlayerDisplayData> playerObjects,
                                 ArrayList<? extends BallDisplayData> ballObjects,
                                 ArrayList<? extends RectangleDisplayData> rectangleObjects,

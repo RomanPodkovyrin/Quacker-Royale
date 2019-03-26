@@ -1,6 +1,8 @@
 package com.anotherworld.view.graphics;
 
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.ParagraphDisplayObject;
+import com.anotherworld.view.data.TextDisplayData;
 import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.input.Button;
 import com.anotherworld.view.input.ButtonData;
@@ -34,6 +36,8 @@ public class GraphicsDisplay {
 
     private ArrayList<ButtonData> buttonsToAdd;
 
+    private ArrayList<TextDisplayData> textToAdd;
+
     public GraphicsDisplay() {
         this(-1f, -1f, 2f, 2f, new Static2dCamera(0, 0, 2, 2));
     }
@@ -60,6 +64,7 @@ public class GraphicsDisplay {
         this.camera = camera;
         objects = new ArrayList<>();
         buttonsToAdd = new ArrayList<>();
+        textToAdd = new ArrayList<>();
     }
 
     /**
@@ -74,6 +79,12 @@ public class GraphicsDisplay {
                 objects.add(new TextDisplayObject(programme, button));
             }
             buttonsToAdd.clear();
+        }
+        synchronized (textToAdd) {
+            for (TextDisplayData data : textToAdd) {
+                objects.add(new ParagraphDisplayObject(programme, data));
+            }
+            textToAdd.clear();
         }
         programme.pushMatrix();
         this.transform(programme);
@@ -128,6 +139,12 @@ public class GraphicsDisplay {
     public void addButton(ButtonData object) {
         synchronized (buttonsToAdd) {
             buttonsToAdd.add(object);
+        }
+    }
+    
+    public void addText(TextDisplayData object) {
+        synchronized (textToAdd) {
+            textToAdd.add(object);
         }
     }
 

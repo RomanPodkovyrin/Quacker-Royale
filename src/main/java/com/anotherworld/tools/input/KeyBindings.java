@@ -16,6 +16,9 @@ public class KeyBindings {
     private final int charge;
     private final int mute;
     
+    /**
+     * Loads the keybindings from settings and stores them so they can be used during the game.
+     */
     public KeyBindings() {
         logger.trace("Creating key bindings");
         up = KeySettings.getUp();
