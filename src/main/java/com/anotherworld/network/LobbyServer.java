@@ -60,7 +60,6 @@ public class LobbyServer extends Thread {
             try {
                 getPlayersIP();
             } catch (IOException e) {
-//                System.out.println("Temp, remove: timout");
                 logger.trace("LobbyServerTimeout");
             }
         }
