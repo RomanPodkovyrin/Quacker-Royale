@@ -18,6 +18,10 @@ import com.anotherworld.view.graphics.layout.LobbyLayout;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.TextFieldData;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -561,7 +565,14 @@ public class MenuSystem {
         layout.setReturn(returnButton);
         
         //TODO load real data
-        String text = "fjrnaugna;eroingmaetimgaptoeimh[atgmareomvaeriohtbuoeeerjfkvgyufbhjkoiyugvjbnkloigutfcyh vjbnjogiyutfcygj hkbnohigyvuj hkbjnohgiyfvugjhk jlnk;mpjgiyvhbkjnlpjihgiyvhbk";
+        String text = "";
+        try {
+            text = new String(Files.readAllBytes(Paths.get("licence")));
+        } catch (IOException ex) {
+            logger.catching(ex);
+            logger.warn("Couldn't load credits from file");
+            text = "Couldn't load credits";
+        }
         
         ButtonData credits = new ButtonData(text);
         
