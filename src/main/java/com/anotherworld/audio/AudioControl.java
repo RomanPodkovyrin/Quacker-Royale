@@ -63,17 +63,22 @@ public class AudioControl {
      * Mutes of unmutes background music and sound effects.
      */
     public static void muteUnmute() {
-        if (musicOn | effectsOn) {
 
-            logger.info("Muted sound effects and Music");
-            backgroundMusic.muteSound();
-            effectsOn = false;
-            musicOn = false;
-        } else {
-            logger.info("Unmuted sound effects and Music");
-            backgroundMusic.unMuteSound();
-            effectsOn = true;
-            musicOn = true;
+        try {
+            if (musicOn | effectsOn) {
+
+                logger.info("Muted sound effects and Music");
+                backgroundMusic.muteSound();
+                effectsOn = false;
+                musicOn = false;
+            } else {
+                logger.info("Unmuted sound effects and Music");
+                backgroundMusic.unMuteSound();
+                effectsOn = true;
+                musicOn = true;
+            }
+        } catch (IllegalArgumentException e) {
+            logger.error("Tried to mute the music while closing the game");
         }
 
     }

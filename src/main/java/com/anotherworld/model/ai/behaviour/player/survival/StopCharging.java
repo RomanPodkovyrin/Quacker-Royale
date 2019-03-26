@@ -34,7 +34,7 @@ public class StopCharging extends Job {
         // Check is ai is charging
         if (ai.getState().equals(ObjectState.CHARGING)) {
             // Stop charging
-            System.out.println("Stop charging");
+//            System.out.println("Stop charging");
             ai.setVelocity(0,0);
             ai.setState(ObjectState.IDLE);
             ai.setSpeed(GameSettings.getDefaultPlayerSpeed());
