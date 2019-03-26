@@ -16,8 +16,8 @@ public class SpriteSheet {
         return 0;
     }
     
-    public int getTextureBuffer() {
-        return 0;
+    public SpriteLocation getTextureBuffer() {
+        return SpriteLocation.NONE;
     }
 
     public boolean shouldBeTransformed() {

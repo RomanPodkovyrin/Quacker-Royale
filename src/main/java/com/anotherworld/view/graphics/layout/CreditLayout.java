@@ -2,6 +2,7 @@ package com.anotherworld.view.graphics.layout;
 
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.view.graphics.GraphicsDisplay;
+import com.anotherworld.view.graphics.spritesheet.SpriteLocation;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.texture.TextureMap;
 
@@ -18,7 +19,7 @@ public class CreditLayout extends Layout {
     public void enactLayout(GraphicsDisplay graphicsDisplay) {
         float buttonWidth;
         try {
-            Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
+            Matrix dimensions = TextureMap.getSpriteDimensions(SpriteLocation.TEXT);
             buttonWidth = returnButton.getText().length() * 0.2f * X_SCALE_ADJUSTMENT * (dimensions.getX() / dimensions.getY());
         } catch (Exception ex) {
             buttonWidth = 0.2f;

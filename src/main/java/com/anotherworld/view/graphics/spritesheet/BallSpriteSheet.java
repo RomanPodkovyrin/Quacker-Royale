@@ -23,8 +23,8 @@ public class BallSpriteSheet extends SpriteSheet {
     }
 
     @Override
-    public int getTextureBuffer() {
-        return TextureMap.BALL_TEXTURE_BUFFER;
+    public SpriteLocation getTextureBuffer() {
+        return SpriteLocation.BALL;
     }
 
 }

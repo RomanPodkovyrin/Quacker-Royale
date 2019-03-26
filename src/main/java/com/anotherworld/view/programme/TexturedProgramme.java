@@ -46,6 +46,7 @@ import com.anotherworld.view.texture.TextureMap;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -232,6 +233,7 @@ public class TexturedProgramme extends Programme {
     public void destory(DisplayObject object) {
         if (object.getProgrammeObjectId().isPresent()) {
             destroyBufferObject(object.getProgrammeObjectId().get());
+            object.removeProgrammeObjectId();
         }
     }
 

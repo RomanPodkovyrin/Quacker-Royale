@@ -21,8 +21,8 @@ public class TextSpriteSheet extends SpriteSheet {
     }
     
     @Override
-    public int getTextureBuffer() {
-        return TextureMap.TEXT_TEXTURE_BUFFER;
+    public SpriteLocation getTextureBuffer() {
+        return SpriteLocation.TEXT;
     }
     
     @Override
@@ -40,7 +40,7 @@ public class TextSpriteSheet extends SpriteSheet {
         Points2d points = new Points2d(4, text.length() * 4);
         float characterWidth;
         try {
-            Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
+            Matrix dimensions = TextureMap.getSpriteDimensions(SpriteLocation.TEXT);
             characterWidth = characterSize * (dimensions.getX() / dimensions.getY());
         } catch (Exception ex) {
             characterWidth = characterSize;
@@ -68,7 +68,7 @@ public class TextSpriteSheet extends SpriteSheet {
         Points2d points = new Points2d(4, text.length() * 4);
         float characterWidth;
         try {
-            Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
+            Matrix dimensions = TextureMap.getSpriteDimensions(SpriteLocation.TEXT);
             characterWidth = characterSize * (dimensions.getX() / dimensions.getY());
         } catch (Exception ex) {
             characterWidth = characterSize;
@@ -77,7 +77,7 @@ public class TextSpriteSheet extends SpriteSheet {
         xOff /= 2;
         float yDiff = (float)Math.floor((characterWidth * text.length()) / width) / 2;
         yDiff *= characterSize;
-        //TODO tidy this up and fix bug with charcters wrapping over whole line
+        //TODO tidy this up
         for (int i = 0; i < text.length(); i++) {
             float xPosition = (i * characterWidth) % width - 0.5f * characterWidth;
             float yPosition = (float) Math.floor((characterWidth * i) / width) * characterSize;
@@ -104,7 +104,7 @@ public class TextSpriteSheet extends SpriteSheet {
     public static FloatBuffer generateTexture(String text) {
         text = text.toUpperCase();
         FloatBuffer buffer = BufferUtils.createFloatBuffer(text.length() * 8);
-        Matrix dimensions = TextureMap.getDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
+        Matrix dimensions = TextureMap.getDimensions(SpriteLocation.TEXT);
         for (int i = 0; i < text.length(); i++) {
             int id = text.charAt(i);
             buffer.put((id % dimensions.getX()) / dimensions.getX());

@@ -41,8 +41,8 @@ public class PlayerSpriteSheet extends SpriteSheet {
     }
 
     @Override
-    public int getTextureBuffer() {
-        return TextureMap.PLAYER_TEXTURE_BUFFER;
+    public SpriteLocation getTextureBuffer() {
+        return SpriteLocation.PLAYER;
     }
     
     private int getDirectionOffset() {

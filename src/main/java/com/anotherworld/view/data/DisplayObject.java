@@ -207,6 +207,10 @@ public abstract class DisplayObject {
         programmeObjectId = Optional.of(id);
     }
     
+    public void removeProgrammeObjectId() {
+        programmeObjectId = Optional.empty();
+    }
+    
     /**
      * Returns how red the object is.
      * @return how red the object is
