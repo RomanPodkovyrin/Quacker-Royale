@@ -26,6 +26,7 @@ import static org.lwjgl.opengl.GL11.glGetError;
 
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.ViewSettings;
 import com.anotherworld.tools.Wrapper;
@@ -309,6 +310,8 @@ public class View implements Runnable {
         programme.destroy();
         running = false;
         window = Optional.empty();
+        AudioControl.stopBackgroundMusic();
+        AudioControl.stopSoundEffects();
         glfwTerminate();
     }
     

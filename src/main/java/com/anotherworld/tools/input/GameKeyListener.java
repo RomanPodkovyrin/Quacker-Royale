@@ -1,5 +1,7 @@
 package com.anotherworld.tools.input;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+
 import com.anotherworld.view.input.KeyListener;
 
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ public class GameKeyListener {
         trackedKeys.add(keyBindings.getDown());
         trackedKeys.add(keyBindings.getCharge());
         trackedKeys.add(keyBindings.getMute());
+        trackedKeys.add(GLFW_KEY_ESCAPE);
         keyListener = new KeyListener(trackedKeys, window);
     }
 
@@ -54,6 +57,8 @@ public class GameKeyListener {
                 keyPresses.add(Input.CHARGE);
             } else if (key == keyBindings.getMute()) {
                 keyPresses.add(Input.MUTE);
+            } else if (key == GLFW_KEY_ESCAPE) {
+                keyPresses.add(Input.QUIT);
             }
         }
         return keyPresses;
