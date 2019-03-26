@@ -3,6 +3,8 @@ package com.anotherworld.model.ai;
 import com.anotherworld.model.ai.tools.Line;
 import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -112,6 +114,30 @@ public class BlackBoard {
         objects.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getXCoordinate(),o1.getYCoordinate()),ai.getCoordinates()))
                 .compareTo(MatrixMath.distanceAB(new Matrix(o2.getXCoordinate(),o2.getYCoordinate()),ai.getCoordinates())));
         return objects;
+    }
+
+    /**
+     * Sorts players based on their distance from the AIController player. Also discards players which are dead
+     *
+     * @param objects The object to be sorted based on the distance from the AIController
+     * @return returns an ArrayList of players starting with the closes one
+     */
+    public static ArrayList<PlayerData> sortTargetPlayers(PlayerData ai, ArrayList<PlayerData> objects) {
+        ArrayList<PlayerData> players = new ArrayList<>(objects);
+        ArrayList<PlayerData> dead = new ArrayList<>();
+        for (PlayerData player : players) {
+            if (player.getState().equals(ObjectState.DEAD)) {
+                dead.add(player);
+            }
+        }
+
+        //Remove all dead players
+        players.removeAll(dead);
+
+
+        players.sort((o1, o2) -> ((Float)MatrixMath.distanceAB(new Matrix(o1.getXCoordinate(),o1.getYCoordinate()),ai.getCoordinates()))
+                .compareTo(MatrixMath.distanceAB(new Matrix(o2.getXCoordinate(),o2.getYCoordinate()),ai.getCoordinates())));
+        return players;
     }
 
     /**
