@@ -31,8 +31,8 @@ public class TextureMap {
      */
     public TextureMap(String location) throws IOException {
         textureBuffers = new TextureBuffer[SpriteLocation.NUMBER_OF_LOCATIONS];
-        textureBuffers[SpriteLocation.NONE.getInt()] = new TextureBuffer(location + "miniDuck.png", 4, 5);
-        textureBuffers[SpriteLocation.PLAYER.getInt()] = new TextureBuffer(location + "miniDuck.png", 4, 11);
+        textureBuffers[SpriteLocation.NONE.getInt()] = new TextureBuffer(location + "mega duck.png", 4, 5);
+        textureBuffers[SpriteLocation.PLAYER.getInt()] = new TextureBuffer(location + "mega duck.png", 4, 11);
         textureBuffers[SpriteLocation.BALL.getInt()] = new TextureBuffer(location + "NeutralBall/NeutralBall0.png", 1, 1);
         textureBuffers[SpriteLocation.TEXT.getInt()] = new TextureBuffer(location + "tom_font.png", 32, 4);
         textureBuffers[SpriteLocation.POWER_UP.getInt()] = new TextureBuffer(location + "powerups.png", 4, 3);
