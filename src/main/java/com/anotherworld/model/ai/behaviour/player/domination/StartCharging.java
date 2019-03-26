@@ -70,7 +70,7 @@ public class StartCharging extends Job {
 
         if (Maths.getRandom(0,150) != 1) {
             logger.trace("Not now");
-            System.out.println("Nope");
+//            System.out.println("Nope");
             succeed();
             return;
         }

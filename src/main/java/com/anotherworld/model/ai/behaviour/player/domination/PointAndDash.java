@@ -42,7 +42,7 @@ public class PointAndDash extends Job  {
                 ai.setSpeed(GameSettings.getDefaultPlayerSpeed());
 //                GameSession.updatePlayer(ai,new ArrayList<Input>(),session);
                 ai.setVelocity(0,0);
-                System.out.println("No players to target");
+//                System.out.println("No players to target");
                 succeed();
                 return;
             }
@@ -51,7 +51,7 @@ public class PointAndDash extends Job  {
             System.out.println("Ai charge " + ai.getChargeLevel() + " max " + GameSettings.getDefaultPlayerMaxCharge()) ;
             if (ai.getChargeLevel() >= GameSettings.getDefaultPlayerMaxCharge() * 0.5) {
                 logger.trace("Reached full charge");
-                System.out.println("Dashing");
+//                System.out.println("Dashing");
                 ai.setTimeStartedCharging(session.getTicksElapsed());
                 ai.setState(ObjectState.DASHING);
 
@@ -68,7 +68,7 @@ public class PointAndDash extends Job  {
 
 
         }
-        System.out.println("Not charging");
+//        System.out.println("Not charging");
         succeed();
 
 
