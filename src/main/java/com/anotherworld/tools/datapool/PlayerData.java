@@ -82,6 +82,7 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
         this.stunTimer = stunTimer;
     }
 
+    @Override
     public boolean isDeadByFalling() {
         return this.deadByFalling;
     }
@@ -90,6 +91,7 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
         this.deadByFalling = deadByFalling;
     }
 
+    @Override
     public boolean isShielded() {
         return this.shielded;
     }

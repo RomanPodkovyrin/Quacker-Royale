@@ -12,5 +12,9 @@ public interface PlayerDisplayData extends CircleDisplayData {
     public int getHealth();
     
     public int getMaxHealth();
+
+    public boolean isShielded();
+
+    public boolean isDeadByFalling();
     
 }
