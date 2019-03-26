@@ -5,6 +5,7 @@ import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.texture.TextureMap;
 
 import java.nio.FloatBuffer;
+import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 
@@ -75,23 +76,44 @@ public class TextSpriteSheet extends SpriteSheet {
         }
         float xOff = width;
         xOff /= 2;
-        float yDiff = (float)Math.floor((characterWidth * text.length()) / width) / 2;
-        yDiff *= characterSize;
-        //TODO tidy this up
+        ArrayList<String> lines = new ArrayList<>();
+        String currentLine = "";
         for (int i = 0; i < text.length(); i++) {
-            float xPosition = (i * characterWidth) % width - 0.5f * characterWidth;
-            float yPosition = (float) Math.floor((characterWidth * i) / width) * characterSize;
-            points.setValue(0, i * 4, xPosition - xOff);
-            points.setValue(1, i * 4, -characterSize / 2 + yPosition - yDiff);
-            points.setValue(0, i * 4 + 1, xPosition + characterWidth - xOff);
-            points.setValue(1, i * 4 + 1, -characterSize / 2 + yPosition - yDiff);
-            points.setValue(0, i * 4 + 2, xPosition + characterWidth - xOff);
-            points.setValue(1, i * 4 + 2, characterSize / 2 + yPosition - yDiff);
-            points.setValue(0, i * 4 + 3, xPosition - xOff);
-            points.setValue(1, i * 4 + 3, characterSize / 2 + yPosition - yDiff);
-            for (int j = 0; j < 4; j++) {
-                points.setValue(3, i * 4 + j, 1);
+            if (text.substring(i, i + 1).matches(".")) {
+                if ((currentLine.length() + 1) * characterWidth >= width) {
+                    lines.add(currentLine);
+                    currentLine = text.substring(i, i + 1);
+                } else {
+                    currentLine = currentLine + text.substring(i, i + 1);
+                }
+            } else {
+                lines.add(currentLine + " "); //TODO REALLY HACKY
+                currentLine = "";
             }
+        }
+        lines.add(currentLine);
+        int numberOfLines = lines.size();
+        float yDiff = (numberOfLines * characterSize) / 2;
+        int lineNumber = 0;
+        int iOffset = 0;
+        for (String line : lines) {
+            for (int i = 0; i < line.length(); i++) {
+                float xPosition = (i * characterWidth) - xOff;
+                float yPosition = lineNumber * characterSize - yDiff;
+                points.setValue(0, (iOffset + i) * 4, xPosition - characterWidth / 2);
+                points.setValue(1, (iOffset + i) * 4, -characterSize / 2 + yPosition);
+                points.setValue(0, (iOffset + i) * 4 + 1, xPosition + characterWidth / 2);
+                points.setValue(1, (iOffset + i) * 4 + 1, -characterSize / 2 + yPosition);
+                points.setValue(0, (iOffset + i) * 4 + 2, xPosition + characterWidth / 2);
+                points.setValue(1, (iOffset + i) * 4 + 2, characterSize / 2 + yPosition);
+                points.setValue(0, (iOffset + i) * 4 + 3, xPosition - characterWidth / 2);
+                points.setValue(1, (iOffset + i) * 4 + 3, characterSize / 2 + yPosition);
+                for (int j = 0; j < 4; j++) {
+                    points.setValue(3, (iOffset + i) * 4 + j, 1);
+                }
+            }
+            lineNumber++;
+            iOffset += line.length();
         }
         return points;
     }
