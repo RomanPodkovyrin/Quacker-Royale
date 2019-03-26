@@ -20,6 +20,10 @@ public class Ball {
         ballData.setTimer(ballData.getTimer() - amount);
     }
 
+    /**
+     * Handles the danger state of a ball upon update.
+     * @param ball the ball to update.
+     */
     public static void handleDangerState(BallData ball) {
         if (ball.isDangerous()) {
             reduceTimer(ball, GameSettings.getBallTimerDecrement());

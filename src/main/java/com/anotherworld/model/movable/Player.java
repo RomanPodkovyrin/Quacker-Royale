@@ -79,6 +79,11 @@ public class Player {
         playerData.setDeadByFalling(byFalling);
     }
 
+    /**
+     * Handles the parameters relating to the players dash.
+     * @param gameData the game session data to access time information.
+     * @param player the player to dash.
+     */
     public static void chargeForward(GameSessionData gameData, PlayerData player) {
         long timeSpent = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
@@ -97,6 +102,11 @@ public class Player {
         }
     }
 
+    /**
+     * Handles moving a player taking into account time stops.
+     * @param gameData the game data to access whether or not the time is stopped.
+     * @param player the player to update.
+     */
     public static void movePlayer(GameSessionData gameData, PlayerData player) {
         if (!gameData.isTimeStopped()) {
             if (player.isTimeStopper()) {
