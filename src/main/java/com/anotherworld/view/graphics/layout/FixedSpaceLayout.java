@@ -49,6 +49,7 @@ public class FixedSpaceLayout extends Layout {
             button.setPosition(this.getX() * X_SCALE_ADJUSTMENT, this.getY() + (-this.getHeight() / 2) + ySpacing * (i + 1));
             display.addButton(button);
         }
+        super.enactLayout(display);
     }
     
     public void addButton(ButtonData button) {

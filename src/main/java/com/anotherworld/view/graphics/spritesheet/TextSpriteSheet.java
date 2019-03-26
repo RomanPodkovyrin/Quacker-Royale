@@ -63,6 +63,39 @@ public class TextSpriteSheet extends SpriteSheet {
         return points;
     }
     
+    public static Points2d generateParagraphLetterPoints(String text, float characterSize, float width) {
+        //TODO handle newlines and break whole words
+        Points2d points = new Points2d(4, text.length() * 4);
+        float characterWidth;
+        try {
+            Matrix dimensions = TextureMap.getSpriteDimensions(TextureMap.TEXT_TEXTURE_BUFFER);
+            characterWidth = characterSize * (dimensions.getX() / dimensions.getY());
+        } catch (Exception ex) {
+            characterWidth = characterSize;
+        }
+        float xOff = width;
+        xOff /= 2;
+        float yDiff = (float)Math.floor((characterWidth * text.length()) / width) / 2;
+        yDiff *= characterSize;
+        //TODO tidy this up and fix bug with charcters wrapping over whole line
+        for (int i = 0; i < text.length(); i++) {
+            float xPosition = (i * characterWidth) % width - 0.5f * characterWidth;
+            float yPosition = (float) Math.floor((characterWidth * i) / width) * characterSize;
+            points.setValue(0, i * 4, xPosition - xOff);
+            points.setValue(1, i * 4, -characterSize / 2 + yPosition - yDiff);
+            points.setValue(0, i * 4 + 1, xPosition + characterWidth - xOff);
+            points.setValue(1, i * 4 + 1, -characterSize / 2 + yPosition - yDiff);
+            points.setValue(0, i * 4 + 2, xPosition + characterWidth - xOff);
+            points.setValue(1, i * 4 + 2, characterSize / 2 + yPosition - yDiff);
+            points.setValue(0, i * 4 + 3, xPosition - xOff);
+            points.setValue(1, i * 4 + 3, characterSize / 2 + yPosition - yDiff);
+            for (int j = 0; j < 4; j++) {
+                points.setValue(3, i * 4 + j, 1);
+            }
+        }
+        return points;
+    }
+    
     /**
      * Returns a buffer containing the texture co-ordinates need to map the text to the sprite sheet.
      * @param text The text to draw

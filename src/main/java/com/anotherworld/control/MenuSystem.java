@@ -11,6 +11,7 @@ import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
 import com.anotherworld.view.graphics.GraphicsDisplay;
+import com.anotherworld.view.graphics.layout.CreditLayout;
 import com.anotherworld.view.graphics.layout.FixedSpaceLayout;
 import com.anotherworld.view.graphics.layout.Layout;
 import com.anotherworld.view.graphics.layout.LobbyLayout;
@@ -55,7 +56,7 @@ public class MenuSystem {
         this.createAudioSettings(settingsMenuDisplay).enactLayout(audioSettingsDisplay);
         this.createViewSettings(settingsMenuDisplay).enactLayout(videoSettingsDisplay);
         this.createKeybindingSettings(settingsMenuDisplay).enactLayout(keyBindingDisplay);
-        //TODO set credit scene and load from file
+        this.createCreditDisplay(mainMenuDisplay).enactLayout(creditDisplay);
         this.createClientLobbyMenuDisplay(clientMenuDisplay, thread).enactLayout(clientLobbyDisplay);
         this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay, victoryDisplay).enactLayout(multiplayerMenuDisplay);
         this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay, clientLobbyDisplay, victoryDisplay, thread).enactLayout(clientMenuDisplay);
@@ -548,6 +549,24 @@ public class MenuSystem {
         });
         layout.addButton(backToMulti);
 
+        return layout;
+    }
+    
+    private Layout createCreditDisplay(GraphicsDisplay mainMenu) {
+        CreditLayout layout = new CreditLayout();
+        
+        ButtonData returnButton = new ButtonData("Main Menu");
+        returnButton.setOnAction(() -> view.switchToDisplay(mainMenu));
+        
+        layout.setReturn(returnButton);
+        
+        //TODO load real data
+        String text = "fjrnaugna;eroingmaetimgaptoeimh[atgmareomvaeriohtbuoeeerjfkvgyufbhjkoiyugvjbnkloigutfcyh vjbnjogiyutfcygj hkbnohigyvuj hkbjnohgiyfvugjhk jlnk;mpjgiyvhbkjnlpjihgiyvhbk";
+        
+        ButtonData credits = new ButtonData(text);
+        
+        layout.setCredits(credits);
+        
         return layout;
     }
     
