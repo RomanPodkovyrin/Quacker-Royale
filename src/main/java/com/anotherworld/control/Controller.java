@@ -1,5 +1,6 @@
 package com.anotherworld.control;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.control.exceptions.ConnectionClosed;
 import com.anotherworld.control.exceptions.NoHostFound;
 import com.anotherworld.network.AbstractNetworkController;
@@ -160,6 +161,9 @@ public class Controller {
         runTheHostGame = false;
         while (!(lobbyServer.isReady() && runTheHostGame)) {
             if (cancelTheGame) {
+
+                lobbyServer.stopLobbyServer();
+                server.stopServer();
                 throw new ConnectionClosed();
                 //TODO tell clients to close?
             }

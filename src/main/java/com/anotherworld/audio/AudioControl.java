@@ -17,6 +17,7 @@ public class AudioControl {
 
     private static Logger logger = LogManager.getLogger(AudioControl.class);
 
+
     /**
      * To be used at the beginning of the game to start background and effects depending on the previous settings.
      */
@@ -32,6 +33,9 @@ public class AudioControl {
             backgroundMusic.muteSound();
         }
 
+        if (soundEffects != null) {
+            soundEffects.stopSoundEffects();
+        }
         soundEffects = new SoundEffects();
 
 
@@ -93,11 +97,31 @@ public class AudioControl {
     }
 
     /**
+     * Plays the hover sound effect.
+     */
+    public static void playButtonHover() {
+        if (effectsOn) {
+            if (soundEffects == null) {
+                soundEffects = new SoundEffects();
+            }
+            soundEffects.playButtonHover();
+        }
+    }
+
+    /**
      * Plays the win sound.
      */
-    public static  void win() {
+    public static void win() {
         if (effectsOn) {
+            soundEffects = new SoundEffects();
             soundEffects.win();
+        }
+    }
+
+    public static void lose() {
+        if (effectsOn) {
+            soundEffects = new SoundEffects();
+            soundEffects.loseSound();
         }
     }
 

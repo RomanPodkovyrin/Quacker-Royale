@@ -233,8 +233,17 @@ public class Physics {
 
         return safeCoordinateAb;
     }
-
-    public static ArrayList<Matrix> calculateCollisionA(MovableData objectA,
+    /**
+     * To calculate safe coordinates between objectA and objectB to prevent
+     * overlapping after collision happened.(without looking ahead)
+     * 
+     * @param objectA
+     *            An object which is collided.
+     * 
+     * @param objectB
+     *            An object which is collided.
+     */
+    public static ArrayList<Matrix> calculateCollisionWOLookAhead(MovableData objectA,
             MovableData objectB) {
         Matrix pointA = new Matrix(objectA.getXCoordinate(),
                 objectA.getYCoordinate());
@@ -352,7 +361,7 @@ public class Physics {
             objectB.setCoordinates(safe.getX(), safe.getY());
         }
         else{
-            newCoordinate = calculateCollisionA(objectA, objectB);
+            newCoordinate = calculateCollisionWOLookAhead(objectA, objectB);
             safe = newCoordinate.get(SECOND);
             objectB.setCoordinates(safe.getX(), safe.getY());
         }

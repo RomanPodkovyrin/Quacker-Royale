@@ -5,6 +5,8 @@ import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
 import static org.lwjgl.glfw.GLFW.glfwGetMouseButton;
 import static org.lwjgl.glfw.GLFW.glfwGetWindowSize;
 
+import static org.lwjgl.opengl.GL46.glViewport;
+
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.primatives.Matrix2d;
 import com.anotherworld.view.graphics.Camera;
@@ -202,18 +204,6 @@ public abstract class Programme {
     public abstract void draw(DisplayObject object);
 
     /**
-     * Creates the programme buffers for the display object.
-     * @param displayObject the object to initialise for
-     */
-    public abstract int initialiseDisplayObject(DisplayObject displayObject);
-
-    /**
-     * Deletes the programme buffers for the display object.
-     * @param displayObject the object to delete the buffers for
-     */
-    public abstract void deleteObject(DisplayObject displayObject);
-
-    /**
      * Updates the colour of the display object.
      * @param displayObject the object to update
      */
@@ -256,5 +246,11 @@ public abstract class Programme {
      * @param displayObject the object to update
      */
     public abstract void updateBuffers(DisplayObject displayObject);
+
+    public void setViewport(int x, int y, int w, int h) {
+        glViewport(x, y, w, h);
+    }
+
+    public abstract void destory(DisplayObject displayObject);
     
 }

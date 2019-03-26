@@ -27,11 +27,16 @@ public class SoundEffects implements Runnable {
     private String quack ="./res/audio/quack.wav";
     //https://freesound.org/people/FoolBoyMedia/sounds/397434/
     private String win = "./res/audio/crowd-cheer.wav";
-
+    //https://freesound.org/people/JPolito/sounds/391697/
+    private String hover = "./res/audio/hover.wav";
+    //https://freesound.org/people/Rocotilos/sounds/178875/
+    private String lose = "./res/audio/lose.wav";
     //All the files of sound effects
     private File ballFile;
     private File quackFile;
     private File winFile;
+    private File hoverFile;
+    private File loseFile;
 
     private Optional<SourceDataLine> line;
     private AudioInputStream audioInputStream;
@@ -51,6 +56,8 @@ public class SoundEffects implements Runnable {
         ballFile = new File(ball);
         quackFile = new File(quack);
         winFile = new File(win);
+        hoverFile = new File(hover);
+        loseFile = new File(lose);
         effect = new Thread(this);
         line = Optional.empty();
         effect.start();
@@ -86,6 +93,20 @@ public class SoundEffects implements Runnable {
                 }
             }
         }
+    }
+
+    /**
+     * Plays the button hover sound effect.
+     */
+    public void playButtonHover() {
+        currentFile = hoverFile;
+    }
+
+    /**
+     * Plays lose sound.
+     */
+    public void loseSound() {
+        currentFile = loseFile;
     }
 
 

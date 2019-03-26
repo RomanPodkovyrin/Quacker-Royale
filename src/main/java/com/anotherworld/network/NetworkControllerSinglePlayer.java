@@ -26,4 +26,9 @@ public class NetworkControllerSinglePlayer extends AbstractNetworkController {
     public void hostControl() {
 
     }
+
+    @Override
+    public void quitTheGame() {
+
+    }
 }

@@ -103,6 +103,12 @@ public class GameSessionController {
 
         while (view.gameRunning() && session.isRunning()) {
 
+            //checks if player quit the game
+            if (keyListener.getKeyPresses().contains(Input.QUIT)) {
+                network.quitTheGame();
+                break;
+            }
+
             // music and effect mute unmute control
             if (keyListener.getKeyPresses().contains(Input.MUTE)) {
                 if (!keyDown) {
@@ -164,6 +170,26 @@ public class GameSessionController {
 
         }
 
+        try {
+            String firstPlace = settings.getGameSessionData().getRankings().get(0);
+
+            if (firstPlace.equals(settings.getCurrentPlayer().getObjectID())) {
+                AudioControl.win();
+
+            } else {
+                AudioControl.lose();
+            }
+
+//            try {
+//                Thread.sleep(3000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+
+        } catch (IndexOutOfBoundsException e) {
+
+        }
+
         shutDownSequence();
     }
 
@@ -179,7 +205,7 @@ public class GameSessionController {
         //stop the music
         AudioControl.stopBackgroundMusic();
         logger.trace("Music stopped");
-        AudioControl.stopSoundEffects();
+//        AudioControl.stopSoundEffects();
         logger.trace("Stopped SoundEffects");
 
         network.stopNetworking();

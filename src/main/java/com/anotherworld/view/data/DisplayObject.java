@@ -1,11 +1,13 @@
 package com.anotherworld.view.data;
 
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,11 +28,11 @@ public abstract class DisplayObject {
     
     private Points2d points;
     
-    private final int displayType;
+    private final DrawType displayType;
     
     private final Programme programme;
     
-    private final int programmeObjectId;
+    private Optional<Integer> programmeObjectId;
     
     private float r;
     
@@ -40,15 +42,15 @@ public abstract class DisplayObject {
     
     private SpriteSheet spriteSheet;
 
-    public DisplayObject(Programme programme, Points2d points, int displayType) {
+    public DisplayObject(Programme programme, Points2d points, DrawType displayType) {
         this(new SpriteSheet(), programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
 
-    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, int displayType) {
+    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, DrawType displayType) {
         this(spriteSheet, programme, points, displayType, (float)Math.random(), (float)Math.random(), (float)Math.random());
     }
     
-    public DisplayObject(Programme programme, Points2d points, int displayType, float r, float g, float b) {
+    public DisplayObject(Programme programme, Points2d points, DrawType displayType, float r, float g, float b) {
         this(new SpriteSheet(), programme, points, displayType, r, g, b);
     }
     
@@ -61,7 +63,7 @@ public abstract class DisplayObject {
      * @param g How green the object is 0 to 1
      * @param b How blue the object is 0 to 1
      */
-    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, int displayType, float r, float g, float b) {
+    public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, DrawType displayType, float r, float g, float b) {
         this.points = points;
         this.displayType = displayType;
         this.r = r;
@@ -71,21 +73,14 @@ public abstract class DisplayObject {
         this.xShear = 1;
         this.yShear = 1;
         this.spriteSheet = spriteSheet;
-        programmeObjectId = programme.initialiseDisplayObject(this);
-    }
-    
-    /**
-     * Cleans opengl of the object's representation.
-     */
-    public void destroyObject() {
-        programme.deleteObject(this);
+        this.programmeObjectId = Optional.empty();
     }
     
     /**
      * Returns the display mode needed to correctly display the object's points.
      * @return The opengl display mode
      */
-    public int getDisplayType() {
+    public DrawType getDisplayType() {
         return displayType;
     }
     
@@ -204,8 +199,12 @@ public abstract class DisplayObject {
         return false;
     }
     
-    public int getProgrammeObjectId() {
+    public Optional<Integer> getProgrammeObjectId() {
         return programmeObjectId;
+    }
+    
+    public void setProgrammeObjectId(int id) {
+        programmeObjectId = Optional.of(id);
     }
     
     /**
@@ -295,6 +294,10 @@ public abstract class DisplayObject {
 
     public void updatePoints(Points2d points) {
         this.points = points;
+    }
+
+    public void destroy() {
+        programme.destory(this);
     }
     
 }

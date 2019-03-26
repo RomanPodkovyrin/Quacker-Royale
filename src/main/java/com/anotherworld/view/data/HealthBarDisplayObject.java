@@ -1,8 +1,7 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
-
 import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.programme.Programme;
 
@@ -22,7 +21,7 @@ public class HealthBarDisplayObject extends DisplayObject {
      * @param displayData The player to display
      */
     public HealthBarDisplayObject(Programme programme, PlayerDisplayData displayData) {
-        super(programme, Points2d.genRectangle(displayData.getRadius() * 2, 0.75f), GL_TRIANGLE_FAN, 1f, 0f, 0f);
+        super(programme, Points2d.genRectangle(displayData.getRadius() * 2, 0.75f), DrawType.TRIANGLE_FAN, 1f, 0f, 0f);
         this.displayData = displayData;
         this.programme = programme;
     }

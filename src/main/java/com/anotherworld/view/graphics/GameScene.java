@@ -34,5 +34,13 @@ public class GameScene extends Scene {
         }
         //camera.updateObjects(objects);
     }
+
+    public void destroyObjects() {
+        for (int i = 0; i < displays.size(); i++) {
+            if (displays.get(i).getClass().equals(GameDisplay.class)) {
+                ((GameDisplay)displays.get(i)).destroyObjects();
+            }
+        }
+    }
     
 }

@@ -1,8 +1,7 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL46.GL_TRIANGLE_FAN;
-
 import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.graphics.spritesheet.PlayerSpriteSheet;
 import com.anotherworld.view.programme.Programme;
@@ -30,7 +29,7 @@ public class PlayerDisplayObject extends DisplayObject {
      * @param displayData The player to display
      */
     public PlayerDisplayObject(Programme programme, PlayerDisplayData displayData) {
-        super(new PlayerSpriteSheet(displayData), programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius() * 2, displayData.getRadius() * 2) : Points2d.genCircle(displayData.getRadius()), GL_TRIANGLE_FAN);
+        super(new PlayerSpriteSheet(displayData), programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius() * 2, displayData.getRadius() * 2) : Points2d.genCircle(displayData.getRadius()), DrawType.TRIANGLE_FAN);
         this.displayData = displayData;
         this.setColours();
         this.timeStartedFalling = Optional.empty();

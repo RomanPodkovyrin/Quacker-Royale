@@ -1,7 +1,6 @@
 package com.anotherworld.view.data;
 
-import static org.lwjgl.opengl.GL46.GL_QUADS;
-
+import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.graphics.spritesheet.TextSpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
@@ -21,7 +20,7 @@ public class TextDisplayObject extends DisplayObject {
      * @param data The text data to display
      */
     public TextDisplayObject(Programme programme, TextDisplayData data) {
-        super(new TextSpriteSheet(), programme, TextSpriteSheet.generateLetterPoints(data.getText(), data.getHeight() / 2), GL_QUADS, data.getTextR(), data.getTextG(), data.getTextB());
+        super(new TextSpriteSheet(), programme, TextSpriteSheet.generateLetterPoints(data.getText(), data.getHeight() / 2), DrawType.QUADS, data.getTextR(), data.getTextG(), data.getTextB());
         this.data = data;
         this.programme = programme;
     }
