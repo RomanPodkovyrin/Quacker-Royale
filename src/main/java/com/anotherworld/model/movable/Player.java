@@ -1,5 +1,8 @@
 package com.anotherworld.model.movable;
 
+import com.anotherworld.model.physics.Physics;
+import com.anotherworld.settings.GameSettings;
+import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 
 /**
@@ -68,9 +71,42 @@ public class Player {
     /**
      * Kills a player by setting their state to dead and removing their ability to move.
      * @param playerData The player to update.
+     * @param byFalling
      */
-    public static void kill(PlayerData playerData) {
+    public static void kill(PlayerData playerData, boolean byFalling) {
         playerData.setState(ObjectState.DEAD);
         playerData.setSpeed(0);
+        playerData.setDeadByFalling(byFalling);
+    }
+
+    public static void chargeForward(GameSessionData gameData, PlayerData player) {
+        long timeSpent = gameData.getTicksElapsed() - player.getTimeStartedCharging();
+
+        if(isCharging(player)) {
+            player.setVelocity(0,0);
+            player.setSpeed(0);
+        } else if (isDashing(player)) {
+            if (timeSpent == 0) {
+                Physics.charge(player);
+            } else if (timeSpent >= 10) {
+                player.setSpeed(GameSettings.getDefaultPlayerSpeed());
+                player.setState(ObjectState.IDLE);
+                player.setChargeLevel(0);
+                player.setVelocity(0,0);
+            }
+        }
+    }
+
+    public static void movePlayer(GameSessionData gameData, PlayerData player) {
+        if (!gameData.isTimeStopped()) {
+            if (player.isTimeStopper()) {
+                player.setTimeStopper(false);
+            }
+            Physics.move(player);
+        } else {
+            if (player.isTimeStopper()) {
+                Physics.move(player);
+            }
+        }
     }
 }
