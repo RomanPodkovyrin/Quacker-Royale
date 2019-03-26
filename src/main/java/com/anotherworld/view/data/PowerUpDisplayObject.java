@@ -4,6 +4,7 @@ import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.graphics.spritesheet.PowerUpSpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
 public class PowerUpDisplayObject extends DisplayObject {
@@ -16,7 +17,7 @@ public class PowerUpDisplayObject extends DisplayObject {
      * @param displayData The data used to render the power up
      */
     public PowerUpDisplayObject(Programme programme, PowerUpData displayData) {
-        super(programme, Points2d.genCircle(displayData.getRadius()), DrawType.TRIANGLE_FAN);
+        super(new PowerUpSpriteSheet(displayData), programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius(), displayData.getRadius()) : Points2d.genCircle(displayData.getRadius()), DrawType.TRIANGLE_FAN, 1, 1, 1);
         this.displayData = displayData;
     }
 

@@ -35,6 +35,10 @@ public class TextureMap {
         textureBuffers[SpriteLocation.PLAYER.getInt()] = new TextureBuffer(location + "miniDuck.png", 4, 5);
         textureBuffers[SpriteLocation.BALL.getInt()] = new TextureBuffer(location + "NeutralBall/NeutralBall0.png", 1, 1);
         textureBuffers[SpriteLocation.TEXT.getInt()] = new TextureBuffer(location + "tom_font.png", 32, 4);
+        //TODO switch to single powerup spritesheet
+        textureBuffers[SpriteLocation.HEAL_POWERUP.getInt()] = new TextureBuffer(location + "Health.png", 2, 2);
+        textureBuffers[SpriteLocation.SHIELD_POWERUP.getInt()] = new TextureBuffer(location + "Shield.png", 2, 2);
+        textureBuffers[SpriteLocation.TIME_STOP_POWERUP.getInt()] = new TextureBuffer(location + "Time.png", 2, 2);
     }
     
     /**
