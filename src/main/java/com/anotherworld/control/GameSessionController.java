@@ -5,7 +5,6 @@ import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
@@ -128,7 +127,7 @@ public class GameSessionController {
             startTime = System.currentTimeMillis();
 
             // Update Game Logic
-            session.updatePlayer(keyListener.getKeyPresses());
+            session.updatePlayerVelocity(keyListener.getKeyPresses());
             session.update();
 
             // Work out the time it took for logic
@@ -154,7 +153,7 @@ public class GameSessionController {
             while ((sleepTime < 0) && (framesDropped < MAX_FRAME_DROP)) {
                 logger.trace("Frames lost " + framesDropped);
                 // updates the Game logic
-                session.updatePlayer(keyListener.getKeyPresses());
+                session.updatePlayerVelocity(keyListener.getKeyPresses());
                 session.update();
 
                 // updates the sleep time

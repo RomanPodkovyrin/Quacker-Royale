@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-
-
-
 /**
  * A class that models the logic of a game session.
  * @author Alfi S.
@@ -149,8 +146,8 @@ public class GameSession {
             if (gameData.isTimeStopped()) {
                 continue;
             }
-            Physics.move(ball);
 
+            Physics.move(ball);
 
             // Handle the danger state of the balls.
             if (ball.isDangerous()) {
@@ -215,6 +212,22 @@ public class GameSession {
 
         for (PlayerData player : allPlayers) {
 
+            long timeSpent = gameData.getTicksElapsed() - player.getTimeStartedCharging();
+
+            if(Player.isCharging(player)) {
+                player.setVelocity(0,0);
+                player.setSpeed(0);
+            } else if (Player.isDashing(player)) {
+                if (timeSpent == 0) {
+                    Physics.charge(player);
+                } else if (timeSpent >= 10) {
+                    player.setSpeed(GameSettings.getDefaultPlayerSpeed());
+                    player.setState(ObjectState.IDLE);
+                    player.setChargeLevel(0);
+                    player.setVelocity(0,0);
+                }
+            }
+
             Player.decrementStunTimer(player);
             if (player.getStunTimer() > 0) {
                 continue;
@@ -268,73 +281,11 @@ public class GameSession {
     }
 
     /**
-     * Updates the current player's movement and actions based on the given list of inputs.
-     * @param keyPresses The set of key presses determining the movement.
-     */
-    public void updatePlayer(ArrayList<Input> keyPresses) {
-        updatePlayer(this.currentPlayer, keyPresses, this.gameData);
-    }
-
-    /**
-     * Updates the movement and actions of a specified player based on given list of inputs.
-     * @param player The playable character to act.
-     * @param keyPresses The set of key presses determining the action.
-     * @param gameData game data to access time.
-     */
-    public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses, GameSessionData gameData) {
-        if (keyPresses.contains(Input.CHARGE)) {
-            //TODO: Fix clunky dash.
-            player.setVelocity(0,0);
-            player.setSpeed(0);
-            long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
-
-            if (player.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()) {
-
-                if (!Player.isCharging(player)) {
-                    player.setTimeStartedCharging(gameData.getTicksElapsed());
-                    player.setState(ObjectState.CHARGING);
-                }
-
-                if (timeSpentCharging % 20 == 0) {
-                    Player.incrementChargeLevel(player);
-                }
-            }
-        } else {
-
-            if (!Player.isDashing(player)) {
-                updatePlayer(player, keyPresses);
-            } else {
-                long timeSpentDashing = gameData.getTicksElapsed() - player.getTimeStartedCharging();
-
-                if (timeSpentDashing >= 10) {
-                    player.setSpeed(GameSettings.getDefaultPlayerSpeed());
-                    player.setState(ObjectState.IDLE);
-                    player.setChargeLevel(1);
-                    player.setVelocity(0,0);
-                }
-            }
-
-            if (Player.isCharging(player)) {
-                if (player.getChargeLevel() == 0) {
-                    // If the charge button was pressed but not long enough, reset.
-                    player.setState(ObjectState.IDLE);
-                } else {
-                    // Otherwise dash forwards.
-                    Physics.charge(player);
-                    player.setTimeStartedCharging(gameData.getTicksElapsed());
-                    player.setState(ObjectState.DASHING);
-
-                }
-            }
-        }
-    }
-
-    /**
      * Updates the velocity of a player based on a given list of inputs.
      * @param player The player to be moved.
      * @param keyPresses The set of key presses determining the movement.
      */
-    public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses) {
+    private static void updatePlayerVelocity (PlayerData player, ArrayList<Input> keyPresses) {
         if (keyPresses.contains(Input.UP)) {
             player.setYVelocity(-1);
         } else if (keyPresses.contains(Input.DOWN)) {
@@ -351,4 +302,55 @@ public class GameSession {
             player.setXVelocity(0);
         }
     }
+
+    /**
+     * Updates the movement and actions of a specified player based on given list of inputs.
+     * @param player The playable character to act.
+     * @param keyPresses The set of key presses determining the action.
+     * @param gameData game data to access time.
+     */
+    public static void updatePlayer(PlayerData player, ArrayList<Input> keyPresses, GameSessionData gameData) {
+        if (keyPresses.contains(Input.CHARGE)) {
+            //TODO: Fix clunky dash.
+
+            long timeSpentCharging = gameData.getTicksElapsed() - player.getTimeStartedCharging();
+
+            if (player.getChargeLevel() < GameSettings.getDefaultPlayerMaxCharge()) {
+
+                if (!Player.isCharging(player)) {
+                    player.setTimeStartedCharging(gameData.getTicksElapsed());
+                    player.setState(ObjectState.CHARGING);
+                }
+
+                if (timeSpentCharging % 20 == 0) {
+                    Player.incrementChargeLevel(player);
+                }
+            }
+        } else {
+            if (!Player.isDashing(player)) {
+                updatePlayerVelocity(player, keyPresses);
+            }
+
+            if (Player.isCharging(player)) {
+                if (player.getChargeLevel() == 0) {
+                    // If the charge button was pressed but not long enough, reset.
+                    player.setState(ObjectState.IDLE);
+                    player.setSpeed(GameSettings.getDefaultPlayerSpeed());
+                } else {
+                    // Otherwise dash forwards.
+                    player.setTimeStartedCharging(gameData.getTicksElapsed());
+                    player.setState(ObjectState.DASHING);
+                }
+            }
+        }
+    }
+
+    /**
+     * Updates the current player's movement and actions based on the given list of inputs.
+     * @param keyPresses The set of key presses determining the movement.
+     */
+    public void updatePlayerVelocity(ArrayList<Input> keyPresses) {
+        updatePlayer(this.currentPlayer, keyPresses, this.gameData);
+    }
+
 }
