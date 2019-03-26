@@ -47,7 +47,7 @@ public abstract class Job {
     /**
      * Tells the job to act based on the current situation.
      *
-     * @param ai The AIController player who is doing the job
+     * @param ai The ControllerAI player who is doing the job
      * @param players The other players on the board
      * @param balls All the balls on the boards
      * @param platform The platform
@@ -57,7 +57,7 @@ public abstract class Job {
     /**
      * Sets all te given data to the variables.
      *
-     * @param ai The AIController player who is doing the job
+     * @param ai The ControllerAI player who is doing the job
      * @param players The other players on the board
      * @param balls All the balls on the boards
      * @param platform The platform

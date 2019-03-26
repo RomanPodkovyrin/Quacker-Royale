@@ -2,12 +2,9 @@ package com.anotherworld.model.physics;
 
 import static org.junit.Assert.assertEquals;
 
-import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.model.logic.Wall;
-import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
-import com.anotherworld.model.physics.Physics;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;

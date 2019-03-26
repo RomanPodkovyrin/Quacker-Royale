@@ -9,7 +9,7 @@ import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import com.anotherworld.control.exceptions.ConnectionClosed;
+import com.anotherworld.tools.exceptions.ConnectionClosed;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

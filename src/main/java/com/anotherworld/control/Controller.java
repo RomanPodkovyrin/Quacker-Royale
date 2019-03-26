@@ -1,8 +1,7 @@
 package com.anotherworld.control;
 
-import com.anotherworld.audio.AudioControl;
-import com.anotherworld.control.exceptions.ConnectionClosed;
-import com.anotherworld.control.exceptions.NoHostFound;
+import com.anotherworld.tools.exceptions.ConnectionClosed;
+import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.network.GameClient;
 import com.anotherworld.network.LobbyClient;
@@ -25,6 +24,7 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,44 +34,35 @@ import org.apache.logging.log4j.Logger;
  * @author roman
  */
 public class Controller {
-    private View view;
-    private ArrayList<String> playersIPaddresses = new ArrayList<>();
     private static Logger logger = LogManager.getLogger(Controller.class);
-    private boolean runTheHostGame = false;
-    private boolean cancelTheGame = false;
 
+    private View view;
+
+    //Default values for single player game
     private int defaultSinglePlayerAI;
     private int defaultSinglePlayerPlayers;
     private int defaultSinglePlayerBalls;
 
+    // Default values for multi player game
     private int defaultMultiPlayerAI;
     private int defaultMultiPlayerBalls;
     private int defaultNumberClients;
 
     // Networking
+    private ArrayList<String> playersIPaddresses = new ArrayList<>();
     private LobbyClient lobbyClient;
+    private boolean runTheHostGame = false;
+    private boolean cancelTheGame = false;
     private boolean waitingForObjects = true;
-
-    /**
-     * The main should only be used for testing.
-     *
-     * @param args - command line arguments are not used
-     */
-    public static void main(String []args) {
-        Controller main = new Controller(new View());
-        GameSettings settings = new GameSettings(2,1,1);
-        main.startTheGame(settings, new NetworkControllerSinglePlayer());
-    }
-
 
     /**
      * Used to initialise the game main class for the game.
      */
     public Controller(View view) {
-        PropertyReader propertyFileLogic = null;
+
         this.view = view;
         try {
-            propertyFileLogic = new PropertyReader("logic.properties");
+            PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
             this.defaultSinglePlayerAI = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_AI"));
             this.defaultSinglePlayerPlayers = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_PLAYERS"));
             this.defaultSinglePlayerBalls = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_BALLS"));
@@ -79,10 +70,8 @@ public class Controller {
             this.defaultMultiPlayerBalls = Integer.parseInt(propertyFileLogic.getValue("MULTI_PLAYER_BALLS"));
             this.defaultNumberClients = Integer.parseInt(propertyFileLogic.getValue("NUMBER_CLIENTS"));
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Could not load default values from properties file: Check that logic.properties file is present");
         }
-
-        // need to set default config files?
     }
 
     /**
@@ -95,20 +84,17 @@ public class Controller {
     private void startTheGame(GameSettings settings, AbstractNetworkController network) {
 
         try {
-            // Starts the game itself
-            logger.trace("The game session started");
+            logger.info("Starting the game session");
             new GameSessionController(view, settings, network);
-
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);
         } catch (RuntimeException ex) {
             logger.fatal(ex);
-            ex.printStackTrace();
         }
     }
 
     /**
-     * When the server is up and running. Host can call this method to start the game.
+     * When the server is up and running. Host can call this method to start the game when all clients connected.
      * @return true can start the game, false can not
      */
     public boolean hostStartTheGame() {
@@ -118,11 +104,18 @@ public class Controller {
         return runTheHostGame;
     }
 
+    /**
+     * Cancels the host game.
+     */
     public void hostCancelTheGame() {
         cancelTheGame = true;
     }
 
 
+    /**
+     * Returns the current ips connected.
+     * @return array of connected clients
+     */
     public ArrayList<String> getPlayersIPaddresses() {
         return playersIPaddresses;
     }
@@ -131,55 +124,34 @@ public class Controller {
      * Host the game, called when player wants to host multiplayer game.
      */
     public void host() throws ConnectionClosed {
+        // Resets defaults before starting lobby
         cancelTheGame = false;
-        // Sets waits for the host to start the game
         runTheHostGame = false;
-        //TODO think about how to cancel it
-        logger.info("User starting the server");
 
-        logger.trace("Multiplayer lobby is created and started");
+        logger.info("Starting Host");
         LobbyServer lobbyServer = new LobbyServer(defaultNumberClients);
         lobbyServer.start();
+        logger.trace("Server lobby is running");
 
         logger.trace("Setting up the game session with " + defaultNumberClients + 1 + " players, " + defaultMultiPlayerBalls + " balls");
         GameSettings settings = new GameSettings(defaultNumberClients + 1,defaultMultiPlayerAI,defaultMultiPlayerBalls);
 
-        logger.trace("Setting up the game Server");
+        logger.trace("Setting up the Game Server");
         Server server = null;
         try {
             server  = new Server(defaultNumberClients, settings);
             server.start();
-        } catch (SocketException e) {
-            // Throw them back?
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+        } catch (SocketException |UnknownHostException e) {
+            //Could not start the server
+            logger.warn("Could not start the server");
+            lobbyServer.stopLobbyServer();
+            server.stopServer();
+            throw new ConnectionClosed();
         }
 
-        logger.trace("Lobby server is waiting for all players to connect");
-        logger.trace("Waiting for Host to start the game");
-        runTheHostGame = false;
-        while (!(lobbyServer.isReady() && runTheHostGame)) {
-            if (cancelTheGame) {
+        waitInLobby(lobbyServer, server);
 
-                lobbyServer.stopLobbyServer();
-                server.stopServer();
-                throw new ConnectionClosed();
-                //TODO tell clients to close?
-            }
-
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            playersIPaddresses = lobbyServer.getIPs();
-        }
-        logger.info("Lobby server: " + playersIPaddresses.size() + " players connected"
-                + "\nLobby server is ready to play");
-
-        lobbyServer.canStartTheGame();
-
+        // Waits until Clients are ready
         while (server.areClientsReady()) {
             try {
                 Thread.sleep(1);
@@ -197,24 +169,65 @@ public class Controller {
     }
 
     /**
+     * Waits for all clients to connect and player to start the game.
+     * @param lobbyServer - the lobby server
+     * @param server - the game server
+     * @throws ConnectionClosed
+     */
+    private void waitInLobby(LobbyServer lobbyServer, Server server) throws ConnectionClosed {
+        logger.trace("Lobby server is waiting for all players to connect and for Host to start the game");
+        while (!(lobbyServer.isReady() && runTheHostGame)) {
+
+            //Check if host canceled the game
+            if (cancelTheGame) {
+
+                lobbyServer.stopLobbyServer();
+                server.stopServer();
+                throw new ConnectionClosed();
+            }
+
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // Get ips of connected clients
+            playersIPaddresses = lobbyServer.getIPs();
+        }
+
+        logger.info("Lobby server: " + playersIPaddresses.size() + " players connected"
+                + "\nLobby server is ready to play");
+
+        // Tell clients to start the game
+        lobbyServer.canStartTheGame();
+    }
+
+    /**
      * Client quits game lobby.
      * @return true can quit, false can't quit.
      */
     public boolean clientCancel() {
+
         if (lobbyClient != null) {
+
             try {
                 logger.info("quit lobby");
                 lobbyClient.cancelConnection();
             } catch (IOException e) {
-                //TODO dont like it change it
-                e.printStackTrace();
+                logger.error("Could not quit the lobby");
             }
+
             return true;
         }
-        logger.info("Can't cancel");
+
         return false;
     }
 
+    /**
+     * Tells if received all the initial game objects.
+     * @return true - has all the objects, false - waiting for objects
+     */
     public boolean getServerStarted() {
         return !waitingForObjects;
     }
@@ -225,23 +238,42 @@ public class Controller {
      * @param serverIP the host ip address to connect to
      */
     public void connect(String serverIP) throws NoHostFound, ConnectionClosed {
+        // tells whether client got all the objects needed to start the game
+        waitingForObjects = true;
+
         logger.info("Starting the Lobby client");
         lobbyClient = new LobbyClient(serverIP);
         try {
+            logger.info("Connecting to lobby host " + serverIP);
             lobbyClient.sendMyIp();
         } catch (ConnectException e) {
+            logger.warn("Could not connect to the server");
             throw new NoHostFound();
 
         } catch (IOException e) {
-            //TODO What ?
-            e.printStackTrace();
+            //Could not connect to the host
+            try {
+                lobbyClient.cancelConnection();
+            } catch (IOException e1) {
+
+            } finally {
+                logger.warn("Error while connecting to the Server");
+                throw new ConnectionClosed();
+            }
+
         }
 
-        logger.info("Connecting to lobby host " + serverIP);
+        logger.info("Waiting for game to start");
         try {
             lobbyClient.waitForGameToStart();
         } catch (IOException e) {
-            throw new ConnectionClosed();
+            try {
+                lobbyClient.cancelConnection();
+            } catch (IOException e1) {
+
+            } finally {
+                throw new ConnectionClosed();
+            }
         }
 
         logger.info("Starting the game client");
@@ -249,16 +281,27 @@ public class Controller {
         try {
             client = new GameClient(serverIP);
             client.start();
-        } catch (SocketException e) {
-            //TODO one of those has to be game cancelled exception
-            e.printStackTrace();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+        } catch (SocketException |UnknownHostException e) {
+            logger.warn("Could not connect to game client");
+            client.stopClient();
+            throw new ConnectionClosed();
         }
 
-        // tells whether client got all the objects needed to start the game
-        waitingForObjects = true;
+        GameSettings settings = getGameSettings(client);
 
+
+        logger.info("Starting the game");
+        NetworkControllerClient network = new NetworkControllerClient(client, settings);
+        startTheGame(settings,network);
+    }
+
+    /**
+     * Gets all the initial objects from server to start a game.
+     * @param client - the client connection
+     * @return - game settings to start a game
+     */
+    private GameSettings getGameSettings(GameClient client) {
+        // The initial game objects
         ArrayList<PlayerData> allPlayers = null;
         ArrayList<BallData> allBalls = null;
         PlayerData myPlayer = null;
@@ -287,7 +330,7 @@ public class Controller {
             }
         }
 
-        // Removes the my player form the list of all players
+        // Removes  my player form the list of all players
         for (int i = 0; i < allPlayers.size(); i++) {
             if (allPlayers.get(i).getObjectID().equals(myPlayer.getObjectID())) {
                 allPlayers.remove(i);
@@ -296,20 +339,18 @@ public class Controller {
         }
 
         // Makes Platform and wall into an appropriate type
-        ArrayList<PlatformData> platforms = new ArrayList<>();
-        platforms.add(platform);
-        ArrayList<WallData> walls = new ArrayList<>();
-        walls.add(wall);
+        ArrayList<PlatformData> platforms = new ArrayList<>(Arrays.asList(platform));
+        ArrayList<WallData> walls = new ArrayList<>(Arrays.asList(wall));
 
         logger.info("Setting up the game session");
-        GameSettings settings = new GameSettings(myPlayer,allPlayers,new ArrayList<>(),allBalls,platforms,walls,session);
-
-
-        NetworkControllerClient network = new NetworkControllerClient(client, settings);
-        startTheGame(settings,network);
+        return new GameSettings(myPlayer,allPlayers,new ArrayList<>(),allBalls,platforms,walls,session);
     }
-    
+
+    /**
+     * This method is used to start single player game.
+     */
     public void startSinglePlayer() {
+        logger.info("Starting single player game");
         GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
         startTheGame(settings, new NetworkControllerSinglePlayer());
     }

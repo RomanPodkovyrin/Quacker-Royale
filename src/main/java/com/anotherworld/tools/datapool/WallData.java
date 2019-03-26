@@ -1,6 +1,5 @@
 package com.anotherworld.tools.datapool;
 
-import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.RectangleDisplayData;
 

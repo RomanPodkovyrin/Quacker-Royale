@@ -1,10 +1,9 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.tools.Line;
-import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.tools.maths.Line;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -18,14 +17,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
-//TODO write some proper description
 /**
- * This class contains useful method for ai.
+ * This class has some method which are shared between different jobs as well as it allows to plan actions for ai.
  * @author roman
  */
 public class BlackBoard {
     private static Logger logger = LogManager.getLogger(BlackBoard.class);
-    //TODO magic numbers
     //The allowed safe distance between the ball and the player
     private static float safeDistance = 4;
     // Player id - ball target
@@ -104,9 +101,9 @@ public class BlackBoard {
     }
 
     /**
-     * Sorts balls based on their distance from the AIController player.
+     * Sorts balls based on their distance from the ControllerAI player.
      *
-     * @param objects The object to be sorted based on the distance from the AIController
+     * @param objects The object to be sorted based on the distance from the ControllerAI
      * @return returns an ArrayList of Balls starting with the closes one
      */
     public static ArrayList<BallData> sortBalls(PlayerData ai, ArrayList<BallData> objects) {
@@ -117,9 +114,9 @@ public class BlackBoard {
     }
 
     /**
-     * Sorts players based on their distance from the AIController player. Also discards players which are dead
+     * Sorts players based on their distance from the ControllerAI player. Also discards players which are dead
      *
-     * @param objects The object to be sorted based on the distance from the AIController
+     * @param objects The object to be sorted based on the distance from the ControllerAI
      * @return returns an ArrayList of players starting with the closes one
      */
     public static ArrayList<PlayerData> sortTargetPlayers(PlayerData ai, ArrayList<PlayerData> objects) {
@@ -144,8 +141,8 @@ public class BlackBoard {
      * Takes all the balls and sorts them based on their danger class.
      * <p>
      * possibleDangerBalls  - Balls that are dangerous
-     * dangerBalls          - Balls that are dangerous and perpendicular to the AIController player
-     * imminentDangerBalls  - Balls that are dangerous, perpendicular and close to the AIController player
+     * dangerBalls          - Balls that are dangerous and perpendicular to the ControllerAI player
+     * imminentDangerBalls  - Balls that are dangerous, perpendicular and close to the ControllerAI player
      * </p>
      */
     public static void sortBallLevels(PlayerData ai, ArrayList<BallData> balls, ArrayList<BallData> dangerBalls, ArrayList<BallData> possibleDangerBalls, ArrayList<BallData> imminentDangerBalls) {
@@ -187,7 +184,7 @@ public class BlackBoard {
     }
 
     /**
-     * Checks whether the the ball is to close to the AIController.
+     * Checks whether the the ball is to close to the ControllerAI.
      * @param ball the ball to be checked
      * @return  true - too close, false at a safe distance
      */

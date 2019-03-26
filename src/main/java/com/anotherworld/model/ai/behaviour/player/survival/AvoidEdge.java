@@ -1,10 +1,9 @@
 package com.anotherworld.model.ai.behaviour.player.survival;
 
 import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -14,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *Makes sure that the AIController doesn't come too close to the edge.
+ *Makes sure that the ControllerAI doesn't come too close to the edge.
  * success - no edge to avoid
  * fail - near the edge
  * @author Roman
@@ -46,18 +45,18 @@ public class AvoidEdge extends Job {
         toCenter = new Matrix(Maths.floatDivision(toCenter.getX(), Math.abs(toCenter.getX())),
                 Maths.floatDivision(toCenter.getY(), Math.abs(toCenter.getY())));
 
-        // Checks if the AIController is near the horizontal edge
+        // Checks if the AI is near the horizontal edge
         if (Math.abs(vectorFromPlatformCenter.getX()) >= platform.getXSize() - distanceFromEdge) {
-            logger.trace("AIController too close to the x edge " + distanceFromEdge + " " + (platform.getXSize() - distanceFromEdge));
+            logger.trace("ControllerAI too close to the x edge " + distanceFromEdge + " " + (platform.getXSize() - distanceFromEdge));
 
             ai.setVelocity(toCenter.getX(),toCenter.getY());
             fail();
             logger.trace("Moving to in direction " + ai.getVelocity());
             return;
 
-        // Checks if the AIController is near the vertical edge
+        // Checks if the AI is near the vertical edge
         } else if (Math.abs(vectorFromPlatformCenter.getY()) >= platform.getYSize() - distanceFromEdge) {
-            logger.trace("AIController too close to the y edge " + vectorFromPlatformCenter + " " + (platform.getYSize() - distanceFromEdge));
+            logger.trace("ControllerAI too close to the y edge " + vectorFromPlatformCenter + " " + (platform.getYSize() - distanceFromEdge));
             ai.setVelocity(toCenter.getX(),toCenter.getY());
             fail();
             logger.trace("Moving to in direction" + ai.getVelocity());

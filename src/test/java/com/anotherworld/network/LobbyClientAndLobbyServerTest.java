@@ -3,9 +3,7 @@ package com.anotherworld.network;
 import static junit.framework.TestCase.assertTrue;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
-import com.anotherworld.control.exceptions.ConnectionClosed;
 import org.junit.Test;
 
 

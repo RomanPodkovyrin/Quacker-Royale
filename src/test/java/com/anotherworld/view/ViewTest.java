@@ -1,6 +1,5 @@
 package com.anotherworld.view;
 
-import com.anotherworld.model.ai.tools.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.view.data.RectangleDisplayData;

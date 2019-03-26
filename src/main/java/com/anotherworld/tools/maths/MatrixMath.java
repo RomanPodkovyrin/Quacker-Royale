@@ -1,6 +1,4 @@
-package com.anotherworld.model.ai.tools;
-
-import com.anotherworld.tools.maths.Maths;
+package com.anotherworld.tools.maths;
 
 /**
  * This class contains mathematical manipulations between Line and Matrix.

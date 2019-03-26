@@ -44,10 +44,6 @@ public class NetworkControllerClient extends AbstractNetworkController {
 
 
         ArrayList<PlayerData> playerUpdate = client.getPlayerData();
-        ArrayList<BallData> ballUpdate = client.getBallData();
-        PlatformData platformUpdate = client.getPlatformData();
-        WallData wallUpdate = client.getWallData();
-        GameSessionData sessionUpdate = client.getGameSessionData();
 
         if (playerUpdate != null) {
             // update Players
@@ -61,6 +57,9 @@ public class NetworkControllerClient extends AbstractNetworkController {
             }
         }
 
+        ArrayList<BallData> ballUpdate = client.getBallData();
+
+
         // update balls
         // TODO need ball ids
         for (BallData data: ballUpdate) {
@@ -70,12 +69,18 @@ public class NetworkControllerClient extends AbstractNetworkController {
                 }
             }
         }
+
+        PlatformData platformUpdate = client.getPlatformData();
+
         // update platform
         platform.copyObject(platformUpdate);
+
+        WallData wallUpdate = client.getWallData();
 
         // update wall
         wall.copyObject(wallUpdate);
 
+        GameSessionData sessionUpdate = client.getGameSessionData();
         // update session
         gameSessionData.copyObject(sessionUpdate);
 
