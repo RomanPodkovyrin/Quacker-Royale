@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL46.glUniform2f;
 import static org.lwjgl.opengl.GL46.glUniformMatrix4fv;
 
 import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.view.graphics.spritesheet.SpriteLocation;
 import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 
 import java.io.IOException;
@@ -22,10 +23,6 @@ import org.lwjgl.BufferUtils;
  */
 public class TextureMap {
     
-    public static final int PLAYER_TEXTURE_BUFFER = 0;
-    public static final int BALL_TEXTURE_BUFFER = 1;
-    public static final int TEXT_TEXTURE_BUFFER = 2;
-    
     private static TextureBuffer[] textureBuffers;
     
     /**
@@ -33,10 +30,12 @@ public class TextureMap {
      * @param location the texture folder location
      */
     public TextureMap(String location) throws IOException {
-        textureBuffers = new TextureBuffer[3];
-        textureBuffers[PLAYER_TEXTURE_BUFFER] = new TextureBuffer(location + "miniDuck.png", 4, 5);
-        textureBuffers[BALL_TEXTURE_BUFFER] = new TextureBuffer(location + "NeutralBall/NeutralBall0.png", 1, 1);
-        textureBuffers[TEXT_TEXTURE_BUFFER] = new TextureBuffer(location + "tom_font.png", 32, 4);
+        textureBuffers = new TextureBuffer[SpriteLocation.NUMBER_OF_LOCATIONS];
+        textureBuffers[SpriteLocation.NONE.getInt()] = new TextureBuffer(location + "mega duck.png", 4, 5);
+        textureBuffers[SpriteLocation.PLAYER.getInt()] = new TextureBuffer(location + "mega duck.png", 4, 11);
+        textureBuffers[SpriteLocation.BALL.getInt()] = new TextureBuffer(location + "NeutralBall/NeutralBall0.png", 1, 1);
+        textureBuffers[SpriteLocation.TEXT.getInt()] = new TextureBuffer(location + "tom_font.png", 32, 4);
+        textureBuffers[SpriteLocation.POWER_UP.getInt()] = new TextureBuffer(location + "powerups.png", 4, 3);
     }
     
     /**
@@ -52,9 +51,9 @@ public class TextureMap {
         glUniform1i(glGetUniformLocation(programmeId, "hasTex"), spriteSheet.isTextured() ? 1 : 0);
         
         if (spriteSheet.isTextured()) {
-            glBindTexture(GL_TEXTURE_2D, textureBuffers[spriteSheet.getTextureBuffer()].getId());
+            glBindTexture(GL_TEXTURE_2D, textureBuffers[spriteSheet.getTextureBuffer().getInt()].getId());
             glUniform1i(glGetUniformLocation(programmeId, "tex"), 0);
-            float[] matrix = textureBuffers[spriteSheet.getTextureBuffer()].getTextureTransformation(spriteSheet).getPoints();
+            float[] matrix = textureBuffers[spriteSheet.getTextureBuffer().getInt()].getTextureTransformation(spriteSheet).getPoints();
             FloatBuffer temp2 = BufferUtils.createFloatBuffer(16);
             temp2.put(matrix);
             temp2.flip();
@@ -74,12 +73,13 @@ public class TextureMap {
         textureBuffers = new TextureBuffer[0];
     }
 
-    public static Matrix getDimensions(int tb) {
-        return new Matrix(textureBuffers[tb].getXNumOfTextures(), textureBuffers[tb].getYNumOfTextures());
+    public static Matrix getDimensions(SpriteLocation spriteLocation) {
+        return new Matrix(textureBuffers[spriteLocation.getInt()].getXNumOfTextures(), textureBuffers[spriteLocation.getInt()].getYNumOfTextures());
     }
 
-    public static Matrix getSpriteDimensions(int tb) {
-        return new Matrix(textureBuffers[tb].getWidth() / textureBuffers[tb].getXNumOfTextures(), textureBuffers[tb].getHeight() / textureBuffers[tb].getYNumOfTextures());
+    public static Matrix getSpriteDimensions(SpriteLocation spriteLocation) {
+        return new Matrix(textureBuffers[spriteLocation.getInt()].getWidth() / textureBuffers[spriteLocation.getInt()].getXNumOfTextures(),
+                textureBuffers[spriteLocation.getInt()].getHeight() / textureBuffers[spriteLocation.getInt()].getYNumOfTextures());
     }
     
 }

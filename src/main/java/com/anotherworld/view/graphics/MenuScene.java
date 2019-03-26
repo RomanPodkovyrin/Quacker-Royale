@@ -9,6 +9,10 @@ public class MenuScene extends Scene {
         this.background =  new GraphicsDisplay();
     }
 
+    /**
+     * Changes the menu display to the passed one.
+     * @param display The new display to render
+     */
     public void changeMenuDisplay(GraphicsDisplay display) {
         this.clearDisplays();
         this.addDisplay(background);

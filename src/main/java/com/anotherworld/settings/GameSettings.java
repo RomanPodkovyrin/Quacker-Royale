@@ -358,7 +358,12 @@ public class GameSettings {
         createGameSessionData();
     }
 
-    public void changeDifficulty() {
+    /**
+     * 1 - easy 2 balls ai at 9
+     * 2 - medium  4 balls ai at 7
+     * 3 - hard  6 balls ai at 6
+     */
+    public void changeDifficulty(int difficulty) {
         //TODO: Think of difficulty settings.
     }
 

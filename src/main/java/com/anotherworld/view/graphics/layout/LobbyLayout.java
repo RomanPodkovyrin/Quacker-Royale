@@ -9,6 +9,10 @@ public class LobbyLayout extends FixedSpaceLayout {
         super(buttonHeight);
     }
     
+    /**
+     * Add a TextList to the layout.
+     * @param b The text list to add
+     */
     public void addList(TextListData b) {
         for (ButtonData button : b.getButtons()) {
             this.addButton(button);

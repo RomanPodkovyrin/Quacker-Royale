@@ -59,7 +59,7 @@ public class ChaseBall extends Job {
 
                 // Checks if it is already near the ball
                 if (MatrixMath.distanceAB(ai.getCoordinates(),neighbour) <= ball.getRadius() + ai.getRadius()) {
-                    succeed();
+                    fail();
                     logger.trace("Touched the ball");
                     return;
                 }
@@ -77,6 +77,7 @@ public class ChaseBall extends Job {
                 if (vector.getY() != 0) {
                     ai.setYVelocity(Maths.floatDivision(vector.getY(), Math.abs(vector.getY())));
                 }
+                logger.trace("Chasing the ball");
                 succeed();
                 return;
             } else {
@@ -86,6 +87,10 @@ public class ChaseBall extends Job {
                 return;
             }
         }
+
+        logger.trace("can't target any balls");
+        fail();
+        return;
     }
 
 }

@@ -131,11 +131,12 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
     public void setStunTimer(int stunTimer) {
         this.stunTimer = stunTimer;
     }
-
+    
     /**
      * Checks whether the player died by falling off the platform.
      * @return true if the player died by falling, false otherwise.
      */
+    @Override
     public boolean isDeadByFalling() {
         return this.deadByFalling;
     }
@@ -147,11 +148,12 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
     public void setDeadByFalling(boolean deadByFalling) {
         this.deadByFalling = deadByFalling;
     }
-
+    
     /**
      * Checks whether the player has a shield buff.
      * @return true if the player has a shield buff, false otherwise.
      */
+    @Override
     public boolean isShielded() {
         return this.shielded;
     }

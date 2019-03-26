@@ -179,11 +179,7 @@ public class GameSessionController {
                 AudioControl.lose();
             }
 
-//            try {
-//                Thread.sleep(3000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
+
 
         } catch (IndexOutOfBoundsException e) {
 
@@ -204,7 +200,12 @@ public class GameSessionController {
         //stop the music
         AudioControl.stopBackgroundMusic();
         logger.trace("Music stopped");
-//        AudioControl.stopSoundEffects();
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        AudioControl.stopSoundEffects();
         logger.trace("Stopped SoundEffects");
 
         network.stopNetworking();

@@ -12,14 +12,11 @@ import com.anotherworld.model.ai.behaviour.player.CheckIfSaveToGo;
 import com.anotherworld.model.ai.behaviour.player.domination.ChaseBall;
 import com.anotherworld.model.ai.behaviour.player.domination.GetPowerUPs;
 
+import com.anotherworld.model.ai.behaviour.player.domination.PointAndDash;
+import com.anotherworld.model.ai.behaviour.player.domination.StartCharging;
 import com.anotherworld.model.ai.behaviour.player.peace.WalkAbout;
 
-import com.anotherworld.model.ai.behaviour.player.survival.AvoidBall;
-import com.anotherworld.model.ai.behaviour.player.survival.AvoidEdge;
-import com.anotherworld.model.ai.behaviour.player.survival.AvoidNeutralPlayer;
-import com.anotherworld.model.ai.behaviour.player.survival.CheckHealth;
-import com.anotherworld.model.ai.behaviour.player.survival.CheckShieldandTimePowerUP;
-import com.anotherworld.model.ai.behaviour.player.survival.GetHealth;
+import com.anotherworld.model.ai.behaviour.player.survival.*;
 
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.ObjectState;
@@ -30,6 +27,8 @@ import com.anotherworld.tools.datapool.PlayerData;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javafx.util.Pair;
 
 import org.apache.logging.log4j.LogManager;
@@ -99,7 +98,7 @@ public class AIController {
 
             // Setting up the main routine
             ArrayList<Job> routines = new ArrayList<>();
-            routines.add(new SequenceSuccess(getSurvival()));
+            routines.add(new Selector(new ArrayList<>(Arrays.asList(new SequenceSuccess(getSurvival()), new StopCharging()))));
             routines.add(new Sequence(extra));
 
             Job job = new Repeat(new SequenceSuccess(routines));
@@ -142,8 +141,10 @@ public class AIController {
     private ArrayList<Job> getDomination() {
         // Set up of the domination skills
         ArrayList<Job> domination = new ArrayList<>();
+        domination.add(new PointAndDash());
         domination.add(new Inverter(new GetPowerUPs()));
         domination.add(new Inverter(new ChaseBall()));
+        domination.add(new StartCharging());
         return  domination;
 
     }
@@ -199,6 +200,7 @@ public class AIController {
 
                     jobs.get(i).act(pair.getKey(), pair.getValue(), balls, platform, session);
                 }
+
             }
             tick = tick + step;
         } else if (tick == maxTick) {

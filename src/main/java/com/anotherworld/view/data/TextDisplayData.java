@@ -10,4 +10,6 @@ public interface TextDisplayData extends RectangleDisplayData {
     
     public float getTextB();
 
+    public float getTextHeight();
+
 }

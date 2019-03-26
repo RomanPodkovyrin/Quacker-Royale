@@ -35,6 +35,9 @@ public class GameScene extends Scene {
         //camera.updateObjects(objects);
     }
 
+    /**
+     * Destroys the objects used to display the game.
+     */
     public void destroyObjects() {
         for (int i = 0; i < displays.size(); i++) {
             if (displays.get(i).getClass().equals(GameDisplay.class)) {

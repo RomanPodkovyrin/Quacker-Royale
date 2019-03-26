@@ -7,7 +7,7 @@ import com.anotherworld.view.data.primatives.Supplier;
 
 import java.util.Optional;
 
-public class ButtonData implements RectangleDisplayData, TextDisplayData {
+public class ButtonData implements TextDisplayData {
 
     private static Supplier<Float> ZERO = () -> 0f;
     
@@ -41,9 +41,9 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
      * @param transparentBackground If the button should have a transparent background
      */
     public ButtonData(Supplier<String> text, boolean transparentBackground) {
-        this.textR = 1;
-        this.textG = 1;
-        this.textB = 1;
+        this.textR = 0;
+        this.textG = 0;
+        this.textB = 0;
         this.backgroundR = 1;
         this.backgroundG = 1;
         this.backgroundB = 1;
@@ -53,7 +53,7 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
     }
     
     /**
-     * Performs the makeDecision if set for the button
+     * Performs the makeDecision if set for the button.
      */
     public void preformAction() {
         if (action.isPresent()) {
@@ -176,6 +176,11 @@ public class ButtonData implements RectangleDisplayData, TextDisplayData {
 
     public boolean hasTransparentBackground() {
         return transparentBackground;
+    }
+
+    @Override
+    public float getTextHeight() {
+        return 0.1f;
     }
 
 }

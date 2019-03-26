@@ -1,8 +1,8 @@
 package com.anotherworld.view.graphics.layout;
 
-import java.util.ArrayList;
-
 import com.anotherworld.view.graphics.GraphicsDisplay;
+
+import java.util.ArrayList;
 
 public abstract class Layout {
     
@@ -19,6 +19,13 @@ public abstract class Layout {
         this(0f, 0f, 2f, 2f);
     }
     
+    /**
+     * Creates a layout to display a menu.
+     * @param x the x position of the layout
+     * @param y the y position of the layout
+     * @param height the height of the layout
+     * @param width the width of the layout
+     */
     public Layout(float x, float y, float height, float width) {
         this.x = x;
         this.y = y;
@@ -27,6 +34,10 @@ public abstract class Layout {
         subLayouts = new ArrayList<>();
     }
     
+    /**
+     * Takes a display and adds all the items currently in the layout to it.
+     * @param display the display that will use the layout
+     */
     public void enactLayout(GraphicsDisplay display) {
         for (Layout l : subLayouts) {
             l.enactLayout(display);
