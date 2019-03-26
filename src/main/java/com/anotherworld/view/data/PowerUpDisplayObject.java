@@ -17,7 +17,9 @@ public class PowerUpDisplayObject extends DisplayObject {
      * @param displayData The data used to render the power up
      */
     public PowerUpDisplayObject(Programme programme, PowerUpData displayData) {
-        super(new PowerUpSpriteSheet(displayData), programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius(), displayData.getRadius()) : Points2d.genCircle(displayData.getRadius()), DrawType.TRIANGLE_FAN, 1, 1, 1);
+        super(new PowerUpSpriteSheet(displayData), programme, programme.supportsTextures() ?
+                Points2d.genRectangle(displayData.getRadius() * 2, displayData.getRadius() * 2) : Points2d.genCircle(displayData.getRadius()),
+                DrawType.TRIANGLE_FAN, 1, 1, 1);
         this.displayData = displayData;
     }
 
