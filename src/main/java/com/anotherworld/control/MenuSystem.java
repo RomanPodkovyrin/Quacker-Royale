@@ -566,7 +566,6 @@ public class MenuSystem {
         
         layout.setReturn(returnButton);
         
-        //TODO load real data
         String text = "";
         try {
             text = new String(Files.readAllBytes(Paths.get("licence")));

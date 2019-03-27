@@ -11,7 +11,6 @@ import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowAttrib;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSize;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
@@ -35,7 +34,17 @@ import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.KeyBindings;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
-import com.anotherworld.view.data.*;
+import com.anotherworld.view.data.BallDisplayData;
+import com.anotherworld.view.data.BallDisplayObject;
+import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.PlayerDisplayData;
+import com.anotherworld.view.data.PlayerDisplayObject;
+import com.anotherworld.view.data.PowerUpDisplayObject;
+import com.anotherworld.view.data.RectangleDisplayData;
+import com.anotherworld.view.data.RectangleDisplayObject;
+import com.anotherworld.view.data.TextDisplayData;
+import com.anotherworld.view.data.TextDisplayObject;
+import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.MenuScene;
@@ -312,6 +321,7 @@ public class View implements Runnable {
         window = Optional.empty();
         AudioControl.stopBackgroundMusic();
         AudioControl.stopSoundEffects();
+        //waitForExit();
         glfwTerminate();
     }
     
@@ -323,6 +333,11 @@ public class View implements Runnable {
                     System.out.println(trace.toString());
                 }
                 System.out.println();
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

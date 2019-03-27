@@ -152,12 +152,10 @@ public class AudioControl {
      * Stops all sound effects.
      */
     public static void stopSoundEffects() {
-        if (effectsOn) {
-            try {
-                soundEffects.stopSoundEffects();
-            } catch (NullPointerException e) {
-                logger.error("Stopping music which wasn't created");
-            }
+        try {
+            soundEffects.stopSoundEffects();
+        } catch (NullPointerException e) {
+            logger.error("Stopping music which wasn't created");
         }
     }
 

@@ -1,12 +1,21 @@
 package com.anotherworld.settings;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_END;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_HOME;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_INSERT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_M;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.glfw.GLFW.*;
 
 import com.anotherworld.tools.PropertyReader;
 
@@ -25,8 +34,12 @@ public class KeySettings {
     
     private static Optional<PropertyReader> keySettings = Optional.empty();
     
+    /**
+     * Converts an GLFW integer key to a displayable string.
+     * @param keyValue The integer constant
+     * @return The string value for display
+     */
     public static String getKeyString(int keyValue) {
-        //TODO convert integer value to readable words
         switch (keyValue) {
             case GLFW_KEY_SPACE:
                 return "SPACE";
