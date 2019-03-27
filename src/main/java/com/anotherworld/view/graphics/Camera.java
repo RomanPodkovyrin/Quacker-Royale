@@ -61,6 +61,16 @@ public abstract class Camera {
         transformation = transformation.mult(Matrix2d.homTranslate3d(-this.getX(), -this.getY(), -this.getZ()));
         return transformation;
     }
+
+
+    /**
+     * Applies matrix transformations using the camera's position so it is centred on the screen.
+     */
+    public Matrix2d inverseTransform() {
+        Matrix2d transformation = (Matrix2d.homScale3d(this.getWidth() / 2, this.getHeight() / -2, 0));
+        transformation = (Matrix2d.homTranslate3d(this.getX(), this.getY(), this.getZ())).mult(transformation);
+        return transformation;
+    }
     
     /**
      * Returns a transformation that scales the objects on screen based on their distance to the camera.

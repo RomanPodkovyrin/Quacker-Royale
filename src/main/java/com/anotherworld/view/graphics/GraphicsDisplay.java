@@ -73,7 +73,7 @@ public class GraphicsDisplay {
      * @param programme The programme to use for rendering
      * @param mouseState The current position of the cursor and if the left button is pressed
      */
-    public void draw(Programme programme, MouseState mouseState) {
+    public void draw(Programme programme, boolean mouseDown) {
         synchronized (buttonsToAdd) {
             for (ButtonData button : buttonsToAdd) {
                 objects.add(new Button(programme, button));
@@ -89,6 +89,7 @@ public class GraphicsDisplay {
         }
         programme.pushMatrix();
         this.transform(programme);
+        MouseState mouseState = programme.getCursorPosition();
         for (int i = 0; i < objects.size(); i++) {
             LinkedList<DisplayObject> drawnObjects = objects.get(i).draw();
             for (DisplayObject object : drawnObjects) {
@@ -102,10 +103,10 @@ public class GraphicsDisplay {
                             && mouseState.getY() >= temp.getY() - temp.getHeight() / 2
                             && mouseState.getX() < temp.getX() + temp.getWidth() / 2
                             && mouseState.getY() < temp.getY() + temp.getHeight() / 2) {
-                        if (mouseState.isMouseDown()) {
+                        if (mouseDown) {
                             temp.click();
                         } else {
-                            temp.release();
+                            temp.release(); //TODO switch to hover
                         }
                     } else {
                         temp.release();
