@@ -1,5 +1,6 @@
 package com.anotherworld.network;
 
+import com.anotherworld.tools.exceptions.ConnectionClosed;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,8 +9,6 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
-import com.anotherworld.tools.exceptions.ConnectionClosed;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,6 +28,7 @@ public class LobbyClient {
     private DataInputStream in;
     private static Logger logger = LogManager.getLogger(LobbyClient.class);
     private boolean conectedToHost = false;
+    private String clientHat = "hat";
 
     /**
      * Used to set up a connection with the lobby server.
@@ -53,7 +53,7 @@ public class LobbyClient {
         logger.info("Just connected to " + client.getRemoteSocketAddress());
         outToServer = client.getOutputStream();
         out = new DataOutputStream(outToServer);
-        out.writeUTF("Hello from " + client.getLocalSocketAddress());
+        out.writeUTF(clientHat);
         conectedToHost = true;
     }
 
