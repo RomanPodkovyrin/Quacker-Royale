@@ -184,6 +184,10 @@ public class GraphicsDisplay {
         }
     }
 
+    /**
+     * Adds a background to the graphicsDisplay.
+     * @param backgroundData the background to add
+     */
     public void addBackground(BackgroundDisplayData backgroundData) {
         synchronized (backgrounds) {
             backgrounds.add(backgroundData);

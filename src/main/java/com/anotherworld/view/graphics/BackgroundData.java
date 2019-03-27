@@ -14,6 +14,13 @@ public class BackgroundData implements BackgroundDisplayData {
     private float w;
     private SpriteSheet spriteSheet;
     
+    /**
+     * Creates a background of the specified dimensions with the background sprite.
+     * @param x the background x
+     * @param y the background y
+     * @param h the background height
+     * @param w the background width
+     */
     public BackgroundData(float x, float y, float h, float w) {
         this.x = x;
         this.y = y;

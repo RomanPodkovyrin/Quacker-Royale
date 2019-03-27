@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Creates and manages a view state like view game or main menu.
+ * Creates and manages a view state like view game or menus.
  * @author Jake Stewart
  *
  */
@@ -21,6 +21,9 @@ public class Scene {
     
     private GraphicsDisplay background;
     
+    /**
+     * Creates a scene that can have multiple displays with objects in.
+     */
     public Scene() {
         displays = new ArrayList<>();
         this.background = new GraphicsDisplay();

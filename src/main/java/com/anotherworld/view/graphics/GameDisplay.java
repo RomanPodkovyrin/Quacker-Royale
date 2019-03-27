@@ -13,6 +13,14 @@ import java.util.ArrayList;
  */
 public class GameDisplay extends GraphicsDisplay {
     
+    /**
+     * Creates a display for the game to add objects to.
+     * @param x the display x
+     * @param y the display y
+     * @param height the display height
+     * @param width the display width
+     * @param camera the display camera
+     */
     public GameDisplay(float x, float y, float height, float width, Camera camera) {
         super(x, y, height, width, camera);
         Long startTime = System.currentTimeMillis();
