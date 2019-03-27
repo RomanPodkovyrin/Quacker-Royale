@@ -32,22 +32,22 @@ public class FixedSpaceLayout extends Layout {
             float buttonWidth;
             try {
                 Matrix dimensions = TextureMap.getSpriteDimensions(SpriteLocation.TEXT);
-                buttonWidth = buttonHeight * X_SCALE_ADJUSTMENT * (dimensions.getX() / dimensions.getY());
+                buttonWidth = buttonHeight * (dimensions.getX() / dimensions.getY());
             } catch (Exception ex) {
                 buttonWidth = buttonHeight;
             }
             float max = 0f;
             for (ButtonData button : buttons) {
-                max = Math.max((float)button.getText().length() * buttonWidth, max);
+                max = Math.max((float)button.getText().length() * buttonWidth / 2, max);
             }
-            return max + buttonWidth;
+            return max + buttonWidth / 2;
         };
         
         for (int i = 0; i < buttons.size(); i++) {
             ButtonData button = buttons.get(i);
             button.setHeight(buttonHeight);
             button.setWidth(maxWidth);
-            button.setPosition(this.getX() * X_SCALE_ADJUSTMENT, this.getY() + (-this.getHeight() / 2) + ySpacing * (i + 1));
+            button.setPosition(this.getX(), this.getY() + (-this.getHeight() / 2) + ySpacing * (i + 1));
             display.addButton(button);
         }
         super.enactLayout(display);

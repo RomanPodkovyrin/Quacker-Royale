@@ -20,7 +20,7 @@ public class CreditLayout extends Layout {
         float buttonWidth;
         try {
             Matrix dimensions = TextureMap.getSpriteDimensions(SpriteLocation.TEXT);
-            buttonWidth = returnButton.getText().length() * 0.2f * X_SCALE_ADJUSTMENT * (dimensions.getX() / dimensions.getY());
+            buttonWidth = returnButton.getText().length() * 0.2f * (dimensions.getX() / dimensions.getY());
         } catch (Exception ex) {
             buttonWidth = 0.2f;
         }
