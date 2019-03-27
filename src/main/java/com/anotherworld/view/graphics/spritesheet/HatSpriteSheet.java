@@ -1,20 +1,10 @@
 package com.anotherworld.view.graphics.spritesheet;
 
-import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.PlayerDisplayData;
 
-public class HatSpriteSheet extends PlayerSpriteSheet {
+public class HatSpriteSheet extends AbstractPlayerSpriteSheet {
 
     private final PlayerDisplayData data;
-    
-    //RIGHT DOWN LEFT UP
-    private static final int DIRECTION_OFFSET = 5;
-    
-    private static final float MIN_ANIMATION_SPEED = 0.1f;
-    
-    private static final int EFFECT_OFFSET = DIRECTION_OFFSET * 4;
-    
-    private int directionOffset = 0;
     
     public HatSpriteSheet(PlayerDisplayData data) {
         super(data);
@@ -24,21 +14,6 @@ public class HatSpriteSheet extends PlayerSpriteSheet {
     @Override
     public boolean isTextured() {
         return true;
-    }
-
-    @Override
-    public int getTextureId() {
-        int id = super.getTextureId();
-        if (data.getState() == ObjectState.DEAD) {
-            if (data.isDeadByFalling()) {
-                return 0;
-            }
-        }
-        if (data.getVelocity().magnitude() >= MIN_ANIMATION_SPEED) {
-            id -= super.getEffectOffset();
-        }
-        id += directionOffset;
-        return id;
     }
 
     @Override
@@ -55,6 +30,11 @@ public class HatSpriteSheet extends PlayerSpriteSheet {
             default:
                 return SpriteLocation.SANTA_HAT;
         }
+    }
+
+    @Override
+    public int getEffectOffsetAmount() {
+        return 0;
     }
     
 }

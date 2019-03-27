@@ -21,6 +21,7 @@ public class VictoryDisplay extends GraphicsDisplay {
     public VictoryDisplay() {
         super();
         playersToAdd = new ArrayList<>();
+        buttons = new ArrayList<>();
     }
 
     public void updatePlayers(Supplier<ArrayList<PlayerData>> playerSupplier) {
