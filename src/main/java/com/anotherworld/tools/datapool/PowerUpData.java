@@ -40,7 +40,6 @@ public class PowerUpData implements Serializable, PowerUpDisplayData {
      * @param data data to be copied.
      */
     public void copyObject(PowerUpData data) {
-        System.out.println("updated " + this);
         this.coordinates = data.coordinates;
         this.powerUpType = data.powerUpType;
         this.spawnTime   = data.spawnTime;
@@ -119,6 +118,7 @@ public class PowerUpData implements Serializable, PowerUpDisplayData {
         return "("
                 + this.powerUpType.toString() + ", "
                 + "x:" + this.coordinates.getX() + ", "
-                + "y:" + this.coordinates.getY() + ")";
+                + "y:" + this.coordinates.getY() + ", "
+                + "state: " + this.getState().toString() + ")";
     }
 }
