@@ -148,7 +148,7 @@ public class Controller {
         try {
             server  = new Server(defaultNumberClients, settings);
             server.start();
-        } catch (SocketException |UnknownHostException e) {
+        } catch (SocketException | UnknownHostException e) {
             //Could not start the server
             logger.warn("Could not start the server");
             lobbyServer.stopLobbyServer();

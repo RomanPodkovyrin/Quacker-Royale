@@ -67,7 +67,7 @@ public class GameSettings {
     private ArrayList<WallData> walls = new ArrayList<>();
     private GameSessionData gameSessionData;
 
-    private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser"));
+    private ArrayList<String> names = new ArrayList<>(Arrays.asList("santa","robber", "police", "pirate", "default"));
 
     // networking objects
 
