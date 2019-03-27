@@ -584,6 +584,8 @@ public class MenuSystem {
             }
         });
         
+        layout.addButton(numberOfPlayers);
+        
         ButtonData start = new ButtonData("Host");
         
         start.setOnAction(() -> {
