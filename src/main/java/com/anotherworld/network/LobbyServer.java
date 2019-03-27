@@ -7,6 +7,8 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -77,10 +79,8 @@ public class LobbyServer extends Thread {
     private void getPlayersIP() throws IOException {
         Socket lobbySocket = tcpSocket.accept();
         DataInputStream in = new DataInputStream(lobbySocket.getInputStream());
-        String input = in.readUTF();
-        System.out.println(input);
-        if (input.equals("cancel connection")) {
-            System.out.println("Cancel me ");
+        String clientMessage = in.readUTF();
+        if (clientMessage.equals("cancel connection")) {
             for (int i = 0; i < playersIpAddresses.size(); i++) {
                 if (playersIpAddresses.get(i).equals(lobbySocket.getInetAddress().getHostAddress())) {
                     logger.info("Player " + playersIpAddresses.get(i) + " Disconnected");
