@@ -2,8 +2,6 @@ package com.anotherworld.view.graphics;
 
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.ParagraphDisplayObject;
-import com.anotherworld.view.data.PlayerDisplayData;
-import com.anotherworld.view.data.PlayerDisplayObject;
 import com.anotherworld.view.data.TextDisplayData;
 import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.input.Button;
@@ -119,6 +117,10 @@ public class GraphicsDisplay {
         programme.popMatrix();
     }
 
+    /**
+     * Uses the camera to transform the display into the correct co-ordinate frame.
+     * @param programme The programme to use for rendering
+     */
     public void transform(Programme programme) {
         synchronized (camera) {
             programme.transform(camera);
@@ -161,6 +163,10 @@ public class GraphicsDisplay {
         }
     }
 
+    /**
+     * Changes the camera use to project the scene.
+     * @param static2dCamera the new camera to use
+     */
     public void changeCamera(Static2dCamera static2dCamera) {
         synchronized (camera) {
             this.camera = static2dCamera;

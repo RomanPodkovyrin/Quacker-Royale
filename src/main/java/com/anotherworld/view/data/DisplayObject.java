@@ -115,6 +115,10 @@ public abstract class DisplayObject {
         return b;
     }
     
+    /**
+     * Returns a float buffer containing the object colour for each point for the display object.
+     * @return the colour buffer for the display object.
+     */
     public FloatBuffer getColourBuffer() {
         FloatBuffer buff = BufferUtils.createFloatBuffer(points.getPoints().length);
         for (int i = 0; i < points.getN(); i++) {

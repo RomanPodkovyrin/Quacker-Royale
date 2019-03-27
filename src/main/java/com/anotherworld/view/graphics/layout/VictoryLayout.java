@@ -17,6 +17,11 @@ public class VictoryLayout extends Layout {
     private ButtonData returnButton;
     private Supplier<ArrayList<PlayerData>> playerSupplier;
     
+    /**
+     * Creates a layout for the victory scene.
+     * @param playerDataSupplier A supplier that returns a list of player names in order of victory
+     * @param exitAction An action to perform when exit is pressed
+     */
     public VictoryLayout(Supplier<List<String>> playerDataSupplier, ButtonListener exitAction) {
         playerSupplier = () -> {
             int i = 0;

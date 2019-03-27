@@ -16,7 +16,7 @@ public class VictoryDisplay extends GraphicsDisplay {
     
     private Supplier<ArrayList<PlayerData>> playerSupplier;
     
-    private ButtonData button;
+    private ArrayList<ButtonData> buttons;
     
     public VictoryDisplay() {
         super();
@@ -26,19 +26,15 @@ public class VictoryDisplay extends GraphicsDisplay {
     public void updatePlayers(Supplier<ArrayList<PlayerData>> playerSupplier) {
         this.playerSupplier = playerSupplier;
     }
-    
-    public void draw(Programme programme, boolean mouseDown) {
-        synchronized (playersToAdd) {
-            for (PlayerDisplayData data : playersToAdd) {
-                objects.add(new PlayerDisplayObject(programme, data));
-            }
-            playersToAdd.clear();
-        }
-        super.draw(programme, mouseDown);
-    }
 
+    /**
+     * Updates the display to use the most recent game session data.
+     */
     public void updatePlayers() {
-        super.addButton(button);
+        objects.clear();
+        for (ButtonData button: buttons) {
+            super.addButton(button);
+        }
         synchronized (playersToAdd) {
             List<PlayerData> players = playerSupplier.get();
             for (PlayerData player : players) {
@@ -48,9 +44,20 @@ public class VictoryDisplay extends GraphicsDisplay {
     }
     
     @Override
+    public void draw(Programme programme, boolean mouseDown) {
+        synchronized (playersToAdd) {
+            for (PlayerDisplayData data : playersToAdd) {
+                objects.add(new PlayerDisplayObject(programme, data));
+            }
+            playersToAdd.clear();
+        }
+        super.draw(programme, mouseDown);
+    }
+    
+    @Override
     public void addButton(ButtonData object) {
         super.addButton(object);
-        button = object;
+        buttons.add(object);
     }
 
 }
