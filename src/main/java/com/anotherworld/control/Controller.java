@@ -207,7 +207,6 @@ public class Controller {
                 + "\nLobby server is ready to play");
 
         // Tell clients to start the game
-        //server.setIpsAndHats = lobbyServer.getIpsAndHats();
         lobbyServer.canStartTheGame();
     }
 
