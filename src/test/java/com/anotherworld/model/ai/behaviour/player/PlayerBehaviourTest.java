@@ -1,14 +1,11 @@
 package com.anotherworld.model.ai.behaviour.player;
 
-import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.ai.behaviour.player.domination.ChaseBall;
 import com.anotherworld.model.ai.behaviour.player.domination.GetPowerUPs;
 import com.anotherworld.model.ai.behaviour.player.peace.WalkAbout;
 import com.anotherworld.model.ai.behaviour.player.survival.*;
 import com.anotherworld.model.logic.Platform;
-import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.datapool.*;
 import org.junit.Before;
 import org.junit.Test;
