@@ -29,7 +29,7 @@ public class CheckIfSaveToGo extends Job {
     private ArrayList<BallData> imminentDangerBalls = new ArrayList<>();
 
     //The allowed safe distance between the ball and the player
-    private float safeDistance = 2;
+    private float safeDistance = 1;
 
     public CheckIfSaveToGo(){
 
