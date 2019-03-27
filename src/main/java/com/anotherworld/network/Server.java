@@ -42,8 +42,6 @@ public class Server extends Thread {
     private ArrayList<String> clientIps;
     private ArrayList<Integer> clientsPorts;
     private HashMap<String, String> ipToID = new HashMap<>();
-    private HashMap<String, String> ipsAndHats = new HashMap<>();
-
 
     // Game data to be sent to client
     private PlayerData hostPlayer;
@@ -63,7 +61,6 @@ public class Server extends Thread {
     public Server(int numberOfClients, GameSettings settings) throws SocketException, UnknownHostException {
         hostPlayer = settings.getCurrentPlayer();
         networkPlayers = settings.getPlayers();
-        // TODO should we also have ai in the multiplayer
         balls = settings.getBalls();
         platform = settings.getPlatform().get(0);
         wall = settings.getWall().get(0);
@@ -270,13 +267,6 @@ public class Server extends Thread {
         ArrayList<Pair<ArrayList<Input>, String>> temp = new ArrayList<>(inputAndIP);
         inputAndIP.clear();
         return temp;
-    }
-
-    /**
-     * Setter for all hats to ip.
-     */
-    public void setIpsAndHats(HashMap<String, String> ipsAndHats) {
-        this.ipsAndHats = ipsAndHats;
     }
 
     /**
