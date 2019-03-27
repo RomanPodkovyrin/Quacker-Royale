@@ -2,6 +2,8 @@ package com.anotherworld.view.graphics;
 
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.ParagraphDisplayObject;
+import com.anotherworld.view.data.PlayerDisplayData;
+import com.anotherworld.view.data.PlayerDisplayObject;
 import com.anotherworld.view.data.TextDisplayData;
 import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.input.Button;
@@ -118,7 +120,9 @@ public class GraphicsDisplay {
     }
 
     public void transform(Programme programme) {
-        programme.transform(camera);
+        synchronized (camera) {
+            programme.transform(camera);
+        }
     }
 
     public float getX() {
@@ -154,6 +158,12 @@ public class GraphicsDisplay {
     public void addText(TextDisplayData object) {
         synchronized (textToAdd) {
             textToAdd.add(object);
+        }
+    }
+
+    public void changeCamera(Static2dCamera static2dCamera) {
+        synchronized (camera) {
+            this.camera = static2dCamera;
         }
     }
 
