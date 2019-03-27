@@ -1,7 +1,7 @@
 package com.anotherworld.view.texture;
 
-import static org.lwjgl.opengl.GL46.GL_REPEAT;
 import static org.lwjgl.opengl.GL46.GL_NEAREST;
+import static org.lwjgl.opengl.GL46.GL_REPEAT;
 import static org.lwjgl.opengl.GL46.GL_RGBA;
 import static org.lwjgl.opengl.GL46.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL46.GL_TEXTURE_MAG_FILTER;

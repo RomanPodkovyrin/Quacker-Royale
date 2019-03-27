@@ -26,9 +26,9 @@ public class PlatformSpriteSheet extends RectangleSpriteSheet {
         buffer.put(0);
         buffer.put(maxX);
         buffer.put(0);
-        buffer.put(0);
-        buffer.put(maxY);
         buffer.put(maxX);
+        buffer.put(maxY);
+        buffer.put(0);
         buffer.put(maxY);
         buffer.flip();
         return buffer;
