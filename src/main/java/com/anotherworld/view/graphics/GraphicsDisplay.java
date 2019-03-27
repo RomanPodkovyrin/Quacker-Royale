@@ -11,6 +11,7 @@ import com.anotherworld.view.input.MouseState;
 import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -89,23 +90,26 @@ public class GraphicsDisplay {
         programme.pushMatrix();
         this.transform(programme);
         for (int i = 0; i < objects.size(); i++) {
-            programme.pushMatrix();
-            objects.get(i).transform();
-            objects.get(i).draw();
-            programme.popMatrix();
-            if (Clickable.class.isAssignableFrom(objects.get(i).getClass())) {
-                Clickable temp = (Clickable) objects.get(i);
-                if (mouseState.getX() >= temp.getX() - temp.getWidth() / 2
-                        && mouseState.getY() >= temp.getY() - temp.getHeight() / 2
-                        && mouseState.getX() < temp.getX() + temp.getWidth() / 2
-                        && mouseState.getY() < temp.getY() + temp.getHeight() / 2) {
-                    if (mouseState.isMouseDown()) {
-                        temp.click();
+            LinkedList<DisplayObject> drawnObjects = objects.get(i).draw();
+            for (DisplayObject object : drawnObjects) {
+                programme.pushMatrix();
+                object.transform();
+                programme.draw(object);
+                programme.popMatrix();
+                if (Clickable.class.isAssignableFrom(object.getClass())) {
+                    Clickable temp = (Clickable) object;
+                    if (mouseState.getX() >= temp.getX() - temp.getWidth() / 2
+                            && mouseState.getY() >= temp.getY() - temp.getHeight() / 2
+                            && mouseState.getX() < temp.getX() + temp.getWidth() / 2
+                            && mouseState.getY() < temp.getY() + temp.getHeight() / 2) {
+                        if (mouseState.isMouseDown()) {
+                            temp.click();
+                        } else {
+                            temp.release();
+                        }
                     } else {
                         temp.release();
                     }
-                } else {
-                    temp.release();
                 }
             }
         }

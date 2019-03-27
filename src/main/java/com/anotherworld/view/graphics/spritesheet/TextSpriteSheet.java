@@ -1,6 +1,6 @@
 package com.anotherworld.view.graphics.spritesheet;
 
-import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.texture.TextureMap;
 

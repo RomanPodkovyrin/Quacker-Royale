@@ -1,10 +1,10 @@
-package com.anotherworld.model.ai.behaviour.player;
+package com.anotherworld.model.ai.behaviour.player.survival;
 
 import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.ai.tools.Line;
-import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.tools.maths.Line;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
@@ -50,7 +50,7 @@ public class CheckIfSaveToGo extends Job {
 
         if (ai.isTimeStopper() || ai.isShielded()) {
             succeed();
-            logger.trace("AIController is invulnerable move on");
+            logger.trace("AI is invulnerable move on");
             return;
         }
 
@@ -78,7 +78,7 @@ public class CheckIfSaveToGo extends Job {
             // In danger in the look ahead
             if (MatrixMath.distanceAB(lookAhead,lookAheadNeighbour) <= ai.getRadius() + firstBall.getRadius() + (Math.pow(safeDistance,2))) {
                 ai.setVelocity(0,0);
-                logger.trace("AIController stopped danger ahead");
+                logger.trace("AI stopped danger ahead");
                 fail();
                 return;
             }

@@ -2,8 +2,8 @@ package com.anotherworld.settings;
 
 import static com.anotherworld.tools.maths.Maths.getRandom;
 
-import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.logic.PowerUpManager;
 import com.anotherworld.model.movable.ObjectState;
@@ -67,9 +67,21 @@ public class GameSettings {
     private ArrayList<WallData> walls = new ArrayList<>();
     private GameSessionData gameSessionData;
 
-    private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser"));
+    enum Hat {
+        SANTA,ROBBER,POLICE,PIRATE
+    }
 
-    // networking objects
+    private ArrayList<String> names = new ArrayList<>(Arrays.asList("santa","robber", "police", "pirate", "default"));
+    private ArrayList<Hat> hats = new ArrayList<>();
+
+    public GameSettings (PlayerData currentPlayer,Hat currentPlayerHat, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
+    ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSessionData, ArrayList<Hat> hats){
+
+        hats.add(currentPlayerHat);
+        this.hats = hats;
+        setUP(currentPlayer, players, ai, balls, platforms, walls, gameSessionData);
+    }
+
 
     /**
      * This method allows to create the Game settings object with pregenerated game objects.
@@ -84,6 +96,10 @@ public class GameSettings {
      */
     public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
                         ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSessionData) {
+        setUP(currentPlayer, players, ai, balls, platforms, walls, gameSessionData);
+    }
+
+    private void setUP(PlayerData currentPlayer, ArrayList<PlayerData> players, ArrayList<PlayerData> ai, ArrayList<BallData> balls, ArrayList<PlatformData> platforms, ArrayList<WallData> walls, GameSessionData gameSessionData) {
         this.currentPlayer = currentPlayer;
         logger.info("GameSettings current player: " + currentPlayer);
         this.players = players;
@@ -101,7 +117,6 @@ public class GameSettings {
 
         // load all the default values
         loadAllGameValues();
-
     }
 
     /**
@@ -128,19 +143,18 @@ public class GameSettings {
 
             this.defaultPlatformXSize = Float.parseFloat(propertyFileLogic.getValue("PLATFORM_X_SIZE"));
             this.defaultPlatformYSize = Float.parseFloat(propertyFileLogic.getValue("PLATFORM_Y_SIZE"));
-
+            propertyFileLogic.close();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
      * This method generates all the game objects with the specified values.
      *
      * @param numberOfPlayers - the total number of players
-     * @param numberOfaiPlayers - number of AIController
+     * @param numberOfaiPlayers - number of ControllerAI
      * @param numberOfBalls - number of balls
      */
     public GameSettings(int numberOfPlayers, int numberOfaiPlayers, int numberOfBalls) {
@@ -310,7 +324,7 @@ public class GameSettings {
             // Creates the player object
             PlayerData newPlayer = new PlayerData(names.get(i),playerHealth,xRandom,yRandom, ObjectState.IDLE, playerSpeed,playerRadius);
 
-            // checks if need to make an AIController, current players or other players
+            // checks if need to make an ControllerAI, current players or other players
             if (numberofaiplayers > 0) {
                 ai.add(newPlayer);
                 numberofaiplayers--;
@@ -358,13 +372,57 @@ public class GameSettings {
         createGameSessionData();
     }
 
+   public enum Difficulty {
+        HARD, MEDIUM, EASY
+    }
+
     /**
+     * Sets the game difficulty.
      * 1 - easy 2 balls ai at 9
      * 2 - medium  4 balls ai at 7
      * 3 - hard  6 balls ai at 6
      */
-    public void changeDifficulty(int difficulty) {
-        //TODO: Think of difficulty settings.
+    public static void changeDifficulty(Difficulty level) {
+
+        float speed = 0;
+        int damage = 0 ;
+        int number = 0;
+        int ai = 0;
+
+        switch (level) {
+            case MEDIUM:
+                speed = 0.6f;
+                damage = 10;
+                number = 4;
+                ai = 2;
+                break;
+            case HARD:
+                speed = 0.8f;
+                damage = 20;
+                number = 6;
+                ai = 3;
+                break;
+            case EASY:
+                speed = 0.5f;
+                damage = 5;
+                number = 4;
+                ai = 1;
+                break;
+        }
+
+        try {
+            PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
+
+            propertyFileLogic.setValue("BALL_SPEED",Float.toString(speed));
+            propertyFileLogic.setValue("BALL_DAMAGE",Integer.toString(damage));
+            propertyFileLogic.setValue("SINGLE_PLAYER_BALLS",Integer.toString(number));
+            propertyFileLogic.setValue("MULTI_PLAYER_BALLS",Integer.toString(number));
+            propertyFileLogic.setValue("SINGLE_PLAYER_AI",Integer.toString(ai));
+            propertyFileLogic.setValue("SINGLE_PLAYER_PLAYERS",Integer.toString(ai +1));
+        } catch (IOException e) {
+           logger.error("Could not load the file to change difficulty");
+        }
+
     }
 
 

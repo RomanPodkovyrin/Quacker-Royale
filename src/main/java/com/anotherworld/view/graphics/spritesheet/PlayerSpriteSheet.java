@@ -71,7 +71,7 @@ public class PlayerSpriteSheet extends SpriteSheet {
         }
     }
     
-    private int getEffectOffset() {
+    protected int getEffectOffset() {
         if (data.isShielded()) {
             return EFFECT_OFFSET;
         }

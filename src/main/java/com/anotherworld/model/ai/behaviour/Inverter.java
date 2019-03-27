@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 
 /**
- * Inverts fail into success and vise versa.
+ * Inverts fail into success and vice versa.
  *
  * @author roman
  */

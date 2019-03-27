@@ -5,12 +5,13 @@ import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.GameKeyListener;
+import com.anotherworld.tools.input.Input;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,28 +19,29 @@ import org.apache.logging.log4j.Logger;
 /**
  * Controller object that connects the View and the Model of the game.
  * @author Alfi S.
+ * @author roman
  */
 public class GameSessionController {
 
 
     private static Logger logger = LogManager.getLogger(GameSessionController.class);
 
-    // Game Loop variables
 
-    // FPS here means the number of game logic computation as second
+    // FPS here means the number of game logic computation per second
     // desired FPS
-    private final static int MAX_FPS = 60;
+    private static final int MAX_FPS = 60;
     // maximum number of frames which are allowed to be dropped
-    private final static int MAX_FRAME_DROP = 5;
+    private static final int MAX_FRAME_DROP = 5;
     // the time between frames
-    private final static int FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
+    private static final int FRAME_PERIOD = 1000 / MAX_FPS; // 1000ms = 1s
 
-
+    // Game Loop variables
     private GameSession session;
     private GameSettings settings;
     private View view;
     private GameKeyListener keyListener;
     private AbstractNetworkController network;
+    boolean keyDown;
 
 
     /**
@@ -70,7 +72,6 @@ public class GameSessionController {
         this.keyListener = view.getKeyListener();
 
         // Setting up the network
-
         this.network = network;
 
 
@@ -88,7 +89,6 @@ public class GameSessionController {
         render();
         
         int framesDropped = 0;
-
         // Time at the start of the loop
         long startTime;
         // Time it took for gameLogic
@@ -96,28 +96,13 @@ public class GameSessionController {
         // Time in ms to sleep
         int sleepTime = 0;
 
-        boolean keyDown = false;
 
 
+        keyDown = false;
 
         while (view.gameRunning() && session.isRunning()) {
 
-            //checks if player quit the game
-            if (keyListener.getKeyPresses().contains(Input.QUIT)) {
-                network.quitTheGame();
-                break;
-            }
-
-            // music and effect mute unmute control
-            if (keyListener.getKeyPresses().contains(Input.MUTE)) {
-                if (!keyDown) {
-                    System.out.println("Muting unmuting");
-                    AudioControl.muteUnmute();
-                    keyDown = true;
-                }
-            } else {
-                keyDown = false;
-            }
+            if (userControl()) break;
 
             // if client check if there are game objects to update
             network.clientControl(keyListener);
@@ -136,7 +121,7 @@ public class GameSessionController {
             // Calculate the time the system can sleep for
             sleepTime = (int)(FRAME_PERIOD - delta);
 
-            //Check if logic tool too long
+            //Check if logic took too long
             if (sleepTime > 0) {
                 // Tell system to sleep
                 try {
@@ -169,23 +154,67 @@ public class GameSessionController {
 
         }
 
-        try {
-            String firstPlace = settings.getGameSessionData().getRankings().get(0);
-
-            if (firstPlace.equals(settings.getCurrentPlayer().getObjectID())) {
-                AudioControl.win();
-
-            } else {
-                AudioControl.lose();
-            }
-
-
-
-        } catch (IndexOutOfBoundsException e) {
-
-        }
+        winOrLoseSound();
 
         shutDownSequence();
+    }
+
+    /**
+     * Reads used key presses to perform not character related controls.
+     * @return true break the loop and quit the game , false continue loop
+     */
+    private boolean userControl() {
+        //checks if player quit the game
+        if (keyListener.getKeyPresses().contains(Input.QUIT)) {
+            network.quitTheGame();
+            return true;
+        }
+
+        // music and effect mute unmute control
+        if (keyListener.getKeyPresses().contains(Input.MUTE)) {
+            if (!keyDown) {
+                System.out.println("Muting unmuting");
+                AudioControl.muteUnmute();
+                keyDown = true;
+            }
+        } else {
+            keyDown = false;
+        }
+        return false;
+    }
+
+    /**
+     * Plays a win sound or lose sound or nothing if the game was quit.
+     */
+    private void winOrLoseSound() {
+            LinkedList<String> rankings = settings.getGameSessionData().getRankings();
+            boolean allRanked = rankings.size() == settings.getPlayers().size() + 1 + settings.getAi().size();
+
+            if (rankings.isEmpty() | !allRanked) {
+                logger.trace("No winner");
+            } else {
+
+                String firstPlace = rankings.get(0);
+                AudioControl.stopBackgroundMusic();
+
+                if (firstPlace.equals(settings.getCurrentPlayer().getObjectID())) {
+                    logger.trace("You won");
+                    AudioControl.win();
+
+
+                } else {
+                    logger.trace("You lost");
+                    AudioControl.lose();
+                }
+
+                // Sleeping the main thread to allow sound to play
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
     }
 
 
@@ -195,22 +224,18 @@ public class GameSessionController {
     private void shutDownSequence() {
 
         logger.info("Initialising Shut down sequence");
-        // TODO if network game then close down the connection
 
-        //stop the music
+        //stop audio
         AudioControl.stopBackgroundMusic();
         logger.trace("Music stopped");
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         AudioControl.stopSoundEffects();
         logger.trace("Stopped SoundEffects");
 
+        //Stop networking
         network.stopNetworking();
         logger.trace("Stopped networking");
-        //send out the message saying that either host or client have disconnected
+
+        //TODO could still do that
         //if a client has disconnected should we just give control to the ai ?
     }
 

@@ -34,9 +34,7 @@ public class NetworkControllerServer extends AbstractNetworkController {
 
     @Override
     public void hostControl() {
-        // TODO get the button presses from the client
 
-        //GameSession.updateCurrentPlayer();
         ArrayList<Pair<ArrayList<Input>,String>> keyPress = server.getInputAndIP();
 
         for (Pair<ArrayList<Input>, String> input: keyPress) {

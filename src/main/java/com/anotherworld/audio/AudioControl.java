@@ -22,9 +22,12 @@ public class AudioControl {
      * To be used at the beginning of the game to start background and effects depending on the previous settings.
      */
     public static void setUp() {
+        // Creates new music object and starts
         backgroundMusic = new BackgroundMusic();
         backgroundMusic.playBackgroundMusic();
+
         if (!musicOn) {
+            // Mute the music
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -33,14 +36,13 @@ public class AudioControl {
             backgroundMusic.muteSound();
         }
 
+        // Reset the sound effect if needed or make new
         if (soundEffects != null) {
             soundEffects.stopSoundEffects();
         }
         soundEffects = new SoundEffects();
 
 
-
-        // soundEffects set up
     }
 
     /**
@@ -88,7 +90,11 @@ public class AudioControl {
      * Stops playing background music.
      */
     public static void stopBackgroundMusic() {
-        backgroundMusic.terminateMusic();
+        try {
+            backgroundMusic.terminateMusic();
+        } catch (NullPointerException e) {
+            logger.error("Stopping music that isn't running");
+        }
     }
 
     /**
@@ -123,6 +129,9 @@ public class AudioControl {
         }
     }
 
+    /**
+     * Plays the lose sound.
+     */
     public static void lose() {
         if (effectsOn) {
             soundEffects = new SoundEffects();
@@ -144,7 +153,11 @@ public class AudioControl {
      */
     public static void stopSoundEffects() {
         if (effectsOn) {
-            soundEffects.stopSoundEffects();
+            try {
+                soundEffects.stopSoundEffects();
+            } catch (NullPointerException e) {
+                logger.error("Stopping music which wasn't created");
+            }
         }
     }
 

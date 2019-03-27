@@ -340,7 +340,6 @@ public class View implements Runnable {
             }
             for (int i = 0; i < updateEvent.getPlayerObjects().size(); i++) {
                 disObj.add(new PlayerDisplayObject(programme, updateEvent.getPlayerObjects().get(i)));
-                disObj.add(new HealthBarDisplayObject(programme, updateEvent.getPlayerObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
                 disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
