@@ -41,7 +41,7 @@ public class TextListData {
         int i = 0;
         //TODO add methods that allow the buttons to set which one is selected like radio buttons
         for (Supplier<String> ts : textSources) {
-            ButtonData button = new ButtonData(ts.get());
+            ButtonData button = new ButtonData(ts, true);
             button.setWidth(width);
             button.setHeight(height / textSources.size());
             button.setPosition(x, (height / (2 * textSources.size())) + (y - height) + (height * i) / textSources.size());

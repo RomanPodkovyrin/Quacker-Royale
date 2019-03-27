@@ -361,10 +361,6 @@ public class GameSettings {
         createGameSessionData();
     }
 
-   public enum Difficulty {
-        HARD, MEDIUM, EASY
-    }
-
     /**
      * Sets the game difficulty.
      * 1 - easy 2 balls ai at 9
@@ -374,7 +370,7 @@ public class GameSettings {
     public static void changeDifficulty(Difficulty level) {
 
         float speed = 0;
-        int damage = 0 ;
+        int damage = 0;
         int number = 0;
         int ai = 0;
 
@@ -397,6 +393,11 @@ public class GameSettings {
                 number = 4;
                 ai = 1;
                 break;
+            default:
+                speed = 0.5f;
+                damage = 5;
+                number = 4;
+                ai = 1;
         }
 
         try {
