@@ -14,8 +14,8 @@ public class WallData implements RectangleDisplayData, Serializable {
 
     private int stage = 3;
 
-    private static final float xShrink = 10;
-    private static final float yShrink = 10;
+    private static final float xShrink = 5;
+    private static final float yShrink = 5;
 
     private float xSize = 70;
     private float ySize = 35;
