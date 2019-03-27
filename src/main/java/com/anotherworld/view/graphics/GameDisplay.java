@@ -1,6 +1,7 @@
 package com.anotherworld.view.graphics;
 
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
@@ -14,6 +15,22 @@ public class GameDisplay extends GraphicsDisplay {
     
     public GameDisplay(float x, float y, float height, float width, Camera camera) {
         super(x, y, height, width, camera);
+        Long startTime = System.currentTimeMillis();
+        ButtonData loadingText = new ButtonData(() -> {
+            return "Loading" + repeatDots((int)((System.currentTimeMillis() - startTime) % 599) / 150);
+        }, true);
+        loadingText.setTextColour(1, 1, 1);
+        loadingText.setPosition(20, 85);
+        loadingText.setHeight(10);
+        this.addButton(loadingText);
+    }
+    
+    private String repeatDots(int n) {
+        String r = "";
+        for (int i = 0; i < 3; i++) {
+            r = r + ((i < n) ? "." : " ");
+        }
+        return r;
     }
 
     /**
