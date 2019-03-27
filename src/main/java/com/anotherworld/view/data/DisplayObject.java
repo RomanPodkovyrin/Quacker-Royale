@@ -22,10 +22,6 @@ import org.lwjgl.BufferUtils;
 public abstract class DisplayObject {
 
     private static Logger logger = LogManager.getLogger(DisplayObject.class);
-
-    private final float xShear;
-    
-    private final float yShear;
     
     private Points2d points;
     
@@ -71,8 +67,6 @@ public abstract class DisplayObject {
         this.g = g;
         this.b = b;
         this.programme = programme;
-        this.xShear = 1;
-        this.yShear = 1;
         this.spriteSheet = spriteSheet;
         this.programmeObjectId = Optional.empty();
     }
@@ -278,14 +272,6 @@ public abstract class DisplayObject {
 
     public int getNumberOfPoints() {
         return this.points.getN();
-    }
-
-    public float getXShear() {
-        return xShear;
-    }
-
-    public float getYShear() {
-        return yShear;
     }
 
     public SpriteSheet getSpriteSheet() {

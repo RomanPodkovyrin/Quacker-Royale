@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL46.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL46.glBindTexture;
 import static org.lwjgl.opengl.GL46.glGetUniformLocation;
 import static org.lwjgl.opengl.GL46.glUniform1i;
-import static org.lwjgl.opengl.GL46.glUniform2f;
 import static org.lwjgl.opengl.GL46.glUniformMatrix4fv;
 
 import com.anotherworld.tools.maths.Matrix;
@@ -50,10 +49,8 @@ public class TextureMap {
      * Loads a texture the correct texture for an object to the opengl buffers.
      * @param programmeId The programme id to use
      * @param spriteSheet The sprite sheet to load
-     * @param xShear The x shear on the sprite
-     * @param yShear The y shear on the sprite
      */
-    public void loadTexture(int programmeId, SpriteSheet spriteSheet, float xShear, float yShear) {
+    public void loadTexture(int programmeId, SpriteSheet spriteSheet) {
 
         glUniform1i(glGetUniformLocation(programmeId, "hasTex"), spriteSheet.isTextured() ? 1 : 0);
         
@@ -65,7 +62,6 @@ public class TextureMap {
             temp2.put(matrix);
             temp2.flip();
             glUniformMatrix4fv(glGetUniformLocation(programmeId, "textureTransformation"), false, temp2);
-            glUniform2f(glGetUniformLocation(programmeId, "Shear"), xShear, yShear);
         }
         
     }

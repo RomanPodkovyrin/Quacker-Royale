@@ -46,7 +46,6 @@ import com.anotherworld.view.texture.TextureMap;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -266,8 +265,7 @@ public class TexturedProgramme extends Programme {
             temp.flip();
             glUniformMatrix4fv(glGetUniformLocation(programmeId, "Transformation"), false, temp);
 
-            textureMap.loadTexture(programmeId, displayObject.getSpriteSheet(), displayObject.getXShear(),
-                    displayObject.getYShear());
+            textureMap.loadTexture(programmeId, displayObject.getSpriteSheet());
 
             TexturedDisplayObjectBuffers bufferObject = bufferObjects.get(displayObject.getProgrammeObjectId().get());
 

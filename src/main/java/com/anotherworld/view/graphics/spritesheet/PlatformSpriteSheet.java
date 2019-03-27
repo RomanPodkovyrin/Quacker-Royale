@@ -6,7 +6,7 @@ import org.lwjgl.BufferUtils;
 
 public class PlatformSpriteSheet extends RectangleSpriteSheet {
 
-    private static final float TILE_SIZE = 10f;
+    private static final float TILE_SIZE = 20f;
     
     public PlatformSpriteSheet() {
         super(SpriteLocation.TILE, 1, 1000);
@@ -18,18 +18,20 @@ public class PlatformSpriteSheet extends RectangleSpriteSheet {
      * @param h the object height
      * @return a texture float buffer
      */
-    public static FloatBuffer getBuffer(float w, float h) {
+    public static FloatBuffer getBuffer(float x, float y, float w, float h) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(8);
         float maxX = w / TILE_SIZE;
+        maxX /= 2;
         float maxY = h / TILE_SIZE;
-        buffer.put(0);
-        buffer.put(0);
-        buffer.put(maxX);
-        buffer.put(0);
-        buffer.put(maxX);
-        buffer.put(maxY);
-        buffer.put(0);
-        buffer.put(maxY);
+        maxY /= 2;
+        buffer.put(x - maxX);
+        buffer.put(y - maxY);
+        buffer.put(x + maxX);
+        buffer.put(y - maxY);
+        buffer.put(x + maxX);
+        buffer.put(y + maxY);
+        buffer.put(x - maxX);
+        buffer.put(y + maxY);
         buffer.flip();
         return buffer;
     }

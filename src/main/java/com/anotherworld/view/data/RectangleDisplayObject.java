@@ -14,12 +14,6 @@ public class RectangleDisplayObject extends DisplayObject {
 
     private final RectangleDisplayData displayData;
     
-    private final float maxWidth;
-    
-    private final float maxHeight;
-    
-    private final Programme programme;
-    
     /**
      * Creates a rectangle to display.
      * @param spriteSheet The rectangle sprite sheet
@@ -29,17 +23,6 @@ public class RectangleDisplayObject extends DisplayObject {
     public RectangleDisplayObject(SpriteSheet spriteSheet, Programme programme, RectangleDisplayData displayData) {
         super(spriteSheet, programme, Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), DrawType.TRIANGLE_FAN, 1f, 1f, 1f);
         this.displayData = displayData;
-        this.maxWidth = displayData.getWidth();
-        this.maxHeight = displayData.getHeight();
-        this.programme = programme;
-    }
-    
-    @Override
-    public void transform() {
-        super.transform();
-        
-        programme.scalef(displayData.getWidth() / maxWidth, displayData.getHeight() / maxHeight, 1f);
-        
     }
 
     @Override
