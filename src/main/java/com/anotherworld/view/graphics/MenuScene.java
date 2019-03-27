@@ -12,7 +12,7 @@ public class MenuScene extends Scene {
      * @param display The new display to render
      */
     public void changeMenuDisplay(GraphicsDisplay display) {
-        super.clearDisplays();
+        this.clearDisplays();
         this.addDisplay(display);
     }
 
