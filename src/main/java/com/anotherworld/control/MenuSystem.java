@@ -19,6 +19,7 @@ import com.anotherworld.view.graphics.layout.FixedSpaceLayout;
 import com.anotherworld.view.graphics.layout.Layout;
 import com.anotherworld.view.graphics.layout.LobbyLayout;
 import com.anotherworld.view.graphics.layout.VictoryLayout;
+import com.anotherworld.view.graphics.spritesheet.SpriteLocation;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.TextFieldData;
 
@@ -54,13 +55,14 @@ public class MenuSystem {
         control = new Controller(view);
 
         GraphicsDisplay mainMenuDisplay = new GraphicsDisplay();
-        VictoryDisplay singlePlayerSettings = new VictoryDisplay();
-        VictoryDisplay hostSettings = new VictoryDisplay();
+        GraphicsDisplay singlePlayerSettings = new GraphicsDisplay();
+        GraphicsDisplay hostSettings = new GraphicsDisplay();
         GraphicsDisplay settingsMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay multiplayerMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay clientMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay hostLobbyMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay connectionFailedDisplay = new GraphicsDisplay();
+        GraphicsDisplay instructionsDisplay = this.createInstructionsMenu(mainMenuDisplay);
         VictoryDisplay victoryDisplay = new VictoryDisplay();
         GraphicsDisplay audioSettingsDisplay = new GraphicsDisplay();
         GraphicsDisplay videoSettingsDisplay = new GraphicsDisplay();
@@ -69,7 +71,7 @@ public class MenuSystem {
         GraphicsDisplay clientLobbyDisplay = new GraphicsDisplay();
         ClientLobbyWaitThread thread = new ClientLobbyWaitThread(() -> control.getServerStarted(), () -> view.switchToGameScene());
         
-        this.createMainMenu(singlePlayerSettings, creditDisplay, settingsMenuDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
+        this.createMainMenu(singlePlayerSettings, instructionsDisplay, creditDisplay, settingsMenuDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
         this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsMenuDisplay);
         this.createAudioSettings(settingsMenuDisplay).enactLayout(audioSettingsDisplay);
         this.createViewSettings(settingsMenuDisplay).enactLayout(videoSettingsDisplay);
@@ -99,7 +101,7 @@ public class MenuSystem {
         
     }
 
-    private Layout createMainMenu(GraphicsDisplay singlePlayerLobby, GraphicsDisplay creditDisplay, GraphicsDisplay settingsDisplay, GraphicsDisplay multiplayerMenuDisplay) {
+    private Layout createMainMenu(GraphicsDisplay singlePlayerLobby, GraphicsDisplay instructionsDisplay, GraphicsDisplay creditDisplay, GraphicsDisplay settingsDisplay, GraphicsDisplay multiplayerMenuDisplay) {
         logger.debug("Creating main menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -117,14 +119,21 @@ public class MenuSystem {
         ButtonData multiPlayer = new ButtonData("Multiplayer");
         multiPlayer.setOnAction(() -> view.switchToDisplay(multiplayerMenuDisplay));
         layout.addButton(multiPlayer);
-        
-        ButtonData settings = new ButtonData("Settings");
-        settings.setOnAction(() -> view.switchToDisplay(settingsDisplay));
-        layout.addButton(settings);
+
+        ButtonData instructions = new ButtonData("Instructions");
+        instructions.setOnAction(() -> {
+            view.switchToDisplay(instructionsDisplay);
+            view.switchBackground(SpriteLocation.INSTRUCTIONS);
+        });
+        layout.addButton(instructions);
 
         ButtonData credits = new ButtonData("Credits");
         credits.setOnAction(() -> view.switchToDisplay(creditDisplay));
         layout.addButton(credits);
+        
+        ButtonData settings = new ButtonData("Settings");
+        settings.setOnAction(() -> view.switchToDisplay(settingsDisplay));
+        layout.addButton(settings);
         
         ButtonData quit = new ButtonData("Exit");
         quit.setOnAction(() -> view.close());
@@ -132,6 +141,27 @@ public class MenuSystem {
 
         return layout;
 
+    }
+    
+    private GraphicsDisplay createInstructionsMenu(GraphicsDisplay mainMenuDisplay) {
+        
+        ButtonData instructions = new ButtonData(BACK);
+        instructions.setOnAction(() -> {
+            view.switchToDisplay(mainMenuDisplay);
+            view.switchBackground(SpriteLocation.BACKGROUND);
+        });
+        
+        instructions.setHeight(0.2f);
+        instructions.setWidth(0.4f);
+        instructions.setPosition(0.7f, 0.8f);
+        instructions.setBackgroundColour(0, 0, 0);
+        instructions.setTextColour(1, 1, 1);
+        
+        GraphicsDisplay display = new GraphicsDisplay();
+        
+        display.addButton(instructions);
+        
+        return display;
     }
 
     private Layout createSettingMenu(GraphicsDisplay mainMenuDisplay, GraphicsDisplay audioSettingsDisplay, GraphicsDisplay videoSettingsDisplay, GraphicsDisplay keyBindingDisplay) {

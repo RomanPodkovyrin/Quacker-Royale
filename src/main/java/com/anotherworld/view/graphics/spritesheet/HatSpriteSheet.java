@@ -18,10 +18,10 @@ public class HatSpriteSheet extends AbstractPlayerSpriteSheet {
 
     @Override
     public SpriteLocation getTextureBuffer() {
-        switch (data.getObjectID().toLowerCase()) { //TODO switch this to real method
+        switch (data.getObjectID().toLowerCase()) {
             case "santa":
                 return SpriteLocation.SANTA_HAT;
-            case "priate":
+            case "pirate":
                 return SpriteLocation.PIRATE_HAT;
             case "robber":
                 return SpriteLocation.ROBBER_HAT;

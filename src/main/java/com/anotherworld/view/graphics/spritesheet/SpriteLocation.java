@@ -1,9 +1,10 @@
 package com.anotherworld.view.graphics.spritesheet;
 
 public enum SpriteLocation {
-    NONE, TEXT, PLAYER, POWER_UP, POLICE_HAT, PIRATE_HAT, ROBBER_HAT, SANTA_HAT, SAFE_BALL, DANGEROUS_BALL;
+    NONE, TEXT, PLAYER, POWER_UP, POLICE_HAT, PIRATE_HAT, ROBBER_HAT, SANTA_HAT, SAFE_BALL, DANGEROUS_BALL, BACKGROUND,
+    INSTRUCTIONS;
     
-    public static final int NUMBER_OF_LOCATIONS = 10;
+    public static final int NUMBER_OF_LOCATIONS = 12;
     
     /**
      * Returns a unique int for each sprite location.
@@ -31,6 +32,10 @@ public enum SpriteLocation {
                 return 8;
             case DANGEROUS_BALL:
                 return 9;
+            case BACKGROUND:
+                return 10;
+            case INSTRUCTIONS:
+                return 11;
             default:
                 return 0;
         }

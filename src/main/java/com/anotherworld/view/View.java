@@ -49,6 +49,8 @@ import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.GraphicsDisplay;
 import com.anotherworld.view.graphics.MenuScene;
 import com.anotherworld.view.graphics.Scene;
+import com.anotherworld.view.graphics.spritesheet.RectangleSpriteSheet;
+import com.anotherworld.view.graphics.spritesheet.SpriteLocation;
 import com.anotherworld.view.input.BindableKeyListener;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.StringKeyListener;
@@ -59,6 +61,7 @@ import com.anotherworld.view.programme.TexturedProgramme;
 import com.anotherworld.view.viewevent.ChangeWindowTitle;
 import com.anotherworld.view.viewevent.MenuSwitch;
 import com.anotherworld.view.viewevent.ReloadWindow;
+import com.anotherworld.view.viewevent.SwitchBackground;
 import com.anotherworld.view.viewevent.SwitchScene;
 import com.anotherworld.view.viewevent.UpdateDisplayObjects;
 import com.anotherworld.view.viewevent.ViewEvent;
@@ -381,6 +384,11 @@ public class View implements Runnable {
         } else if (event.getClass().equals(ReloadWindow.class)) {
             loadWindow();
             logger.debug("Window reloaded");
+        } else if (event.getClass().equals(SwitchBackground.class)) {
+            SwitchBackground switchBackground = (SwitchBackground) event;
+            System.out.println("Switching");
+            currentScene.switchBackgroundImage(switchBackground.getBackground());
+            logger.debug("Background switched");
         } else {
             logger.warn("Unexpected view event was created " + event.getClass());
         }
@@ -429,6 +437,22 @@ public class View implements Runnable {
     public void setTitle(String title) {
         synchronized (eventQueue) {
             eventQueue.add(new ChangeWindowTitle(title));
+        }
+    }
+    
+    /**
+     * Switches the view background with the sprite from the selected one.
+     * @param location the new background
+     */
+    public void switchBackground(SpriteLocation location) {
+        synchronized (eventQueue) {
+            switch (location) {
+                case INSTRUCTIONS:
+                    eventQueue.add(new SwitchBackground(new RectangleSpriteSheet(location, 1, 1000)));
+                    break;
+                default:
+                    eventQueue.add(new SwitchBackground(new RectangleSpriteSheet(SpriteLocation.BACKGROUND, 10, 1000f / 12)));
+            }
         }
     }
 

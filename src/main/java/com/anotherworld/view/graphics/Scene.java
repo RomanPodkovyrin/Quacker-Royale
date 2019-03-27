@@ -1,5 +1,6 @@
 package com.anotherworld.view.graphics;
 
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Creates and manages a view state like view game or main menu.
+ * Creates and manages a view state like view game or menus.
  * @author Jake Stewart
  *
  */
@@ -18,8 +19,19 @@ public class Scene {
     
     protected ArrayList<GraphicsDisplay> displays;
     
+    private GraphicsDisplay background;
+    
+    private BackgroundData backgroundData;
+    
+    /**
+     * Creates a scene that can have multiple displays with objects in.
+     */
     public Scene() {
         displays = new ArrayList<>();
+        this.background = new GraphicsDisplay();
+        backgroundData = new BackgroundData(0, 0, 2, 2);
+        background.addBackground(backgroundData);
+        displays.add(background);
     }
     
     /**
@@ -70,10 +82,15 @@ public class Scene {
     
     protected void clearDisplays() {
         displays.clear();
+        this.addDisplay(background);
     }
     
     public void addDisplay(GraphicsDisplay d) {
         displays.add(d);
+    }
+    
+    public void switchBackgroundImage(SpriteSheet spriteSheet) {
+        backgroundData.setSpriteSheet(spriteSheet);
     }
     
 }

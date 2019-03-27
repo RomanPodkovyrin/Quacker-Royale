@@ -1,5 +1,7 @@
 package com.anotherworld.view.graphics;
 
+import com.anotherworld.view.data.BackgroundDisplayData;
+import com.anotherworld.view.data.BackgroundDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.ParagraphDisplayObject;
 import com.anotherworld.view.data.TextDisplayData;
@@ -38,6 +40,8 @@ public class GraphicsDisplay {
     private ArrayList<ButtonData> buttonsToAdd;
 
     private ArrayList<TextDisplayData> textToAdd;
+    
+    private ArrayList<BackgroundDisplayData> backgrounds;
 
     public GraphicsDisplay() {
         this(-1f, -1f, 2f, 2f, new Static2dCamera(0, 0, 2, 2));
@@ -66,6 +70,7 @@ public class GraphicsDisplay {
         objects = new ArrayList<>();
         buttonsToAdd = new ArrayList<>();
         textToAdd = new ArrayList<>();
+        backgrounds = new ArrayList<>();
     }
 
     /**
@@ -86,6 +91,12 @@ public class GraphicsDisplay {
                 objects.add(new ParagraphDisplayObject(programme, data));
             }
             textToAdd.clear();
+        }
+        synchronized (backgrounds) {
+            for (BackgroundDisplayData background : backgrounds) {
+                objects.add(new BackgroundDisplayObject(programme, background));
+            }
+            backgrounds.clear();
         }
         programme.pushMatrix();
         this.transform(programme);
@@ -170,6 +181,16 @@ public class GraphicsDisplay {
     public void changeCamera(Static2dCamera static2dCamera) {
         synchronized (camera) {
             this.camera = static2dCamera;
+        }
+    }
+
+    /**
+     * Adds a background to the graphicsDisplay.
+     * @param backgroundData the background to add
+     */
+    public void addBackground(BackgroundDisplayData backgroundData) {
+        synchronized (backgrounds) {
+            backgrounds.add(backgroundData);
         }
     }
 
