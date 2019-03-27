@@ -33,7 +33,7 @@ public class AvoidEdge extends Job {
     @Override
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
-        float distanceFromEdge = ai.getRadius();
+        float distanceFromEdge = ai.getRadius()*2;
         logger.debug("Running AvoidEdge");
 
         // get x y Matrix of the Platform

@@ -56,7 +56,7 @@ public class PointAndDash extends Job  {
             }
 
             ai.setVelocity(0,0);
-            System.out.println("Ai charge " + ai.getChargeLevel() + " max " + GameSettings.getDefaultPlayerMaxCharge());
+//            System.out.println("Ai charge " + ai.getChargeLevel() + " max " + GameSettings.getDefaultPlayerMaxCharge());
             if (ai.getChargeLevel() >= GameSettings.getDefaultPlayerMaxCharge() * 1) {
                 logger.trace("Reached full charge");
                 GameSession.updatePlayer(ai,new ArrayList<>(),session);
@@ -67,11 +67,11 @@ public class PointAndDash extends Job  {
                 PlayerData closestPlayer = targetPlayers.get(0);
                 //TODO  still has speed after hashing
                 BlackBoard.moveTo(ai,closestPlayer.getCoordinates());
-                System.out.println("Ai location " + ai.getCoordinates());
-                System.out.println("Player location " + closestPlayer.getCoordinates());
-                System.out.println("Vector ai -> player " + MatrixMath.pointsVector(ai.getCoordinates(),closestPlayer.getCoordinates()));
-                System.out.println("Norm ai -> player " + MatrixMath.pointsVector(ai.getCoordinates(),closestPlayer.getCoordinates()).normalize());
-                System.out.println(ai.getVelocity());
+//                System.out.println("Ai location " + ai.getCoordinates());
+//                System.out.println("Player location " + closestPlayer.getCoordinates());
+//                System.out.println("Vector ai -> player " + MatrixMath.pointsVector(ai.getCoordinates(),closestPlayer.getCoordinates()));
+//                System.out.println("Norm ai -> player " + MatrixMath.pointsVector(ai.getCoordinates(),closestPlayer.getCoordinates()).normalize());
+//                System.out.println(ai.getVelocity());
                 Matrix point = MatrixMath.pointsVector(ai.getCoordinates(),closestPlayer.getCoordinates()).normalize();
                 ai.setVelocity(point.getX(),point.getY());
 

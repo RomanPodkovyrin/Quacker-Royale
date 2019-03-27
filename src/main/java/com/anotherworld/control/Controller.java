@@ -377,7 +377,7 @@ public class Controller {
      */
     public void startSinglePlayer() {
         logger.info("Starting single player game");
-//        setUp();
+        setUp();
         GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
         startTheGame(settings, new NetworkControllerSinglePlayer());
     }

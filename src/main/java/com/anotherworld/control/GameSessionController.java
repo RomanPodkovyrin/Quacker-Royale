@@ -193,6 +193,7 @@ public class GameSessionController {
             boolean allRanked = rankings.size() == settings.getPlayers().size() + 1 + settings.getAi().size();
 
             if (rankings.isEmpty() | !allRanked) {
+                rankings.clear();
                 logger.trace("No winner");
             } else {
 
