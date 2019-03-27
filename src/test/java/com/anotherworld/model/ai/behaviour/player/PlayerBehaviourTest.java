@@ -5,6 +5,7 @@ import com.anotherworld.model.ai.behaviour.player.domination.GetPowerUPs;
 import com.anotherworld.model.ai.behaviour.player.peace.WalkAbout;
 import com.anotherworld.model.ai.behaviour.player.survival.*;
 import com.anotherworld.model.logic.Platform;
+import com.anotherworld.model.logic.PowerUpManager;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.datapool.*;
 import org.junit.Before;
@@ -308,7 +309,7 @@ public class PlayerBehaviourTest {
         // danger need to stop
         ball.setDangerous(true);
         ball.setVelocity(1,0);
-        ball.setCoordinates(10,37);
+        ball.setCoordinates(10,36);
         currentAI.setVelocity(0,-1);
         currentAI.setCoordinates(80,45);
         job = new CheckIfSaveToGo();
@@ -331,6 +332,10 @@ public class PlayerBehaviourTest {
 
     @Test
     public void GetPowerUpTest() {
+        GameSessionData session = new GameSessionData(1000);
+        session.setPowerUpSchedule(PowerUpManager.generatePowerUpSchedule(1000,new PlatformData(40,4)));
+
+
         GetPowerUPs job = new GetPowerUPs();
         currentAI.setCoordinates(80,45);
         job.start();
@@ -388,6 +393,9 @@ public class PlayerBehaviourTest {
 
     @Test
     public void GetHealthTest() {
+        GameSessionData session = new GameSessionData(1000);
+        session.setPowerUpSchedule(PowerUpManager.generatePowerUpSchedule(1000,new PlatformData(40,4)));
+
         GetHealth job = new GetHealth();
         job.start();
         job.act(currentAI,otherPlayers,balls,platform,session);
