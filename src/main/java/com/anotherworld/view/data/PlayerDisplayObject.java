@@ -6,6 +6,7 @@ import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.graphics.spritesheet.PlayerSpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
+import java.util.LinkedList;
 import java.util.Optional;
 
 /**
@@ -21,8 +22,8 @@ public class PlayerDisplayObject extends DisplayObject {
     private float maxB;
     
     private Programme programme;
-    
     private Optional<Long> timeStartedFalling;
+    private HealthBarDisplayObject healthBar;
     
     /**
      * Creates a display object to display a player.
@@ -34,6 +35,7 @@ public class PlayerDisplayObject extends DisplayObject {
         this.setColours();
         this.timeStartedFalling = Optional.empty();
         this.programme = programme;
+        this.healthBar = new HealthBarDisplayObject(programme, displayData);
     }
     
     private void setColours() {
@@ -46,8 +48,16 @@ public class PlayerDisplayObject extends DisplayObject {
     }
     
     @Override
+    public LinkedList<DisplayObject> draw() {
+        LinkedList<DisplayObject> result = super.draw();
+        result.addAll(healthBar.draw());
+        return result;
+    }
+    
+    @Override
     public void transform() {
-        if (displayData.getState() == ObjectState.DEAD) {
+        super.transform();
+        if (displayData.getState() == ObjectState.DEAD && displayData.isDeadByFalling()) {
             if (!timeStartedFalling.isPresent()) {
                 timeStartedFalling = Optional.of(System.currentTimeMillis());
             }
@@ -55,7 +65,6 @@ public class PlayerDisplayObject extends DisplayObject {
             timeFalling = timeFalling / 1000;
             programme.scalef(1 / (1 + timeFalling * timeFalling * 4.8f), 1 / (1 + timeFalling * timeFalling * 4.8f), 0);
         }
-        super.transform();
     }
 
     @Override
@@ -76,7 +85,6 @@ public class PlayerDisplayObject extends DisplayObject {
     @Override
     public boolean shouldDraw() {
         return true;
-        //return displayData.getState() != ObjectState.DEAD;
     }
     
     @Override
