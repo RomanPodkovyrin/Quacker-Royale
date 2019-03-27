@@ -2,11 +2,9 @@ package com.anotherworld.view.graphics;
 
 public class MenuScene extends Scene {
     
-    private GraphicsDisplay background;
     
     public MenuScene() {
         super();
-        this.background =  new GraphicsDisplay();
     }
 
     /**
@@ -14,8 +12,7 @@ public class MenuScene extends Scene {
      * @param display The new display to render
      */
     public void changeMenuDisplay(GraphicsDisplay display) {
-        this.clearDisplays();
-        this.addDisplay(background);
+        super.clearDisplays();
         this.addDisplay(display);
     }
 

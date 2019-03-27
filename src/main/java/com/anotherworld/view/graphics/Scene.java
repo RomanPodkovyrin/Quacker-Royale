@@ -1,5 +1,6 @@
 package com.anotherworld.view.graphics;
 
+import com.anotherworld.view.data.BackgroundDisplayData;
 import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
@@ -18,8 +19,15 @@ public class Scene {
     
     protected ArrayList<GraphicsDisplay> displays;
     
+    private GraphicsDisplay background;
+    
     public Scene() {
         displays = new ArrayList<>();
+        this.background = new GraphicsDisplay();
+        BackgroundDisplayData backgroundData;
+        backgroundData = new BackgroundData(0, 0, 2, 2);
+        background.addBackground(backgroundData);
+        displays.add(background);
     }
     
     /**
@@ -70,6 +78,7 @@ public class Scene {
     
     protected void clearDisplays() {
         displays.clear();
+        this.addDisplay(background);
     }
     
     public void addDisplay(GraphicsDisplay d) {

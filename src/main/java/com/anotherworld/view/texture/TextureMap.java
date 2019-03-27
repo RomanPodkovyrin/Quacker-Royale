@@ -41,6 +41,7 @@ public class TextureMap {
         textureBuffers[SpriteLocation.PIRATE_HAT.getInt()] = new TextureBuffer(location + "pirate.png", 4, 5);
         textureBuffers[SpriteLocation.ROBBER_HAT.getInt()] = new TextureBuffer(location + "robber.png", 4, 5);
         textureBuffers[SpriteLocation.SANTA_HAT.getInt()] = new TextureBuffer(location + "santa.png", 4, 5);
+        textureBuffers[SpriteLocation.BACKGROUND.getInt()] = new TextureBuffer(location + "Background.png", 2, 5);
     }
     
     /**
