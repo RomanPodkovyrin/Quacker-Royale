@@ -1,6 +1,7 @@
 package com.anotherworld.tools.datapool;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -24,8 +25,8 @@ public class GameSessionData implements Serializable {
     private LinkedList<String> rankings;
 
     // Power up elements of the game
-    private LinkedList<PowerUpData> powerUpSchedule;
-    PowerUpData currentPowerUp;
+    private ArrayList<PowerUpData> powerUpSchedule;
+    int currentPowerUp;
 
     /**
      * Class constructor for the game data.
@@ -38,8 +39,8 @@ public class GameSessionData implements Serializable {
         this.timeStopCounter = 0;
         this.timeStopped     = false;
         this.rankings        = new LinkedList<>();
-        this.powerUpSchedule = new LinkedList<>();
-        this.currentPowerUp  = null;
+        this.powerUpSchedule = new ArrayList<>();
+        this.currentPowerUp  = 0;
     }
 
     /**
@@ -149,7 +150,7 @@ public class GameSessionData implements Serializable {
      * Gets the schedule of power up spawns.
      * @return linked list representing the schedule of power up spawns.
      */
-    public LinkedList<PowerUpData> getPowerUpSchedule() {
+    public ArrayList<PowerUpData> getPowerUpSchedule() {
         return this.powerUpSchedule;
     }
 
@@ -157,23 +158,30 @@ public class GameSessionData implements Serializable {
      * Sets the schedule of power up spawns.
      * @param schedule the schedule determining the spawn times of the power ups.
      */
-    public void setPowerUpSchedule(LinkedList<PowerUpData> schedule) {
+    public void setPowerUpSchedule(ArrayList<PowerUpData> schedule) {
         this.powerUpSchedule = schedule;
     }
 
     /**
-     * Gets the current power up that is spawned.
+     * Gets of the current power up that is spawned.
      * @return the power up that is currently spawned.
      */
     public PowerUpData getCurrentPowerUp() {
+        return this.powerUpSchedule.get(currentPowerUp);
+    }
+
+    /**
+     *
+     */
+    public int getPowerUpIndex() {
         return this.currentPowerUp;
     }
 
     /**
-     * Sets the current power up that is spawned.
-     * @param powerUp The power up to spawn.
+     * Sets the current power up that is spawned to an index in the power up schedule.
+     * @param powerUpIndex The index of the power up to spawn.
      */
-    public void setCurrentPowerUp(PowerUpData powerUp) {
-        this.currentPowerUp = powerUp;
+    public void setCurrentPowerUp(int powerUpIndex) {
+        this.currentPowerUp = powerUpIndex;
     }
 }

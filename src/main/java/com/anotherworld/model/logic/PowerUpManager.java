@@ -63,18 +63,11 @@ public class PowerUpManager {
      * @param data the game session data which holds all the power ups.
      */
     public static void spawnPowerUp(GameSessionData data) {
-        PowerUpData nextPowerUp;
         PowerUpData currentPowerUp = data.getCurrentPowerUp();
-        nextPowerUp = data.getPowerUpSchedule().peek();
-        if (nextPowerUp != null) {
-            if (nextPowerUp.getSpawnTime() == data.getTimeLeft()) {
-                data.getPowerUpSchedule().pop();
-                if (currentPowerUp != null) {
-                    currentPowerUp.setState(ObjectState.INACTIVE);
-                }
-                nextPowerUp.setState(ObjectState.ACTIVE);
-                data.setCurrentPowerUp(nextPowerUp);
-            }
+        if (data.getPowerUpIndex() > data.getPowerUpSchedule().size() - 1) {
+            data.setCurrentPowerUp(data.getPowerUpIndex()+1);
+            currentPowerUp.setState(ObjectState.INACTIVE);
+            data.getCurrentPowerUp().setState(ObjectState.ACTIVE);
         }
     }
 
@@ -117,7 +110,8 @@ public class PowerUpManager {
                 powerUp.setState(ObjectState.INACTIVE);
 
                 //Delete the current power up
-                data.setCurrentPowerUp(null);
+                data.setCurrentPowerUp(data.getPowerUpIndex()+1);
+                data.getCurrentPowerUp().setState(ObjectState.ACTIVE);
             }
         }
     }

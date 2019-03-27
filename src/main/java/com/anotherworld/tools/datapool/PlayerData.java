@@ -53,7 +53,12 @@ public class PlayerData extends MovableData implements PlayerDisplayData, Serial
      * @param data data to be copied.
      */
     public void copyObject(PlayerData data) {
-        this.health = data.getHealth();
+        this.health = data.health;
+        this.shielded = data.shielded;
+        this.chargeLevel = data.chargeLevel;
+        this.stunTimer = data.stunTimer;
+        this.timeStopper = data.timeStopper;
+        this.timeStartedCharging = data.timeStartedCharging;
         this.deadByFalling = data.deadByFalling;
         super.copyObject(data);
     }
