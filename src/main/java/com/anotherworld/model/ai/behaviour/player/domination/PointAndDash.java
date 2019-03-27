@@ -2,6 +2,7 @@ package com.anotherworld.model.ai.behaviour.player.domination;
 
 import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
+import com.anotherworld.model.movable.Player;
 import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
@@ -37,9 +38,12 @@ public class PointAndDash extends Job  {
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
         if (ai.getState().equals(ObjectState.CHARGING)) {
-            GameSession.updatePlayer(ai,new ArrayList<>(Arrays.asList(Input.CHARGE)),session);
-//            ai.setTimeStartedCharging(session.getTicksElapsed());
-//            ai.setState(ObjectState.CHARGING);
+//            GameSession.updatePlayer(ai,new ArrayList<>(Arrays.asList(Input.CHARGE)),session);
+            ai.setTimeStartedCharging(session.getTicksElapsed());
+            ai.setState(ObjectState.CHARGING);
+            if ((session.getTicksElapsed() - ai.getTimeStartedCharging()) % 20 == 0) {
+                Player.incrementChargeLevel(ai);
+            }
 
             ArrayList<PlayerData> targetPlayers = BlackBoard.sortTargetPlayers(ai,players);
             if (targetPlayers.isEmpty()) {
@@ -53,7 +57,7 @@ public class PointAndDash extends Job  {
 
             ai.setVelocity(0,0);
             System.out.println("Ai charge " + ai.getChargeLevel() + " max " + GameSettings.getDefaultPlayerMaxCharge());
-            if (ai.getChargeLevel() >= GameSettings.getDefaultPlayerMaxCharge() * 0.5) {
+            if (ai.getChargeLevel() >= GameSettings.getDefaultPlayerMaxCharge() * 1) {
                 logger.trace("Reached full charge");
                 GameSession.updatePlayer(ai,new ArrayList<>(),session);
                 ai.setTimeStartedCharging(session.getTicksElapsed());
