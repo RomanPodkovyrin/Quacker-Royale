@@ -4,6 +4,7 @@ import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.settings.GameSettings;
+import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.Input;
@@ -12,6 +13,7 @@ import com.anotherworld.view.View;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -215,6 +217,10 @@ public class GameSessionController {
                 }
             }
 
+    }
+    
+    public List<String> getRanking() {
+        return settings.getGameSessionData().getRankings();
     }
 
 

@@ -71,7 +71,7 @@ public class GraphicsDisplay {
     /**
      * Returns draws the objects it contains to the screen.
      * @param programme The programme to use for rendering
-     * @param mouseState The current position of the cursor and if the left button is pressed
+     * @param mouseDown if the left button is pressed
      */
     public void draw(Programme programme, boolean mouseDown) {
         synchronized (buttonsToAdd) {
@@ -147,6 +147,10 @@ public class GraphicsDisplay {
         }
     }
     
+    /**
+     * Queues a text display object to be drawn.
+     * @param object the text to add
+     */
     public void addText(TextDisplayData object) {
         synchronized (textToAdd) {
             textToAdd.add(object);

@@ -1,7 +1,5 @@
 package com.anotherworld.control;
 
-import com.anotherworld.tools.exceptions.ConnectionClosed;
-import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.network.GameClient;
 import com.anotherworld.network.LobbyClient;
@@ -17,6 +15,8 @@ import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
+import com.anotherworld.tools.exceptions.ConnectionClosed;
+import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import java.io.IOException;
@@ -25,6 +25,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +39,8 @@ public class Controller {
     private static Logger logger = LogManager.getLogger(Controller.class);
 
     private View view;
+    
+    private Optional<GameSessionController> gameSession;
 
     //Default values for single player game
     private int defaultSinglePlayerAI;
@@ -60,6 +64,7 @@ public class Controller {
      */
     public Controller(View view) {
         this.view = view;
+        this.gameSession = Optional.empty();
         setUp();
 //        GameSettings.changeDifficulty(GameSettings.Difficulty.MEDIUM);
     }
@@ -90,7 +95,7 @@ public class Controller {
 
         try {
             logger.info("Starting the game session");
-            new GameSessionController(view, settings, network);
+            this.gameSession = Optional.of(new GameSessionController(view, settings, network));
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex);
         } catch (RuntimeException ex) {
@@ -107,6 +112,18 @@ public class Controller {
             runTheHostGame = true;
         }
         return runTheHostGame;
+    }
+    
+    /**
+     * Returns a list of string contains the rankings for each player.
+     * @return the player rankins
+     */
+    public List<String> getRanking() {
+        if (!gameSession.isPresent()) {
+            logger.warn("No game session is present at victory sceen");
+            return new ArrayList<>();
+        }
+        return gameSession.get().getRanking();
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.input.MouseState;
 import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class Scene {
     public void draw(int width, int height, Programme programme) {
         logger.debug("Drawing Scene");
         
-        boolean pressed = programme.getCusorPressed();
+        boolean pressed = programme.getCursorPressed();
         
         for (int i = 0; i < displays.size(); i++) {
             logger.trace("Drawing scene: " + i);

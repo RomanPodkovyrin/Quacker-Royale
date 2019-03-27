@@ -1,12 +1,12 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.tools.exceptions.ConnectionClosed;
-import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.KeySettings;
 import com.anotherworld.settings.ViewSettings;
 import com.anotherworld.tools.Wrapper;
+import com.anotherworld.tools.exceptions.ConnectionClosed;
+import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
@@ -36,6 +36,10 @@ public class MenuSystem {
         this.control = control;
     }
 
+    /**
+     * Creates and runs the menu using the view.
+     * @throws KeyListenerNotFoundException If the view objects can't be created for the menu
+     */
     public void start() throws KeyListenerNotFoundException {
 
         // TODO Change throw to menucouldnotbeinitialised or similar
@@ -581,6 +585,10 @@ public class MenuSystem {
         return layout;
     }
     
+    /**
+     * The main method to start the game menu.
+     * @param args the arguments passed to run the game (not currently used)
+     */
     public static void main(String[] args) {
         View view = new View();
 

@@ -249,7 +249,7 @@ public abstract class Programme {
      * Returns if the cursor has just been pressed.
      * @return if the cusor has just been pressed since last call
      */
-    public boolean getCusorPressed() {
+    public boolean getCursorPressed() {
         
         boolean pressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1;
         
