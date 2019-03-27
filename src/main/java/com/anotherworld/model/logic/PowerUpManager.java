@@ -11,7 +11,6 @@ import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -67,8 +66,8 @@ public class PowerUpManager {
         PowerUpData currentPowerUp = data.getCurrentPowerUp();
         if (data.getPowerUpIndex() + 1 < data.getPowerUpSchedule().size()) {
             if (data.getPowerUpSchedule().get(data.getPowerUpIndex() + 1).getSpawnTime() == data.getTimeLeft()) {
-                data.setCurrentPowerUp(data.getPowerUpIndex() + 1);
                 currentPowerUp.setState(ObjectState.INACTIVE);
+                data.setCurrentPowerUp(data.getPowerUpIndex() + 1);
                 data.getCurrentPowerUp().setState(ObjectState.ACTIVE);
             }
         }
