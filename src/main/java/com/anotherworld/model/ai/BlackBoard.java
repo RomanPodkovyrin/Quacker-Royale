@@ -23,6 +23,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class BlackBoard {
     private static Logger logger = LogManager.getLogger(BlackBoard.class);
+
+
     //The allowed safe distance between the ball and the player
     private static float safeDistance = 2;
     // Player id - ball target
@@ -42,6 +44,11 @@ public class BlackBoard {
         }
 
     }
+
+    public static float getSafeDistance() {
+        return safeDistance;
+    }
+
 
     public static float getAcceptableHealthPercentage() {
         return acceptableHealthPercentage;

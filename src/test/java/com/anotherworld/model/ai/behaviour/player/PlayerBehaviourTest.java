@@ -309,7 +309,7 @@ public class PlayerBehaviourTest {
         // danger need to stop
         ball.setDangerous(true);
         ball.setVelocity(1,0);
-        ball.setCoordinates(10,37);
+        ball.setCoordinates(10,36);
         currentAI.setVelocity(0,-1);
         currentAI.setCoordinates(80,45);
         job = new CheckIfSaveToGo();
