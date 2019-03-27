@@ -1,6 +1,6 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.data.BackgroundDisplayData;
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
@@ -21,13 +21,14 @@ public class Scene {
     
     private GraphicsDisplay background;
     
+    private BackgroundData backgroundData;
+    
     /**
      * Creates a scene that can have multiple displays with objects in.
      */
     public Scene() {
         displays = new ArrayList<>();
         this.background = new GraphicsDisplay();
-        BackgroundDisplayData backgroundData;
         backgroundData = new BackgroundData(0, 0, 2, 2);
         background.addBackground(backgroundData);
         displays.add(background);
@@ -86,6 +87,10 @@ public class Scene {
     
     public void addDisplay(GraphicsDisplay d) {
         displays.add(d);
+    }
+    
+    public void switchBackgroundImage(SpriteSheet spriteSheet) {
+        backgroundData.setSpriteSheet(spriteSheet);
     }
     
 }

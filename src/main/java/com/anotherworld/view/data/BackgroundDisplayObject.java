@@ -2,6 +2,7 @@ package com.anotherworld.view.data;
 
 import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
 public class BackgroundDisplayObject extends DisplayObject {
@@ -11,6 +12,11 @@ public class BackgroundDisplayObject extends DisplayObject {
     public BackgroundDisplayObject(Programme programme, BackgroundDisplayData displayData) {
         super(displayData.getSpriteSheet(), programme, Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), DrawType.TRIANGLE_FAN, 1, 1, 1);
         this.displayData = displayData;
+    }
+    
+    @Override
+    public SpriteSheet getSpriteSheet() {
+        return displayData.getSpriteSheet();
     }
 
     @Override

@@ -10,6 +10,11 @@ public class ClientLobbyWaitThread implements Runnable {
     private Supplier<Boolean> shouldStart;
     private ButtonListener gameStart;
     
+    /**
+     * Creates a runnable object that manages when a client should start the game.
+     * @param shouldStart Returns if the client should start
+     * @param gameStart Performs the action on game start
+     */
     public ClientLobbyWaitThread(Supplier<Boolean> shouldStart, ButtonListener gameStart) {
         waitingForGame = true;
         gameStarted = false;

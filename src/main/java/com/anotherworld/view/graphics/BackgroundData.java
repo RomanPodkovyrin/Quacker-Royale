@@ -64,4 +64,8 @@ public class BackgroundData implements BackgroundDisplayData {
         return spriteSheet;
     }
 
+    public void setSpriteSheet(SpriteSheet spriteSheet) {
+        this.spriteSheet = spriteSheet;
+    }
+
 }
