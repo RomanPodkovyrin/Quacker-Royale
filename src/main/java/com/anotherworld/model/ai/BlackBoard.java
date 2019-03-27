@@ -1,13 +1,13 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.tools.maths.Line;
-import com.anotherworld.tools.maths.Matrix;
-import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.maths.Line;
 import com.anotherworld.tools.maths.Maths;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 
 import java.io.IOException;
 import java.util.ArrayList;

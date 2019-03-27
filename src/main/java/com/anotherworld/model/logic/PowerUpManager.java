@@ -1,6 +1,5 @@
 package com.anotherworld.model.logic;
 
-import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.physics.Physics;
 import com.anotherworld.settings.GameSettings;
@@ -10,6 +9,7 @@ import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
 
+import com.anotherworld.tools.maths.Matrix;
 import java.util.ArrayList;
 import java.util.Random;
 

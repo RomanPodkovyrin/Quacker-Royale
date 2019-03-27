@@ -56,7 +56,7 @@ public class GameSessionData implements Serializable {
         this.rankings        = data.rankings;
         this.currentPowerUp  = data.currentPowerUp;
 
-        for (int i = 0 ; i < powerUpSchedule.size(); i++) {
+        for (int i = 0; i < powerUpSchedule.size(); i++) {
             this.powerUpSchedule.get(i).copyObject(data.powerUpSchedule.get(i));
         }
     }

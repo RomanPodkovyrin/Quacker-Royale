@@ -1,7 +1,12 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.behaviour.*;
-import com.anotherworld.model.ai.behaviour.player.survival.CheckIfSaveToGo;
+import com.anotherworld.model.ai.behaviour.Inverter;
+import com.anotherworld.model.ai.behaviour.Job;
+import com.anotherworld.model.ai.behaviour.Repeat;
+import com.anotherworld.model.ai.behaviour.Selector;
+import com.anotherworld.model.ai.behaviour.Sequence;
+import com.anotherworld.model.ai.behaviour.SequenceSuccess;
+import com.anotherworld.model.ai.behaviour.Succeeder;
 import com.anotherworld.model.ai.behaviour.player.domination.ChaseBall;
 import com.anotherworld.model.ai.behaviour.player.domination.GetPowerUPs;
 import com.anotherworld.model.ai.behaviour.player.domination.PointAndDash;
@@ -10,6 +15,7 @@ import com.anotherworld.model.ai.behaviour.player.peace.WalkAbout;
 import com.anotherworld.model.ai.behaviour.player.survival.AvoidBall;
 import com.anotherworld.model.ai.behaviour.player.survival.AvoidEdge;
 import com.anotherworld.model.ai.behaviour.player.survival.CheckHealth;
+import com.anotherworld.model.ai.behaviour.player.survival.CheckIfSaveToGo;
 import com.anotherworld.model.ai.behaviour.player.survival.CheckShieldandTimePowerUP;
 import com.anotherworld.model.ai.behaviour.player.survival.GetHealth;
 import com.anotherworld.model.ai.behaviour.player.survival.StopCharging;
@@ -88,12 +94,12 @@ public class ControllerAI {
 
             // Setting up the extra check if the given makeDecision can be done to avoid the ball
             ArrayList<Job> extra = new ArrayList<>(
-                    Arrays.asList(new SequenceSuccess(dominationAndPeace),new CheckIfSaveToGo() ));
+                    Arrays.asList(new SequenceSuccess(dominationAndPeace),new CheckIfSaveToGo()));
 
 
             // Setting up the main routine
             ArrayList<Job> routines = new ArrayList<>();
-            routines.add(new Selector(new ArrayList<>(Arrays.asList(new SequenceSuccess(getSurvival()), new Inverter( new Succeeder(new StopCharging()))))));
+            routines.add(new Selector(new ArrayList<>(Arrays.asList(new SequenceSuccess(getSurvival()), new Inverter(new Succeeder(new StopCharging()))))));
             routines.add(new Sequence(extra));
 
             Job job = new Repeat(new SequenceSuccess(routines));

@@ -1,8 +1,8 @@
 package com.anotherworld.model.logic;
 
-import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.tools.datapool.MovableData;
 import com.anotherworld.tools.datapool.PlatformData;
+import com.anotherworld.tools.maths.Matrix;
 
 /**
  * Represents Platform Object.

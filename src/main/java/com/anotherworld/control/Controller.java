@@ -66,7 +66,6 @@ public class Controller {
         this.view = view;
         this.gameSession = Optional.empty();
         setUp();
-//        GameSettings.changeDifficulty(GameSettings.Difficulty.MEDIUM);
     }
 
     private void setUp() {
@@ -201,7 +200,7 @@ public class Controller {
      * Waits for all clients to connect and player to start the game.
      * @param lobbyServer - the lobby server
      * @param server - the game server
-     * @throws ConnectionClosed
+     * @throws ConnectionClosed - if something bad happen
      */
     private void waitInLobby(LobbyServer lobbyServer, Server server) throws ConnectionClosed {
         logger.trace("Lobby server is waiting for all players to connect and for Host to start the game");
@@ -284,7 +283,7 @@ public class Controller {
             try {
                 lobbyClient.cancelConnection();
             } catch (IOException e1) {
-
+                logger.error(e1.getMessage());
             } finally {
                 logger.warn("Error while connecting to the Server");
                 throw new ConnectionClosed();
@@ -299,7 +298,7 @@ public class Controller {
             try {
                 lobbyClient.cancelConnection();
             } catch (IOException e1) {
-
+                logger.error(e1.getMessage());
             } finally {
                 throw new ConnectionClosed();
             }
@@ -310,7 +309,7 @@ public class Controller {
         try {
             client = new GameClient(serverIP);
             client.start();
-        } catch (SocketException |UnknownHostException e) {
+        } catch (SocketException | UnknownHostException e) {
             logger.warn("Could not connect to game client");
             client.stopClient();
             throw new ConnectionClosed();
