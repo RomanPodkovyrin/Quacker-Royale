@@ -153,7 +153,7 @@ public class MenuSystem {
         
         instructions.setHeight(0.2f);
         instructions.setWidth(0.4f);
-        instructions.setPosition(0.7f, 0.8f);
+        instructions.setPosition(0.7f, -0.8f);
         instructions.setBackgroundColour(0, 0, 0);
         instructions.setTextColour(1, 1, 1);
         

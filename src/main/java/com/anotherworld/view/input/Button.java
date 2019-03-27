@@ -1,6 +1,7 @@
 package com.anotherworld.view.input;
 
 import com.anotherworld.view.data.RectangleDisplayObject;
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class Button extends RectangleDisplayObject implements Clickable {
      * @param buttonData The data to use for rendering
      */
     public Button(Programme programme, ButtonData buttonData) {
-        super(programme, buttonData);
+        super(new SpriteSheet(), programme, buttonData);
         this.listeners = new ArrayList<>();
         this.buttonData = buttonData;
         this.setColour(buttonData.getBackgroundR(), buttonData.getBackgroundG(), buttonData.getBackgroundB());

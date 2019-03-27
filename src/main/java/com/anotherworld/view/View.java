@@ -37,11 +37,11 @@ import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.BallDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.PlatformDisplayObject;
 import com.anotherworld.view.data.PlayerDisplayData;
 import com.anotherworld.view.data.PlayerDisplayObject;
 import com.anotherworld.view.data.PowerUpDisplayObject;
 import com.anotherworld.view.data.RectangleDisplayData;
-import com.anotherworld.view.data.RectangleDisplayObject;
 import com.anotherworld.view.data.TextDisplayData;
 import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.data.WallDisplayObject;
@@ -351,7 +351,7 @@ public class View implements Runnable {
             ArrayList<DisplayObject> disObj = new ArrayList<>();
             UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects) event);
             for (int i = 0; i < updateEvent.getRectangleObjects().size(); i++) {
-                disObj.add(new RectangleDisplayObject(programme, updateEvent.getRectangleObjects().get(i)));
+                disObj.add(new PlatformDisplayObject(programme, updateEvent.getRectangleObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getWallObjects().size(); i++) {
                 disObj.add(new WallDisplayObject(programme, updateEvent.getWallObjects().get(i)));

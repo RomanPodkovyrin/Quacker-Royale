@@ -2,6 +2,7 @@ package com.anotherworld.view.data;
 
 import com.anotherworld.view.data.primatives.DrawType;
 import com.anotherworld.view.data.primatives.Points2d;
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
 /** 
@@ -20,11 +21,13 @@ public class RectangleDisplayObject extends DisplayObject {
     private final Programme programme;
     
     /**
-     * Creates a display object to display a rectangle.
-     * @param displayData The rectangle to display
+     * Creates a rectangle to display.
+     * @param spriteSheet The rectangle sprite sheet
+     * @param programme The programme to use for rendering
+     * @param displayData The display data
      */
-    public RectangleDisplayObject(Programme programme, RectangleDisplayData displayData) {
-        super(programme, Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), DrawType.TRIANGLE_FAN, 0.6f, 0.4f, 0f);
+    public RectangleDisplayObject(SpriteSheet spriteSheet, Programme programme, RectangleDisplayData displayData) {
+        super(spriteSheet, programme, Points2d.genRectangle(displayData.getWidth(), displayData.getHeight()), DrawType.TRIANGLE_FAN, 1f, 1f, 1f);
         this.displayData = displayData;
         this.maxWidth = displayData.getWidth();
         this.maxHeight = displayData.getHeight();
