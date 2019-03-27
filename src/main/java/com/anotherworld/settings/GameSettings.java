@@ -67,20 +67,9 @@ public class GameSettings {
     private ArrayList<WallData> walls = new ArrayList<>();
     private GameSessionData gameSessionData;
 
-    enum Hat {
-        SANTA,ROBBER,POLICE,PIRATE
-    }
+
 
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("santa","robber", "police", "pirate", "default"));
-    private ArrayList<Hat> hats = new ArrayList<>();
-
-    public GameSettings (PlayerData currentPlayer,Hat currentPlayerHat, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
-    ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSessionData, ArrayList<Hat> hats){
-
-        hats.add(currentPlayerHat);
-        this.hats = hats;
-        setUP(currentPlayer, players, ai, balls, platforms, walls, gameSessionData);
-    }
 
 
     /**
