@@ -54,7 +54,7 @@ public class GameSessionData implements Serializable {
         this.timeStopCounter = data.timeStopCounter;
         this.timeStopped     = data.timeStopped;
         this.rankings        = data.rankings;
-        this.powerUpSchedule = data.powerUpSchedule;
+        //this.powerUpSchedule = data.powerUpSchedule;
         this.currentPowerUp = data.currentPowerUp;
 
         for (int i = 0 ; i < powerUpSchedule.size(); i++) {
