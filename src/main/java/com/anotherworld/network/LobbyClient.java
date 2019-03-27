@@ -28,7 +28,6 @@ public class LobbyClient {
     private DataInputStream in;
     private static Logger logger = LogManager.getLogger(LobbyClient.class);
     private boolean conectedToHost = false;
-    private String clientHat = "hat";
 
     /**
      * Used to set up a connection with the lobby server.
@@ -53,7 +52,7 @@ public class LobbyClient {
         logger.info("Just connected to " + client.getRemoteSocketAddress());
         outToServer = client.getOutputStream();
         out = new DataOutputStream(outToServer);
-        out.writeUTF(clientHat);
+        out.writeUTF("Hello from " + client.getLocalSocketAddress());
         conectedToHost = true;
     }
 

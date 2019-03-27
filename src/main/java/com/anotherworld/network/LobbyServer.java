@@ -24,7 +24,6 @@ public class LobbyServer extends Thread {
     private boolean allPlayersJoined;
     private boolean canStart = false;
     private ArrayList<String> playersIpAddresses;
-    private HashMap<String, String> playersIpsAndHats;
     private ArrayList<OutputStream> clientSockets;
     private int currentPlayersAmount;
     private int numberOfClients;
@@ -38,7 +37,6 @@ public class LobbyServer extends Thread {
     public LobbyServer(int numberOfClients) {
         playersIpAddresses = new ArrayList<String>();
         clientSockets = new ArrayList<OutputStream>();
-        playersIpsAndHats = new HashMap<String, String>();
         currentPlayersAmount = 0;
         this.numberOfClients = numberOfClients;
         port = 4446;
@@ -85,9 +83,8 @@ public class LobbyServer extends Thread {
         if (clientMessage.equals("cancel connection")) {
             for (int i = 0; i < playersIpAddresses.size(); i++) {
                 if (playersIpAddresses.get(i).equals(lobbySocket.getInetAddress().getHostAddress())) {
-                    logger.info("Player " + playersIpAddresses.get(i) + " with " + playersIpsAndHats.get(playersIpAddresses.get(i)) + " hat has disconnected.");
+                    logger.info("Player " + playersIpAddresses.get(i) + " Disconnected");
                     playersIpAddresses.remove(playersIpAddresses.get(i));
-                    playersIpsAndHats.remove(playersIpAddresses.get(i));
                     currentPlayersAmount--;
                     allPlayersJoined = false;
                     canStart = false;
@@ -97,9 +94,8 @@ public class LobbyServer extends Thread {
             logger.info("Received from: " + lobbySocket.getInetAddress().getHostAddress() + " on port " + lobbySocket.getPort());
             clientSockets.add(lobbySocket.getOutputStream());
             playersIpAddresses.add(lobbySocket.getInetAddress().getHostAddress());
-            playersIpsAndHats.put(lobbySocket.getInetAddress().getHostAddress(), clientMessage);
             countPlayers();
-            logger.info("New player has joined the lobby. He has a " + playersIpsAndHats.get(lobbySocket.getInetAddress().getHostAddress()) + " hat. Now there are " + currentPlayersAmount + " player in lobby");
+            logger.info("New player has joined the lobby. Now there are " + currentPlayersAmount + " player in lobby");
         }
     }
 
@@ -140,15 +136,6 @@ public class LobbyServer extends Thread {
      */
     public ArrayList<String> getIPs() {
         return playersIpAddresses;
-    }
-
-    /**
-     * Used to get all the IP addresses and hats of the players.
-     *
-     * @return the ArrayList with all clients IPs
-     */
-    public HashMap<String, String> getIpsAndHats() {
-        return playersIpsAndHats;
     }
 
     /**
