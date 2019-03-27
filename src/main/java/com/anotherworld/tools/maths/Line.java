@@ -1,4 +1,4 @@
-package com.anotherworld.model.ai.tools;
+package com.anotherworld.tools.maths;
 
 /**
  * Represents a line in the form of
@@ -26,16 +26,8 @@ public class Line {
         return a;
     }
 
-    public float getX1() {
-        return x1;
-    }
-
     public float getB() {
         return b;
-    }
-
-    public float getX2() {
-        return x2;
     }
 
     public float getD() {

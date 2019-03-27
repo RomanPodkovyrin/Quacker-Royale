@@ -7,7 +7,7 @@ import static org.lwjgl.opengl.GL46.glUniform1i;
 import static org.lwjgl.opengl.GL46.glUniform2f;
 import static org.lwjgl.opengl.GL46.glUniformMatrix4fv;
 
-import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.view.graphics.spritesheet.SpriteLocation;
 import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 

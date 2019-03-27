@@ -8,12 +8,11 @@ import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.input.Input;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+
 
 /**
  * If the player is charging it stops them from doing.
@@ -34,11 +33,9 @@ public class StopCharging extends Job {
         // Check is ai is charging
         if (ai.getState().equals(ObjectState.CHARGING)) {
             // Stop charging
-//            System.out.println("Stop charging");
             ai.setVelocity(0,0);
             ai.setState(ObjectState.IDLE);
             ai.setSpeed(GameSettings.getDefaultPlayerSpeed());
-//            GameSession.updatePlayer(ai,new ArrayList<Input>(),session);
 
             fail();
             return;

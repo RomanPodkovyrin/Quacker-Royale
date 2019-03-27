@@ -2,9 +2,9 @@ package com.anotherworld.model.ai.behaviour.player.survival;
 
 import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.ai.tools.Line;
-import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.tools.maths.Line;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
@@ -16,9 +16,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Makes sure that the AIController player stays away from the Dangerous balls.
- *  success - AIController is safe no need to avoid balls
- *  fail - AIController is not safe need to avoid balls
+ * Makes sure that the ControllerAI player stays away from the Dangerous balls.
+ *  success - ControllerAI is safe no need to avoid balls
+ *  fail - ControllerAI is not safe need to avoid balls
  * @author Roman
  */
 public class AvoidBall extends Job {
@@ -49,7 +49,7 @@ public class AvoidBall extends Job {
 
         logger.trace("Starting the AvoidBall Job");
 
-        //Sorts the balls based on their distance to the AIController
+        //Sorts the balls based on their distance to the ControllerAI
         BlackBoard.sortBalls(this.ai, this.balls);
 
 
@@ -66,7 +66,7 @@ public class AvoidBall extends Job {
     }
 
     /**
-     * Points the AIController players in the opposite direction of the dangerous ball.
+     * Points the ControllerAI players in the opposite direction of the dangerous ball.
      */
     private void moveAway() {
         // loads the first value which is the closest balls
@@ -77,7 +77,7 @@ public class AvoidBall extends Job {
             ballPosition = imminentDangerBalls.get(0).getCoordinates();
             ballDirection = imminentDangerBalls.get(0).getVelocity();
         } else {
-            logger.error("AIController is safe computation error");
+            logger.error("ControllerAI is safe computation error");
             succeed();
             return;
         }
@@ -85,7 +85,7 @@ public class AvoidBall extends Job {
         // Getting the neighbour in the ball direction vector
         Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ballPosition, ballDirection),ai.getCoordinates());
 
-        // Vector from AIController to the closes point
+        // Vector from AI to the closes point
         Matrix direction = MatrixMath.pointsVector(ai.getCoordinates(), neighbour);
 
         // Check if vectors are zero
@@ -104,34 +104,15 @@ public class AvoidBall extends Job {
     }
 
     /**
-     * Checks if the AIController in danger of the balls.
+     * Checks if the ControllerAI in danger of the balls.
      *
-     * @return true if the ball is headed AIController's way or falls if ball is headed in the direction of the AIController
+     * @return true if the ball is headed ControllerAI's way or falls if ball is headed in the direction of the ControllerAI
      */
     private boolean isAIsafe() {
         // sorts balls into danger categories
         BlackBoard.sortBallLevels(ai,balls,dangerBalls,possibleDangerBalls,imminentDangerBalls);
-
-        boolean tooFar = false; // tells whether the ball is too far to affect the player
-
-        if (!imminentDangerBalls.isEmpty()) {
-        // TODO either make me work or purge me
-//            float distanceFromTheBall = MatrixMath.distanceAB(ai.getCoordinates(),imminentDangerBalls.get(0).getCoordinates());
-////            tooFar = distanceFromTheBall >= platform.getYSize();
-//
-//            // checks if ai is safe because the ball is too far away
-//            BallData ball = imminentDangerBalls.get(0);
-//            Matrix neighbour = MatrixMath.nearestNeighbour(new Line(ball.getCoordinates(),ball.getVelocity()),ai.getCoordinates());
-//            float ballRate = Maths.floatDivision(MatrixMath.distanceAB(ball.getCoordinates(),neighbour) , ball.getSpeed());
-//            float aiRate = Maths.floatDivision(MatrixMath.distanceAB(ai.getCoordinates(),neighbour) , ai.getSpeed());
-//            if (ballRate < aiRate) {
-//                logger.debug("Too far away safe");
-//                tooFar = false;
-//            }
-        }
-
-        boolean save =  imminentDangerBalls.isEmpty() || tooFar;
-        logger.trace("AIController is " + (save ? "Save" : "in Danger"));
+        boolean save =  imminentDangerBalls.isEmpty();
+        logger.trace("AI is " + (save ? "Save" : "in Danger"));
         return save;
     }
 

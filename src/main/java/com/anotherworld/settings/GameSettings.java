@@ -2,8 +2,8 @@ package com.anotherworld.settings;
 
 import static com.anotherworld.tools.maths.Maths.getRandom;
 
-import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.logic.PowerUpManager;
 import com.anotherworld.model.movable.ObjectState;
@@ -140,7 +140,7 @@ public class GameSettings {
      * This method generates all the game objects with the specified values.
      *
      * @param numberOfPlayers - the total number of players
-     * @param numberOfaiPlayers - number of AIController
+     * @param numberOfaiPlayers - number of ControllerAI
      * @param numberOfBalls - number of balls
      */
     public GameSettings(int numberOfPlayers, int numberOfaiPlayers, int numberOfBalls) {
@@ -310,7 +310,7 @@ public class GameSettings {
             // Creates the player object
             PlayerData newPlayer = new PlayerData(names.get(i),playerHealth,xRandom,yRandom, ObjectState.IDLE, playerSpeed,playerRadius);
 
-            // checks if need to make an AIController, current players or other players
+            // checks if need to make an ControllerAI, current players or other players
             if (numberofaiplayers > 0) {
                 ai.add(newPlayer);
                 numberofaiplayers--;
@@ -359,6 +359,7 @@ public class GameSettings {
     }
 
     /**
+     * Sets the game difficulty.
      * 1 - easy 2 balls ai at 9
      * 2 - medium  4 balls ai at 7
      * 3 - hard  6 balls ai at 6
