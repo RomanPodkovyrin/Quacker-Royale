@@ -215,7 +215,7 @@ public abstract class Programme {
      */
     public final void rotatef(float angle, float x, float y, float z) {
         assert (y == 0);
-        assert (z == 0);
+        assert (x == 0);
         multiplyCurrent(getRotation(angle));
         multiplyInverseCurrent(getRotation(-angle));
     }
@@ -247,7 +247,7 @@ public abstract class Programme {
     
     /**
      * Returns if the cursor has just been pressed.
-     * @return if the cusor has just been pressed since last call
+     * @return if the cursor has just been pressed since last call
      */
     public boolean getCursorPressed() {
         

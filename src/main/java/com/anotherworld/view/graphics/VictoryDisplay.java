@@ -18,6 +18,9 @@ public class VictoryDisplay extends GraphicsDisplay {
     
     private ArrayList<ButtonData> buttons;
     
+    /**
+     * Creates a display used to display the victory scene.
+     */
     public VictoryDisplay() {
         super();
         playersToAdd = new ArrayList<>();
