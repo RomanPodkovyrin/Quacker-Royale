@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 public class PowerUpData implements Serializable, PowerUpDisplayData {
 
-    private float radius = 2; //TODO: Magic Number
+    private float radius = 3; //TODO: Magic Number
 
     private Matrix coordinates;
     private PowerUpType powerUpType;
