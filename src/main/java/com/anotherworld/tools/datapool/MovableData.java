@@ -1,7 +1,7 @@
 package com.anotherworld.tools.datapool;
 
-import com.anotherworld.model.ai.tools.Matrix;
-import com.anotherworld.model.ai.tools.MatrixMath;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.view.data.DisplayData;
 

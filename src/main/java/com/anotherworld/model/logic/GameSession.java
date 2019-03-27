@@ -1,7 +1,7 @@
 package com.anotherworld.model.logic;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.model.ai.AIController;
+import com.anotherworld.model.ai.ControllerAI;
 import com.anotherworld.model.movable.Ball;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.movable.Player;
@@ -31,7 +31,7 @@ public class GameSession {
     private ArrayList<PlayerData> allPlayers;
     private ArrayList<PlayerData> livingPlayers;
 
-    private AIController aiController;
+    private ControllerAI controllerAI;
     private ArrayList<BallData> balls;
 
     private Platform platform;
@@ -84,7 +84,7 @@ public class GameSession {
         this.platform = new Platform(platform);
         this.wall = new Wall(wall);
 
-        this.aiController = new AIController(aiPlayers, this.allPlayers, this.balls, this.platform, this.gameData);
+        this.controllerAI = new ControllerAI(aiPlayers, this.allPlayers, this.balls, this.platform, this.gameData);
 
         Physics.setUp();
     }
@@ -98,7 +98,7 @@ public class GameSession {
      */
     public void update() {
 
-        aiController.makeDecision();
+        controllerAI.makeDecision();
         updateAllPlayers();
         updateAllBalls();
 

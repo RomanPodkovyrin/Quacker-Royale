@@ -1,8 +1,8 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.control.exceptions.ConnectionClosed;
-import com.anotherworld.control.exceptions.NoHostFound;
+import com.anotherworld.tools.exceptions.ConnectionClosed;
+import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.KeySettings;
 import com.anotherworld.settings.ViewSettings;

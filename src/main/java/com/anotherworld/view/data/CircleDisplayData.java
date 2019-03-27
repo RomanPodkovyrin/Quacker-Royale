@@ -1,6 +1,6 @@
 package com.anotherworld.view.data;
 
-import com.anotherworld.model.ai.tools.Matrix;
+import com.anotherworld.tools.maths.Matrix;
 
 /**
  * Defines the data needed to display a circle.

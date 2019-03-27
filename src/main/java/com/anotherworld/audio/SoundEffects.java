@@ -24,7 +24,7 @@ public class SoundEffects implements Runnable {
     //https://freesound.org/people/zmobie/sounds/319783/
     private String ball = "./res/audio/basketball-8.wav";
     //https://freesound.org/people/Reitanna/sounds/242664/
-    private String quack ="./res/audio/quack.wav";
+    private String quack = "./res/audio/quack.wav";
     //https://freesound.org/people/FoolBoyMedia/sounds/397434/
     private String win = "./res/audio/crowd-cheer.wav";
     //https://freesound.org/people/JPolito/sounds/391697/

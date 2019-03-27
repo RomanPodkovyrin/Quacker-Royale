@@ -1,5 +1,6 @@
 package com.anotherworld.network;
 
+import com.anotherworld.control.exceptions.ConnectionClosed;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-import com.anotherworld.control.exceptions.ConnectionClosed;
+import com.anotherworld.tools.exceptions.ConnectionClosed;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,7 +51,6 @@ public class LobbyClient {
      */
     public void sendMyIp() throws IOException {
         client = new Socket(serverIp, port);
-//        client.setSoTimeout(1000);
         logger.info("Just connected to " + client.getRemoteSocketAddress());
         outToServer = client.getOutputStream();
         out = new DataOutputStream(outToServer);
@@ -77,12 +77,8 @@ public class LobbyClient {
      * Cancels connection with the lobby host.
      */
     public void cancelConnection() throws IOException {
-
-//        outToServer = client.getOutputStream();
-//        out = new DataOutputStream(outToServer);
         if (in != null) {
             in.close();
-//            in.skip(1000);
         }
         try {
             Thread.sleep(1000);
@@ -90,13 +86,9 @@ public class LobbyClient {
             e.printStackTrace();
         }
         client = new Socket(serverIp, port);
-//        client.setSoTimeout(1000);
-//        logger.info("Just connected to " + client.getRemoteSocketAddress());
         outToServer = client.getOutputStream();
         out = new DataOutputStream(outToServer);
-
         out.writeUTF("cancel connection");
-
         client.close();
         logger.info("lobby client has cancelled the connection with lobby host. Closed the socket");
 

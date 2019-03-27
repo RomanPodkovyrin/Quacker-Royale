@@ -38,7 +38,7 @@ public class PlayerBehaviourTest {
 
 
         // Create players
-        currentAI = new PlayerData("AIController",100,80,45, ObjectState.IDLE, 1f,1f);
+        currentAI = new PlayerData("ControllerAI",100,80,45, ObjectState.IDLE, 1f,1f);
         currentAI.setVelocity(0,0);
         otherPlayers.clear();
         otherPlayers.add(new PlayerData("player",100,50,30, ObjectState.IDLE, 1f,1f));
@@ -319,67 +319,6 @@ public class PlayerBehaviourTest {
         job.act(currentAI,otherPlayers,balls,platform,session);
         assertEquals(0,currentAI.getXVelocity(),delta);
         assertEquals(0,currentAI.getYVelocity(),delta);
-
-    }
-
-    @Test
-    public void avoidNeutralPlayerTest() {
-        //TODO remove
-//        float delta = 0.00001f;
-//
-//        // Too close move away
-//        PlayerData player = otherPlayers.get(0);
-//        AvoidNeutralPlayer job = new AvoidNeutralPlayer();
-//        player.setCoordinates(80,45);
-//        player.setVelocity(1,0);
-//        currentAI.setCoordinates(82,45);
-//        currentAI.setVelocity(-1,0);
-//        job.start();
-//        job.act(currentAI,otherPlayers,balls,platform,session);
-//        assertEquals(0,currentAI.getXVelocity(),delta);
-//        assertTrue(currentAI.getYVelocity() == 1 | currentAI.getYVelocity() == -1);
-//
-//         // Too far way keep going
-//        player = otherPlayers.get(0);
-//        job = new AvoidNeutralPlayer();
-//        player.setCoordinates(80,45);
-//        player.setVelocity(1,0);
-//        currentAI.setCoordinates(83,45);
-//        currentAI.setVelocity(-1,0);
-//        job.start();
-//        job.act(currentAI,otherPlayers,balls,platform,session);
-//        assertEquals(-1,currentAI.getXVelocity(),delta);
-//        assertEquals(0, currentAI.getYVelocity(),delta);
-//
-//
-//        // Player is dead no one to avoid
-//        player = otherPlayers.get(0);
-//        job = new AvoidNeutralPlayer();
-//        player.setCoordinates(80,45);
-//        player.setVelocity(1,0);
-//        player.setState(ObjectState.DEAD);
-//        currentAI.setCoordinates(82,45);
-//        currentAI.setVelocity(-1,0);
-//        job.start();
-//        job.act(currentAI,otherPlayers,balls,platform,session);
-//        assertEquals(-1,currentAI.getXVelocity(),delta);
-//        assertEquals(0, currentAI.getYVelocity(),delta);
-    }
-
-    @Test
-    public void neutralBallCheckTest() {
-        BallData ball = balls.get(0);
-        ball.setDangerous(false);
-        NeutralBallCheck job = new NeutralBallCheck();
-        job.start();
-        job.act(currentAI,otherPlayers,balls,platform,session);
-        assertEquals(Job.JobState.SUCCESS, job.getState());
-
-        ball.setDangerous(true);
-        job = new NeutralBallCheck();
-        job.start();
-        job.act(currentAI,otherPlayers,balls,platform,session);
-        assertEquals(Job.JobState.FAILURE, job.getState());
 
     }
 
