@@ -10,6 +10,7 @@ import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -28,9 +29,9 @@ public class PowerUpManager {
      * @param platform platform determining the range of the coordinates for the powerup
      * @return linked list scheduling the power up spawns.
      */
-    public static LinkedList<PowerUpData> generatePowerUpSchedule(long totalTime, PlatformData platform) {
+    public static ArrayList<PowerUpData> generatePowerUpSchedule(long totalTime, PlatformData platform) {
 
-        LinkedList<PowerUpData> output = new LinkedList<>();
+        ArrayList<PowerUpData> output = new ArrayList<>();
         Random random = new Random();
 
         for (long i = totalTime; i > 0; i -= 5) {
@@ -50,7 +51,7 @@ public class PowerUpManager {
                 int choice = random.nextInt(PowerUpType.values().length);
                 PowerUpType type = PowerUpType.values()[choice];
 
-                output.addLast(new PowerUpData(coordinates, type, i));
+                output.add(new PowerUpData(coordinates, type, i));
             }
 
         }
@@ -64,10 +65,12 @@ public class PowerUpManager {
      */
     public static void spawnPowerUp(GameSessionData data) {
         PowerUpData currentPowerUp = data.getCurrentPowerUp();
-        if (data.getPowerUpIndex() > data.getPowerUpSchedule().size() - 1) {
-            data.setCurrentPowerUp(data.getPowerUpIndex()+1);
-            currentPowerUp.setState(ObjectState.INACTIVE);
-            data.getCurrentPowerUp().setState(ObjectState.ACTIVE);
+        if (data.getPowerUpIndex() < data.getPowerUpSchedule().size()) {
+            if (data.getPowerUpSchedule().get(data.getPowerUpIndex() + 1).getSpawnTime() == data.getTimeLeft()) {
+                data.setCurrentPowerUp(data.getPowerUpIndex() + 1);
+                currentPowerUp.setState(ObjectState.INACTIVE);
+                data.getCurrentPowerUp().setState(ObjectState.ACTIVE);
+            }
         }
     }
 
@@ -79,7 +82,7 @@ public class PowerUpManager {
      */
     public static void collect(PlayerData player, GameSessionData data) {
         PowerUpData powerUp = data.getCurrentPowerUp();
-        if (powerUp != null) {
+        if (powerUp.getState() == ObjectState.ACTIVE) {
             if (Physics.checkCollision(player, powerUp.getCoordinates(), powerUp.getRadius())) {
                 //Apply effects
                 switch (powerUp.getPowerUpType()) {
@@ -108,10 +111,6 @@ public class PowerUpManager {
                 }
 
                 powerUp.setState(ObjectState.INACTIVE);
-
-                //Delete the current power up
-                data.setCurrentPowerUp(data.getPowerUpIndex()+1);
-                data.getCurrentPowerUp().setState(ObjectState.ACTIVE);
             }
         }
     }
