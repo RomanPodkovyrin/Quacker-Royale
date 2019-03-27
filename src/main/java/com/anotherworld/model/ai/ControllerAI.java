@@ -186,6 +186,11 @@ public class ControllerAI {
         if (tick == 0) {
             for (int i = 0; i < aiPlayers.size(); i++) {
                 Pair<PlayerData, ArrayList<PlayerData>> pair = aiPlayers.get(i);
+
+                if (pair.getKey().getState() == ObjectState.DASHING) {
+                    continue;
+                }
+
                 if (pair.getKey().getState() == ObjectState.DEAD) {
 
                     logger.debug(pair.getKey().getObjectID() + " is dead");
