@@ -92,9 +92,11 @@ public class Controller {
             logger.info("Starting the game session");
             new GameSessionController(view, settings, network);
         } catch (KeyListenerNotFoundException ex) {
-            logger.fatal(ex);
+            logger.fatal(ex  + "Key listener");
+            ex.printStackTrace();
         } catch (RuntimeException ex) {
-            logger.fatal(ex);
+            logger.fatal(ex + "Run time exception");
+            ex.printStackTrace();
         }
     }
 

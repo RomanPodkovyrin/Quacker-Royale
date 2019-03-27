@@ -64,7 +64,8 @@ public class PowerUpManager {
      */
     public static void spawnPowerUp(GameSessionData data) {
         PowerUpData currentPowerUp = data.getCurrentPowerUp();
-        if (data.getPowerUpIndex()+1 < data.getPowerUpSchedule().size()) {
+
+        if (data.getPowerUpIndex() + 1 < data.getPowerUpSchedule().size()) {
             if (data.getPowerUpSchedule().get(data.getPowerUpIndex() + 1).getSpawnTime() == data.getTimeLeft()) {
                 currentPowerUp.setState(ObjectState.INACTIVE);
                 data.setCurrentPowerUp(data.getPowerUpIndex() + 1);
