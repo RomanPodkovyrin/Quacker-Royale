@@ -7,6 +7,7 @@ import com.anotherworld.view.programme.Programme;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.LinkedList;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
@@ -85,15 +86,15 @@ public abstract class DisplayObject {
     }
     
     /**
-     * Draws the object using the stored points.
+     * Returns an linkedlist of DisplayObjects to draw for the object.
+     * @return the linkedlist of objects
      */
-    public void draw() {
-        
+    public LinkedList<DisplayObject> draw() {
+        LinkedList<DisplayObject> result = new LinkedList<>();
         if (this.shouldDraw()) {
-            
-            programme.draw(this);
+            result.add(this);
         }
-        
+        return result;
     }
     
     public void transform() {
