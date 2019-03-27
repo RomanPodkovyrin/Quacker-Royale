@@ -45,9 +45,6 @@ public class PowerUpDisplayObject extends DisplayObject {
 
     @Override
     public boolean shouldDraw() {
-        if(this.displayData.getState() == ObjectState.ACTIVE) {
-            System.out.println("SHOULD DRAW " + displayData);
-        }
         return this.displayData.getState() == ObjectState.ACTIVE;
     }
 
