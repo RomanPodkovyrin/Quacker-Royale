@@ -67,7 +67,7 @@ public class GameSettings {
     private ArrayList<WallData> walls = new ArrayList<>();
     private GameSessionData gameSessionData;
 
-    private ArrayList<String> names = new ArrayList<>(Arrays.asList("Boi","Terminator", "Eiker", "DanTheMan", "Loser"));
+    private ArrayList<String> names = new ArrayList<>(Arrays.asList("santa","robber", "police", "pirate", "default"));
 
     // networking objects
 
@@ -128,7 +128,7 @@ public class GameSettings {
 
             this.defaultPlatformXSize = Float.parseFloat(propertyFileLogic.getValue("PLATFORM_X_SIZE"));
             this.defaultPlatformYSize = Float.parseFloat(propertyFileLogic.getValue("PLATFORM_Y_SIZE"));
-
+            propertyFileLogic.close();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -358,14 +358,57 @@ public class GameSettings {
         createGameSessionData();
     }
 
+   public enum Difficulty {
+        HARD, MEDIUM, EASY
+    }
+
     /**
      * Sets the game difficulty.
      * 1 - easy 2 balls ai at 9
      * 2 - medium  4 balls ai at 7
      * 3 - hard  6 balls ai at 6
      */
-    public void changeDifficulty(int difficulty) {
-        //TODO: Think of difficulty settings.
+    public static void changeDifficulty(Difficulty level) {
+
+        float speed = 0;
+        int damage = 0 ;
+        int number = 0;
+        int ai = 0;
+
+        switch (level) {
+            case MEDIUM:
+                speed = 0.6f;
+                damage = 10;
+                number = 4;
+                ai = 2;
+                break;
+            case HARD:
+                speed = 0.8f;
+                damage = 20;
+                number = 6;
+                ai = 3;
+                break;
+            case EASY:
+                speed = 0.5f;
+                damage = 5;
+                number = 4;
+                ai = 1;
+                break;
+        }
+
+        try {
+            PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
+
+            propertyFileLogic.setValue("BALL_SPEED",Float.toString(speed));
+            propertyFileLogic.setValue("BALL_DAMAGE",Integer.toString(damage));
+            propertyFileLogic.setValue("SINGLE_PLAYER_BALLS",Integer.toString(number));
+            propertyFileLogic.setValue("MULTI_PLAYER_BALLS",Integer.toString(number));
+            propertyFileLogic.setValue("SINGLE_PLAYER_AI",Integer.toString(ai));
+            propertyFileLogic.setValue("SINGLE_PLAYER_PLAYERS",Integer.toString(ai +1));
+        } catch (IOException e) {
+           logger.error("Could not load the file to change difficulty");
+        }
+
     }
 
 

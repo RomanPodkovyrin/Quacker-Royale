@@ -59,8 +59,13 @@ public class Controller {
      * Used to initialise the game main class for the game.
      */
     public Controller(View view) {
-
         this.view = view;
+        setUp();
+//        GameSettings.changeDifficulty(GameSettings.Difficulty.MEDIUM);
+    }
+
+    private void setUp() {
+
         try {
             PropertyReader propertyFileLogic = new PropertyReader("logic.properties");
             this.defaultSinglePlayerAI = Integer.parseInt(propertyFileLogic.getValue("SINGLE_PLAYER_AI"));
@@ -124,6 +129,8 @@ public class Controller {
      * Host the game, called when player wants to host multiplayer game.
      */
     public void host() throws ConnectionClosed {
+
+        setUp();
         // Resets defaults before starting lobby
         cancelTheGame = false;
         runTheHostGame = false;
@@ -141,7 +148,7 @@ public class Controller {
         try {
             server  = new Server(defaultNumberClients, settings);
             server.start();
-        } catch (SocketException |UnknownHostException e) {
+        } catch (SocketException | UnknownHostException e) {
             //Could not start the server
             logger.warn("Could not start the server");
             lobbyServer.stopLobbyServer();
@@ -351,6 +358,7 @@ public class Controller {
      */
     public void startSinglePlayer() {
         logger.info("Starting single player game");
+//        setUp();
         GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
         startTheGame(settings, new NetworkControllerSinglePlayer());
     }

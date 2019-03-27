@@ -71,6 +71,7 @@ public class ControllerAI {
 
         try {
             PropertyReader  aiProperties = new PropertyReader("ai.properties");
+            aiProperties.close();
             maxTick = Integer.parseInt(aiProperties.getValue("AI_RATE"));
             if (maxTick == 0) {
                 step = 0;

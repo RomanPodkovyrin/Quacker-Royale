@@ -1,6 +1,5 @@
 package com.anotherworld.network;
 
-import com.anotherworld.control.exceptions.ConnectionClosed;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
