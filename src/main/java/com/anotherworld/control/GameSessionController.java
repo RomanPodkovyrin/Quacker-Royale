@@ -112,7 +112,7 @@ public class GameSessionController {
             startTime = System.currentTimeMillis();
 
             // Update Game Logic
-            session.updatePlayerVelocity(keyListener.getKeyPresses());
+            session.updateCurrentPlayer(keyListener.getKeyPresses());
             session.update();
 
             // Work out the time it took for logic
@@ -138,7 +138,7 @@ public class GameSessionController {
             while ((sleepTime < 0) && (framesDropped < MAX_FRAME_DROP)) {
                 logger.trace("Frames lost " + framesDropped);
                 // updates the Game logic
-                session.updatePlayerVelocity(keyListener.getKeyPresses());
+                session.updateCurrentPlayer(keyListener.getKeyPresses());
                 session.update();
 
                 // updates the sleep time

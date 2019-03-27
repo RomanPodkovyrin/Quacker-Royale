@@ -1,5 +1,6 @@
 package com.anotherworld.model.movable;
 
+import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 
 /**
@@ -19,4 +20,17 @@ public class Ball {
         ballData.setTimer(ballData.getTimer() - amount);
     }
 
+    /**
+     * Handles the danger state of a ball upon update.
+     * @param ball the ball to update.
+     */
+    public static void handleDangerState(BallData ball) {
+        if (ball.isDangerous()) {
+            reduceTimer(ball, GameSettings.getBallTimerDecrement());
+            if (ball.getTimer() <= 0) {
+                ball.setDangerous(false);
+                ball.setSpeed(GameSettings.getDefaultBallSpeed());
+            }
+        }
+    }
 }

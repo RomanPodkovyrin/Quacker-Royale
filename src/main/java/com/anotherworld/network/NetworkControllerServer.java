@@ -34,7 +34,6 @@ public class NetworkControllerServer extends AbstractNetworkController {
 
     @Override
     public void hostControl() {
-        // TODO get the button presses from the client
 
         ArrayList<Pair<ArrayList<Input>,String>> keyPress = server.getInputAndIP();
 
