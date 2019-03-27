@@ -20,6 +20,12 @@ public class PlayerRectangleDisplayObject extends DisplayObject {
     private Programme programme;
     private Optional<Long> timeStartedFalling;
     
+    /**
+     * Create an object to render the player or the players hat.
+     * @param spriteSheet The sprite to map to the player
+     * @param programme The programme to render with
+     * @param displayData The display data to render the player
+     */
     public PlayerRectangleDisplayObject(SpriteSheet spriteSheet, Programme programme, PlayerDisplayData displayData) {
         super(spriteSheet, programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius() * 2, displayData.getRadius() * 2) : Points2d.genCircle(displayData.getRadius()), DrawType.TRIANGLE_FAN, 1, 1, 1);
         this.displayData = displayData;

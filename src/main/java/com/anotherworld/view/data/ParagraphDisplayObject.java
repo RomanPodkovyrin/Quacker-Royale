@@ -10,6 +10,11 @@ public class ParagraphDisplayObject extends DisplayObject {
 
     private TextDisplayData displayData;
     
+    /**
+     * Creates a display object to drawn a block of text to the screen.
+     * @param programme The programme to use for rendering
+     * @param displayData The text to draw
+     */
     public ParagraphDisplayObject(Programme programme, TextDisplayData displayData) {
         super(new TextSpriteSheet(), programme, TextSpriteSheet.generateParagraphLetterPoints(displayData.getText(), displayData.getTextHeight(), displayData.getWidth()), DrawType.QUADS, 1, 1, 1);
         this.displayData = displayData;

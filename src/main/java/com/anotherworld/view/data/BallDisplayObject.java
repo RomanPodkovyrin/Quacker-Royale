@@ -14,6 +14,8 @@ public class BallDisplayObject extends DisplayObject {
 
     private final BallDisplayData displayData;
     
+    private final Programme programme;
+    
     /**
      * Creates a display object to display a ball.
      * @param displayData The ball to display
@@ -21,15 +23,19 @@ public class BallDisplayObject extends DisplayObject {
     public BallDisplayObject(Programme programme, BallDisplayData displayData) {
         super(new BallSpriteSheet(displayData), programme, programme.supportsTextures() ? Points2d.genRectangle(displayData.getRadius() * 2, displayData.getRadius() * 2) : Points2d.genCircle(displayData.getRadius()), DrawType.TRIANGLE_FAN);
         this.displayData = displayData;
+        this.programme = programme;
     }
     
     @Override
     public void transform() {
         super.transform();
-        if (displayData.isDangerous()) {
-            super.setColour(1, 0, 0);
-        } else {
-            super.setColour(0, 1, 0);
+        programme.rotatef(this.getTheta(), 0, 0, 1);
+        if (!programme.supportsTextures()) {
+            if (displayData.isDangerous()) {
+                super.setColour(1, 0, 0);
+            } else {
+                super.setColour(0, 1, 0);
+            }
         }
     }
 
@@ -50,7 +56,7 @@ public class BallDisplayObject extends DisplayObject {
     
     @Override
     public float getZ() {
-        return 0;//-displayData.getRadius();
+        return 0;
     }
     
     @Override

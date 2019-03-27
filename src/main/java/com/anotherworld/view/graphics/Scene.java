@@ -1,6 +1,5 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.input.MouseState;
 import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class Scene {
     public void draw(int width, int height, Programme programme) {
         logger.debug("Drawing Scene");
         
-        MouseState ms = programme.getCursorPosition();
+        boolean pressed = programme.getCursorPressed();
         
         for (int i = 0; i < displays.size(); i++) {
             logger.trace("Drawing scene: " + i);
@@ -42,13 +41,8 @@ public class Scene {
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
             programme.setViewport(x, y, w, h);
-            display.draw(programme, translateMouseState(ms));
+            display.draw(programme, pressed);
         }
-    }
-    
-    private MouseState translateMouseState(MouseState mouseState) {
-        //TODO Translate the mouse state
-        return mouseState;
     }
     
     /**

@@ -31,9 +31,10 @@ public class TextureMap {
      */
     public TextureMap(String location) throws IOException {
         textureBuffers = new TextureBuffer[SpriteLocation.NUMBER_OF_LOCATIONS];
-        textureBuffers[SpriteLocation.NONE.getInt()] = new TextureBuffer(location + "mega duck.png", 4, 5);
+        textureBuffers[SpriteLocation.NONE.getInt()] = new TextureBuffer(location + "alien.png", 1, 1);
         textureBuffers[SpriteLocation.PLAYER.getInt()] = new TextureBuffer(location + "mega duck.png", 4, 11);
-        textureBuffers[SpriteLocation.BALL.getInt()] = new TextureBuffer(location + "NeutralBall/NeutralBall0.png", 1, 1);
+        textureBuffers[SpriteLocation.SAFE_BALL.getInt()] = new TextureBuffer(location + "basketball.png", 2, 2);
+        textureBuffers[SpriteLocation.DANGEROUS_BALL.getInt()] = new TextureBuffer(location + "DangerBall.png", 2, 2);
         textureBuffers[SpriteLocation.TEXT.getInt()] = new TextureBuffer(location + "tom_font.png", 32, 4);
         textureBuffers[SpriteLocation.POWER_UP.getInt()] = new TextureBuffer(location + "powerups.png", 4, 3);
         textureBuffers[SpriteLocation.POLICE_HAT.getInt()] = new TextureBuffer(location + "police.png", 4, 5);
@@ -51,7 +52,6 @@ public class TextureMap {
      */
     public void loadTexture(int programmeId, SpriteSheet spriteSheet, float xShear, float yShear) {
 
-        //Change this to select right texture from buffer
         glUniform1i(glGetUniformLocation(programmeId, "hasTex"), spriteSheet.isTextured() ? 1 : 0);
         
         if (spriteSheet.isTextured()) {

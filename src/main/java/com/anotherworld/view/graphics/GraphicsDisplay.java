@@ -71,9 +71,9 @@ public class GraphicsDisplay {
     /**
      * Returns draws the objects it contains to the screen.
      * @param programme The programme to use for rendering
-     * @param mouseState The current position of the cursor and if the left button is pressed
+     * @param mouseDown if the left button is pressed
      */
-    public void draw(Programme programme, MouseState mouseState) {
+    public void draw(Programme programme, boolean mouseDown) {
         synchronized (buttonsToAdd) {
             for (ButtonData button : buttonsToAdd) {
                 objects.add(new Button(programme, button));
@@ -89,6 +89,7 @@ public class GraphicsDisplay {
         }
         programme.pushMatrix();
         this.transform(programme);
+        MouseState mouseState = programme.getCursorPosition();
         for (int i = 0; i < objects.size(); i++) {
             LinkedList<DisplayObject> drawnObjects = objects.get(i).draw();
             for (DisplayObject object : drawnObjects) {
@@ -102,10 +103,10 @@ public class GraphicsDisplay {
                             && mouseState.getY() >= temp.getY() - temp.getHeight() / 2
                             && mouseState.getX() < temp.getX() + temp.getWidth() / 2
                             && mouseState.getY() < temp.getY() + temp.getHeight() / 2) {
-                        if (mouseState.isMouseDown()) {
+                        if (mouseDown) {
                             temp.click();
                         } else {
-                            temp.release();
+                            temp.release(); //TODO switch to hover
                         }
                     } else {
                         temp.release();
@@ -116,8 +117,14 @@ public class GraphicsDisplay {
         programme.popMatrix();
     }
 
+    /**
+     * Uses the camera to transform the display into the correct co-ordinate frame.
+     * @param programme The programme to use for rendering
+     */
     public void transform(Programme programme) {
-        programme.transform(camera);
+        synchronized (camera) {
+            programme.transform(camera);
+        }
     }
 
     public float getX() {
@@ -146,9 +153,23 @@ public class GraphicsDisplay {
         }
     }
     
+    /**
+     * Queues a text display object to be drawn.
+     * @param object the text to add
+     */
     public void addText(TextDisplayData object) {
         synchronized (textToAdd) {
             textToAdd.add(object);
+        }
+    }
+
+    /**
+     * Changes the camera use to project the scene.
+     * @param static2dCamera the new camera to use
+     */
+    public void changeCamera(Static2dCamera static2dCamera) {
+        synchronized (camera) {
+            this.camera = static2dCamera;
         }
     }
 

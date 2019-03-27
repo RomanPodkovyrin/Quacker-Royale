@@ -1,20 +1,22 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.tools.exceptions.ConnectionClosed;
-import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.KeySettings;
 import com.anotherworld.settings.ViewSettings;
 import com.anotherworld.tools.Wrapper;
+import com.anotherworld.tools.exceptions.ConnectionClosed;
+import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
 import com.anotherworld.view.graphics.GraphicsDisplay;
+import com.anotherworld.view.graphics.VictoryDisplay;
 import com.anotherworld.view.graphics.layout.CreditLayout;
 import com.anotherworld.view.graphics.layout.FixedSpaceLayout;
 import com.anotherworld.view.graphics.layout.Layout;
 import com.anotherworld.view.graphics.layout.LobbyLayout;
+import com.anotherworld.view.graphics.layout.VictoryLayout;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.TextFieldData;
 
@@ -36,6 +38,10 @@ public class MenuSystem {
         this.control = control;
     }
 
+    /**
+     * Creates and runs the menu using the view.
+     * @throws KeyListenerNotFoundException If the view objects can't be created for the menu
+     */
     public void start() throws KeyListenerNotFoundException {
 
         // TODO Change throw to menucouldnotbeinitialised or similar
@@ -48,7 +54,7 @@ public class MenuSystem {
         GraphicsDisplay clientMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay hostLobbyMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay connectionFailedDisplay = new GraphicsDisplay();
-        GraphicsDisplay victoryDisplay = new GraphicsDisplay();
+        VictoryDisplay victoryDisplay = new VictoryDisplay();
         GraphicsDisplay audioSettingsDisplay = new GraphicsDisplay();
         GraphicsDisplay videoSettingsDisplay = new GraphicsDisplay();
         GraphicsDisplay keyBindingDisplay = new GraphicsDisplay();
@@ -83,7 +89,7 @@ public class MenuSystem {
         
     }
 
-    private Layout createMainMenu(GraphicsDisplay victoryDisplay, GraphicsDisplay creditDisplay, GraphicsDisplay settingsDisplay, GraphicsDisplay multiplayerMenuDisplay) {
+    private Layout createMainMenu(VictoryDisplay victoryDisplay, GraphicsDisplay creditDisplay, GraphicsDisplay settingsDisplay, GraphicsDisplay multiplayerMenuDisplay) {
         logger.debug("Creating main menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -98,6 +104,7 @@ public class MenuSystem {
                 logger.trace("Starting singleplayer");
                 control.startSinglePlayer();
                 logger.trace("Queueing switch to victory scene");
+                victoryDisplay.updatePlayers();
                 view.switchToDisplay(victoryDisplay);
             });
             logger.debug("Queueing switch to game view");
@@ -373,7 +380,7 @@ public class MenuSystem {
         return layout;
     }
     
-    private Layout createMultiplayerMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay clientMenuDisplay, GraphicsDisplay hostMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay victoryDisplay) {
+    private Layout createMultiplayerMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay clientMenuDisplay, GraphicsDisplay hostMenuDisplay, GraphicsDisplay connectionFailedDisplay, VictoryDisplay victoryDisplay) {
         logger.debug("Creating multiplayer menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -388,6 +395,7 @@ public class MenuSystem {
                 view.switchToDisplay(hostMenuDisplay);
                 try {
                     control.host();
+                    victoryDisplay.updatePlayers();
                     view.switchToDisplay(victoryDisplay);
                 } catch (Exception ex) { //TODO custom exception
                     //TODO switch to better display
@@ -412,7 +420,7 @@ public class MenuSystem {
         
     }
     
-    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay clientLobbyDisplay, GraphicsDisplay victoryDisplay, ClientLobbyWaitThread thread) throws KeyListenerNotFoundException {
+    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay clientLobbyDisplay, VictoryDisplay victoryDisplay, ClientLobbyWaitThread thread) throws KeyListenerNotFoundException {
         logger.debug("Creating client menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -429,6 +437,7 @@ public class MenuSystem {
                 try {
                     view.switchToDisplay(clientLobbyDisplay);
                     control.connect(ipAndPort.getText());
+                    victoryDisplay.updatePlayers();
                     view.switchToDisplay(victoryDisplay);
                 } catch (NoHostFound | ConnectionClosed e) {
                     view.switchToDisplay(connectionFailedDisplay);
@@ -504,16 +513,9 @@ public class MenuSystem {
     private Layout createVictoryDisplay(GraphicsDisplay mainMenuDisplay) {
         logger.debug("Creating victory display");
         
-        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
-        
-        ButtonData gameOver = new ButtonData("Game Over");
-        layout.addButton(gameOver);
-        
-        ButtonData menuReturn = new ButtonData("Return to menu");
-        menuReturn.setOnAction(() -> {
+        VictoryLayout layout = new VictoryLayout(() -> control.getRanking(), () -> {
             view.switchToDisplay(mainMenuDisplay);
         });
-        layout.addButton(menuReturn);
         
         return layout;
         
@@ -564,7 +566,6 @@ public class MenuSystem {
         
         layout.setReturn(returnButton);
         
-        //TODO load real data
         String text = "";
         try {
             text = new String(Files.readAllBytes(Paths.get("licence")));
@@ -581,6 +582,10 @@ public class MenuSystem {
         return layout;
     }
     
+    /**
+     * The main method to start the game menu.
+     * @param args the arguments passed to run the game (not currently used)
+     */
     public static void main(String[] args) {
         View view = new View();
 
