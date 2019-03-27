@@ -58,6 +58,7 @@ public class ChaseBall extends Job {
 
                 // Checks if it is already near the ball
                 if (MatrixMath.distanceAB(ai.getCoordinates(),neighbour) <= ball.getRadius() + ai.getRadius()) {
+                    ai.setVelocity(0,0);
                     fail();
                     logger.trace("Touched the ball");
                     return;

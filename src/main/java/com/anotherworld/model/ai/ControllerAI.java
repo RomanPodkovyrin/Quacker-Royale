@@ -1,11 +1,6 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.model.ai.behaviour.Inverter;
-import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.ai.behaviour.Repeat;
-import com.anotherworld.model.ai.behaviour.Selector;
-import com.anotherworld.model.ai.behaviour.Sequence;
-import com.anotherworld.model.ai.behaviour.SequenceSuccess;
+import com.anotherworld.model.ai.behaviour.*;
 import com.anotherworld.model.ai.behaviour.player.survival.CheckIfSaveToGo;
 import com.anotherworld.model.ai.behaviour.player.domination.ChaseBall;
 import com.anotherworld.model.ai.behaviour.player.domination.GetPowerUPs;
@@ -98,7 +93,7 @@ public class ControllerAI {
 
             // Setting up the main routine
             ArrayList<Job> routines = new ArrayList<>();
-            routines.add(new Selector(new ArrayList<>(Arrays.asList(new SequenceSuccess(getSurvival()), new StopCharging()))));
+            routines.add(new Selector(new ArrayList<>(Arrays.asList(new SequenceSuccess(getSurvival()), new Inverter( new Succeeder(new StopCharging()))))));
             routines.add(new Sequence(extra));
 
             Job job = new Repeat(new SequenceSuccess(routines));
