@@ -27,9 +27,9 @@ public class BallSpriteSheet extends SpriteSheet {
     @Override
     public SpriteLocation getTextureBuffer() {
         if (data.isDangerous()) {
-            return SpriteLocation.SAFE_BALL;
-        } else {
             return SpriteLocation.DANGEROUS_BALL;
+        } else {
+            return SpriteLocation.SAFE_BALL;
         }
     }
 
