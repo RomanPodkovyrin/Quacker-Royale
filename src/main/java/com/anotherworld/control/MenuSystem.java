@@ -496,9 +496,30 @@ public class MenuSystem {
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
         
-        ButtonData start = new ButtonData("Start Game");
+        ButtonData title = new ButtonData("Select Difficulty");
+        layout.addButton(title);
         
         ButtonData difficultyButton = new ButtonData("Medium");
+        
+        difficultyButton.setOnAction(() -> {
+            switch (difficultyButton.getText()) {
+                case "Easy":
+                    difficultyButton.setText("Medium");
+                    break;
+                case "Medium":
+                    difficultyButton.setText("Hard");
+                    break;
+                case "Hard":
+                    difficultyButton.setText("Easy");
+                    break;
+                default:
+                    difficultyButton.setText("Medium");
+            }
+        });
+        
+        layout.addButton(difficultyButton);
+        
+        ButtonData start = new ButtonData("Start Game");
         
         start.setOnAction(() -> {
             Thread singlePlayerThread = new Thread(() -> {
@@ -529,24 +550,6 @@ public class MenuSystem {
         
         layout.addButton(start);
         
-        difficultyButton.setOnAction(() -> {
-            switch (difficultyButton.getText()) {
-                case "Easy":
-                    difficultyButton.setText("Medium");
-                    break;
-                case "Medium":
-                    difficultyButton.setText("Hard");
-                    break;
-                case "Hard":
-                    difficultyButton.setText("Easy");
-                    break;
-                default:
-                    difficultyButton.setText("Medium");
-            }
-        });
-        
-        layout.addButton(difficultyButton);
-        
         ButtonData back = new ButtonData(BACK);
         
         back.setOnAction(() -> view.switchToDisplay(mainMenu));
@@ -555,20 +558,40 @@ public class MenuSystem {
         
         return layout;
     }
-    
-
-    
+  
     private Layout createMultiplayerGameSettings(GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay hostLobbyMenuDisplay, GraphicsDisplay connectionFailedDisplay, VictoryDisplay victoryDisplay) {
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
         
+        ButtonData title = new ButtonData("Lobby Size");
+        layout.addButton(title);
+        
+        ButtonData numberOfPlayers = new ButtonData("4");
+        
+        numberOfPlayers.setOnAction(() -> {
+            switch (numberOfPlayers.getText()) {
+                case "2":
+                    numberOfPlayers.setText("3");
+                    break;
+                case "3":
+                    numberOfPlayers.setText("4");
+                    break;
+                case "4":
+                    numberOfPlayers.setText("2");
+                    break;
+                default:
+                    numberOfPlayers.setText("4");
+            }
+        });
+        
         ButtonData start = new ButtonData("Host");
         
         start.setOnAction(() -> {
+            int numberOfClients = Integer.parseInt(numberOfPlayers.getText());
             Thread hostThread = new Thread(() -> {
                 view.switchToDisplay(hostLobbyMenuDisplay);
                 try {
-                    control.host();
+                    control.host(numberOfClients);
                     victoryDisplay.updatePlayers();
                     view.switchToDisplay(victoryDisplay);
                 } catch (Exception ex) {

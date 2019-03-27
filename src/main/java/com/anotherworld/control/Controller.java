@@ -146,9 +146,12 @@ public class Controller {
 
     /**
      * Host the game, called when player wants to host multiplayer game.
+     * @param numberOfClients the number of clients to connect
      */
-    public void host() throws ConnectionClosed {
+    public void host(int numberOfClients) throws ConnectionClosed {
 
+        defaultNumberClients = numberOfClients;
+        
         setUp();
         // Resets defaults before starting lobby
         cancelTheGame = false;
@@ -377,7 +380,7 @@ public class Controller {
      */
     public void startSinglePlayer() {
         logger.info("Starting single player game");
-//        setUp();
+        setUp();
         GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
         startTheGame(settings, new NetworkControllerSinglePlayer());
     }
