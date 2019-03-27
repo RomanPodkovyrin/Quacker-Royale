@@ -3,13 +3,13 @@ package com.anotherworld.model.ai.behaviour.player.survival;
 import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
+import com.anotherworld.tools.maths.Matrix;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;

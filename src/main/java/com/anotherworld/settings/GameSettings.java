@@ -2,18 +2,17 @@ package com.anotherworld.settings;
 
 import static com.anotherworld.tools.maths.Maths.getRandom;
 
-import com.anotherworld.tools.maths.Matrix;
-import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.logic.PowerUpManager;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.PropertyReader;
-
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -408,9 +407,9 @@ public class GameSettings {
             propertyFileLogic.setValue("SINGLE_PLAYER_BALLS",Integer.toString(number));
             propertyFileLogic.setValue("MULTI_PLAYER_BALLS",Integer.toString(number));
             propertyFileLogic.setValue("SINGLE_PLAYER_AI",Integer.toString(ai));
-            propertyFileLogic.setValue("SINGLE_PLAYER_PLAYERS",Integer.toString(ai +1));
+            propertyFileLogic.setValue("SINGLE_PLAYER_PLAYERS",Integer.toString(ai  + 1));
         } catch (IOException e) {
-           logger.error("Could not load the file to change difficulty");
+            logger.error("Could not load the file to change difficulty");
         }
 
     }
