@@ -6,7 +6,7 @@ import com.anotherworld.model.ai.behaviour.Repeat;
 import com.anotherworld.model.ai.behaviour.Selector;
 import com.anotherworld.model.ai.behaviour.Sequence;
 import com.anotherworld.model.ai.behaviour.SequenceSuccess;
-import com.anotherworld.model.ai.behaviour.player.CheckIfSaveToGo;
+import com.anotherworld.model.ai.behaviour.player.survival.CheckIfSaveToGo;
 import com.anotherworld.model.ai.behaviour.player.domination.ChaseBall;
 import com.anotherworld.model.ai.behaviour.player.domination.GetPowerUPs;
 import com.anotherworld.model.ai.behaviour.player.domination.PointAndDash;

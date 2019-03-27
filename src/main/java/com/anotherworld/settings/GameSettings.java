@@ -67,9 +67,21 @@ public class GameSettings {
     private ArrayList<WallData> walls = new ArrayList<>();
     private GameSessionData gameSessionData;
 
-    private ArrayList<String> names = new ArrayList<>(Arrays.asList("santa","robber", "police", "pirate", "default"));
+    enum Hat {
+        SANTA,ROBBER,POLICE,PIRATE
+    }
 
-    // networking objects
+    private ArrayList<String> names = new ArrayList<>(Arrays.asList("santa","robber", "police", "pirate", "default"));
+    private ArrayList<Hat> hats = new ArrayList<>();
+
+    public GameSettings (PlayerData currentPlayer,Hat currentPlayerHat, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
+    ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSessionData, ArrayList<Hat> hats){
+
+        hats.add(currentPlayerHat);
+        this.hats = hats;
+        setUP(currentPlayer, players, ai, balls, platforms, walls, gameSessionData);
+    }
+
 
     /**
      * This method allows to create the Game settings object with pregenerated game objects.
@@ -84,6 +96,10 @@ public class GameSettings {
      */
     public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
                         ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSessionData) {
+        setUP(currentPlayer, players, ai, balls, platforms, walls, gameSessionData);
+    }
+
+    private void setUP(PlayerData currentPlayer, ArrayList<PlayerData> players, ArrayList<PlayerData> ai, ArrayList<BallData> balls, ArrayList<PlatformData> platforms, ArrayList<WallData> walls, GameSessionData gameSessionData) {
         this.currentPlayer = currentPlayer;
         logger.info("GameSettings current player: " + currentPlayer);
         this.players = players;
@@ -101,7 +117,6 @@ public class GameSettings {
 
         // load all the default values
         loadAllGameValues();
-
     }
 
     /**
@@ -133,7 +148,6 @@ public class GameSettings {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
