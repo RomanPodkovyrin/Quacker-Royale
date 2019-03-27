@@ -2,6 +2,7 @@ package com.anotherworld.model.ai.behaviour.player.survival;
 
 import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.tools.datapool.BallData;
@@ -32,8 +33,11 @@ public class GetHealth extends Job {
     @Override
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
-        try {
-            PowerUpData powerUP = session.getCurrentPowerUp();
+
+        PowerUpData powerUP = session.getCurrentPowerUp();
+        if (powerUP.getState().equals(ObjectState.ACTIVE)) {
+
+
             if (powerUP.getPowerUpType().equals(PowerUpType.HEAL)) {
                 Matrix destination = powerUP.getCoordinates();
                 logger.trace("Getting Heal power up from: " + destination);
@@ -41,11 +45,12 @@ public class GetHealth extends Job {
                 succeed();
                 return;
             }
-        } catch (NullPointerException e) {
-            logger.trace("No power up is present");
-            fail();
-            return;
+
         }
+        logger.trace("No power up is present");
+        fail();
+        return;
+
 
     }
 }

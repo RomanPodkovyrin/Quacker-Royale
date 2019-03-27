@@ -61,7 +61,6 @@ public class Server extends Thread {
     public Server(int numberOfClients, GameSettings settings) throws SocketException, UnknownHostException {
         hostPlayer = settings.getCurrentPlayer();
         networkPlayers = settings.getPlayers();
-        // TODO should we also have ai in the multiplayer
         balls = settings.getBalls();
         platform = settings.getPlatform().get(0);
         wall = settings.getWall().get(0);
@@ -208,18 +207,23 @@ public class Server extends Thread {
         Object object = objectInputStream.readObject();
         ArrayList<Input> received = new ArrayList<>();
         received = (ArrayList<Input>) object;
-        String ipFromWhereReceived = packet.getAddress().toString().substring(1);
-        String id = ipToID.get(ipFromWhereReceived);
-        logger.trace("Key press has been received from " + id);
-        for (int i = 0; i < inputAndIP.size(); i++) {
-            Pair<ArrayList<Input>, String> playerCommand = inputAndIP.get(i);
-            if (playerCommand.getValue().equals(id)) {
-                playerCommand.getKey().addAll(received);
-                ArrayList<Input> temp = playerCommand.getKey();
-                inputAndIP.clear();
-                inputAndIP.add(new Pair<>(received,id));
-                return inputAndIP;
+        String id = null;
+        try {
+            String ipFromWhereReceived = packet.getAddress().toString().substring(1);
+            id = ipToID.get(ipFromWhereReceived);
+            logger.trace("Key press has been received from " + id);
+            for (int i = 0; i < inputAndIP.size(); i++) {
+                Pair<ArrayList<Input>, String> playerCommand = inputAndIP.get(i);
+                if (playerCommand.getValue().equals(id)) {
+                    playerCommand.getKey().addAll(received);
+                    ArrayList<Input> temp = playerCommand.getKey();
+                    inputAndIP.clear();
+                    inputAndIP.add(new Pair<>(received,id));
+                    return inputAndIP;
+                }
             }
+        } catch (NullPointerException e) {
+            // catch null pointer exception
         }
         ArrayList<Pair<ArrayList<Input>, String>> keyPressesWithClientId = new ArrayList<>(inputAndIP);
         keyPressesWithClientId.add(new Pair<>(received, id));

@@ -67,9 +67,10 @@ public class GameSettings {
     private ArrayList<WallData> walls = new ArrayList<>();
     private GameSessionData gameSessionData;
 
+
+
     private ArrayList<String> names = new ArrayList<>(Arrays.asList("santa","robber", "police", "pirate", "default"));
 
-    // networking objects
 
     /**
      * This method allows to create the Game settings object with pregenerated game objects.
@@ -84,6 +85,10 @@ public class GameSettings {
      */
     public GameSettings(PlayerData currentPlayer, ArrayList<PlayerData> players,ArrayList<PlayerData> ai,
                         ArrayList<BallData> balls,ArrayList<PlatformData> platforms,ArrayList<WallData> walls, GameSessionData gameSessionData) {
+        setUP(currentPlayer, players, ai, balls, platforms, walls, gameSessionData);
+    }
+
+    private void setUP(PlayerData currentPlayer, ArrayList<PlayerData> players, ArrayList<PlayerData> ai, ArrayList<BallData> balls, ArrayList<PlatformData> platforms, ArrayList<WallData> walls, GameSessionData gameSessionData) {
         this.currentPlayer = currentPlayer;
         logger.info("GameSettings current player: " + currentPlayer);
         this.players = players;
@@ -101,7 +106,6 @@ public class GameSettings {
 
         // load all the default values
         loadAllGameValues();
-
     }
 
     /**
@@ -133,7 +137,6 @@ public class GameSettings {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     /**

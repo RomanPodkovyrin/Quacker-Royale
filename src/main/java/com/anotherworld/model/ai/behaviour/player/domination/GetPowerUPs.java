@@ -2,6 +2,7 @@ package com.anotherworld.model.ai.behaviour.player.domination;
 
 import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.tools.datapool.BallData;
@@ -31,21 +32,21 @@ public class GetPowerUPs extends Job {
     @Override
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
-        try {
-            PowerUpData powerUP = session.getCurrentPowerUp();
-            PowerUpType type = powerUP.getPowerUpType();
 
+        PowerUpData powerUP = session.getCurrentPowerUp();
+        PowerUpType type = powerUP.getPowerUpType();
+        if (powerUP.getState().equals(ObjectState.ACTIVE)) {
             if (type.equals(PowerUpType.TIME_STOP) || type.equals(PowerUpType.SHIELD)) {
                 logger.trace("Getting " + type + " power up");
                 Matrix destination = powerUP.getCoordinates();
-                BlackBoard.moveTo(ai,destination);
+                BlackBoard.moveTo(ai, destination);
                 succeed();
                 return;
             }
-        } catch (NullPointerException e) {
-            logger.trace("No power up is present");
-            fail();
-            return;
         }
+        logger.trace("No power up is present");
+        fail();
+        return;
+
     }
 }

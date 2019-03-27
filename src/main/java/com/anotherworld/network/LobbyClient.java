@@ -1,5 +1,6 @@
 package com.anotherworld.network;
 
+import com.anotherworld.tools.exceptions.ConnectionClosed;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,8 +9,6 @@ import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
-import com.anotherworld.tools.exceptions.ConnectionClosed;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
