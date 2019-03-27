@@ -23,6 +23,7 @@ import com.anotherworld.view.input.TextFieldData;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -397,8 +398,7 @@ public class MenuSystem {
                     control.host();
                     victoryDisplay.updatePlayers();
                     view.switchToDisplay(victoryDisplay);
-                } catch (Exception ex) { //TODO custom exception
-                    //TODO switch to better display
+                } catch (Exception ex) {
                     view.switchToDisplay(connectionFailedDisplay);
                 }
                 
@@ -530,14 +530,14 @@ public class MenuSystem {
         layout.addButton(host);
 
         TextListData playerList = new TextListData(4);
-        //TODO implement actual data
         
-        playerList.addTextSource(() -> {
-            return "Yes";
-        }, 0);
-        playerList.addTextSource(() -> {
-            return "No";
-        }, 1);
+        for (int i = 0; i < 4; i++) { //TODO let the user change this from 4
+            int j = i;
+            playerList.addTextSource(() -> {
+                ArrayList<String> ips = control.getPlayersIPaddresses();
+                return (ips.size() > j) ? ips.get(j) : "";
+            }, j);
+        }
         layout.addList(playerList);
         
         ButtonData startGame = new ButtonData("Start game");
