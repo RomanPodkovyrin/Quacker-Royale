@@ -236,7 +236,7 @@ public class View implements Runnable {
         
         TextDisplayData frameCounterData = new ButtonData(() -> {
             return Integer.toString(currentFrameRate.getValue());
-        }, true);
+        }, 0);
         //TODO draw this a different way
         
         TextDisplayObject frameCounterButton = new TextDisplayObject(programme, frameCounterData);

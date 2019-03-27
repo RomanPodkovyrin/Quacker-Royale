@@ -117,7 +117,7 @@ public class GraphicsDisplay {
                         if (mouseDown) {
                             temp.click();
                         } else {
-                            temp.release(); //TODO switch to hover
+                            temp.hover();
                         }
                     } else {
                         temp.release();

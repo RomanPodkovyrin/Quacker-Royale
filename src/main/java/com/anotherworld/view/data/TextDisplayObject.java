@@ -28,6 +28,7 @@ public class TextDisplayObject extends DisplayObject {
     @Override
     public void transform() {
         super.transform();
+        this.setColour(data.getTextR(), data.getTextG(), data.getTextB(), 1);
         if (!currentText.equals(data.getText())) {
             super.updatePoints(TextSpriteSheet.generateLetterPoints(data.getText(), data.getHeight() / 2));
             programme.updateBuffers(this);

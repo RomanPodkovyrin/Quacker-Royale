@@ -1,22 +1,23 @@
 package com.anotherworld.view.programme;
 
-import static org.lwjgl.opengl.GL46.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL46.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL46.GL_BLEND;
 import static org.lwjgl.opengl.GL46.GL_COMPILE_STATUS;
 import static org.lwjgl.opengl.GL46.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL46.GL_FLOAT;
 import static org.lwjgl.opengl.GL46.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL46.GL_GREATER;
+import static org.lwjgl.opengl.GL46.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL46.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL46.GL_STATIC_DRAW;
 import static org.lwjgl.opengl.GL46.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL46.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL46.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL46.glAlphaFunc;
 import static org.lwjgl.opengl.GL46.glAttachShader;
 import static org.lwjgl.opengl.GL46.glBindAttribLocation;
 import static org.lwjgl.opengl.GL46.glBindBuffer;
 import static org.lwjgl.opengl.GL46.glBindTexture;
 import static org.lwjgl.opengl.GL46.glBindVertexArray;
+import static org.lwjgl.opengl.GL46.glBlendFunc;
 import static org.lwjgl.opengl.GL46.glBufferData;
 import static org.lwjgl.opengl.GL46.glCreateProgram;
 import static org.lwjgl.opengl.GL46.glDeleteBuffers;
@@ -193,8 +194,8 @@ public class TexturedProgramme extends Programme {
 
     @Override
     public void use() {
-        glEnable(GL_ALPHA_TEST);
-        glAlphaFunc(GL_GREATER, 0);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glUseProgram(programmeId);
     }
 

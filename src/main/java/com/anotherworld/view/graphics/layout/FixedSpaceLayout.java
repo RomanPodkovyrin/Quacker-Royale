@@ -48,6 +48,14 @@ public class FixedSpaceLayout extends Layout {
             button.setHeight(buttonHeight);
             button.setWidth(maxWidth);
             button.setPosition(this.getX(), this.getY() + (-this.getHeight() / 2) + ySpacing * (i + 1));
+            button.setOnHover(() -> {
+                button.setBackgroundColour(1, 1, 1, 1);
+                button.setTextColour(0, 0, 0);
+            });
+            button.setOnRelease(() -> {
+                button.setBackgroundColour(0, 0, 0, 0);
+                button.setTextColour(1, 1, 1);
+            });
             display.addButton(button);
         }
         super.enactLayout(display);

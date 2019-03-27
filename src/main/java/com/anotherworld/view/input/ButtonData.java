@@ -1,7 +1,6 @@
 package com.anotherworld.view.input;
 
 import com.anotherworld.model.movable.ObjectState;
-import com.anotherworld.view.data.RectangleDisplayData;
 import com.anotherworld.view.data.TextDisplayData;
 import com.anotherworld.view.data.primatives.Supplier;
 
@@ -19,11 +18,13 @@ public class ButtonData implements TextDisplayData {
     private float backgroundR;
     private float backgroundG;
     private float backgroundB;
-    private boolean transparentBackground;
+    private float backgroundAlpha;
     private float textR;
     private float textG;
     private float textB;
-    private Optional<ButtonListener> action;
+    private Optional<ButtonListener> clock;
+    private Optional<ButtonListener> hover;
+    private Optional<ButtonListener> release;
     
     /**
      * Creates the button data.
@@ -32,32 +33,52 @@ public class ButtonData implements TextDisplayData {
     public ButtonData(String text) {
         this(() -> {
             return text;
-        }, false);
+        }, 1f);
     }
     
     /**
      * Creates button data.
      * @param text The supplier of text for the button
-     * @param transparentBackground If the button should have a transparent background
+     * @param backgroundAlpha If the button should have a transparent background
      */
-    public ButtonData(Supplier<String> text, boolean transparentBackground) {
+    public ButtonData(Supplier<String> text, float backgroundAlpha) {
         this.textR = 0;
         this.textG = 0;
         this.textB = 0;
         this.backgroundR = 1;
         this.backgroundG = 1;
         this.backgroundB = 1;
-        this.transparentBackground = transparentBackground;
+        this.backgroundAlpha = backgroundAlpha;
         this.text = text;
-        action = Optional.empty();
+        clock = Optional.empty();
+        hover = Optional.empty();
+        release = Optional.empty();
     }
     
     /**
-     * Performs the makeDecision if set for the button.
+     * Performs the action if set for the button.
      */
     public void preformAction() {
-        if (action.isPresent()) {
-            action.get().clicked();
+        if (clock.isPresent()) {
+            clock.get().clicked();
+        }
+    }
+    
+    /**
+     * Performs the hover if set for the button.
+     */
+    public void preformHover() {
+        if (hover.isPresent()) {
+            hover.get().clicked();
+        }
+    }
+    
+    /**
+     * Performs the release if set for the button.
+     */
+    public void preformRelease() {
+        if (release.isPresent()) {
+            release.get().clicked();
         }
     }
     
@@ -66,11 +87,13 @@ public class ButtonData implements TextDisplayData {
      * @param r the red value
      * @param g the green value
      * @param b the blue value
+     * @param alpha the alpha value
      */
-    public void setBackgroundColour(float r, float g, float b) {
+    public void setBackgroundColour(float r, float g, float b, float alpha) {
         backgroundR = r;
         backgroundG = g;
         backgroundB = b;
+        backgroundAlpha = alpha;
     }
     
     /**
@@ -147,7 +170,15 @@ public class ButtonData implements TextDisplayData {
     }
 
     public void setOnAction(ButtonListener action) {
-        this.action = Optional.of(action);
+        this.clock = Optional.of(action);
+    }
+
+    public void setOnHover(ButtonListener action) {
+        this.hover = Optional.of(action);
+    }
+
+    public void setOnRelease(ButtonListener action) {
+        this.release = Optional.of(action);
     }
     
     public float getTextR() {
@@ -174,13 +205,13 @@ public class ButtonData implements TextDisplayData {
         return backgroundB;
     }
 
-    public boolean hasTransparentBackground() {
-        return transparentBackground;
-    }
-
     @Override
     public float getTextHeight() {
         return 0.1f;
+    }
+
+    public float getBackgroundAlpha() {
+        return backgroundAlpha;
     }
 
 }

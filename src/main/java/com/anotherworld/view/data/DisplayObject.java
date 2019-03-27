@@ -37,6 +37,8 @@ public abstract class DisplayObject {
     
     private float b;
     
+    private float alpha;
+    
     private SpriteSheet spriteSheet;
 
     public DisplayObject(Programme programme, Points2d points, DrawType displayType) {
@@ -66,6 +68,7 @@ public abstract class DisplayObject {
         this.r = r;
         this.g = g;
         this.b = b;
+        this.alpha = 1;
         this.programme = programme;
         this.spriteSheet = spriteSheet;
         this.programmeObjectId = Optional.empty();
@@ -119,7 +122,7 @@ public abstract class DisplayObject {
             buff.put(this.r);
             buff.put(this.g);
             buff.put(this.b);
-            buff.put(1f);
+            buff.put(this.alpha);
         }
         buff.flip();
         return buff;
@@ -182,11 +185,12 @@ public abstract class DisplayObject {
         return b;
     }
     
-    protected void setColour(float r, float g, float b) {
-        if (floatNotEq(this.r, r) || floatNotEq(this.g, g) || floatNotEq(this.b, b)) {
+    protected void setColour(float r, float g, float b, float alpha) {
+        if (floatNotEq(this.r, r) || floatNotEq(this.g, g) || floatNotEq(this.b, b) || floatNotEq(this.alpha, alpha)) {
             this.r = r;
             this.g = g;
             this.b = b;
+            this.alpha = alpha;
             programme.updateObjectColour(this);
         }
     }
@@ -232,6 +236,14 @@ public abstract class DisplayObject {
      */
     public float getB() {
         return b;
+    }
+
+    /**
+     * Returns how transparent the object is.
+     * @return how transparent the object is
+     */
+    public float getAlpha() {
+        return alpha;
     }
     
     /**

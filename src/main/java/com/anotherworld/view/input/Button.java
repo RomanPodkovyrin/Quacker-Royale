@@ -22,7 +22,13 @@ public class Button extends RectangleDisplayObject implements Clickable {
         super(new SpriteSheet(), programme, buttonData);
         this.listeners = new ArrayList<>();
         this.buttonData = buttonData;
-        this.setColour(buttonData.getBackgroundR(), buttonData.getBackgroundG(), buttonData.getBackgroundB());
+        this.setColour(buttonData.getBackgroundR(), buttonData.getBackgroundG(), buttonData.getBackgroundB(), buttonData.getBackgroundAlpha());
+    }
+    
+    @Override
+    public void transform() {
+        super.transform();
+        this.setColour(buttonData.getBackgroundR(), buttonData.getBackgroundG(), buttonData.getBackgroundB(), buttonData.getBackgroundAlpha());
     }
 
     @Override
@@ -34,8 +40,13 @@ public class Button extends RectangleDisplayObject implements Clickable {
     }
 
     @Override
+    public void hover() {
+        buttonData.preformHover();
+    }
+
+    @Override
     public void release() {
-        //TODO implement this
+        buttonData.preformRelease();
     }
 
     public void addButtonListener(ButtonListener listener) {
@@ -44,7 +55,7 @@ public class Button extends RectangleDisplayObject implements Clickable {
     
     @Override
     public boolean shouldDraw() {
-        return !buttonData.hasTransparentBackground();
+        return true;
     }
 
     @Override

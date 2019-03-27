@@ -154,7 +154,7 @@ public class MenuSystem {
         instructions.setHeight(0.2f);
         instructions.setWidth(0.4f);
         instructions.setPosition(0.7f, -0.8f);
-        instructions.setBackgroundColour(0, 0, 0);
+        instructions.setBackgroundColour(0, 0, 0, 1);
         instructions.setTextColour(1, 1, 1);
         
         GraphicsDisplay display = new GraphicsDisplay();
@@ -239,7 +239,7 @@ public class MenuSystem {
         
         ButtonData muteButton = new ButtonData(() -> {
             return "MUTE: " + KeySettings.getKeyString(KeySettings.getMute());  
-        }, false);
+        }, 1);
         
         muteButton.setOnAction(() -> {
             logger.info("charge key button pressed");
@@ -249,7 +249,7 @@ public class MenuSystem {
         
         ButtonData upButton = new ButtonData(() -> {
             return "UP: " + KeySettings.getKeyString(KeySettings.getUp());  
-        }, false);
+        }, 1);
         
         upButton.setOnAction(() -> {
             logger.info("up key button pressed");
@@ -259,7 +259,7 @@ public class MenuSystem {
         
         ButtonData downButton = new ButtonData(() -> {
             return "DOWN: " + KeySettings.getKeyString(KeySettings.getDown());  
-        }, false);
+        }, 1);
         
         downButton.setOnAction(() -> {
             logger.info("down key button pressed");
@@ -269,7 +269,7 @@ public class MenuSystem {
         
         ButtonData leftButton = new ButtonData(() -> {
             return "LEFT: " + KeySettings.getKeyString(KeySettings.getLeft());  
-        }, false);
+        }, 1);
         
         leftButton.setOnAction(() -> {
             logger.info("left key button pressed");
@@ -279,7 +279,7 @@ public class MenuSystem {
         
         ButtonData rightButton = new ButtonData(() -> {
             return "RIGHT: " + KeySettings.getKeyString(KeySettings.getRight());  
-        }, false);
+        }, 1);
         
         rightButton.setOnAction(() -> {
             logger.info("key button pressed");
@@ -289,7 +289,7 @@ public class MenuSystem {
         
         ButtonData chargeButton = new ButtonData(() -> {
             return "CHARGE: " + KeySettings.getKeyString(KeySettings.getCharge());  
-        }, false);
+        }, 1);
         
         chargeButton.setOnAction(() -> {
             logger.info("charge key button pressed");
@@ -323,7 +323,7 @@ public class MenuSystem {
                 default:
                     return "UNKNOWN DISPLAY TYPE";
             }
-        }, false);
+        }, 1);
         
         displayTypeButton.setOnAction(() -> {
             logger.info("Change display type button pressed");
@@ -342,7 +342,7 @@ public class MenuSystem {
         
         final Wrapper<Integer> height = new Wrapper<>(ViewSettings.getHeight());
         final Wrapper<Integer> width = new Wrapper<>(ViewSettings.getWidth());
-        ButtonData resolutionButton = new ButtonData(() -> width.getValue() + "X" + height.getValue(), false);
+        ButtonData resolutionButton = new ButtonData(() -> width.getValue() + "X" + height.getValue(), 1);
         
         
         resolutionButton.setOnAction(() -> {
@@ -368,7 +368,7 @@ public class MenuSystem {
         
         layout.addButton(resolutionButton);
         final Wrapper<Integer> frameRate = new Wrapper<>(ViewSettings.getRefreshRate());
-        ButtonData frameRateButton = new ButtonData(() -> "Refresh rate: " + frameRate.getValue(), false);
+        ButtonData frameRateButton = new ButtonData(() -> "Refresh rate: " + frameRate.getValue(), 1);
         
         
         frameRateButton.setOnAction(() -> {
