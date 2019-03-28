@@ -3,14 +3,15 @@ package com.anotherworld.view;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetMonitors;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
+import static org.lwjgl.glfw.GLFW.glfwGetMonitors;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowAttrib;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSize;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
@@ -73,8 +74,10 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
+import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.Platform;
@@ -385,6 +388,12 @@ public class View implements Runnable {
         if (!window.isPresent()) {
             window = Optional.of(glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL));
             glfwSetWindowAttrib(window.get(), GLFW_RESIZABLE, GLFW_FALSE);
+            glfwSetWindowSizeCallback(window.get(), (window, width, height) -> {
+                if (window == this.window.get()) {
+                    this.width = width;
+                    this.height = height;
+                }
+            });
         }
         PointerBuffer monitors = glfwGetMonitors();
         if (displayType.equals(DisplayType.WINDOWED)) {
@@ -392,6 +401,7 @@ public class View implements Runnable {
             glfwSetWindowSize(window.get(), width, height);
         } else {
             glfwSetWindowMonitor(window.get(), monitors.get(), 0, 0, width, height, refreshRate);
+            //glfwSetWindowSize(window.get(), width, height);
         }
         IntBuffer windowHeight = BufferUtils.createIntBuffer(1);
         IntBuffer windowWidth = BufferUtils.createIntBuffer(1);
@@ -400,7 +410,6 @@ public class View implements Runnable {
             width = windowWidth.get();
             height = windowHeight.get();
         }
-        System.out.println(width + ":" + height);
     }
 
     public boolean gameRunning() {
