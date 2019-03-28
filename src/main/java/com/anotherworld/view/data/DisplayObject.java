@@ -22,10 +22,6 @@ import org.lwjgl.BufferUtils;
 public abstract class DisplayObject {
 
     private static Logger logger = LogManager.getLogger(DisplayObject.class);
-
-    private final float xShear;
-    
-    private final float yShear;
     
     private Points2d points;
     
@@ -40,6 +36,8 @@ public abstract class DisplayObject {
     private float g;
     
     private float b;
+    
+    private float alpha;
     
     private SpriteSheet spriteSheet;
 
@@ -65,14 +63,14 @@ public abstract class DisplayObject {
      * @param b How blue the object is 0 to 1
      */
     public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, DrawType displayType, float r, float g, float b) {
+        logger.trace("Creating display object");
         this.points = points;
         this.displayType = displayType;
         this.r = r;
         this.g = g;
         this.b = b;
+        this.alpha = 1;
         this.programme = programme;
-        this.xShear = 1;
-        this.yShear = 1;
         this.spriteSheet = spriteSheet;
         this.programmeObjectId = Optional.empty();
     }
@@ -115,13 +113,17 @@ public abstract class DisplayObject {
         return b;
     }
     
+    /**
+     * Returns a float buffer containing the object colour for each point for the display object.
+     * @return the colour buffer for the display object.
+     */
     public FloatBuffer getColourBuffer() {
         FloatBuffer buff = BufferUtils.createFloatBuffer(points.getPoints().length);
         for (int i = 0; i < points.getN(); i++) {
             buff.put(this.r);
             buff.put(this.g);
             buff.put(this.b);
-            buff.put(1f);
+            buff.put(this.alpha);
         }
         buff.flip();
         return buff;
@@ -146,10 +148,6 @@ public abstract class DisplayObject {
     
     private float getYScale() {
         return getScale(1);
-    }
-    
-    private float getZScale() {
-        return -getScale(2);
     }
     
     private float getScale(int axis) {
@@ -184,11 +182,12 @@ public abstract class DisplayObject {
         return b;
     }
     
-    protected void setColour(float r, float g, float b) {
-        if (floatNotEq(this.r, r) || floatNotEq(this.g, g) || floatNotEq(this.b, b)) {
+    protected void setColour(float r, float g, float b, float alpha) {
+        if (floatNotEq(this.r, r) || floatNotEq(this.g, g) || floatNotEq(this.b, b) || floatNotEq(this.alpha, alpha)) {
             this.r = r;
             this.g = g;
             this.b = b;
+            this.alpha = alpha;
             programme.updateObjectColour(this);
         }
     }
@@ -235,6 +234,14 @@ public abstract class DisplayObject {
     public float getB() {
         return b;
     }
+
+    /**
+     * Returns how transparent the object is.
+     * @return how transparent the object is
+     */
+    public float getAlpha() {
+        return alpha;
+    }
     
     /**
      * Returns the angle of the object in degrees.
@@ -274,14 +281,6 @@ public abstract class DisplayObject {
 
     public int getNumberOfPoints() {
         return this.points.getN();
-    }
-
-    public float getXShear() {
-        return xShear;
-    }
-
-    public float getYShear() {
-        return yShear;
     }
 
     public SpriteSheet getSpriteSheet() {

@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL46.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL46.glBindTexture;
 import static org.lwjgl.opengl.GL46.glGetUniformLocation;
 import static org.lwjgl.opengl.GL46.glUniform1i;
-import static org.lwjgl.opengl.GL46.glUniform2f;
 import static org.lwjgl.opengl.GL46.glUniformMatrix4fv;
 
 import com.anotherworld.tools.maths.Matrix;
@@ -31,27 +30,29 @@ public class TextureMap {
      */
     public TextureMap(String location) throws IOException {
         textureBuffers = new TextureBuffer[SpriteLocation.NUMBER_OF_LOCATIONS];
-        textureBuffers[SpriteLocation.NONE.getInt()] = new TextureBuffer(location + "mega duck.png", 4, 5);
+        textureBuffers[SpriteLocation.NONE.getInt()] = new TextureBuffer(location + "alien.png", 1, 1);
         textureBuffers[SpriteLocation.PLAYER.getInt()] = new TextureBuffer(location + "mega duck.png", 4, 11);
-        textureBuffers[SpriteLocation.BALL.getInt()] = new TextureBuffer(location + "NeutralBall/NeutralBall0.png", 1, 1);
+        textureBuffers[SpriteLocation.SAFE_BALL.getInt()] = new TextureBuffer(location + "basketball.png", 2, 2);
+        textureBuffers[SpriteLocation.DANGEROUS_BALL.getInt()] = new TextureBuffer(location + "DangerBall.png", 2, 2);
         textureBuffers[SpriteLocation.TEXT.getInt()] = new TextureBuffer(location + "tom_font.png", 32, 4);
         textureBuffers[SpriteLocation.POWER_UP.getInt()] = new TextureBuffer(location + "powerups.png", 4, 3);
         textureBuffers[SpriteLocation.POLICE_HAT.getInt()] = new TextureBuffer(location + "police.png", 4, 5);
         textureBuffers[SpriteLocation.PIRATE_HAT.getInt()] = new TextureBuffer(location + "pirate.png", 4, 5);
         textureBuffers[SpriteLocation.ROBBER_HAT.getInt()] = new TextureBuffer(location + "robber.png", 4, 5);
         textureBuffers[SpriteLocation.SANTA_HAT.getInt()] = new TextureBuffer(location + "santa.png", 4, 5);
+        textureBuffers[SpriteLocation.BACKGROUND.getInt()] = new TextureBuffer(location + "Background.png", 2, 5);
+        textureBuffers[SpriteLocation.INSTRUCTIONS.getInt()] = new TextureBuffer(location + "instructions.png", 1, 1);
+        textureBuffers[SpriteLocation.TILE.getInt()] = new TextureBuffer(location + "tile.png", 1, 1);
+        textureBuffers[SpriteLocation.ARROW.getInt()] = new TextureBuffer(location + "Arrow.png", 1, 1);
     }
     
     /**
      * Loads a texture the correct texture for an object to the opengl buffers.
      * @param programmeId The programme id to use
      * @param spriteSheet The sprite sheet to load
-     * @param xShear The x shear on the sprite
-     * @param yShear The y shear on the sprite
      */
-    public void loadTexture(int programmeId, SpriteSheet spriteSheet, float xShear, float yShear) {
+    public void loadTexture(int programmeId, SpriteSheet spriteSheet) {
 
-        //Change this to select right texture from buffer
         glUniform1i(glGetUniformLocation(programmeId, "hasTex"), spriteSheet.isTextured() ? 1 : 0);
         
         if (spriteSheet.isTextured()) {
@@ -62,7 +63,6 @@ public class TextureMap {
             temp2.put(matrix);
             temp2.flip();
             glUniformMatrix4fv(glGetUniformLocation(programmeId, "textureTransformation"), false, temp2);
-            glUniform2f(glGetUniformLocation(programmeId, "Shear"), xShear, yShear);
         }
         
     }

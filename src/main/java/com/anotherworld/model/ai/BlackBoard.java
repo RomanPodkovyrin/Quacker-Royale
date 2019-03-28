@@ -1,13 +1,13 @@
 package com.anotherworld.model.ai;
 
-import com.anotherworld.tools.maths.Line;
-import com.anotherworld.tools.maths.Matrix;
-import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.maths.Line;
 import com.anotherworld.tools.maths.Maths;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,8 +23,10 @@ import org.apache.logging.log4j.Logger;
  */
 public class BlackBoard {
     private static Logger logger = LogManager.getLogger(BlackBoard.class);
+
+
     //The allowed safe distance between the ball and the player
-    private static float safeDistance = 4;
+    private static float safeDistance = 2;
     // Player id - ball target
     private static Map<String, String> targetedBalls = new HashMap<>();
     private static float acceptableHealthPercentage = 0.5f;
@@ -42,6 +44,11 @@ public class BlackBoard {
         }
 
     }
+
+    public static float getSafeDistance() {
+        return safeDistance;
+    }
+
 
     public static float getAcceptableHealthPercentage() {
         return acceptableHealthPercentage;

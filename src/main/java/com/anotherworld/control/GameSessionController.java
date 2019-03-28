@@ -4,6 +4,7 @@ import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.settings.GameSettings;
+import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.Input;
@@ -12,6 +13,7 @@ import com.anotherworld.view.View;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -102,7 +104,9 @@ public class GameSessionController {
 
         while (view.gameRunning() && session.isRunning()) {
 
-            if (userControl()) break;
+            if (userControl()) {
+                break;
+            }
 
             // if client check if there are game objects to update
             network.clientControl(keyListener);
@@ -187,34 +191,40 @@ public class GameSessionController {
      * Plays a win sound or lose sound or nothing if the game was quit.
      */
     private void winOrLoseSound() {
-            LinkedList<String> rankings = settings.getGameSessionData().getRankings();
-            boolean allRanked = rankings.size() == settings.getPlayers().size() + 1 + settings.getAi().size();
 
-            if (rankings.isEmpty() | !allRanked) {
-                logger.trace("No winner");
+        LinkedList<String> rankings = settings.getGameSessionData().getRankings();
+        boolean allRanked = rankings.size() == settings.getPlayers().size() + 1 + settings.getAi().size();
+
+        if (rankings.isEmpty() | !allRanked) {
+            rankings.clear();
+            logger.trace("No winner");
+        } else {
+
+            String firstPlace = rankings.get(0);
+            AudioControl.stopBackgroundMusic();
+
+            if (firstPlace.equals(settings.getCurrentPlayer().getObjectID())) {
+                logger.trace("You won");
+                AudioControl.win();
+
+
             } else {
-
-                String firstPlace = rankings.get(0);
-                AudioControl.stopBackgroundMusic();
-
-                if (firstPlace.equals(settings.getCurrentPlayer().getObjectID())) {
-                    logger.trace("You won");
-                    AudioControl.win();
-
-
-                } else {
-                    logger.trace("You lost");
-                    AudioControl.lose();
-                }
-
-                // Sleeping the main thread to allow sound to play
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                logger.trace("You lost");
+                AudioControl.lose();
             }
 
+            // Sleeping the main thread to allow sound to play
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+    
+    public List<String> getRanking() {
+        return settings.getGameSessionData().getRankings();
     }
 
 

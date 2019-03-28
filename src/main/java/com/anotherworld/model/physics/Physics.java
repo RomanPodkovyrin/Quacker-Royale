@@ -1,7 +1,5 @@
 package com.anotherworld.model.physics;
 
-import com.anotherworld.tools.maths.Matrix;
-import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.Wall;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.settings.GameSettings;
@@ -9,12 +7,15 @@ import com.anotherworld.tools.PropertyReader;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.MovableData;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 /**
  * This class allows the game to move objects, detect collisions and response with collisions.
  *
@@ -27,7 +28,9 @@ public class Physics {
     private static final String FALLING = "FALLINGSPEED";
     private static final String FILE = "physics.properties";
     private static final float CHARGE_RATE = 1.5f;
-    private static final int FIRST = 0, SECOND = 1, AVERAGE = 2;
+    private static final int FIRST = 0;
+    private static final int SECOND = 1;
+    private static final int AVERAGE = 2;
     static float friction;
     static float rate;
     static float fallingSpeed;
@@ -233,6 +236,7 @@ public class Physics {
 
         return safeCoordinateAb;
     }
+
     /**
      * To calculate safe coordinates between objectA and objectB to prevent
      * overlapping after collision happened.(without looking ahead)
@@ -359,8 +363,7 @@ public class Physics {
             objectA.setCoordinates(safe.getX(), safe.getY());
             safe = newCoordinate.get(SECOND);
             objectB.setCoordinates(safe.getX(), safe.getY());
-        }
-        else{
+        } else {
             newCoordinate = calculateCollisionWOLookAhead(objectA, objectB);
             safe = newCoordinate.get(SECOND);
             objectB.setCoordinates(safe.getX(), safe.getY());

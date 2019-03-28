@@ -124,7 +124,6 @@ public class AudioControl {
      */
     public static void win() {
         if (effectsOn) {
-            soundEffects = new SoundEffects();
             soundEffects.win();
         }
     }
@@ -134,7 +133,6 @@ public class AudioControl {
      */
     public static void lose() {
         if (effectsOn) {
-            soundEffects = new SoundEffects();
             soundEffects.loseSound();
         }
     }
@@ -152,12 +150,10 @@ public class AudioControl {
      * Stops all sound effects.
      */
     public static void stopSoundEffects() {
-        if (effectsOn) {
-            try {
-                soundEffects.stopSoundEffects();
-            } catch (NullPointerException e) {
-                logger.error("Stopping music which wasn't created");
-            }
+        try {
+            soundEffects.stopSoundEffects();
+        } catch (NullPointerException e) {
+            logger.error("Stopping music which wasn't created");
         }
     }
 

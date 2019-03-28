@@ -9,6 +9,7 @@ import static org.lwjgl.opengl.GL46.glViewport;
 
 import com.anotherworld.view.data.DisplayObject;
 import com.anotherworld.view.data.primatives.Matrix2d;
+import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.graphics.Camera;
 import com.anotherworld.view.input.MouseState;
 
@@ -27,6 +28,8 @@ public abstract class Programme {
     
     private Stack<Matrix2d> matrixStack;
     
+    private Stack<Matrix2d> inverseMatrixStack;
+    
     private final long window;
     
     private boolean mouseDown;
@@ -38,6 +41,7 @@ public abstract class Programme {
      */
     public Programme(long window) throws ProgrammeUnavailableException {
         matrixStack = new Stack<>();
+        inverseMatrixStack = new Stack<>();
         this.mouseDown = false;
         this.window = window;
     }
@@ -73,8 +77,9 @@ public abstract class Programme {
      * Applies matrix transformations using the camera's position so it is centred on the screen.
      * @param camera The camera to use for display
      */
-    public void transform(Camera camera) {
+    public final void transform(Camera camera) {
         this.multiplyCurrent(camera.transform());
+        this.multiplyInverseCurrent(camera.inverseTransform());
     }
 
     /**
@@ -129,29 +134,54 @@ public abstract class Programme {
     }
     
     /**
+     * Translates the current matrix on the inverse stack.
+     * @param b the translation matrix
+     */
+    private void multiplyInverseCurrent(Matrix2d b) {
+        Matrix2d currentMatrix = getCurrentInverseMatrix();
+        if (!inverseMatrixStack.isEmpty()) {
+            inverseMatrixStack.pop();
+        }
+        inverseMatrixStack.push(b.mult(currentMatrix));
+    }
+    
+    /**
      * Returns the current matrix on the stack or the identity if the stack is empty.
      * @return The current matrix
      */
-    public Matrix2d getCurrentMatrix() {
+    public final Matrix2d getCurrentMatrix() {
         if (matrixStack.isEmpty()) {
             return getIdentity();
         }
         return matrixStack.peek();
     }
+    
+    /**
+     * Returns the current matrix on the stack or the identity if the stack is empty.
+     * @return The current matrix
+     */
+    public final Matrix2d getCurrentInverseMatrix() {
+        if (inverseMatrixStack.isEmpty()) {
+            return getIdentity();
+        }
+        return inverseMatrixStack.peek();
+    }
 
     /**
      * Save the current matrix to the stack.
      */
-    public void pushMatrix() {
+    public final void pushMatrix() {
         matrixStack.push(getCurrentMatrix());
+        inverseMatrixStack.push(getCurrentInverseMatrix());
     }
 
 
     /**
      * Resets the current matrix transformations.
      */
-    public void loadIdentity() {
+    public final void loadIdentity() {
         matrixStack.clear();
+        inverseMatrixStack.clear();
     }
 
     /**
@@ -160,8 +190,9 @@ public abstract class Programme {
      * @param y the y translation
      * @param z the z translation
      */
-    public void translatef(float x, float y, float z) {
+    public final void translatef(float x, float y, float z) {
         multiplyCurrent(getTranslation(x, y, z));
+        multiplyInverseCurrent(getTranslation(1 / x, 1 / y, 1 / z));
     }
 
     /**
@@ -170,8 +201,9 @@ public abstract class Programme {
      * @param y the y scale
      * @param z the z scale
      */
-    public void scalef(float x, float y, float z) {
+    public final void scalef(float x, float y, float z) {
         multiplyCurrent(getScale(x, y, z));
+        multiplyInverseCurrent(getScale(1 / x, 1 / y, 1 / z));
     }
 
     /**
@@ -181,19 +213,23 @@ public abstract class Programme {
      * @param y the y component of the line
      * @param z the z component of the line
      */
-    public void rotatef(float angle, float x, float y, float z) {
+    public final void rotatef(float angle, float x, float y, float z) {
         assert (y == 0);
-        assert (z == 0);
+        assert (x == 0);
         multiplyCurrent(getRotation(angle));
+        multiplyInverseCurrent(getRotation(-angle));
     }
 
 
     /**
      * Resets to the last matrix pushed onto the stack or the identity if there are none left.
      */
-    public void popMatrix() {
+    public final void popMatrix() {
         if (!matrixStack.isEmpty()) {
             matrixStack.pop();
+        }
+        if (!inverseMatrixStack.isEmpty()) {
+            inverseMatrixStack.pop();
         }
     }
 
@@ -208,6 +244,28 @@ public abstract class Programme {
      * @param displayObject the object to update
      */
     public abstract void updateObjectColour(DisplayObject displayObject);
+    
+    /**
+     * Returns if the cursor has just been pressed.
+     * @return if the cursor has just been pressed since last call
+     */
+    public boolean getCursorPressed() {
+        
+        boolean pressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1;
+        
+        if (pressed) {
+            if (!mouseDown) {
+                mouseDown = true;
+            } else {
+                pressed = false;
+            }
+        } else {
+            mouseDown = false;
+        }
+        
+        return pressed;
+        
+    }
 
     /**
      * Returns the cursors current position.
@@ -223,22 +281,25 @@ public abstract class Programme {
         IntBuffer height = BufferUtils.createIntBuffer(1);
         
         glfwGetWindowSize(window, width, height);
-        float x = -1 + (2 * (float)cursorX.get() / ((float)width.get()));
-        float y = -1 + (2 * (float)cursorY.get() / ((float)height.get()));
         
-        boolean pressed = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1;
+        Points2d cursorPoint = new Points2d(4, 1);
         
-        if (pressed) {
-            if (!mouseDown) {
-                mouseDown = true;
-            } else {
-                pressed = false;
-            }
-        } else {
-            mouseDown = false;
-        }
+        cursorPoint.setValue(0, 0, -1 + (2 * (float)cursorX.get() / ((float)width.get())));
+        cursorPoint.setValue(1, 0, 1 - (2 * (float)cursorY.get() / ((float)height.get())));
+        cursorPoint.setValue(3, 0, 1);
         
-        return new MouseState(x, y, pressed);
+        //System.out.println(cursorPoint.getValue(0, 0) + ":" + cursorPoint.getValue(1, 0));
+        
+        //System.out.println(getCurrentMatrix().toString());
+        
+        cursorPoint = getCurrentInverseMatrix().mult(cursorPoint);
+        
+        float x = cursorPoint.getValue(0, 0) / cursorPoint.getValue(3, 0);
+        float y = cursorPoint.getValue(1, 0) / cursorPoint.getValue(3, 0);
+        
+        //System.out.println(x + ":" + y);
+        
+        return new MouseState(x, y);
     }
 
     /**
@@ -248,6 +309,7 @@ public abstract class Programme {
     public abstract void updateBuffers(DisplayObject displayObject);
 
     public void setViewport(int x, int y, int w, int h) {
+        //System.out.println(x + ":" + y + ":" + w + ":" + h);
         glViewport(x, y, w, h);
     }
 

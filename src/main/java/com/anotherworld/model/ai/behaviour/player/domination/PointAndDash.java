@@ -2,19 +2,17 @@ package com.anotherworld.model.ai.behaviour.player.domination;
 
 import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.model.movable.Player;
-import com.anotherworld.tools.maths.Matrix;
-import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.model.movable.ObjectState;
+import com.anotherworld.model.movable.Player;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
-import com.anotherworld.tools.input.Input;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import java.util.ArrayList;
-import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -38,7 +36,6 @@ public class PointAndDash extends Job  {
     public void act(PlayerData ai, ArrayList<PlayerData> players, ArrayList<BallData> balls, Platform platform, GameSessionData session) {
 
         if (ai.getState().equals(ObjectState.CHARGING)) {
-//            GameSession.updatePlayer(ai,new ArrayList<>(Arrays.asList(Input.CHARGE)),session);
             ai.setTimeStartedCharging(session.getTicksElapsed());
             ai.setState(ObjectState.CHARGING);
             if ((session.getTicksElapsed() - ai.getTimeStartedCharging()) % 20 == 0) {
@@ -56,7 +53,6 @@ public class PointAndDash extends Job  {
             }
 
             ai.setVelocity(0,0);
-            System.out.println("Ai charge " + ai.getChargeLevel() + " max " + GameSettings.getDefaultPlayerMaxCharge());
             if (ai.getChargeLevel() >= GameSettings.getDefaultPlayerMaxCharge() * 1) {
                 logger.trace("Reached full charge");
                 GameSession.updatePlayer(ai,new ArrayList<>(),session);
@@ -64,14 +60,8 @@ public class PointAndDash extends Job  {
                 ai.setState(ObjectState.DASHING);
 
 
+                // Points it in the direction of the closest player
                 PlayerData closestPlayer = targetPlayers.get(0);
-                //TODO  still has speed after hashing
-                BlackBoard.moveTo(ai,closestPlayer.getCoordinates());
-                System.out.println("Ai location " + ai.getCoordinates());
-                System.out.println("Player location " + closestPlayer.getCoordinates());
-                System.out.println("Vector ai -> player " + MatrixMath.pointsVector(ai.getCoordinates(),closestPlayer.getCoordinates()));
-                System.out.println("Norm ai -> player " + MatrixMath.pointsVector(ai.getCoordinates(),closestPlayer.getCoordinates()).normalize());
-                System.out.println(ai.getVelocity());
                 Matrix point = MatrixMath.pointsVector(ai.getCoordinates(),closestPlayer.getCoordinates()).normalize();
                 ai.setVelocity(point.getX(),point.getY());
 

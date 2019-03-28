@@ -2,13 +2,13 @@ package com.anotherworld.model.ai.behaviour.player.survival;
 
 import com.anotherworld.model.ai.BlackBoard;
 import com.anotherworld.model.ai.behaviour.Job;
-import com.anotherworld.tools.maths.Line;
-import com.anotherworld.tools.maths.Matrix;
-import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.Platform;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlayerData;
+import com.anotherworld.tools.maths.Line;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,7 +29,7 @@ public class CheckIfSaveToGo extends Job {
     private ArrayList<BallData> imminentDangerBalls = new ArrayList<>();
 
     //The allowed safe distance between the ball and the player
-    private float safeDistance = 2;
+    private float safeDistance = 6;
 
     public CheckIfSaveToGo(){
 
@@ -55,6 +55,7 @@ public class CheckIfSaveToGo extends Job {
         }
 
         BlackBoard.sortBallLevels(ai,balls,dangerBalls,possibleDangerBalls,imminentDangerBalls);
+        imminentDangerBalls.addAll(possibleDangerBalls);
         if (imminentDangerBalls.isEmpty()) {
             succeed();
             logger.trace("All good no bad balls");
@@ -67,7 +68,7 @@ public class CheckIfSaveToGo extends Job {
             Matrix neighbour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),aiPosition);
 
             // Already in the danger zone at the current moment
-            if (MatrixMath.distanceAB(aiPosition,neighbour) <= ai.getRadius() + firstBall.getRadius() + safeDistance) {
+            if (MatrixMath.distanceAB(aiPosition,neighbour) <= ai.getRadius() + firstBall.getRadius() + BlackBoard.getSafeDistance()) {
                 logger.trace("Within the danger zone need to move out");
                 succeed();
                 return;
@@ -76,7 +77,7 @@ public class CheckIfSaveToGo extends Job {
             Matrix lookAheadNeighbour = MatrixMath.nearestNeighbour(new Line(firstBall.getCoordinates(),firstBall.getVelocity()),lookAhead);
 
             // In danger in the look ahead
-            if (MatrixMath.distanceAB(lookAhead,lookAheadNeighbour) <= ai.getRadius() + firstBall.getRadius() + (Math.pow(safeDistance,2))) {
+            if (MatrixMath.distanceAB(lookAhead,lookAheadNeighbour) <= ai.getRadius() + firstBall.getRadius() + (BlackBoard.getSafeDistance() + 2)) {
                 ai.setVelocity(0,0);
                 logger.trace("AI stopped danger ahead");
                 fail();

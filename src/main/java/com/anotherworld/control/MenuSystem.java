@@ -1,26 +1,32 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
-import com.anotherworld.tools.exceptions.ConnectionClosed;
-import com.anotherworld.tools.exceptions.NoHostFound;
+import com.anotherworld.settings.Difficulty;
 import com.anotherworld.settings.DisplayType;
+import com.anotherworld.settings.GameSettings;
 import com.anotherworld.settings.KeySettings;
 import com.anotherworld.settings.ViewSettings;
 import com.anotherworld.tools.Wrapper;
+import com.anotherworld.tools.exceptions.ConnectionClosed;
+import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import com.anotherworld.view.data.TextListData;
 import com.anotherworld.view.graphics.GraphicsDisplay;
+import com.anotherworld.view.graphics.VictoryDisplay;
 import com.anotherworld.view.graphics.layout.CreditLayout;
 import com.anotherworld.view.graphics.layout.FixedSpaceLayout;
 import com.anotherworld.view.graphics.layout.Layout;
 import com.anotherworld.view.graphics.layout.LobbyLayout;
+import com.anotherworld.view.graphics.layout.VictoryLayout;
+import com.anotherworld.view.graphics.spritesheet.SpriteLocation;
 import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.TextFieldData;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,12 +36,18 @@ public class MenuSystem {
     private View view;
 
     private static Logger logger = LogManager.getLogger(MenuSystem.class);
+    
+    private static final String BACK = "Back";
 
     public MenuSystem(View view, Controller control) {
         this.view = view;
         this.control = control;
     }
 
+    /**
+     * Creates and runs the menu using the view.
+     * @throws KeyListenerNotFoundException If the view objects can't be created for the menu
+     */
     public void start() throws KeyListenerNotFoundException {
 
         // TODO Change throw to menucouldnotbeinitialised or similar
@@ -43,26 +55,32 @@ public class MenuSystem {
         control = new Controller(view);
 
         GraphicsDisplay mainMenuDisplay = new GraphicsDisplay();
+        GraphicsDisplay singlePlayerSettings = new GraphicsDisplay();
+        GraphicsDisplay hostSettings = new GraphicsDisplay();
         GraphicsDisplay settingsMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay multiplayerMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay clientMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay hostLobbyMenuDisplay = new GraphicsDisplay();
         GraphicsDisplay connectionFailedDisplay = new GraphicsDisplay();
-        GraphicsDisplay victoryDisplay = new GraphicsDisplay();
+        GraphicsDisplay instructionsDisplay = this.createInstructionsMenu(mainMenuDisplay);
+        VictoryDisplay victoryDisplay = new VictoryDisplay();
         GraphicsDisplay audioSettingsDisplay = new GraphicsDisplay();
         GraphicsDisplay videoSettingsDisplay = new GraphicsDisplay();
         GraphicsDisplay keyBindingDisplay = new GraphicsDisplay();
         GraphicsDisplay creditDisplay = new GraphicsDisplay();
         GraphicsDisplay clientLobbyDisplay = new GraphicsDisplay();
         ClientLobbyWaitThread thread = new ClientLobbyWaitThread(() -> control.getServerStarted(), () -> view.switchToGameScene());
-        this.createMainMenu(victoryDisplay, creditDisplay, settingsMenuDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
+        
+        this.createMainMenu(singlePlayerSettings, instructionsDisplay, creditDisplay, settingsMenuDisplay, multiplayerMenuDisplay).enactLayout(mainMenuDisplay);
         this.createSettingMenu(mainMenuDisplay, audioSettingsDisplay, videoSettingsDisplay, keyBindingDisplay).enactLayout(settingsMenuDisplay);
         this.createAudioSettings(settingsMenuDisplay).enactLayout(audioSettingsDisplay);
         this.createViewSettings(settingsMenuDisplay).enactLayout(videoSettingsDisplay);
         this.createKeybindingSettings(settingsMenuDisplay).enactLayout(keyBindingDisplay);
         this.createCreditDisplay(mainMenuDisplay).enactLayout(creditDisplay);
+        this.createSinglePlayerGameSettings(mainMenuDisplay, victoryDisplay).enactLayout(singlePlayerSettings);
+        this.createMultiplayerGameSettings(multiplayerMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay, victoryDisplay).enactLayout(hostSettings);
         this.createClientLobbyMenuDisplay(clientMenuDisplay, thread).enactLayout(clientLobbyDisplay);
-        this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostLobbyMenuDisplay, connectionFailedDisplay, victoryDisplay).enactLayout(multiplayerMenuDisplay);
+        this.createMultiplayerMenuDisplay(mainMenuDisplay, clientMenuDisplay, hostSettings).enactLayout(multiplayerMenuDisplay);
         this.createClientMenuDisplay(mainMenuDisplay, multiplayerMenuDisplay, connectionFailedDisplay, clientLobbyDisplay, victoryDisplay, thread).enactLayout(clientMenuDisplay);
         this.createHostLobbyMenuDisplay(multiplayerMenuDisplay).enactLayout(hostLobbyMenuDisplay);
         this.createConnectionFailedDisplay(mainMenuDisplay).enactLayout(connectionFailedDisplay);
@@ -83,7 +101,7 @@ public class MenuSystem {
         
     }
 
-    private Layout createMainMenu(GraphicsDisplay victoryDisplay, GraphicsDisplay creditDisplay, GraphicsDisplay settingsDisplay, GraphicsDisplay multiplayerMenuDisplay) {
+    private Layout createMainMenu(GraphicsDisplay singlePlayerLobby, GraphicsDisplay instructionsDisplay, GraphicsDisplay creditDisplay, GraphicsDisplay settingsDisplay, GraphicsDisplay multiplayerMenuDisplay) {
         logger.debug("Creating main menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -94,29 +112,28 @@ public class MenuSystem {
         ButtonData singlePlayer = new ButtonData("SinglePlayer");
         singlePlayer.setOnAction(() -> {
             logger.trace("Single player button pressed");
-            Thread x = new Thread(() -> {
-                logger.trace("Starting singleplayer");
-                control.startSinglePlayer();
-                logger.trace("Queueing switch to victory scene");
-                view.switchToDisplay(victoryDisplay);
-            });
-            logger.debug("Queueing switch to game view");
-            view.switchToGameScene();
-            x.start();
+            view.switchToDisplay(singlePlayerLobby);
         });
         layout.addButton(singlePlayer);
 
         ButtonData multiPlayer = new ButtonData("Multiplayer");
         multiPlayer.setOnAction(() -> view.switchToDisplay(multiplayerMenuDisplay));
         layout.addButton(multiPlayer);
-        
-        ButtonData settings = new ButtonData("Settings");
-        settings.setOnAction(() -> view.switchToDisplay(settingsDisplay));
-        layout.addButton(settings);
+
+        ButtonData instructions = new ButtonData("Instructions");
+        instructions.setOnAction(() -> {
+            view.switchToDisplay(instructionsDisplay);
+            view.switchBackground(SpriteLocation.INSTRUCTIONS);
+        });
+        layout.addButton(instructions);
 
         ButtonData credits = new ButtonData("Credits");
         credits.setOnAction(() -> view.switchToDisplay(creditDisplay));
         layout.addButton(credits);
+        
+        ButtonData settings = new ButtonData("Settings");
+        settings.setOnAction(() -> view.switchToDisplay(settingsDisplay));
+        layout.addButton(settings);
         
         ButtonData quit = new ButtonData("Exit");
         quit.setOnAction(() -> view.close());
@@ -124,6 +141,27 @@ public class MenuSystem {
 
         return layout;
 
+    }
+    
+    private GraphicsDisplay createInstructionsMenu(GraphicsDisplay mainMenuDisplay) {
+        
+        ButtonData instructions = new ButtonData(BACK);
+        instructions.setOnAction(() -> {
+            view.switchToDisplay(mainMenuDisplay);
+            view.switchBackground(SpriteLocation.BACKGROUND);
+        });
+        
+        instructions.setHeight(0.2f);
+        instructions.setWidth(0.4f);
+        instructions.setPosition(0.7f, -0.8f);
+        instructions.setBackgroundColour(0, 0, 0, 1);
+        instructions.setTextColour(1, 1, 1);
+        
+        GraphicsDisplay display = new GraphicsDisplay();
+        
+        display.addButton(instructions);
+        
+        return display;
     }
 
     private Layout createSettingMenu(GraphicsDisplay mainMenuDisplay, GraphicsDisplay audioSettingsDisplay, GraphicsDisplay videoSettingsDisplay, GraphicsDisplay keyBindingDisplay) {
@@ -146,7 +184,7 @@ public class MenuSystem {
         keyBindings.setOnAction(() -> view.switchToDisplay(keyBindingDisplay));
         layout.addButton(keyBindings);
 
-        ButtonData backToMenu = new ButtonData("Main Menu");
+        ButtonData backToMenu = new ButtonData(BACK);
         backToMenu.setOnAction(() -> view.switchToDisplay(mainMenuDisplay));
         layout.addButton(backToMenu);
         
@@ -184,7 +222,7 @@ public class MenuSystem {
         });
         layout.addButton(sfxButton);
 
-        ButtonData backToSettings = new ButtonData("Settings");
+        ButtonData backToSettings = new ButtonData(BACK);
         backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
         layout.addButton(backToSettings);
         
@@ -201,66 +239,69 @@ public class MenuSystem {
         
         ButtonData muteButton = new ButtonData(() -> {
             return "MUTE: " + KeySettings.getKeyString(KeySettings.getMute());  
-        }, false);
+        }, 1);
         
         muteButton.setOnAction(() -> {
-            logger.info("charge key button pressed");
-            KeySettings.setMute(view.getBindableKey());
+            logger.info("mute key button pressed");
+            view.getBindableKey(i -> KeySettings.setMute(i));
         });
         layout.addButton(muteButton);
         
         ButtonData upButton = new ButtonData(() -> {
             return "UP: " + KeySettings.getKeyString(KeySettings.getUp());  
-        }, false);
+        }, 1);
         
         upButton.setOnAction(() -> {
             logger.info("up key button pressed");
-            KeySettings.setUp(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setUp(i));
         });
         layout.addButton(upButton);
         
         ButtonData downButton = new ButtonData(() -> {
             return "DOWN: " + KeySettings.getKeyString(KeySettings.getDown());  
-        }, false);
+        }, 1);
         
         downButton.setOnAction(() -> {
             logger.info("down key button pressed");
-            KeySettings.setDown(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setDown(i));
         });
         layout.addButton(downButton);
         
         ButtonData leftButton = new ButtonData(() -> {
             return "LEFT: " + KeySettings.getKeyString(KeySettings.getLeft());  
-        }, false);
+        }, 1);
         
         leftButton.setOnAction(() -> {
             logger.info("left key button pressed");
-            KeySettings.setLeft(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setLeft(i));
         });
         layout.addButton(leftButton);
         
         ButtonData rightButton = new ButtonData(() -> {
             return "RIGHT: " + KeySettings.getKeyString(KeySettings.getRight());  
-        }, false);
+        }, 1);
         
         rightButton.setOnAction(() -> {
             logger.info("key button pressed");
-            KeySettings.setRight(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setRight(i));
         });
         layout.addButton(rightButton);
         
         ButtonData chargeButton = new ButtonData(() -> {
             return "CHARGE: " + KeySettings.getKeyString(KeySettings.getCharge());  
-        }, false);
+        }, 1);
         
         chargeButton.setOnAction(() -> {
             logger.info("charge key button pressed");
-            KeySettings.setCharge(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setCharge(i));
         });
         layout.addButton(chargeButton);
 
-        ButtonData backToSettings = new ButtonData("Settings");
-        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
+        ButtonData backToSettings = new ButtonData(BACK);
+        backToSettings.setOnAction(() -> {
+            view.cancelWaitingKeys();
+            view.switchToDisplay(settingsMenuDisplay);
+        });
         layout.addButton(backToSettings);
         
         return layout;
@@ -285,7 +326,7 @@ public class MenuSystem {
                 default:
                     return "UNKNOWN DISPLAY TYPE";
             }
-        }, false);
+        }, 1);
         
         displayTypeButton.setOnAction(() -> {
             logger.info("Change display type button pressed");
@@ -304,7 +345,7 @@ public class MenuSystem {
         
         final Wrapper<Integer> height = new Wrapper<>(ViewSettings.getHeight());
         final Wrapper<Integer> width = new Wrapper<>(ViewSettings.getWidth());
-        ButtonData resolutionButton = new ButtonData(() -> width.getValue() + "X" + height.getValue(), false);
+        ButtonData resolutionButton = new ButtonData(() -> width.getValue() + "X" + height.getValue(), 1);
         
         
         resolutionButton.setOnAction(() -> {
@@ -330,7 +371,7 @@ public class MenuSystem {
         
         layout.addButton(resolutionButton);
         final Wrapper<Integer> frameRate = new Wrapper<>(ViewSettings.getRefreshRate());
-        ButtonData frameRateButton = new ButtonData(() -> "Refresh rate: " + frameRate.getValue(), false);
+        ButtonData frameRateButton = new ButtonData(() -> "Refresh rate: " + frameRate.getValue(), 1);
         
         
         frameRateButton.setOnAction(() -> {
@@ -361,7 +402,7 @@ public class MenuSystem {
         });
         layout.addButton(applyChanges);
 
-        ButtonData backToSettings = new ButtonData("Settings");
+        ButtonData backToSettings = new ButtonData(BACK);
         backToSettings.setOnAction(() -> {
             view.switchToDisplay(settingsMenuDisplay);
             width.setValue(ViewSettings.getWidth());
@@ -373,7 +414,7 @@ public class MenuSystem {
         return layout;
     }
     
-    private Layout createMultiplayerMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay clientMenuDisplay, GraphicsDisplay hostMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay victoryDisplay) {
+    private Layout createMultiplayerMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay clientMenuDisplay, GraphicsDisplay hostMenuDisplay) {
         logger.debug("Creating multiplayer menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
@@ -382,29 +423,14 @@ public class MenuSystem {
         layout.addButton(multi);
 
         ButtonData buttonHost = new ButtonData("Host");
-        buttonHost.setOnAction(() -> {
-            // start the game
-            Thread x = new Thread(() -> {
-                view.switchToDisplay(hostMenuDisplay);
-                try {
-                    control.host();
-                    view.switchToDisplay(victoryDisplay);
-                } catch (Exception ex) { //TODO custom exception
-                    //TODO switch to better display
-                    view.switchToDisplay(connectionFailedDisplay);
-                }
-                
-                
-            });
-            x.start();
-        });
+        buttonHost.setOnAction(() -> view.switchToDisplay(hostMenuDisplay));
         layout.addButton(buttonHost);
 
         ButtonData buttonClient = new ButtonData("Connect");
         buttonClient.setOnAction(() -> view.switchToDisplay(clientMenuDisplay));
         layout.addButton(buttonClient);
 
-        ButtonData backToMenu = new ButtonData("Main menu");
+        ButtonData backToMenu = new ButtonData(BACK);
         backToMenu.setOnAction(() -> view.switchToDisplay(mainMenuDisplay));
         layout.addButton(backToMenu);
 
@@ -412,12 +438,12 @@ public class MenuSystem {
         
     }
     
-    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay clientLobbyDisplay, GraphicsDisplay victoryDisplay, ClientLobbyWaitThread thread) throws KeyListenerNotFoundException {
+    private Layout createClientMenuDisplay(GraphicsDisplay mainMenuDisplay, GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay connectionFailedDisplay, GraphicsDisplay clientLobbyDisplay, VictoryDisplay victoryDisplay, ClientLobbyWaitThread thread) throws KeyListenerNotFoundException {
         logger.debug("Creating client menu display");
         
         FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
         
-        ButtonData client = new ButtonData("Please type in the IP and Port of the host and press connect");
+        ButtonData client = new ButtonData("Enter host's ip address");
         layout.addButton(client);
 
         TextFieldData ipAndPort = new TextFieldData("localhost", view.getStringKeyListener("LOCALHOST"));
@@ -429,6 +455,7 @@ public class MenuSystem {
                 try {
                     view.switchToDisplay(clientLobbyDisplay);
                     control.connect(ipAndPort.getText());
+                    victoryDisplay.updatePlayers();
                     view.switchToDisplay(victoryDisplay);
                 } catch (NoHostFound | ConnectionClosed e) {
                     view.switchToDisplay(connectionFailedDisplay);
@@ -441,7 +468,7 @@ public class MenuSystem {
         });
         layout.addButton(buttonConnect);
 
-        ButtonData backToMulti = new ButtonData("Go back");
+        ButtonData backToMulti = new ButtonData(BACK);
         backToMulti.setOnAction(() -> {
             thread.cancleWait();
             view.switchToDisplay(multiplayerMenuDisplay);
@@ -473,24 +500,10 @@ public class MenuSystem {
         
         LobbyLayout layout = new LobbyLayout(0.2f);
         
-        ButtonData host = new ButtonData("Clienting...");
+        ButtonData host = new ButtonData("Waiting for host to start...");
         layout.addButton(host);
         
-        //TODO implement actual data
-
-        TextListData playerList = new TextListData(4);
-        playerList.setWidth(0.5f);
-        playerList.setHeight(0.4f);
-        
-        playerList.addTextSource(() -> {
-            return "Yes";
-        }, 0);
-        playerList.addTextSource(() -> {
-            return "No";
-        }, 1);
-        layout.addList(playerList);
-        
-        ButtonData backToMulti = new ButtonData("Go back");
+        ButtonData backToMulti = new ButtonData(BACK);
         backToMulti.setOnAction(() -> {
             control.clientCancel();
             thread.cancleWait();
@@ -504,19 +517,134 @@ public class MenuSystem {
     private Layout createVictoryDisplay(GraphicsDisplay mainMenuDisplay) {
         logger.debug("Creating victory display");
         
-        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
-        
-        ButtonData gameOver = new ButtonData("Game Over");
-        layout.addButton(gameOver);
-        
-        ButtonData menuReturn = new ButtonData("Return to menu");
-        menuReturn.setOnAction(() -> {
+        VictoryLayout layout = new VictoryLayout(() -> control.getRanking(), () -> {
             view.switchToDisplay(mainMenuDisplay);
         });
-        layout.addButton(menuReturn);
         
         return layout;
         
+    }
+    
+    private Layout createSinglePlayerGameSettings(GraphicsDisplay mainMenu, VictoryDisplay victoryDisplay) {
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
+        ButtonData title = new ButtonData("Select Difficulty");
+        layout.addButton(title);
+        
+        ButtonData difficultyButton = new ButtonData("Medium");
+        
+        difficultyButton.setOnAction(() -> {
+            switch (difficultyButton.getText()) {
+                case "Easy":
+                    difficultyButton.setText("Medium");
+                    break;
+                case "Medium":
+                    difficultyButton.setText("Hard");
+                    break;
+                case "Hard":
+                    difficultyButton.setText("Easy");
+                    break;
+                default:
+                    difficultyButton.setText("Medium");
+            }
+        });
+        
+        layout.addButton(difficultyButton);
+        
+        ButtonData start = new ButtonData("Start Game");
+        
+        start.setOnAction(() -> {
+            Thread singlePlayerThread = new Thread(() -> {
+                Difficulty diff;
+                switch (difficultyButton.getText()) {
+                    case "Easy":
+                        diff = Difficulty.EASY;
+                        break;
+                    case "Medium":
+                        diff = Difficulty.MEDIUM;
+                        break;
+                    case "Hard":
+                        diff = Difficulty.HARD;
+                        break;
+                    default:
+                        diff = Difficulty.MEDIUM;
+                }
+                GameSettings.changeDifficulty(diff);
+                logger.trace("Starting singleplayer");
+                control.startSinglePlayer();
+                logger.trace("Queueing switch to victory scene");
+                victoryDisplay.updatePlayers();
+                view.switchToDisplay(victoryDisplay);
+            });
+            view.switchToGameScene();
+            singlePlayerThread.start();
+        });
+        
+        layout.addButton(start);
+        
+        ButtonData back = new ButtonData(BACK);
+        
+        back.setOnAction(() -> view.switchToDisplay(mainMenu));
+        
+        layout.addButton(back);
+        
+        return layout;
+    }
+  
+    private Layout createMultiplayerGameSettings(GraphicsDisplay multiplayerMenuDisplay, GraphicsDisplay hostLobbyMenuDisplay, GraphicsDisplay connectionFailedDisplay, VictoryDisplay victoryDisplay) {
+        
+        FixedSpaceLayout layout = new FixedSpaceLayout(0.2f);
+        
+        ButtonData title = new ButtonData("Lobby Size");
+        layout.addButton(title);
+        
+        ButtonData numberOfPlayers = new ButtonData("4");
+        
+        numberOfPlayers.setOnAction(() -> {
+            switch (numberOfPlayers.getText()) {
+                case "2":
+                    numberOfPlayers.setText("3");
+                    break;
+                case "3":
+                    numberOfPlayers.setText("4");
+                    break;
+                case "4":
+                    numberOfPlayers.setText("2");
+                    break;
+                default:
+                    numberOfPlayers.setText("4");
+            }
+        });
+        
+        layout.addButton(numberOfPlayers);
+        
+        ButtonData start = new ButtonData("Host");
+        
+        start.setOnAction(() -> {
+            int numberOfClients = Integer.parseInt(numberOfPlayers.getText());
+            Thread hostThread = new Thread(() -> {
+                view.switchToDisplay(hostLobbyMenuDisplay);
+                try {
+                    control.host(numberOfClients);
+                    victoryDisplay.updatePlayers();
+                    view.switchToDisplay(victoryDisplay);
+                } catch (Exception ex) {
+                    view.switchToDisplay(connectionFailedDisplay);
+                }
+            });
+            hostThread.start();
+        });
+        
+        layout.addButton(start);
+        
+        ButtonData back = new ButtonData(BACK);
+        
+        back.setOnAction(() -> view.switchToDisplay(multiplayerMenuDisplay));
+        
+        layout.addButton(back);
+        
+        return layout;
     }
     
     private Layout createHostLobbyMenuDisplay(GraphicsDisplay multiplayerMenuDisplay) {
@@ -528,14 +656,14 @@ public class MenuSystem {
         layout.addButton(host);
 
         TextListData playerList = new TextListData(4);
-        //TODO implement actual data
         
-        playerList.addTextSource(() -> {
-            return "Yes";
-        }, 0);
-        playerList.addTextSource(() -> {
-            return "No";
-        }, 1);
+        for (int i = 0; i < 4; i++) { //TODO let the user change this from 4
+            int j = i;
+            playerList.addTextSource(() -> {
+                ArrayList<String> ips = control.getPlayersIPaddresses();
+                return (ips.size() > j) ? ips.get(j) : "";
+            }, j);
+        }
         layout.addList(playerList);
         
         ButtonData startGame = new ButtonData("Start game");
@@ -546,7 +674,7 @@ public class MenuSystem {
         });
         layout.addButton(startGame);
         
-        ButtonData backToMulti = new ButtonData("Go back");
+        ButtonData backToMulti = new ButtonData("Cancel");
         backToMulti.setOnAction(() -> {
             control.hostCancelTheGame();
             view.switchToDisplay(multiplayerMenuDisplay);
@@ -559,12 +687,11 @@ public class MenuSystem {
     private Layout createCreditDisplay(GraphicsDisplay mainMenu) {
         CreditLayout layout = new CreditLayout();
         
-        ButtonData returnButton = new ButtonData("Main Menu");
+        ButtonData returnButton = new ButtonData(BACK);
         returnButton.setOnAction(() -> view.switchToDisplay(mainMenu));
         
         layout.setReturn(returnButton);
         
-        //TODO load real data
         String text = "";
         try {
             text = new String(Files.readAllBytes(Paths.get("licence")));
@@ -581,6 +708,10 @@ public class MenuSystem {
         return layout;
     }
     
+    /**
+     * The main method to start the game menu.
+     * @param args the arguments passed to run the game (not currently used)
+     */
     public static void main(String[] args) {
         View view = new View();
 

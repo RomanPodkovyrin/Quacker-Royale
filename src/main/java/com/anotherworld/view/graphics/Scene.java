@@ -1,6 +1,6 @@
 package com.anotherworld.view.graphics;
 
-import com.anotherworld.view.input.MouseState;
+import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Creates and manages a view state like view game or main menu.
+ * Creates and manages a view state like view game or menus.
  * @author Jake Stewart
  *
  */
@@ -19,8 +19,19 @@ public class Scene {
     
     protected ArrayList<GraphicsDisplay> displays;
     
+    private GraphicsDisplay background;
+    
+    private BackgroundData backgroundData;
+    
+    /**
+     * Creates a scene that can have multiple displays with objects in.
+     */
     public Scene() {
         displays = new ArrayList<>();
+        this.background = new GraphicsDisplay();
+        backgroundData = new BackgroundData(0, 0, 2, 2);
+        background.addBackground(backgroundData);
+        displays.add(background);
     }
     
     /**
@@ -32,7 +43,7 @@ public class Scene {
     public void draw(int width, int height, Programme programme) {
         logger.debug("Drawing Scene");
         
-        MouseState ms = programme.getCursorPosition();
+        boolean pressed = programme.getCursorPressed();
         
         for (int i = 0; i < displays.size(); i++) {
             logger.trace("Drawing scene: " + i);
@@ -42,13 +53,8 @@ public class Scene {
             int w = convertScale(display.getWidth(), width, x);
             int h = convertScale(display.getHeight(), height, y);
             programme.setViewport(x, y, w, h);
-            display.draw(programme, translateMouseState(ms));
+            display.draw(programme, pressed);
         }
-    }
-    
-    private MouseState translateMouseState(MouseState mouseState) {
-        //TODO Translate the mouse state
-        return mouseState;
     }
     
     /**
@@ -76,10 +82,15 @@ public class Scene {
     
     protected void clearDisplays() {
         displays.clear();
+        this.addDisplay(background);
     }
     
     public void addDisplay(GraphicsDisplay d) {
         displays.add(d);
+    }
+    
+    public void switchBackgroundImage(SpriteSheet spriteSheet) {
+        backgroundData.setSpriteSheet(spriteSheet);
     }
     
 }

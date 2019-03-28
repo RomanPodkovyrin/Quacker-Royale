@@ -10,6 +10,10 @@ public class PowerUpSpriteSheet extends SpriteSheet {
 
     private int powerUpType;
     
+    /**
+     * Creates a spritesheet to manage which power up sprite to render.
+     * @param displayData the power up to manage textures for
+     */
     public PowerUpSpriteSheet(PowerUpDisplayData displayData) {
         switch (displayData.getPowerUpType()) {
             case HEAL:

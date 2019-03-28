@@ -1,12 +1,21 @@
 package com.anotherworld.settings;
 
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_DELETE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_END;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_ENTER;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_HOME;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_INSERT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_LEFT;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_M;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_DOWN;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_PAGE_UP;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_RIGHT;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_SPACE;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_UP;
-import static org.lwjgl.glfw.GLFW.*;
 
 import com.anotherworld.tools.PropertyReader;
 
@@ -25,9 +34,15 @@ public class KeySettings {
     
     private static Optional<PropertyReader> keySettings = Optional.empty();
     
+    /**
+     * Converts an GLFW integer key to a displayable string.
+     * @param keyValue The integer constant
+     * @return The string value for display
+     */
     public static String getKeyString(int keyValue) {
-        //TODO convert integer value to readable words
         switch (keyValue) {
+            case -1:
+                return " ";
             case GLFW_KEY_SPACE:
                 return "SPACE";
             case GLFW_KEY_ESCAPE:
@@ -131,13 +146,25 @@ public class KeySettings {
         return setKey("MUTE", value);
     }
     
-    private static boolean keyInUse(int value) {
-        if (value == GLFW_KEY_ESCAPE) {
-            return true;
+    private static void removeKeyFromUse(int value) throws IOException {
+        if (getUp() == value) {
+            keySettings.get().setValue("UP", String.valueOf(-1));
         }
-        return getUp() == value || getLeft() == value
-                || getRight() == value || getDown() == value
-                || getCharge() == value;
+        if (getDown() == value) {
+            keySettings.get().setValue("DOWN", String.valueOf(-1));
+        }
+        if (getLeft() == value) {
+            keySettings.get().setValue("LEFT", String.valueOf(-1));
+        }
+        if (getRight() == value) {
+            keySettings.get().setValue("RIGHT", String.valueOf(-1));
+        }
+        if (getCharge() == value) {
+            keySettings.get().setValue("CHARGE", String.valueOf(-1));
+        }
+        if (getMute() == value) {
+            keySettings.get().setValue("MUTE", String.valueOf(-1));
+        }
     }
     
     private static boolean setKey(String fileKey, int value) {
@@ -146,10 +173,10 @@ public class KeySettings {
                 loadSettings();
             }
             keySettings.get().setValue(fileKey, String.valueOf(-1));
-            if (keyInUse(value)) {
-                value = -1;
+            if (value != GLFW_KEY_ESCAPE) {
+                removeKeyFromUse(value);
+                keySettings.get().setValue(fileKey, String.valueOf(value));
             }
-            keySettings.get().setValue(fileKey, String.valueOf(value));
         } catch (NumberFormatException | IOException e) {
             logger.warn("Couldn't save " + fileKey + " to file");
         }

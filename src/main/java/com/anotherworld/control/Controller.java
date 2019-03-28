@@ -1,7 +1,5 @@
 package com.anotherworld.control;
 
-import com.anotherworld.tools.exceptions.ConnectionClosed;
-import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.network.AbstractNetworkController;
 import com.anotherworld.network.GameClient;
 import com.anotherworld.network.LobbyClient;
@@ -17,6 +15,8 @@ import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
+import com.anotherworld.tools.exceptions.ConnectionClosed;
+import com.anotherworld.tools.exceptions.NoHostFound;
 import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.View;
 import java.io.IOException;
@@ -25,6 +25,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,6 +39,8 @@ public class Controller {
     private static Logger logger = LogManager.getLogger(Controller.class);
 
     private View view;
+    
+    private Optional<GameSessionController> gameSession;
 
     //Default values for single player game
     private int defaultSinglePlayerAI;
@@ -60,8 +64,8 @@ public class Controller {
      */
     public Controller(View view) {
         this.view = view;
+        this.gameSession = Optional.empty();
         setUp();
-//        GameSettings.changeDifficulty(GameSettings.Difficulty.MEDIUM);
     }
 
     private void setUp() {
@@ -90,7 +94,7 @@ public class Controller {
 
         try {
             logger.info("Starting the game session");
-            new GameSessionController(view, settings, network);
+            this.gameSession = Optional.of(new GameSessionController(view, settings, network));
         } catch (KeyListenerNotFoundException ex) {
             logger.fatal(ex  + "Key listener");
             ex.printStackTrace();
@@ -109,6 +113,18 @@ public class Controller {
             runTheHostGame = true;
         }
         return runTheHostGame;
+    }
+    
+    /**
+     * Returns a list of string contains the rankings for each player.
+     * @return the player rankins
+     */
+    public List<String> getRanking() {
+        if (!gameSession.isPresent()) {
+            logger.warn("No game session is present at victory sceen");
+            return new ArrayList<>();
+        }
+        return gameSession.get().getRanking();
     }
 
     /**
@@ -129,9 +145,12 @@ public class Controller {
 
     /**
      * Host the game, called when player wants to host multiplayer game.
+     * @param numberOfClients the number of clients to connect
      */
-    public void host() throws ConnectionClosed {
+    public void host(int numberOfClients) throws ConnectionClosed {
 
+        defaultNumberClients = numberOfClients;
+        
         setUp();
         // Resets defaults before starting lobby
         cancelTheGame = false;
@@ -181,7 +200,7 @@ public class Controller {
      * Waits for all clients to connect and player to start the game.
      * @param lobbyServer - the lobby server
      * @param server - the game server
-     * @throws ConnectionClosed
+     * @throws ConnectionClosed - if something bad happen
      */
     private void waitInLobby(LobbyServer lobbyServer, Server server) throws ConnectionClosed {
         logger.trace("Lobby server is waiting for all players to connect and for Host to start the game");
@@ -264,7 +283,7 @@ public class Controller {
             try {
                 lobbyClient.cancelConnection();
             } catch (IOException e1) {
-
+                logger.error(e1.getMessage());
             } finally {
                 logger.warn("Error while connecting to the Server");
                 throw new ConnectionClosed();
@@ -279,7 +298,7 @@ public class Controller {
             try {
                 lobbyClient.cancelConnection();
             } catch (IOException e1) {
-
+                logger.error(e1.getMessage());
             } finally {
                 throw new ConnectionClosed();
             }
@@ -290,7 +309,7 @@ public class Controller {
         try {
             client = new GameClient(serverIP);
             client.start();
-        } catch (SocketException |UnknownHostException e) {
+        } catch (SocketException | UnknownHostException e) {
             logger.warn("Could not connect to game client");
             client.stopClient();
             throw new ConnectionClosed();
@@ -360,7 +379,7 @@ public class Controller {
      */
     public void startSinglePlayer() {
         logger.info("Starting single player game");
-//        setUp();
+        setUp();
         GameSettings settings = new GameSettings(defaultSinglePlayerPlayers,defaultSinglePlayerAI,defaultSinglePlayerBalls);
         startTheGame(settings, new NetworkControllerSinglePlayer());
     }

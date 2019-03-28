@@ -2,18 +2,17 @@ package com.anotherworld.settings;
 
 import static com.anotherworld.tools.maths.Maths.getRandom;
 
-import com.anotherworld.tools.maths.Matrix;
-import com.anotherworld.tools.maths.MatrixMath;
 import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.model.logic.PowerUpManager;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.PropertyReader;
-
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.WallData;
+import com.anotherworld.tools.maths.Matrix;
+import com.anotherworld.tools.maths.MatrixMath;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -361,10 +360,6 @@ public class GameSettings {
         createGameSessionData();
     }
 
-   public enum Difficulty {
-        HARD, MEDIUM, EASY
-    }
-
     /**
      * Sets the game difficulty.
      * 1 - easy 2 balls ai at 9
@@ -374,7 +369,7 @@ public class GameSettings {
     public static void changeDifficulty(Difficulty level) {
 
         float speed = 0;
-        int damage = 0 ;
+        int damage = 0;
         int number = 0;
         int ai = 0;
 
@@ -397,6 +392,11 @@ public class GameSettings {
                 number = 4;
                 ai = 1;
                 break;
+            default:
+                speed = 0.5f;
+                damage = 5;
+                number = 4;
+                ai = 1;
         }
 
         try {
@@ -407,9 +407,9 @@ public class GameSettings {
             propertyFileLogic.setValue("SINGLE_PLAYER_BALLS",Integer.toString(number));
             propertyFileLogic.setValue("MULTI_PLAYER_BALLS",Integer.toString(number));
             propertyFileLogic.setValue("SINGLE_PLAYER_AI",Integer.toString(ai));
-            propertyFileLogic.setValue("SINGLE_PLAYER_PLAYERS",Integer.toString(ai +1));
+            propertyFileLogic.setValue("SINGLE_PLAYER_PLAYERS",Integer.toString(ai  + 1));
         } catch (IOException e) {
-           logger.error("Could not load the file to change difficulty");
+            logger.error("Could not load the file to change difficulty");
         }
 
     }

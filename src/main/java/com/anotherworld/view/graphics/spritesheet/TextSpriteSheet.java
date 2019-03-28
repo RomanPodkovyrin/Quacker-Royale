@@ -64,8 +64,14 @@ public class TextSpriteSheet extends SpriteSheet {
         return points;
     }
     
+    /**
+     * Creates the points for a paragraph of text to display to the screen.
+     * @param text The text to display
+     * @param characterSize the character size of the text
+     * @param width the width of the text
+     * @return the points to display the text
+     */
     public static Points2d generateParagraphLetterPoints(String text, float characterSize, float width) {
-        //TODO handle newlines and break whole words
         Points2d points = new Points2d(4, text.length() * 4);
         float characterWidth;
         try {
@@ -87,7 +93,7 @@ public class TextSpriteSheet extends SpriteSheet {
                     currentLine = currentLine + text.substring(i, i + 1);
                 }
             } else {
-                lines.add(currentLine + " "); //TODO REALLY HACKY
+                lines.add(currentLine + " ");
                 currentLine = "";
             }
         }
@@ -129,6 +135,9 @@ public class TextSpriteSheet extends SpriteSheet {
         Matrix dimensions = TextureMap.getDimensions(SpriteLocation.TEXT);
         for (int i = 0; i < text.length(); i++) {
             int id = text.charAt(i);
+            if (!text.substring(i, i + 1).matches(".")) {
+                id = ' ';
+            }
             buffer.put((id % dimensions.getX()) / dimensions.getX());
             buffer.put((float)Math.floor((float)id / dimensions.getX()) / dimensions.getY());
             buffer.put(((id % dimensions.getX()) + 1) / dimensions.getX());
