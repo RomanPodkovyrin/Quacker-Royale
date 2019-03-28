@@ -80,6 +80,7 @@ public class SoundEffects implements Runnable {
         clickFile = new File(click);
         effect = new Thread(this);
         line = Optional.empty();
+        effect.setDaemon(true);
         effect.start();
     }
 
