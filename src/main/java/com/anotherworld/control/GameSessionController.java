@@ -254,8 +254,8 @@ public class GameSessionController {
     private void render() {
 
         ArrayList<PlayerData> players = new ArrayList<>();
-        players.addAll(settings.getAi());
         players.add(settings.getCurrentPlayer());
+        players.addAll(settings.getAi());
         players.addAll(settings.getPlayers());
         view.updateGameObjects(players,
                                settings.getBalls(),
