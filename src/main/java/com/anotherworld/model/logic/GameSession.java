@@ -118,7 +118,7 @@ public class GameSession {
         PowerUpManager.spawnPowerUp(gameData);
 
         // If someone has won, update the rankings one last time.
-        if (!isRunning() && !gameData.getRankings().contains(livingPlayers.get(0).getObjectID())) {
+        if (!isRunning() && livingPlayers.size() > 0 && !gameData.getRankings().contains(livingPlayers.get(0).getObjectID())) {
             gameData.getRankings().addFirst(livingPlayers.get(0).getObjectID());
             System.out.println(gameData.getRankings().toString());
         }
