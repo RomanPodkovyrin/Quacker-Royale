@@ -203,7 +203,7 @@ public class MenuSystem {
         musicButton.setOnAction(() -> {
             logger.info("Music button pressed");
             musicButton.setText("Music: " + (musicButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
-            if (musicButton.getText().split(" ")[1].equals("ON")) {
+            if (musicButton.getText().toUpperCase().split(" ")[1].equals("ON")) {
                 AudioControl.setMusicOn(true);
             } else {
                 AudioControl.setMusicOn(false);
@@ -214,7 +214,7 @@ public class MenuSystem {
         ButtonData sfxButton = new ButtonData("SFX: On");
         sfxButton.setOnAction(() -> {
             sfxButton.setText("SFX: " + (sfxButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
-            if (sfxButton.getText().split(" ")[1].equals("ON")) {
+            if (sfxButton.getText().toUpperCase().split(" ")[1].equals("ON")) {
                 AudioControl.setEffectsOn(true);
             } else {
                 AudioControl.setEffectsOn(false);
