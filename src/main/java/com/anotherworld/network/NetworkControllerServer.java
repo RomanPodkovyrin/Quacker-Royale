@@ -1,6 +1,7 @@
 package com.anotherworld.network;
 
 import com.anotherworld.model.logic.GameSession;
+import com.anotherworld.model.logic.PlayerNotFoundError;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.PlayerData;
@@ -47,8 +48,17 @@ public class NetworkControllerServer extends AbstractNetworkController {
                 if (player.getObjectID().equals(id)) {
 
                     if (in.contains(Input.QUIT)) {
-                        //The client quit the game
-                        player.setState(ObjectState.DEAD);
+
+                        logger.info("Player " + player.getObjectID() + " quit the game ");
+                        //The client quit the game replace with ai
+                        try {
+                            gameSession.replacePlayableWithAI(player.getObjectID());
+                            logger.info("Replaced Player with AI");
+                        } catch (PlayerNotFoundError playerNotFoundError) {
+                            logger.info("Could not replace player with AI. Player is killed");
+                            player.setState(ObjectState.DEAD);
+                        }
+//
                     }
 
                     GameSession.updatePlayer(player,in, gameSessionData);

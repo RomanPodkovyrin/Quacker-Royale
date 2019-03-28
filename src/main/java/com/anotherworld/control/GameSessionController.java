@@ -75,6 +75,7 @@ public class GameSessionController {
 
         // Setting up the network
         this.network = network;
+        this.network.setGameSession(session);
 
 
 
