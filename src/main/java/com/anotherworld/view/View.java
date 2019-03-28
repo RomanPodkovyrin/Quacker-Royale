@@ -5,13 +5,13 @@ import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetMonitors;
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowAttrib;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowMonitor;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowSize;
+import static org.lwjgl.glfw.GLFW.glfwSetWindowSizeCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowTitle;
 import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
@@ -28,7 +28,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.ViewSettings;
-import com.anotherworld.tools.Wrapper;
+import com.anotherworld.tools.Action;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.GameKeyListener;
@@ -37,13 +37,11 @@ import com.anotherworld.tools.input.KeyListenerNotFoundException;
 import com.anotherworld.view.data.BallDisplayData;
 import com.anotherworld.view.data.BallDisplayObject;
 import com.anotherworld.view.data.DisplayObject;
+import com.anotherworld.view.data.PlatformDisplayObject;
 import com.anotherworld.view.data.PlayerDisplayData;
 import com.anotherworld.view.data.PlayerDisplayObject;
 import com.anotherworld.view.data.PowerUpDisplayObject;
 import com.anotherworld.view.data.RectangleDisplayData;
-import com.anotherworld.view.data.RectangleDisplayObject;
-import com.anotherworld.view.data.TextDisplayData;
-import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.GraphicsDisplay;
@@ -52,7 +50,6 @@ import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.graphics.spritesheet.RectangleSpriteSheet;
 import com.anotherworld.view.graphics.spritesheet.SpriteLocation;
 import com.anotherworld.view.input.BindableKeyListener;
-import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.StringKeyListener;
 import com.anotherworld.view.programme.LegacyProgramme;
 import com.anotherworld.view.programme.Programme;
@@ -77,6 +74,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
 import org.lwjgl.opengl.GL;
@@ -116,6 +114,10 @@ public class View implements Runnable {
     private int refreshRate;
     
     private boolean enableFrameCounter;
+    
+    private BindableKeyManager keyManager;
+    
+    private Thread keyManagerThread;
 
     /**
      * Creates the View object initialising it's values.
@@ -222,6 +224,10 @@ public class View implements Runnable {
         }
 
         keyListenerLatch.countDown();
+        
+        keyManager = new BindableKeyManager(new BindableKeyListener(window.get()));
+        keyManagerThread = new Thread(keyManager);
+        keyManagerThread.start();
 
         int error = glGetError();
 
@@ -229,17 +235,6 @@ public class View implements Runnable {
             logger.error("Initialise GL error " + error);
             error = glGetError();
         }
-        
-        Wrapper<Integer> currentFrameRate = new Wrapper<>(0);
-        
-        Optional<Double> lastDraw = Optional.empty();
-        
-        TextDisplayData frameCounterData = new ButtonData(() -> {
-            return Integer.toString(currentFrameRate.getValue());
-        }, true);
-        //TODO draw this a different way
-        
-        TextDisplayObject frameCounterButton = new TextDisplayObject(programme, frameCounterData);
 
         while (!glfwWindowShouldClose(window.get()) && running) {
 
@@ -256,10 +251,6 @@ public class View implements Runnable {
             programme.loadIdentity();
 
             currentScene.draw(width, height, programme);
-            
-            if (this.shouldShowFramerate()) {
-                programme.draw(frameCounterButton);
-            }
 
             glFlush();
 
@@ -271,13 +262,6 @@ public class View implements Runnable {
             }
 
             glfwSwapBuffers(window.get());
-            
-            double currentDraw = glfwGetTime();
-            if (lastDraw.isPresent()) {
-                currentFrameRate.setValue((int)(1d / (currentDraw - lastDraw.get())));
-            }
-            
-            lastDraw = Optional.of(currentDraw);
 
             logger.trace("Polling for glfw events");
 
@@ -324,18 +308,21 @@ public class View implements Runnable {
         window = Optional.empty();
         AudioControl.stopBackgroundMusic();
         AudioControl.stopSoundEffects();
-        //waitForExit();
+        keyManager.close();
+        keyManagerThread.interrupt();
         glfwTerminate();
+        waitForExit();
     }
     
     private void waitForExit() {
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        while (threadSet.size() > 3) {
+        while (threadSet.size() > 5) {
+            int i = 0;
             for (Thread thread : threadSet) {
+                logger.info("Thread " + i++);
                 for (StackTraceElement trace : thread.getStackTrace()) {
-                    System.out.println(trace.toString());
+                    logger.info(trace.toString());
                 }
-                System.out.println();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
@@ -351,7 +338,7 @@ public class View implements Runnable {
             ArrayList<DisplayObject> disObj = new ArrayList<>();
             UpdateDisplayObjects updateEvent = ((UpdateDisplayObjects) event);
             for (int i = 0; i < updateEvent.getRectangleObjects().size(); i++) {
-                disObj.add(new RectangleDisplayObject(programme, updateEvent.getRectangleObjects().get(i)));
+                disObj.add(new PlatformDisplayObject(programme, updateEvent.getRectangleObjects().get(i)));
             }
             for (int i = 0; i < updateEvent.getWallObjects().size(); i++) {
                 disObj.add(new WallDisplayObject(programme, updateEvent.getWallObjects().get(i)));
@@ -360,7 +347,7 @@ public class View implements Runnable {
                 disObj.add(new PowerUpDisplayObject(programme, updateEvent.getGameSessionData().getPowerUpSchedule().get(i)));
             }
             for (int i = 0; i < updateEvent.getPlayerObjects().size(); i++) {
-                disObj.add(new PlayerDisplayObject(programme, updateEvent.getPlayerObjects().get(i)));
+                disObj.add(new PlayerDisplayObject(programme, updateEvent.getPlayerObjects().get(i), i + 1 == updateEvent.getPlayerObjects().size()));
             }
             for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
                 disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
@@ -386,7 +373,6 @@ public class View implements Runnable {
             logger.debug("Window reloaded");
         } else if (event.getClass().equals(SwitchBackground.class)) {
             SwitchBackground switchBackground = (SwitchBackground) event;
-            System.out.println("Switching");
             currentScene.switchBackgroundImage(switchBackground.getBackground());
             logger.debug("Background switched");
         } else {
@@ -402,6 +388,12 @@ public class View implements Runnable {
         if (!window.isPresent()) {
             window = Optional.of(glfwCreateWindow(width, height, "Bullet Hell", NULL, NULL));
             glfwSetWindowAttrib(window.get(), GLFW_RESIZABLE, GLFW_FALSE);
+            glfwSetWindowSizeCallback(window.get(), (window, width, height) -> {
+                if (window == this.window.get()) {
+                    this.width = width;
+                    this.height = height;
+                }
+            });
         }
         PointerBuffer monitors = glfwGetMonitors();
         if (displayType.equals(DisplayType.WINDOWED)) {
@@ -409,14 +401,12 @@ public class View implements Runnable {
             glfwSetWindowSize(window.get(), width, height);
         } else {
             glfwSetWindowMonitor(window.get(), monitors.get(), 0, 0, width, height, refreshRate);
+            //glfwSetWindowSize(window.get(), width, height);
         }
         IntBuffer windowHeight = BufferUtils.createIntBuffer(1);
         IntBuffer windowWidth = BufferUtils.createIntBuffer(1);
         glfwGetFramebufferSize(window.get(), windowWidth, windowHeight);
-        if (displayType.equals(DisplayType.WINDOWED)) {
-            width = Math.min(windowWidth.get(), width);
-            height = Math.min(windowHeight.get(), height);
-        } else {
+        if (displayType.equals(DisplayType.FULLSCREEN)) {
             width = windowWidth.get();
             height = windowHeight.get();
         }
@@ -477,28 +467,18 @@ public class View implements Runnable {
     public boolean windowOpen() {
         return running;
     }
-
+    
     /**
-     * Takes control and waits for the user to press a key that can be bound or escape to exit.
-     * @return the bindable key
+     * Performs the given action using the next bindable key.
+     * @param whatToDo the action to perform
      */
-    public int getBindableKey() {
-        logger.info("Request for bindable key");
-        try {
-            if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
-                BindableKeyListener bk = new BindableKeyListener(window.get());
-                ArrayList<Integer> downKeys;
-                do {
-                    downKeys = bk.getBindableKey();
-                    glfwPollEvents();
-                } while (downKeys.size() == 0);
-                logger.info("Returning " + downKeys.get(0));
-                return downKeys.get(0);
-            }
-        } catch (InterruptedException e) {
-            logger.catching(e);
-        }
-        return -1;
+    public void getBindableKey(Action<Integer> whatToDo) {
+        cancelWaitingKeys();
+        keyManager.queue(whatToDo);
+    }
+    
+    public void cancelWaitingKeys() {
+        keyManager.clear();
     }
 
     /**

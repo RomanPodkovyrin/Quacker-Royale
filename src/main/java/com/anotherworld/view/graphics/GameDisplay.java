@@ -26,7 +26,7 @@ public class GameDisplay extends GraphicsDisplay {
         Long startTime = System.currentTimeMillis();
         ButtonData loadingText = new ButtonData(() -> {
             return "Loading" + repeatDots((int)((System.currentTimeMillis() - startTime) % 599) / 150);
-        }, true);
+        }, 0);
         loadingText.setTextColour(1, 1, 1);
         loadingText.setPosition(20, 85);
         loadingText.setHeight(10);

@@ -32,9 +32,9 @@ public class BallDisplayObject extends DisplayObject {
         programme.rotatef(this.getTheta() +  90, 0, 0, 1);
         if (!programme.supportsTextures()) {
             if (displayData.isDangerous()) {
-                super.setColour(1, 0, 0);
+                super.setColour(1, 0, 0, 1);
             } else {
-                super.setColour(0, 1, 0);
+                super.setColour(0, 1, 0, 1);
             }
         }
     }

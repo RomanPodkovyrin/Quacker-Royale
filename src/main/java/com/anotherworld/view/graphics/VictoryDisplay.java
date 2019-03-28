@@ -51,7 +51,7 @@ public class VictoryDisplay extends GraphicsDisplay {
     public void draw(Programme programme, boolean mouseDown) {
         synchronized (playersToAdd) {
             for (PlayerDisplayData data : playersToAdd) {
-                objects.add(new PlayerDisplayObject(programme, data));
+                objects.add(new PlayerDisplayObject(programme, data, false));
             }
             playersToAdd.clear();
         }
