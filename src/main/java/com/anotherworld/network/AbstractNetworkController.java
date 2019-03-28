@@ -22,6 +22,7 @@ public abstract class AbstractNetworkController {
     protected Server server;
 
     protected ArrayList<PlayerData> allPlayers;
+    protected PlayerData currentPlayer;
     protected ArrayList<BallData> balls;
     protected PlatformData platform;
     protected WallData wall;
@@ -39,6 +40,7 @@ public abstract class AbstractNetworkController {
         ArrayList<PlayerData> temp = new ArrayList<>(settings.getPlayers());
         temp.add(settings.getCurrentPlayer());
 
+        this.currentPlayer = settings.getCurrentPlayer();
         this.allPlayers = temp;
         this.balls = settings.getBalls();
         this.platform = settings.getPlatform().get(0);

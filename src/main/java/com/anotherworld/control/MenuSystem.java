@@ -203,7 +203,7 @@ public class MenuSystem {
         musicButton.setOnAction(() -> {
             logger.info("Music button pressed");
             musicButton.setText("Music: " + (musicButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
-            if (musicButton.getText().split(" ")[1].equals("ON")) {
+            if (musicButton.getText().toUpperCase().split(" ")[1].equals("ON")) {
                 AudioControl.setMusicOn(true);
             } else {
                 AudioControl.setMusicOn(false);
@@ -214,7 +214,7 @@ public class MenuSystem {
         ButtonData sfxButton = new ButtonData("SFX: On");
         sfxButton.setOnAction(() -> {
             sfxButton.setText("SFX: " + (sfxButton.getText().split(" ")[1].equals("On") ? "Off" : "On"));
-            if (sfxButton.getText().split(" ")[1].equals("ON")) {
+            if (sfxButton.getText().toUpperCase().split(" ")[1].equals("ON")) {
                 AudioControl.setEffectsOn(true);
             } else {
                 AudioControl.setEffectsOn(false);
@@ -599,6 +599,26 @@ public class MenuSystem {
         ButtonData title = new ButtonData("Lobby Size");
         layout.addButton(title);
         
+        ButtonData difficultyButton = new ButtonData("Medium");
+        
+        difficultyButton.setOnAction(() -> {
+            switch (difficultyButton.getText()) {
+                case "Easy":
+                    difficultyButton.setText("Medium");
+                    break;
+                case "Medium":
+                    difficultyButton.setText("Hard");
+                    break;
+                case "Hard":
+                    difficultyButton.setText("Easy");
+                    break;
+                default:
+                    difficultyButton.setText("Medium");
+            }
+        });
+        
+        layout.addButton(difficultyButton);
+        
         ButtonData numberOfPlayers = new ButtonData("4");
         
         numberOfPlayers.setOnAction(() -> {
@@ -633,6 +653,19 @@ public class MenuSystem {
                     view.switchToDisplay(connectionFailedDisplay);
                 }
             });
+            switch (difficultyButton.getText()) {
+                case "Easy":
+                    GameSettings.changeDifficulty(Difficulty.EASY);
+                    break;
+                case "Medium":
+                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
+                    break;
+                case "Hard":
+                    GameSettings.changeDifficulty(Difficulty.HARD);
+                    break;
+                default:
+                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
+            }
             hostThread.start();
         });
         

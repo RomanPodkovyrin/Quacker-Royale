@@ -159,8 +159,6 @@ public class GameSessionController {
 
         }
 
-        winOrLoseSound();
-
         shutDownSequence();
     }
 
@@ -194,6 +192,17 @@ public class GameSessionController {
     private void winOrLoseSound() {
 
         LinkedList<String> rankings = settings.getGameSessionData().getRankings();
+        
+        LinkedList<String> temp = new LinkedList<>();
+        
+        for (String rank : rankings) {
+            if (!temp.contains(rank)) {
+                temp.add(rank);
+            }
+        }
+        
+        rankings = temp;
+        
         boolean allRanked = rankings.size() == settings.getPlayers().size() + 1 + settings.getAi().size();
 
         if (rankings.isEmpty() | !allRanked) {
@@ -239,15 +248,13 @@ public class GameSessionController {
         //stop audio
         AudioControl.stopBackgroundMusic();
         logger.info("Music stopped");
-        AudioControl.stopSoundEffects();
-        logger.info("Stopped SoundEffects");
 
         //Stop networking
         network.stopNetworking();
         logger.info("Stopped networking");
 
-        //TODO could still do that
-        //if a client has disconnected should we just give control to the ai ?
+
+        winOrLoseSound();
     }
 
 

@@ -9,6 +9,8 @@ import com.anotherworld.tools.input.GameKeyListener;
 import com.anotherworld.tools.input.Input;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javafx.util.Pair;
 
 
@@ -30,6 +32,12 @@ public class NetworkControllerServer extends AbstractNetworkController {
 
     @Override
     public void stopNetworking() {
+        try {
+            currentPlayer.setHealth(0);
+            server.sendObjectToClients(new ArrayList<>(Arrays.asList(currentPlayer)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         server.stopServer();
     }
 
@@ -115,6 +123,7 @@ public class NetworkControllerServer extends AbstractNetworkController {
     @Override
     public void quitTheGame() {
         for (PlayerData player: allPlayers) {
+            player.setHealth(0);
             player.setState(ObjectState.DEAD);
         }
         try {
