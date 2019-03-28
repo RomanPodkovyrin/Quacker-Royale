@@ -59,6 +59,7 @@ public class NetworkControllerClient extends AbstractNetworkController {
                 }
             }
             if (numAlive <= 1) {
+                gameSessionData.copyObject(client.getGameSessionData());
                 return;
             }
         }
