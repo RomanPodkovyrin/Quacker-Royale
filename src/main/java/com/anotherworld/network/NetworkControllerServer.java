@@ -34,7 +34,7 @@ public class NetworkControllerServer extends AbstractNetworkController {
     public void stopNetworking() {
         try {
             currentPlayer.setHealth(0);
-            server.sendObjectToClients(new ArrayList<>(Arrays.asList(currentPlayer)));
+            server.sendObjectToClients(allPlayers);
         } catch (IOException e) {
             e.printStackTrace();
         }
