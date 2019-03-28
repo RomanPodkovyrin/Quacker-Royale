@@ -196,6 +196,7 @@ public class Controller {
 
         NetworkControllerServer network = new NetworkControllerServer(server, settings);
         startTheGame(settings,network);
+        logger.info("Finished the game");
     }
 
     /**
@@ -323,6 +324,7 @@ public class Controller {
         logger.info("Starting the game");
         NetworkControllerClient network = new NetworkControllerClient(client, settings);
         startTheGame(settings,network);
+        logger.info("Finished the game");
     }
 
     /**

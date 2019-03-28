@@ -198,19 +198,19 @@ public class GameSessionController {
 
         if (rankings.isEmpty() | !allRanked) {
             rankings.clear();
-            logger.trace("No winner");
+            logger.info("No winner");
         } else {
 
             String firstPlace = rankings.get(0);
             AudioControl.stopBackgroundMusic();
 
             if (firstPlace.equals(settings.getCurrentPlayer().getObjectID())) {
-                logger.trace("You won");
+                logger.info("You won");
                 AudioControl.win();
 
 
             } else {
-                logger.trace("You lost");
+                logger.info("You lost");
                 AudioControl.lose();
             }
 
@@ -238,13 +238,13 @@ public class GameSessionController {
 
         //stop audio
         AudioControl.stopBackgroundMusic();
-        logger.trace("Music stopped");
+        logger.info("Music stopped");
         AudioControl.stopSoundEffects();
-        logger.trace("Stopped SoundEffects");
+        logger.info("Stopped SoundEffects");
 
         //Stop networking
         network.stopNetworking();
-        logger.trace("Stopped networking");
+        logger.info("Stopped networking");
 
         //TODO could still do that
         //if a client has disconnected should we just give control to the ai ?
