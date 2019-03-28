@@ -15,6 +15,7 @@ import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.Input;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -251,17 +252,29 @@ public class GameSession {
                 // Move the player based on the time stop.
                 Player.movePlayer(gameData, player);
 
+                // Kill the player if their health goes below zero.
+                if ((player.getHealth() <= 0  || player.getState().equals(ObjectState.DEAD))) {
+                    Player.kill(player, false);
+                    if (!gameData.getRankings().contains(player.getObjectID())) {
+                        gameData.getRankings().addFirst(player.getObjectID());
+                    }
+                    removeFromLiving(player);
+                    logger.info(player.getObjectID() + " was killed.");
+                }
+                
+                // Kill the player if they fall off the edge of the platform
+                if ((!platform.isOnPlatform(player) || player.getState().equals(ObjectState.DEAD))) {
+                    Player.kill(player, true);
+                    if (!gameData.getRankings().contains(player.getObjectID())) {
+                        gameData.getRankings().addFirst(player.getObjectID());
+                    }
+                    removeFromLiving(player);
+                    logger.info(player.getObjectID() + " fell off");
+                }
+                    
                 if (!Player.isDead(player)) {
                     // Check if a player has collided with a power up.
                     PowerUpManager.collect(player, gameData);
-
-                    // Kill the player if their health goes below zero.
-                    if ((player.getHealth() <= 0  || player.getObjectID().equals(ObjectState.DEAD)) && !gameData.getRankings().contains(player.getObjectID())) {
-                        Player.kill(player, false);
-                        gameData.getRankings().addFirst(player.getObjectID());
-                        livingPlayers.remove(player);
-                        logger.info(player.getObjectID() + " was killed.");
-                    }
 
                     // Check if a player has collided with another player.
                     for (PlayerData playerB : this.allPlayers) {
@@ -277,6 +290,20 @@ public class GameSession {
                     }
                 }
             }
+        }
+    }    
+    private void removeFromLiving(PlayerData player) {
+        System.out.println(player.getObjectID());
+        LinkedList<PlayerData> toRemove = new LinkedList<>();
+        for (PlayerData playerData : livingPlayers) {
+            if (playerData.getObjectID().equals(player.getObjectID())) {
+                toRemove.add(playerData);
+            }
+        }
+        for (PlayerData playerData : toRemove) {
+            System.out.println(livingPlayers.size());
+            livingPlayers.remove(playerData);
+            System.out.println(livingPlayers.size());
         }
     }
 
