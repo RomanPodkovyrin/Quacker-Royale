@@ -1,22 +1,20 @@
 package com.anotherworld.view.input;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.view.data.RectangleDisplayObject;
 import com.anotherworld.view.data.primatives.Points2d;
 import com.anotherworld.view.graphics.spritesheet.SpriteSheet;
 import com.anotherworld.view.programme.Programme;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Button extends RectangleDisplayObject implements Clickable {
     
     private final ButtonData buttonData;
-
-    private List<ButtonListener> listeners;
     
     private float buttonWidth;
     
     private Programme programme;
+    
+    private boolean soundPlaying;
 
     /**
      * Creates a new button.
@@ -25,11 +23,11 @@ public class Button extends RectangleDisplayObject implements Clickable {
      */
     public Button(Programme programme, ButtonData buttonData) {
         super(new SpriteSheet(), programme, buttonData);
-        this.listeners = new ArrayList<>();
         this.buttonData = buttonData;
         this.setColour(buttonData.getBackgroundR(), buttonData.getBackgroundG(), buttonData.getBackgroundB(), buttonData.getBackgroundAlpha());
         this.buttonWidth = buttonData.getWidth();
         this.programme = programme;
+        soundPlaying = false;
     }
     
     @Override
@@ -45,24 +43,23 @@ public class Button extends RectangleDisplayObject implements Clickable {
 
     @Override
     public void click() {
-        for (ButtonListener l : listeners) {
-            l.clicked();
-        }
         buttonData.preformAction();
+        release();
     }
 
     @Override
     public void hover() {
+        if (!soundPlaying) {
+            AudioControl.playButtonHover();
+            soundPlaying = true;
+        }
         buttonData.preformHover();
     }
 
     @Override
     public void release() {
         buttonData.preformRelease();
-    }
-
-    public void addButtonListener(ButtonListener listener) {
-        listeners.add(listener);
+        soundPlaying = false;
     }
     
     @Override
