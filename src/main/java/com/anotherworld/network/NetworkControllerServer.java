@@ -30,6 +30,11 @@ public class NetworkControllerServer extends AbstractNetworkController {
 
     @Override
     public void stopNetworking() {
+        try {
+            server.sendObjectToClients(allPlayers);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         server.stopServer();
     }
 
