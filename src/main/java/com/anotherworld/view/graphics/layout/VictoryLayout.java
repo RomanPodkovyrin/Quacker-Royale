@@ -31,24 +31,6 @@ public class VictoryLayout extends Layout {
             for (String name : playerData) {
                 PlayerData playerObject = new PlayerData(name, 0, 160 * (i + 1) / (playerData.size() + 1), 50, ObjectState.IDLE, 0, 5);
                 players.add(playerObject);
-                String position;
-                switch (i) {
-                    case 1:
-                        position = "1st";
-                        break;
-                    case 2:
-                        position = "2nd";
-                        break;
-                    case 3:
-                        position = "3rd";
-                        break;
-                    case 4:
-                        position = "4th";
-                        break;
-                    default:
-                        position = "dnf";
-                }
-                ButtonData place = new ButtonData(() -> position, 0);
                 i++;
             }
             return players;
