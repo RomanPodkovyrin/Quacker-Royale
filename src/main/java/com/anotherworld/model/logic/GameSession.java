@@ -214,6 +214,7 @@ public class GameSession {
             ball.setDangerous(true);
             ball.setTimer(GameSettings.getBallMaxTimer());
             ball.setSpeed(ball.getSpeed() * 2);
+            AudioControl.ballCollidedWithWall();
         } else {
             if (player.isShielded()) {
                 player.setShielded(false);

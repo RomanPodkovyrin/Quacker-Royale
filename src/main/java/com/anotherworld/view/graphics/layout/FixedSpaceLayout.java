@@ -37,8 +37,8 @@ public class FixedSpaceLayout extends Layout {
                 buttonWidth = buttonHeight;
             }
             float max = 0f;
-            for (ButtonData button : buttons) {
-                max = Math.max((float)button.getText().length() * buttonWidth / 2, max);
+            for (int i = 1; i < buttons.size(); i++) {
+                max = Math.max((float)buttons.get(i).getText().length() * buttonWidth / 2, max);
             }
             return max + buttonWidth / 2;
         };
@@ -57,6 +57,9 @@ public class FixedSpaceLayout extends Layout {
                     button.setBackgroundColour(0, 0, 0, 0);
                     button.setTextColour(1, 1, 1);
                 });
+            } else {
+                button.setHeight(buttonHeight * 2);
+                button.setWidth(-1); //So it can't be pressed
             }
             button.setBackgroundColour(0, 0, 0, 0);
             button.setTextColour(1, 1, 1);

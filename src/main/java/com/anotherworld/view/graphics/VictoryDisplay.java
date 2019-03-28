@@ -16,6 +16,8 @@ public class VictoryDisplay extends GraphicsDisplay {
     
     private Supplier<ArrayList<PlayerData>> playerSupplier;
     
+    private Supplier<ArrayList<ButtonData>> buttonSupplier;
+    
     private ArrayList<ButtonData> buttons;
     
     /**
@@ -36,6 +38,10 @@ public class VictoryDisplay extends GraphicsDisplay {
      */
     public void updatePlayers() {
         objects.clear();
+        for (ButtonData button: buttons) {
+            super.addButton(button);
+        }
+        List<ButtonData> buttons = buttonSupplier.get();
         for (ButtonData button: buttons) {
             super.addButton(button);
         }
@@ -62,6 +68,10 @@ public class VictoryDisplay extends GraphicsDisplay {
     public void addButton(ButtonData object) {
         super.addButton(object);
         buttons.add(object);
+    }
+
+    public void updateButtons(Supplier<ArrayList<ButtonData>> buttonSupplier) {
+        this.buttonSupplier = buttonSupplier;
     }
 
 }

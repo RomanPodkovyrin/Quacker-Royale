@@ -144,7 +144,7 @@ public class SoundEffects implements Runnable {
      */
     public void ballCollidedWithWall() {
         logger.trace("Play ball sound");
-        //currentFile = ballFile;
+        currentFile = ballFile;
     }
 
     public void win() {
