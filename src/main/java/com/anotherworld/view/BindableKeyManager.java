@@ -75,6 +75,10 @@ public class BindableKeyManager implements Runnable {
         logger.debug("Waiting for key");
         do {
             downKeys = keyListener.getBindableKey();
+            Thread.sleep(50);
+            if (!running) {
+                throw new InterruptedException();
+            }
         } while (downKeys.size() == 0);
         return downKeys.get(0);
     }

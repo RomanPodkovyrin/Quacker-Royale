@@ -311,16 +311,18 @@ public class View implements Runnable {
         keyManager.close();
         keyManagerThread.interrupt();
         glfwTerminate();
+        waitForExit();
     }
     
     private void waitForExit() {
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        while (threadSet.size() > 3) {
+        while (threadSet.size() > 5) {
+            int i = 0;
             for (Thread thread : threadSet) {
+                logger.info("Thread " + i++);
                 for (StackTraceElement trace : thread.getStackTrace()) {
-                    System.out.println(trace.toString());
+                    logger.info(trace.toString());
                 }
-                System.out.println();
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
