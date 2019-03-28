@@ -59,7 +59,7 @@ public class FixedSpaceLayout extends Layout {
                 });
             } else {
                 button.setHeight(buttonHeight * 2);
-                button.setWidth(maxWidth);
+                button.setWidth(-1); //So it can't be pressed
             }
             button.setBackgroundColour(0, 0, 0, 0);
             button.setTextColour(1, 1, 1);
