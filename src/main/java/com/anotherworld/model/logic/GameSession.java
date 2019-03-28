@@ -29,6 +29,7 @@ public class GameSession {
 
     private PlayerData currentPlayer;
     private ArrayList<PlayerData> allPlayers;
+    private ArrayList<PlayerData> aiPlayers;
     private ArrayList<PlayerData> livingPlayers;
 
     private ControllerAI controllerAI;
@@ -59,7 +60,7 @@ public class GameSession {
         this.allPlayers = new ArrayList<>();
 
         this.allPlayers.add(currentPlayer);
-        ArrayList<PlayerData> aiPlayers = new ArrayList<>();
+        aiPlayers = new ArrayList<>();
 
         for (PlayerData data : players) {
             allPlayers.add(data);
@@ -83,7 +84,7 @@ public class GameSession {
         this.platform = new Platform(platform);
         this.wall = new Wall(wall);
 
-        this.controllerAI = new ControllerAI(aiPlayers, this.allPlayers, this.balls, this.platform, this.gameData);
+        this.controllerAI = new ControllerAI(this.aiPlayers, this.allPlayers, this.balls, this.platform, this.gameData);
 
         Physics.setUp();
     }
@@ -139,6 +140,28 @@ public class GameSession {
                 }
             }
         }
+    }
+
+    /**
+     * Searches the list of all players for one with the given ID, adds it to the
+     * current list of AI players and passes it into the AI Controller.
+     * @param playerId The ID of the player to replace.
+     * @throws PlayerNotFoundError Error when the player to search is not found.
+     */
+    public void replacePlayableWithAI(String playerId) throws PlayerNotFoundError {
+        PlayerData playerToReplace = null;
+        for (PlayerData player : allPlayers) {
+            if(player.getObjectID().equals(playerId)) {
+                playerToReplace = player;
+            }
+        }
+
+        if(playerToReplace == null) {
+            throw new PlayerNotFoundError(playerId);
+        }
+
+        this.aiPlayers.add(playerToReplace);
+        this.controllerAI = new ControllerAI(this.aiPlayers, this.allPlayers, this.balls, this.platform, this.gameData);
     }
 
     /**

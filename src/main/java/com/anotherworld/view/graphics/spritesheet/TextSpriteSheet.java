@@ -135,6 +135,9 @@ public class TextSpriteSheet extends SpriteSheet {
         Matrix dimensions = TextureMap.getDimensions(SpriteLocation.TEXT);
         for (int i = 0; i < text.length(); i++) {
             int id = text.charAt(i);
+            if (!text.substring(i, i + 1).matches(".")) {
+                id = ' ';
+            }
             buffer.put((id % dimensions.getX()) / dimensions.getX());
             buffer.put((float)Math.floor((float)id / dimensions.getX()) / dimensions.getY());
             buffer.put(((id % dimensions.getX()) + 1) / dimensions.getX());

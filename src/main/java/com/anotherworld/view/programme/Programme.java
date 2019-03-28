@@ -309,6 +309,7 @@ public abstract class Programme {
     public abstract void updateBuffers(DisplayObject displayObject);
 
     public void setViewport(int x, int y, int w, int h) {
+        //System.out.println(x + ":" + y + ":" + w + ":" + h);
         glViewport(x, y, w, h);
     }
 

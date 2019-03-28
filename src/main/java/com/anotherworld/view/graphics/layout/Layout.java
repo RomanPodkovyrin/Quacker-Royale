@@ -1,6 +1,7 @@
 package com.anotherworld.view.graphics.layout;
 
 import com.anotherworld.view.graphics.GraphicsDisplay;
+import com.anotherworld.view.graphics.Static2dCamera;
 
 import java.util.ArrayList;
 
@@ -10,8 +11,6 @@ public abstract class Layout {
     private float y;
     private float height;
     private float width;
-    
-    public static final float X_SCALE_ADJUSTMENT = 9f / 16f; //Times x values by this to adjust to aspect ratio
     
     private ArrayList<Layout> subLayouts;
     
@@ -39,6 +38,7 @@ public abstract class Layout {
      * @param display the display that will use the layout
      */
     public void enactLayout(GraphicsDisplay display) {
+        display.changeCamera(new Static2dCamera(0, 0, 2f * 16f / 9f, 2));
         for (Layout l : subLayouts) {
             l.enactLayout(display);
         }
