@@ -238,7 +238,7 @@ public class GameSessionController {
         //stop audio
         AudioControl.stopBackgroundMusic();
         logger.trace("Music stopped");
-        AudioControl.stopSoundEffects();
+//        AudioControl.stopSoundEffects();
         logger.trace("Stopped SoundEffects");
 
         //Stop networking

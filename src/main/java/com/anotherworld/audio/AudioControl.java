@@ -124,7 +124,6 @@ public class AudioControl {
      */
     public static void win() {
         if (effectsOn) {
-            soundEffects = new SoundEffects();
             soundEffects.win();
         }
     }
@@ -134,7 +133,6 @@ public class AudioControl {
      */
     public static void lose() {
         if (effectsOn) {
-            soundEffects = new SoundEffects();
             soundEffects.loseSound();
         }
     }

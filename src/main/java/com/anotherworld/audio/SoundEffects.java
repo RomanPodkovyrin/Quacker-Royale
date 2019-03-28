@@ -164,10 +164,11 @@ public class SoundEffects implements Runnable {
      */
     public void stopSoundEffects() {
         logger.info("STOPPING SOUND EFFECTS");
-        effect.interrupt();
+
         if (line.isPresent()) {
             line.get().close();
         }
+        effect.interrupt();
         running = false;
     }
 }
