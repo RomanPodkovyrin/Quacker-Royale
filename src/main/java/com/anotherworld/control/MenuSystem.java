@@ -684,7 +684,7 @@ public class MenuSystem {
     private Layout createCreditDisplay(GraphicsDisplay mainMenu) {
         CreditLayout layout = new CreditLayout();
         
-        ButtonData returnButton = new ButtonData("Main Menu");
+        ButtonData returnButton = new ButtonData(BACK);
         returnButton.setOnAction(() -> view.switchToDisplay(mainMenu));
         
         layout.setReturn(returnButton);
