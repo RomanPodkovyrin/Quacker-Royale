@@ -117,7 +117,7 @@ public class GameSession {
         PowerUpManager.spawnPowerUp(gameData);
 
         // If someone has won, update the rankings one last time.
-        if (!isRunning()) {
+        if (!isRunning() && !gameData.getRankings().contains(livingPlayers.get(0).getObjectID())) {
             gameData.getRankings().addFirst(livingPlayers.get(0).getObjectID());
             System.out.println(gameData.getRankings().toString());
         }
@@ -256,7 +256,7 @@ public class GameSession {
                     PowerUpManager.collect(player, gameData);
 
                     // Kill the player if their health goes below zero.
-                    if (player.getHealth() <= 0) {
+                    if (player.getHealth() <= 0 && !gameData.getRankings().contains(player.getObjectID())) {
                         Player.kill(player, false);
                         gameData.getRankings().addFirst(player.getObjectID());
                         livingPlayers.remove(player);
@@ -269,7 +269,7 @@ public class GameSession {
                     }
 
                     // Kill the player if they fall off the edge of the platform
-                    if (!platform.isOnPlatform(player)) {
+                    if (!platform.isOnPlatform(player) && !gameData.getRankings().contains(player.getObjectID())) {
                         Player.kill(player, true);
                         gameData.getRankings().addFirst(player.getObjectID());
                         livingPlayers.remove(player);
