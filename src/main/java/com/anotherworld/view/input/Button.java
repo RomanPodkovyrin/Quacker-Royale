@@ -44,6 +44,7 @@ public class Button extends RectangleDisplayObject implements Clickable {
     @Override
     public void click() {
         buttonData.preformAction();
+        AudioControl.playButtonClick();
         release();
     }
 
