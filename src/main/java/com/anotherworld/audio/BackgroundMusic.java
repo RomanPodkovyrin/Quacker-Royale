@@ -46,6 +46,7 @@ public class BackgroundMusic implements Runnable {
      */
     public void playBackgroundMusic() {
         music = new Thread(this);
+        music.setDaemon(true);
         music.start();
     }
 

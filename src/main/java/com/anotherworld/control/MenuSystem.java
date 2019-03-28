@@ -96,7 +96,6 @@ public class MenuSystem {
                 e.printStackTrace();
             }
         }
-        
         thread.cancleWait();
         
     }

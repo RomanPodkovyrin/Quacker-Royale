@@ -316,6 +316,7 @@ public class View implements Runnable {
     
     private void waitForExit() {
         Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        System.exit(0);
         while (threadSet.size() > 5) {
             int i = 0;
             for (Thread thread : threadSet) {
