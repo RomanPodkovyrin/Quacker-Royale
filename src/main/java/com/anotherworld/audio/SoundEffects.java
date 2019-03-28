@@ -29,6 +29,8 @@ public class SoundEffects implements Runnable {
     private String win = "./res/audio/crowd-cheer.wav";
     //https://freesound.org/people/JPolito/sounds/391697/
     private String hover = "./res/audio/hover.wav";
+    //https://opengameart.org/content/512-sound-effects-8-bit-style - Juhani Junkala
+    private String click = "./res/audio/click.wav";
     //https://freesound.org/people/Rocotilos/sounds/178875/
     private String lose = "./res/audio/lose.wav";
     // Roman Podkovyrin
@@ -49,6 +51,7 @@ public class SoundEffects implements Runnable {
     private File timeFile;
     private File healthFile;
     private File shieldFile;
+    private File clickFile;
 
     private Optional<SourceDataLine> line;
     private AudioInputStream audioInputStream;
@@ -74,6 +77,7 @@ public class SoundEffects implements Runnable {
         healthFile = new File(health);
         shieldFile = new File(shield);
         shieldBreakFile = new File(shieldBreak);
+        clickFile = new File(click);
         effect = new Thread(this);
         line = Optional.empty();
         effect.start();
@@ -116,6 +120,14 @@ public class SoundEffects implements Runnable {
      */
     public void playButtonHover() {
         currentFile = hoverFile;
+    }
+
+
+    /**
+     * Plays the button click sound effect.
+     */
+    public void click() {
+        currentFile = clickFile;
     }
 
     /**

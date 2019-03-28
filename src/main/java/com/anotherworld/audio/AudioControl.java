@@ -119,6 +119,16 @@ public class AudioControl {
         }
     }
 
+    //TODO: JAVADOCS
+    public static void playButtonClick() {
+        if (effectsOn) {
+            if (soundEffects == null) {
+                soundEffects = new SoundEffects();
+            }
+            soundEffects.click();
+        }
+    }
+
     /**
      * Plays the win sound.
      */
@@ -193,5 +203,4 @@ public class AudioControl {
             logger.error("Stopping music which wasn't created");
         }
     }
-
 }
