@@ -261,7 +261,7 @@ public class GameSession {
                     removeFromLiving(player);
                     logger.info(player.getObjectID() + " was killed.");
                 }
-
+                
                 // Kill the player if they fall off the edge of the platform
                 if ((!platform.isOnPlatform(player) || player.getState().equals(ObjectState.DEAD))) {
                     Player.kill(player, true);
@@ -282,7 +282,7 @@ public class GameSession {
                     }
 
                     // Kill the player if they fall off the edge of the platform
-                    if (!platform.isOnPlatform(player) && !gameData.getRankings().contains(player.getObjectID())) {
+                    if ((!platform.isOnPlatform(player) || player.getObjectID().equals(ObjectState.DEAD) )&& !gameData.getRankings().contains(player.getObjectID())) {
                         Player.kill(player, true);
                         gameData.getRankings().addFirst(player.getObjectID());
                         livingPlayers.remove(player);
