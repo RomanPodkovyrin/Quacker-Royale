@@ -19,8 +19,6 @@ public class BindableKeyManager implements Runnable {
 
     private boolean running;
 
-    private boolean wait = true;
-
     /**
      * Creates a wrapper for the bindable key listener to release control.
      * @param keyListener The key listener to use
@@ -35,29 +33,27 @@ public class BindableKeyManager implements Runnable {
     public void run() {
         while (running) {
             try {
-                Optional<Action<Integer>> current;
-                synchronized (waiting) {
-                    current = waiting;
-                    waiting = Optional.empty();
-                    wait = true;
-                }
+                int action = tryAction();
 
-                if (current.isPresent()) {
-                    current.get().perform(tryAction());
+                synchronized (waiting) {
+                    if (waiting.isPresent()) {
+                        waiting.get().perform(action);
+                        waiting = Optional.empty();
+                    }
                 }
-                Thread.sleep(100);
             } catch (InterruptedException e) {
                 logger.debug("Interupted");
             }
         }
     }
 
-    public boolean hasWaitingKeys() {
-        return true;
-    }
-
+    /**
+     * Clears the current bindable key action.
+     */
     public void clear() {
-        waiting = Optional.empty();
+        synchronized (waiting) {
+            waiting = Optional.empty();
+        }
     }
 
     public void close() {
@@ -69,9 +65,7 @@ public class BindableKeyManager implements Runnable {
      * @param action The action to perform with the button
      */
     public void queue(Action<Integer> action) {
-        System.out.println("queued");
         synchronized (waiting) {
-            wait = false;
             waiting = Optional.of(action);
         }
     }
@@ -81,10 +75,6 @@ public class BindableKeyManager implements Runnable {
         logger.debug("Waiting for key");
         do {
             downKeys = keyListener.getBindableKey();
-            Thread.sleep(10);
-            if (!wait) {
-                throw new InterruptedException("");
-            }
         } while (downKeys.size() == 0);
         return downKeys.get(0);
     }

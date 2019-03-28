@@ -77,7 +77,6 @@ import org.apache.logging.log4j.Logger;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.Platform;
@@ -310,7 +309,7 @@ public class View implements Runnable {
         AudioControl.stopBackgroundMusic();
         AudioControl.stopSoundEffects();
         keyManager.close();
-        keyManagerThread.isInterrupted();
+        keyManagerThread.interrupt();
         glfwTerminate();
     }
     
@@ -372,7 +371,6 @@ public class View implements Runnable {
             logger.debug("Window reloaded");
         } else if (event.getClass().equals(SwitchBackground.class)) {
             SwitchBackground switchBackground = (SwitchBackground) event;
-            System.out.println("Switching");
             currentScene.switchBackgroundImage(switchBackground.getBackground());
             logger.debug("Background switched");
         } else {
@@ -473,12 +471,12 @@ public class View implements Runnable {
      * @param whatToDo the action to perform
      */
     public void getBindableKey(Action<Integer> whatToDo) {
-        keyManager.queue(whatToDo);
         cancelWaitingKeys();
+        keyManager.queue(whatToDo);
     }
     
     public void cancelWaitingKeys() {
-        keyManagerThread.interrupt();
+        keyManager.clear();
     }
 
     /**
