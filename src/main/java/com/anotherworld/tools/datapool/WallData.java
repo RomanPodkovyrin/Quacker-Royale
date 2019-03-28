@@ -171,7 +171,7 @@ public class WallData implements RectangleDisplayData, Serializable {
     }
 
     /**
-     * Sets the height of the wall
+     * Sets the height of the wall.
      * @param height the height of the wall.
      */
     public void setHeight(float height) {
