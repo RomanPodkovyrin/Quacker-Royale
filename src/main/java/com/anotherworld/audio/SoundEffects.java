@@ -71,7 +71,7 @@ public class SoundEffects implements Runnable {
             try {
                 Thread.sleep(0);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.trace("Sound Thread interrupted");
             }
 
             if (currentFile == null) {
@@ -164,7 +164,7 @@ public class SoundEffects implements Runnable {
      */
     public void stopSoundEffects() {
         logger.info("STOPPING SOUND EFFECTS");
-        effect.stop();
+        effect.interrupt();
         if (line.isPresent()) {
             line.get().close();
         }
