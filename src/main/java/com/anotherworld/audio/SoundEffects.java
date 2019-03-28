@@ -202,6 +202,7 @@ public class SoundEffects implements Runnable {
         if (line.isPresent()) {
             line.get().close();
         }
+        effect.stop();
         effect.interrupt();
     }
 }
