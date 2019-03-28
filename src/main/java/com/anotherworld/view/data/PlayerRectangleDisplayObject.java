@@ -63,7 +63,7 @@ public class PlayerRectangleDisplayObject extends DisplayObject {
     
     @Override
     public boolean shouldDraw() {
-        return true;
+        return displayData.getState() != ObjectState.DEAD || displayData.isDeadByFalling();
     }
     
     @Override

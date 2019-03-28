@@ -622,7 +622,7 @@ public class MenuSystem {
         ButtonData start = new ButtonData("Host");
         
         start.setOnAction(() -> {
-            int numberOfClients = Integer.parseInt(numberOfPlayers.getText());
+            int numberOfClients = Integer.parseInt(numberOfPlayers.getText()) - 1;
             Thread hostThread = new Thread(() -> {
                 view.switchToDisplay(hostLobbyMenuDisplay);
                 try {
