@@ -192,17 +192,7 @@ public class GameSessionController {
     private void winOrLoseSound() {
 
         LinkedList<String> rankings = settings.getGameSessionData().getRankings();
-        
-        LinkedList<String> temp = new LinkedList<>();
-        
-        for (String rank : rankings) {
-            if (!temp.contains(rank)) {
-                temp.add(rank);
-            }
-        }
-        
-        rankings = temp;
-        
+
         boolean allRanked = rankings.size() == settings.getPlayers().size() + 1 + settings.getAi().size();
 
         if (rankings.isEmpty() | !allRanked) {
