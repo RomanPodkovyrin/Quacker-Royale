@@ -151,12 +151,12 @@ public class GameSession {
     public void replacePlayableWithAI(String playerId) throws PlayerNotFoundError {
         PlayerData playerToReplace = null;
         for (PlayerData player : allPlayers) {
-            if(player.getObjectID().equals(playerId)) {
+            if (player.getObjectID().equals(playerId)) {
                 playerToReplace = player;
             }
         }
 
-        if(playerToReplace == null) {
+        if (playerToReplace == null) {
             throw new PlayerNotFoundError(playerId);
         }
 

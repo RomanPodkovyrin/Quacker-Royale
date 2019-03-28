@@ -71,7 +71,7 @@ public class Player {
     /**
      * Kills a player by setting their state to dead and removing their ability to move.
      * @param playerData The player to update.
-     * @param byFalling
+     * @param byFalling - tells if player died by falling
      */
     public static void kill(PlayerData playerData, boolean byFalling) {
         playerData.setState(ObjectState.DEAD);
@@ -87,7 +87,7 @@ public class Player {
     public static void chargeForward(GameSessionData gameData, PlayerData player) {
         long timeSpent = gameData.getTicksElapsed() - player.getTimeStartedCharging();
 
-        if(isCharging(player)) {
+        if (isCharging(player)) {
             player.setVelocity(0,0);
             player.setSpeed(0);
         } else if (isDashing(player)) {

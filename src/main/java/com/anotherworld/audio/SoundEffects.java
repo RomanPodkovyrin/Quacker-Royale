@@ -71,7 +71,7 @@ public class SoundEffects implements Runnable {
         hoverFile = new File(hover);
         loseFile = new File(lose);
         timeFile = new File(time);
-        healthFile = new File (health);
+        healthFile = new File(health);
         shieldFile = new File(shield);
         shieldBreakFile = new File(shieldBreak);
         effect = new Thread(this);
@@ -203,6 +203,5 @@ public class SoundEffects implements Runnable {
             line.get().close();
         }
         effect.interrupt();
-//        running = false;
     }
 }
