@@ -1,5 +1,6 @@
 package com.anotherworld.network;
 
+import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
@@ -47,16 +48,21 @@ public class NetworkControllerClient extends AbstractNetworkController {
 
         if (playerUpdate != null) {
             // update Players
+            int numAlive = 0;
             for (PlayerData data : playerUpdate) {
                 for (PlayerData player : allPlayers) {
                     if (data.getObjectID().equals(player.getObjectID())) {
                         player.copyObject(data);
+                        numAlive += player.getState() == ObjectState.DEAD ? 0 : 1;
                     }
 
                 }
             }
+            if (numAlive <= 1) {
+                return;
+            }
         }
-
+        
         ArrayList<BallData> ballUpdate = client.getBallData();
 
 

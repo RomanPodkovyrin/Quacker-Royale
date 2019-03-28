@@ -599,6 +599,30 @@ public class MenuSystem {
         ButtonData title = new ButtonData("Lobby Size");
         layout.addButton(title);
         
+        ButtonData difficultyButton = new ButtonData("Medium");
+        
+        difficultyButton.setOnAction(() -> {
+            switch (difficultyButton.getText()) {
+                case "Easy":
+                    difficultyButton.setText("Medium");
+                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
+                    break;
+                case "Medium":
+                    difficultyButton.setText("Hard");
+                    GameSettings.changeDifficulty(Difficulty.HARD);
+                    break;
+                case "Hard":
+                    difficultyButton.setText("Easy");
+                    GameSettings.changeDifficulty(Difficulty.EASY);
+                    break;
+                default:
+                    difficultyButton.setText("Medium");
+                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
+            }
+        });
+        
+        layout.addButton(difficultyButton);
+        
         ButtonData numberOfPlayers = new ButtonData("4");
         
         numberOfPlayers.setOnAction(() -> {
