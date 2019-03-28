@@ -131,5 +131,12 @@ public class NetworkControllerServer extends AbstractNetworkController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        // Allow to send all the objects
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
