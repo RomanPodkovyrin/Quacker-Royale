@@ -605,19 +605,15 @@ public class MenuSystem {
             switch (difficultyButton.getText()) {
                 case "Easy":
                     difficultyButton.setText("Medium");
-                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
                     break;
                 case "Medium":
                     difficultyButton.setText("Hard");
-                    GameSettings.changeDifficulty(Difficulty.HARD);
                     break;
                 case "Hard":
                     difficultyButton.setText("Easy");
-                    GameSettings.changeDifficulty(Difficulty.EASY);
                     break;
                 default:
                     difficultyButton.setText("Medium");
-                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
             }
         });
         
@@ -657,6 +653,19 @@ public class MenuSystem {
                     view.switchToDisplay(connectionFailedDisplay);
                 }
             });
+            switch (difficultyButton.getText()) {
+                case "Easy":
+                    GameSettings.changeDifficulty(Difficulty.EASY);
+                    break;
+                case "Medium":
+                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
+                    break;
+                case "Hard":
+                    GameSettings.changeDifficulty(Difficulty.HARD);
+                    break;
+                default:
+                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
+            }
             hostThread.start();
         });
         
