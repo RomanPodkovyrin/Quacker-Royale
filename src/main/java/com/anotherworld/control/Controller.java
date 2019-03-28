@@ -179,6 +179,7 @@ public class Controller {
 
         waitInLobby(lobbyServer, server);
 
+
         // Waits until Clients are ready
         while (server.areClientsReady()) {
             try {
@@ -190,10 +191,12 @@ public class Controller {
 
 
 
+        lobbyServer.stopLobbyServer();
         logger.info("Host started the game");
 
         NetworkControllerServer network = new NetworkControllerServer(server, settings);
         startTheGame(settings,network);
+        logger.info("Finished the game");
     }
 
     /**
@@ -208,9 +211,9 @@ public class Controller {
 
             //Check if host canceled the game
             if (cancelTheGame) {
-
-                lobbyServer.stopLobbyServer();
                 server.stopServer();
+                lobbyServer.stopLobbyServer();
+
                 throw new ConnectionClosed();
             }
 
@@ -321,6 +324,7 @@ public class Controller {
         logger.info("Starting the game");
         NetworkControllerClient network = new NetworkControllerClient(client, settings);
         startTheGame(settings,network);
+        logger.info("Finished the game");
     }
 
     /**

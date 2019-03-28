@@ -38,6 +38,11 @@ public class PlayerDisplayObject extends PlayerRectangleDisplayObject {
     }
     
     @Override
+    public boolean shouldDraw() {
+        return true;
+    }
+    
+    @Override
     public void destroy() {
         super.destroy();
         healthBar.destroy();
