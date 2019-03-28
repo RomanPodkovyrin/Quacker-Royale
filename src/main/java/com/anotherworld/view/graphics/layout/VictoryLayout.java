@@ -16,6 +16,7 @@ public class VictoryLayout extends Layout {
 
     private ButtonData returnButton;
     private Supplier<ArrayList<PlayerData>> playerSupplier;
+    private Supplier<ArrayList<ButtonData>> buttonSupplier;
     
     /**
      * Creates a layout for the victory scene.
@@ -28,11 +29,58 @@ public class VictoryLayout extends Layout {
             ArrayList<PlayerData> players = new ArrayList<>();
             List<String> playerData = playerDataSupplier.get();
             for (String name : playerData) {
-                PlayerData playerObject = new PlayerData(name, 0, 160 * (i + 1) / (playerData.size() + 1), 45, ObjectState.IDLE, 0, 5);
+                PlayerData playerObject = new PlayerData(name, 0, 160 * (i + 1) / (playerData.size() + 1), 50, ObjectState.IDLE, 0, 5);
                 players.add(playerObject);
+                String position;
+                switch (i) {
+                    case 1:
+                        position = "1st";
+                        break;
+                    case 2:
+                        position = "2nd";
+                        break;
+                    case 3:
+                        position = "3rd";
+                        break;
+                    case 4:
+                        position = "4th";
+                        break;
+                    default:
+                        position = "dnf";
+                }
+                ButtonData place = new ButtonData(() -> position, 0);
                 i++;
             }
             return players;
+        };
+        buttonSupplier = () -> {
+            ArrayList<ButtonData> buttons = new ArrayList<>();
+            List<String> playerData = playerDataSupplier.get();
+            for (int i = 0; i < playerData.size(); i++) {
+                String position;
+                switch (i) {
+                    case 0:
+                        position = "1st";
+                        break;
+                    case 1:
+                        position = "2nd";
+                        break;
+                    case 2:
+                        position = "3rd";
+                        break;
+                    case 3:
+                        position = "4th";
+                        break;
+                    default:
+                        position = "dnf";
+                }
+                ButtonData place = new ButtonData(() -> position, 0);
+                place.setPosition(160 * (i + 1) / (playerData.size() + 1), 30);
+                place.setHeight(20);
+                place.setTextColour(1, 1, 1);
+                buttons.add(place);
+            }
+            return buttons;
         };
         this.returnButton = new ButtonData("");
         this.returnButton.setOnAction(exitAction);
@@ -42,6 +90,7 @@ public class VictoryLayout extends Layout {
     public void enactLayout(GraphicsDisplay display) {
         display.changeCamera(new Static2dCamera(80, 45, 160, 90));
         ((VictoryDisplay)display).updatePlayers(playerSupplier);
+        ((VictoryDisplay)display).updateButtons(buttonSupplier);
         returnButton.setHeight(10);
         returnButton.setWidth(50);
         returnButton.setText("Main Menu");
