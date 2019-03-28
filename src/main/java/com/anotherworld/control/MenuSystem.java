@@ -242,8 +242,8 @@ public class MenuSystem {
         }, 1);
         
         muteButton.setOnAction(() -> {
-            logger.info("charge key button pressed");
-            KeySettings.setMute(view.getBindableKey());
+            logger.info("mute key button pressed");
+            view.getBindableKey(i -> KeySettings.setMute(i));
         });
         layout.addButton(muteButton);
         
@@ -253,7 +253,7 @@ public class MenuSystem {
         
         upButton.setOnAction(() -> {
             logger.info("up key button pressed");
-            KeySettings.setUp(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setUp(i));
         });
         layout.addButton(upButton);
         
@@ -263,7 +263,7 @@ public class MenuSystem {
         
         downButton.setOnAction(() -> {
             logger.info("down key button pressed");
-            KeySettings.setDown(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setDown(i));
         });
         layout.addButton(downButton);
         
@@ -273,7 +273,7 @@ public class MenuSystem {
         
         leftButton.setOnAction(() -> {
             logger.info("left key button pressed");
-            KeySettings.setLeft(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setLeft(i));
         });
         layout.addButton(leftButton);
         
@@ -283,7 +283,7 @@ public class MenuSystem {
         
         rightButton.setOnAction(() -> {
             logger.info("key button pressed");
-            KeySettings.setRight(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setRight(i));
         });
         layout.addButton(rightButton);
         
@@ -293,12 +293,15 @@ public class MenuSystem {
         
         chargeButton.setOnAction(() -> {
             logger.info("charge key button pressed");
-            KeySettings.setCharge(view.getBindableKey());
+            view.getBindableKey(i -> KeySettings.setCharge(i));
         });
         layout.addButton(chargeButton);
 
         ButtonData backToSettings = new ButtonData(BACK);
-        backToSettings.setOnAction(() -> view.switchToDisplay(settingsMenuDisplay));
+        backToSettings.setOnAction(() -> {
+            view.cancelWaitingKeys();
+            view.switchToDisplay(settingsMenuDisplay);
+        });
         layout.addButton(backToSettings);
         
         return layout;

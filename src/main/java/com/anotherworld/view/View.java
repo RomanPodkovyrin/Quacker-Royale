@@ -28,6 +28,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import com.anotherworld.audio.AudioControl;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.ViewSettings;
+import com.anotherworld.tools.Action;
 import com.anotherworld.tools.Wrapper;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
@@ -72,6 +73,7 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -116,6 +118,10 @@ public class View implements Runnable {
     private int refreshRate;
     
     private boolean enableFrameCounter;
+    
+    private BindableKeyManager keyManager;
+    
+    private Thread keyManagerThread;
 
     /**
      * Creates the View object initialising it's values.
@@ -222,6 +228,10 @@ public class View implements Runnable {
         }
 
         keyListenerLatch.countDown();
+        
+        keyManager = new BindableKeyManager(new BindableKeyListener(window.get()));
+        keyManagerThread = new Thread(keyManager);
+        keyManagerThread.start();
 
         int error = glGetError();
 
@@ -229,17 +239,6 @@ public class View implements Runnable {
             logger.error("Initialise GL error " + error);
             error = glGetError();
         }
-        
-        Wrapper<Integer> currentFrameRate = new Wrapper<>(0);
-        
-        Optional<Double> lastDraw = Optional.empty();
-        
-        TextDisplayData frameCounterData = new ButtonData(() -> {
-            return Integer.toString(currentFrameRate.getValue());
-        }, 0);
-        //TODO draw this a different way
-        
-        TextDisplayObject frameCounterButton = new TextDisplayObject(programme, frameCounterData);
 
         while (!glfwWindowShouldClose(window.get()) && running) {
 
@@ -256,10 +255,6 @@ public class View implements Runnable {
             programme.loadIdentity();
 
             currentScene.draw(width, height, programme);
-            
-            if (this.shouldShowFramerate()) {
-                programme.draw(frameCounterButton);
-            }
 
             glFlush();
 
@@ -271,13 +266,6 @@ public class View implements Runnable {
             }
 
             glfwSwapBuffers(window.get());
-            
-            double currentDraw = glfwGetTime();
-            if (lastDraw.isPresent()) {
-                currentFrameRate.setValue((int)(1d / (currentDraw - lastDraw.get())));
-            }
-            
-            lastDraw = Optional.of(currentDraw);
 
             logger.trace("Polling for glfw events");
 
@@ -324,7 +312,8 @@ public class View implements Runnable {
         window = Optional.empty();
         AudioControl.stopBackgroundMusic();
         AudioControl.stopSoundEffects();
-        //waitForExit();
+        keyManager.close();
+        keyManagerThread.isInterrupted();
         glfwTerminate();
     }
     
@@ -477,28 +466,15 @@ public class View implements Runnable {
     public boolean windowOpen() {
         return running;
     }
-
-    /**
-     * Takes control and waits for the user to press a key that can be bound or escape to exit.
-     * @return the bindable key
-     */
-    public int getBindableKey() {
-        logger.info("Request for bindable key");
-        try {
-            if (keyListenerLatch.await(10, TimeUnit.SECONDS)) {
-                BindableKeyListener bk = new BindableKeyListener(window.get());
-                ArrayList<Integer> downKeys;
-                do {
-                    downKeys = bk.getBindableKey();
-                    glfwPollEvents();
-                } while (downKeys.size() == 0);
-                logger.info("Returning " + downKeys.get(0));
-                return downKeys.get(0);
-            }
-        } catch (InterruptedException e) {
-            logger.catching(e);
-        }
-        return -1;
+    
+    public void getBindableKey(Action<Integer> whatToDo) {
+        System.out.println("Yap");
+        keyManager.queue(whatToDo);
+        cancelWaitingKeys();
+    }
+    
+    public void cancelWaitingKeys() {
+        keyManagerThread.interrupt();
     }
 
     /**
