@@ -253,21 +253,17 @@ public class GameSession {
                 Player.movePlayer(gameData, player);
 
                 // Kill the player if their health goes below zero.
-                if ((player.getHealth() <= 0  || player.getState().equals(ObjectState.DEAD))) {
+                if ((player.getHealth() <= 0  || player.getState().equals(ObjectState.DEAD)) && !gameData.getRankings().contains(player.getObjectID())) {
                     Player.kill(player, false);
-                    if (!gameData.getRankings().contains(player.getObjectID())) {
-                        gameData.getRankings().addFirst(player.getObjectID());
-                    }
+                    gameData.getRankings().addFirst(player.getObjectID());
                     removeFromLiving(player);
                     logger.info(player.getObjectID() + " was killed.");
                 }
                 
                 // Kill the player if they fall off the edge of the platform
-                if ((!platform.isOnPlatform(player) || player.getState().equals(ObjectState.DEAD))) {
+                if ((!platform.isOnPlatform(player) || player.getState().equals(ObjectState.DEAD))&& !gameData.getRankings().contains(player.getObjectID())) {
                     Player.kill(player, true);
-                    if (!gameData.getRankings().contains(player.getObjectID())) {
-                        gameData.getRankings().addFirst(player.getObjectID());
-                    }
+                    gameData.getRankings().addFirst(player.getObjectID());
                     removeFromLiving(player);
                     logger.info(player.getObjectID() + " fell off");
                 }
