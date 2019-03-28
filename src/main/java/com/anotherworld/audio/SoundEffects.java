@@ -31,12 +31,24 @@ public class SoundEffects implements Runnable {
     private String hover = "./res/audio/hover.wav";
     //https://freesound.org/people/Rocotilos/sounds/178875/
     private String lose = "./res/audio/lose.wav";
+    // Roman Podkovyrin
+    private String shieldBreak = "./res/audio/Shield_breaking.wav";
+    //https://freesound.org/people/InspectorJ/sounds/398194/
+    private String time = "./res/audio/time.wav";
+    //https://freesound.org/people/rdaly95/sounds/387133/
+    private String health = "./res/audio/health.wav";
+    //https://freesound.org/people/Leszek_Szary/sounds/146723/
+    private String shield = "./res/audio/shield.wav";
     //All the files of sound effects
     private File ballFile;
     private File quackFile;
     private File winFile;
     private File hoverFile;
     private File loseFile;
+    private File shieldBreakFile;
+    private File timeFile;
+    private File healthFile;
+    private File shieldFile;
 
     private Optional<SourceDataLine> line;
     private AudioInputStream audioInputStream;
@@ -58,6 +70,10 @@ public class SoundEffects implements Runnable {
         winFile = new File(win);
         hoverFile = new File(hover);
         loseFile = new File(lose);
+        timeFile = new File(time);
+        healthFile = new File (health);
+        shieldFile = new File(shield);
+        shieldBreakFile = new File(shieldBreak);
         effect = new Thread(this);
         line = Optional.empty();
         effect.start();
@@ -110,6 +126,19 @@ public class SoundEffects implements Runnable {
     }
 
 
+    public void time() {
+        currentFile = timeFile;
+    }
+
+    public void health() {
+        currentFile = healthFile;
+    }
+
+    public void shield() {
+        currentFile = shieldFile;
+    }
+
+
     /**
      * Used to create a line for the current sound effect.
      *
@@ -148,9 +177,14 @@ public class SoundEffects implements Runnable {
     }
 
     public void win() {
-        System.out.println("Hello");
         currentFile = winFile;
     }
+
+    public void shieldBreak() {
+        logger.trace("Playing shield break");
+        currentFile = shieldBreakFile;
+    }
+
 
     /**
      * Plays a sound of ball collision with the another ball.
@@ -169,6 +203,6 @@ public class SoundEffects implements Runnable {
             line.get().close();
         }
         effect.interrupt();
-        running = false;
+//        running = false;
     }
 }

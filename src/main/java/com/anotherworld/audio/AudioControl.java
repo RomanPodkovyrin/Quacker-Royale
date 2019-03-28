@@ -128,6 +128,34 @@ public class AudioControl {
         }
     }
 
+
+    /**
+     * Plays shield breaks.
+     */
+    public static void shieldBreak() {
+        if (effectsOn) {
+            soundEffects.shieldBreak();
+        }
+    }
+
+    public static void time() {
+        if (effectsOn) {
+            soundEffects.time();
+        }
+    }
+
+    public static void health() {
+        if (effectsOn) {
+            soundEffects.health();
+        }
+    }
+
+    public static void shield() {
+        if (effectsOn) {
+            soundEffects.shield();
+        }
+    }
+
     /**
      * Plays the lose sound.
      */

@@ -218,7 +218,7 @@ public class GameSession {
         } else {
             if (player.isShielded()) {
                 player.setShielded(false);
-                //TODO: Play shield break sound effect
+                AudioControl.shieldBreak();
             } else {
                 Player.damage(player, ball.getDamage());
                 AudioControl.playerCollidedWithBall();
