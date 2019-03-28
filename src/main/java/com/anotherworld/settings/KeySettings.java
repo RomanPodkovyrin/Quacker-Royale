@@ -168,7 +168,6 @@ public class KeySettings {
     }
     
     private static boolean setKey(String fileKey, int value) {
-        System.out.println(value);
         try {
             if (!keySettings.isPresent()) {
                 loadSettings();

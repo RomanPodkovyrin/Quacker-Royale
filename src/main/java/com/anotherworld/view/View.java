@@ -3,9 +3,8 @@ package com.anotherworld.view;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwGetMonitors;
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
@@ -29,7 +28,6 @@ import com.anotherworld.audio.AudioControl;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.ViewSettings;
 import com.anotherworld.tools.Action;
-import com.anotherworld.tools.Wrapper;
 import com.anotherworld.tools.datapool.GameSessionData;
 import com.anotherworld.tools.datapool.WallData;
 import com.anotherworld.tools.input.GameKeyListener;
@@ -43,8 +41,6 @@ import com.anotherworld.view.data.PlayerDisplayData;
 import com.anotherworld.view.data.PlayerDisplayObject;
 import com.anotherworld.view.data.PowerUpDisplayObject;
 import com.anotherworld.view.data.RectangleDisplayData;
-import com.anotherworld.view.data.TextDisplayData;
-import com.anotherworld.view.data.TextDisplayObject;
 import com.anotherworld.view.data.WallDisplayObject;
 import com.anotherworld.view.graphics.GameScene;
 import com.anotherworld.view.graphics.GraphicsDisplay;
@@ -53,7 +49,6 @@ import com.anotherworld.view.graphics.Scene;
 import com.anotherworld.view.graphics.spritesheet.RectangleSpriteSheet;
 import com.anotherworld.view.graphics.spritesheet.SpriteLocation;
 import com.anotherworld.view.input.BindableKeyListener;
-import com.anotherworld.view.input.ButtonData;
 import com.anotherworld.view.input.StringKeyListener;
 import com.anotherworld.view.programme.LegacyProgramme;
 import com.anotherworld.view.programme.Programme;
@@ -73,7 +68,6 @@ import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -402,13 +396,11 @@ public class View implements Runnable {
         IntBuffer windowHeight = BufferUtils.createIntBuffer(1);
         IntBuffer windowWidth = BufferUtils.createIntBuffer(1);
         glfwGetFramebufferSize(window.get(), windowWidth, windowHeight);
-        if (displayType.equals(DisplayType.WINDOWED)) {
-            width = Math.min(windowWidth.get(), width);
-            height = Math.min(windowHeight.get(), height);
-        } else {
+        if (displayType.equals(DisplayType.FULLSCREEN)) {
             width = windowWidth.get();
             height = windowHeight.get();
         }
+        System.out.println(width + ":" + height);
     }
 
     public boolean gameRunning() {
@@ -467,8 +459,11 @@ public class View implements Runnable {
         return running;
     }
     
+    /**
+     * Performs the given action using the next bindable key.
+     * @param whatToDo the action to perform
+     */
     public void getBindableKey(Action<Integer> whatToDo) {
-        System.out.println("Yap");
         keyManager.queue(whatToDo);
         cancelWaitingKeys();
     }

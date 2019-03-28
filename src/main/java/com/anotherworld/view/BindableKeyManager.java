@@ -21,6 +21,10 @@ public class BindableKeyManager implements Runnable {
 
     private boolean wait = true;
 
+    /**
+     * Creates a wrapper for the bindable key listener to release control.
+     * @param keyListener The key listener to use
+     */
     public BindableKeyManager(BindableKeyListener keyListener) {
         waiting = Optional.empty();
         running = true;
@@ -30,7 +34,7 @@ public class BindableKeyManager implements Runnable {
     @Override
     public void run() {
         while (running) {
-            try { // TODO fix this
+            try {
                 Optional<Action<Integer>> current;
                 synchronized (waiting) {
                     current = waiting;
@@ -43,7 +47,7 @@ public class BindableKeyManager implements Runnable {
                 }
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                logger.info("Interupted");
+                logger.debug("Interupted");
             }
         }
     }
@@ -60,6 +64,10 @@ public class BindableKeyManager implements Runnable {
         running = false;
     }
 
+    /**
+     * Queues an action to collect a button for.
+     * @param action The action to perform with the button
+     */
     public void queue(Action<Integer> action) {
         System.out.println("queued");
         synchronized (waiting) {
@@ -70,7 +78,7 @@ public class BindableKeyManager implements Runnable {
 
     private int tryAction() throws InterruptedException {
         ArrayList<Integer> downKeys;
-        logger.info("Waiting for key");
+        logger.debug("Waiting for key");
         do {
             downKeys = keyListener.getBindableKey();
             Thread.sleep(10);
@@ -78,7 +86,6 @@ public class BindableKeyManager implements Runnable {
                 throw new InterruptedException("");
             }
         } while (downKeys.size() == 0);
-        System.out.println(downKeys.get(0));
         return downKeys.get(0);
     }
 

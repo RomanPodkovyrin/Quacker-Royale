@@ -63,6 +63,7 @@ public abstract class DisplayObject {
      * @param b How blue the object is 0 to 1
      */
     public DisplayObject(SpriteSheet spriteSheet, Programme programme, Points2d points, DrawType displayType, float r, float g, float b) {
+        logger.trace("Creating display object");
         this.points = points;
         this.displayType = displayType;
         this.r = r;
@@ -147,10 +148,6 @@ public abstract class DisplayObject {
     
     private float getYScale() {
         return getScale(1);
-    }
-    
-    private float getZScale() {
-        return -getScale(2);
     }
     
     private float getScale(int axis) {
