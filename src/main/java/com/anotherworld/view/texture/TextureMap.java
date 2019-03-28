@@ -43,6 +43,7 @@ public class TextureMap {
         textureBuffers[SpriteLocation.BACKGROUND.getInt()] = new TextureBuffer(location + "Background.png", 2, 5);
         textureBuffers[SpriteLocation.INSTRUCTIONS.getInt()] = new TextureBuffer(location + "instructions.png", 1, 1);
         textureBuffers[SpriteLocation.TILE.getInt()] = new TextureBuffer(location + "tile.png", 1, 1);
+        textureBuffers[SpriteLocation.ARROW.getInt()] = new TextureBuffer(location + "Arrow.png", 1, 1);
     }
     
     /**

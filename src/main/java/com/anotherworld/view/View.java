@@ -347,7 +347,7 @@ public class View implements Runnable {
                 disObj.add(new PowerUpDisplayObject(programme, updateEvent.getGameSessionData().getPowerUpSchedule().get(i)));
             }
             for (int i = 0; i < updateEvent.getPlayerObjects().size(); i++) {
-                disObj.add(new PlayerDisplayObject(programme, updateEvent.getPlayerObjects().get(i)));
+                disObj.add(new PlayerDisplayObject(programme, updateEvent.getPlayerObjects().get(i), i + 1 == updateEvent.getPlayerObjects().size()));
             }
             for (int i = 0; i < updateEvent.getBallObjects().size(); i++) {
                 disObj.add(new BallDisplayObject(programme, updateEvent.getBallObjects().get(i)));
