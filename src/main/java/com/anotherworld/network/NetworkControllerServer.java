@@ -58,7 +58,6 @@ public class NetworkControllerServer extends AbstractNetworkController {
                             logger.info("Could not replace player with AI. Player is killed");
                             player.setState(ObjectState.DEAD);
                         }
-//
                     }
 
                     GameSession.updatePlayer(player,in, gameSessionData);

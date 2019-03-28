@@ -1,8 +1,8 @@
 package com.anotherworld.tools.datapool;
 
-import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.tools.enums.PowerUpType;
+import com.anotherworld.tools.maths.Matrix;
 import com.anotherworld.view.data.PowerUpDisplayData;
 
 import java.io.Serializable;

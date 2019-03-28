@@ -1,5 +1,6 @@
 package com.anotherworld.model.logic;
 
+import com.anotherworld.audio.AudioControl;
 import com.anotherworld.model.movable.ObjectState;
 import com.anotherworld.model.physics.Physics;
 import com.anotherworld.settings.GameSettings;
@@ -89,7 +90,7 @@ public class PowerUpManager {
                     case HEAL:
                         System.out.println(player.getObjectID() + " was healed");
                         player.setHealth(GameSettings.getDefaultPlayerHealth());
-                        //TODO: Play heal sound effect
+                        AudioControl.health();
                         break;
 
                     case TIME_STOP:
@@ -97,13 +98,13 @@ public class PowerUpManager {
                         player.setTimeStopper(true);
                         data.setTimeStopped(true);
                         data.setTimeStopCounter(3); // TODO: Yet another magic number
-                        //TODO: Play time stop sound effect
+                        AudioControl.time();
                         break;
 
                     case SHIELD:
                         System.out.println(player.getObjectID() + " has a shield");
                         player.setShielded(true);
-                        //TODO: Play shield pickup sound effect
+                        AudioControl.shield();
                         break;
 
                     default:
