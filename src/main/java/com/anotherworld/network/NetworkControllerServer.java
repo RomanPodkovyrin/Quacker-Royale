@@ -48,7 +48,7 @@ public class NetworkControllerServer extends AbstractNetworkController {
 
                     if (in.contains(Input.QUIT)) {
                         //The client quit the game
-                        player.setState(ObjectState.DEAD);
+//                        player.setState(ObjectState.DEAD);
                     }
 
                     GameSession.updatePlayer(player,in, gameSessionData);

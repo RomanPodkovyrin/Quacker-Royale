@@ -1,5 +1,6 @@
 package com.anotherworld.network;
 
+import com.anotherworld.model.logic.GameSession;
 import com.anotherworld.settings.GameSettings;
 import com.anotherworld.tools.datapool.BallData;
 import com.anotherworld.tools.datapool.GameSessionData;
@@ -25,6 +26,7 @@ public abstract class AbstractNetworkController {
     protected PlatformData platform;
     protected WallData wall;
     protected GameSessionData gameSessionData;
+    protected GameSession gameSession;
     protected static Logger logger = LogManager.getLogger(AbstractNetworkController.class);
     protected int hostSendRate = 0;
 
@@ -45,6 +47,13 @@ public abstract class AbstractNetworkController {
 
     }
 
+    /**
+     * Adds the current game session.
+     * @param gameSession - Current game session
+     */
+    public void setGameSession(GameSession gameSession) {
+        this.gameSession = gameSession;
+    }
 
 
     /**
