@@ -26,7 +26,7 @@ public class CreditLayout extends Layout {
         }
         credits.setWidth(1.8f * 16f / 9f);
         credits.setHeight(1f);
-        credits.setTextHeight(0.09f);
+        credits.setTextHeight(0.08f);
         graphicsDisplay.addText(credits);
         returnButton.setPosition(0.95f * 16f / 9f - buttonWidth / 2, 0.85f);
         returnButton.setWidth(buttonWidth);
