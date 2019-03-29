@@ -1,6 +1,10 @@
 package com.anotherworld.network;
 
-import java.net.*;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.Enumeration;
 
 public class NetworkTools {
@@ -12,16 +16,15 @@ public class NetworkTools {
      */
     public static String getMyIP() {
         try {
-            final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces( );
+            final Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
             NetworkInterface netInt = interfaces.nextElement();
-            for ( final InterfaceAddress addr : netInt.getInterfaceAddresses( ) )
-            {
-                final InetAddress inetAddr = addr.getAddress( );
+            for (final InterfaceAddress addr : netInt.getInterfaceAddresses()) {
+                final InetAddress inetAddr = addr.getAddress();
 
-                if ( !( inetAddr instanceof Inet4Address ) ) {
+                if (!(inetAddr instanceof Inet4Address)) {
                     continue;
                 }
-                return inetAddr.getHostAddress( );
+                return inetAddr.getHostAddress();
             }
 
         } catch (SocketException e) {
@@ -32,8 +35,5 @@ public class NetworkTools {
 
     }
 
-    public static void main(String args[]) {
 
-        System.out.println(getMyIP());
-    }
 }
