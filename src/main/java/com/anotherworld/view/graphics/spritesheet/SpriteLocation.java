@@ -8,7 +8,7 @@ public enum SpriteLocation {
     
     /**
      * Returns a unique int for each sprite location.
-     * @return
+     * @return returns the unique int location
      */
     public int getInt() {
         switch (this) {
