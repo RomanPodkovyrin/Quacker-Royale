@@ -247,24 +247,24 @@ public class GameSession {
             // If the player is stunned, decrement their timer.
             Player.decrementStunTimer(player);
 
+            // Kill the player if they fall off the edge of the platform
+            if ((!platform.isOnPlatform(player))) {
+                if (!gameData.getRankings().contains(player.getObjectID())) {
+                    Player.kill(player, true);
+                    gameData.getRankings().addFirst(player.getObjectID());
+                    logger.info(player.getObjectID() + " fell off");
+                }
+                removeFromLiving(player);
+            }
+
             // Kill the player if their health goes below zero.
             if ((player.getHealth() <= 0  || player.getState().equals(ObjectState.DEAD))) {
-                Player.kill(player, false);
                 if (!gameData.getRankings().contains(player.getObjectID())) {
+                    Player.kill(player, false);
                     gameData.getRankings().addFirst(player.getObjectID());
+                    logger.info(player.getObjectID() + " was killed.");
                 }
                 removeFromLiving(player);
-                logger.info(player.getObjectID() + " was killed.");
-            }
-                
-            // Kill the player if they fall off the edge of the platform
-            if ((!platform.isOnPlatform(player) || player.getState().equals(ObjectState.DEAD))) {
-                Player.kill(player, true);
-                if (!gameData.getRankings().contains(player.getObjectID())) {
-                    gameData.getRankings().addFirst(player.getObjectID());
-                }
-                removeFromLiving(player);
-                logger.info(player.getObjectID() + " fell off");
             }
 
             if (player.getStunTimer() <= 0) {
