@@ -112,6 +112,7 @@ public class Controller {
         if (playersIPaddresses.size() == defaultNumberClients) {
             runTheHostGame = true;
         }
+
         return runTheHostGame;
     }
     
@@ -149,9 +150,10 @@ public class Controller {
      */
     public void host(int numberOfClients) throws ConnectionClosed {
 
-        defaultNumberClients = numberOfClients;
+        logger.info("Waiting for " + defaultNumberClients + " clients");
         
         setUp();
+        defaultNumberClients = numberOfClients;
         // Resets defaults before starting lobby
         cancelTheGame = false;
         runTheHostGame = false;
@@ -208,7 +210,6 @@ public class Controller {
     private void waitInLobby(LobbyServer lobbyServer, Server server) throws ConnectionClosed {
         logger.trace("Lobby server is waiting for all players to connect and for Host to start the game");
         while (!(lobbyServer.isReady() && runTheHostGame)) {
-
             //Check if host canceled the game
             if (cancelTheGame) {
                 server.stopServer();

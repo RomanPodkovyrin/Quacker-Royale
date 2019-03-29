@@ -1,6 +1,7 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
+import com.anotherworld.network.NetworkTools;
 import com.anotherworld.settings.Difficulty;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.GameSettings;
@@ -96,7 +97,6 @@ public class MenuSystem {
                 e.printStackTrace();
             }
         }
-        
         thread.cancleWait();
         
     }
@@ -599,6 +599,26 @@ public class MenuSystem {
         ButtonData title = new ButtonData("Lobby Size");
         layout.addButton(title);
         
+        ButtonData difficultyButton = new ButtonData("Medium");
+        
+        difficultyButton.setOnAction(() -> {
+            switch (difficultyButton.getText()) {
+                case "Easy":
+                    difficultyButton.setText("Medium");
+                    break;
+                case "Medium":
+                    difficultyButton.setText("Hard");
+                    break;
+                case "Hard":
+                    difficultyButton.setText("Easy");
+                    break;
+                default:
+                    difficultyButton.setText("Medium");
+            }
+        });
+        
+        layout.addButton(difficultyButton);
+        
         ButtonData numberOfPlayers = new ButtonData("4");
         
         numberOfPlayers.setOnAction(() -> {
@@ -633,6 +653,19 @@ public class MenuSystem {
                     view.switchToDisplay(connectionFailedDisplay);
                 }
             });
+            switch (difficultyButton.getText()) {
+                case "Easy":
+                    GameSettings.changeDifficulty(Difficulty.EASY);
+                    break;
+                case "Medium":
+                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
+                    break;
+                case "Hard":
+                    GameSettings.changeDifficulty(Difficulty.HARD);
+                    break;
+                default:
+                    GameSettings.changeDifficulty(Difficulty.MEDIUM);
+            }
             hostThread.start();
         });
         
@@ -652,7 +685,7 @@ public class MenuSystem {
         
         LobbyLayout layout = new LobbyLayout(0.2f);
         
-        ButtonData host = new ButtonData("Hosting...");
+        ButtonData host = new ButtonData("Host at " + NetworkTools.getMyIP());
         layout.addButton(host);
 
         TextListData playerList = new TextListData(4);

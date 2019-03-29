@@ -120,6 +120,18 @@ public class AudioControl {
     }
 
     /**
+     * Plays button click sound.
+     */
+    public static void playButtonClick() {
+        if (effectsOn) {
+            if (soundEffects == null) {
+                soundEffects = new SoundEffects();
+            }
+            soundEffects.click();
+        }
+    }
+
+    /**
      * Plays the win sound.
      */
     public static void win() {
@@ -193,5 +205,4 @@ public class AudioControl {
             logger.error("Stopping music which wasn't created");
         }
     }
-
 }

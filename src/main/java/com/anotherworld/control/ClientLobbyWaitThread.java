@@ -32,7 +32,6 @@ public class ClientLobbyWaitThread implements Runnable {
                     waitingForGame = false;
                 }
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
