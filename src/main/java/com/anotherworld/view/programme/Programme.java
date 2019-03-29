@@ -288,16 +288,10 @@ public abstract class Programme {
         cursorPoint.setValue(1, 0, 1 - (2 * (float)cursorY.get() / ((float)height.get())));
         cursorPoint.setValue(3, 0, 1);
         
-        //System.out.println(cursorPoint.getValue(0, 0) + ":" + cursorPoint.getValue(1, 0));
-        
-        //System.out.println(getCurrentMatrix().toString());
-        
         cursorPoint = getCurrentInverseMatrix().mult(cursorPoint);
         
         float x = cursorPoint.getValue(0, 0) / cursorPoint.getValue(3, 0);
         float y = cursorPoint.getValue(1, 0) / cursorPoint.getValue(3, 0);
-        
-        //System.out.println(x + ":" + y);
         
         return new MouseState(x, y);
     }
@@ -309,7 +303,6 @@ public abstract class Programme {
     public abstract void updateBuffers(DisplayObject displayObject);
 
     public void setViewport(int x, int y, int w, int h) {
-        //System.out.println(x + ":" + y + ":" + w + ":" + h);
         glViewport(x, y, w, h);
     }
 

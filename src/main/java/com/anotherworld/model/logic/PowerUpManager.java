@@ -9,10 +9,13 @@ import com.anotherworld.tools.datapool.PlatformData;
 import com.anotherworld.tools.datapool.PlayerData;
 import com.anotherworld.tools.datapool.PowerUpData;
 import com.anotherworld.tools.enums.PowerUpType;
-
 import com.anotherworld.tools.maths.Matrix;
+
 import java.util.ArrayList;
 import java.util.Random;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Handles generation and representation of powerups in the game
@@ -23,6 +26,8 @@ import java.util.Random;
  */
 
 public class PowerUpManager {
+    
+    private static Logger logger = LogManager.getLogger(PowerUpManager.class);
 
     /**
      * Generates a Power Up at a random location within the range of the platform.
@@ -88,13 +93,13 @@ public class PowerUpManager {
                 //Apply effects
                 switch (powerUp.getPowerUpType()) {
                     case HEAL:
-                        System.out.println(player.getObjectID() + " was healed");
+                        logger.debug(player.getObjectID() + " was healed");
                         player.setHealth(GameSettings.getDefaultPlayerHealth());
                         AudioControl.health();
                         break;
 
                     case TIME_STOP:
-                        System.out.println(player.getObjectID() + " stopped time");
+                        logger.debug(player.getObjectID() + " stopped time");
                         player.setTimeStopper(true);
                         data.setTimeStopped(true);
                         data.setTimeStopCounter(3); // TODO: Yet another magic number
@@ -102,7 +107,7 @@ public class PowerUpManager {
                         break;
 
                     case SHIELD:
-                        System.out.println(player.getObjectID() + " has a shield");
+                        logger.debug(player.getObjectID() + " has a shield");
                         player.setShielded(true);
                         AudioControl.shield();
                         break;
