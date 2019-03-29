@@ -1,17 +1,21 @@
------------------------------------------------
-               DEVELOPMENT TEAM
------------------------------------------------
-Physics Engine:             Kwan Chi Ho
-Game Logic:                 Alfi Sumadi
-Graphics Engine:            Jake Stewart
-Artificial Intelligence:    Roman Podkovyrin
-Networking:                 Anton Lebedjko
+PHYSICS ENGINE:             Kwan Chi Ho
+GAME LOGIC:                 Alfi Sumadi
+GRAPHICS ENGINE:            Jake Stewart
+ARTIFICIAL INTELLIGENCE:    Roman Podkovyrin
+NETWORKING                 Anton Lebedjko
 
------------------------------------------------
-                    ASSETS
------------------------------------------------
-https://robey.lag.net/2010/01/23/tiny-monospace-font.html MIT
-Music:   "Cosmic Ducks" by Alfi Sumadi
-Artwork: Sprites by Roman Podkovyrin,
+FONT: tiny-monospace-font by Robey Pointer
+
+SOUND EFFECTS:
+basketball-8 by Zombie of Freesound.org
+quack by Reitanna of Freesound.org
+crowd-cheer by FoolBoyMedia of Freesound.org
+hover by JPolito of Freesound.org
+Cuckoo Clock, Single by InspectorJ of Freesound.org
+512-sound-effects-8-bit-style by Juhani Junkala
+lose by Rocotilos of Freesound.org
+
+MUSIC:   "Cosmic Ducks" by Alfi Sumadi
+ARTWORK: Sprites by Roman Podkovyrin,
          Background by Alfi Sumadi
 
