@@ -171,7 +171,7 @@ public class GameSessionData implements Serializable {
     }
 
     /**
-     *
+     * Gets the index of the current power up.
      */
     public int getPowerUpIndex() {
         return this.currentPowerUp;

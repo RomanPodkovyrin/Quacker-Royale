@@ -14,7 +14,7 @@ public class BallData extends MovableData implements BallDisplayData, Serializab
 
     private boolean dangerous;
     private int timer;
-    private int damage = 2; // TODO: Create damage in the constructor.
+    private int damage = 2;
 
     /**
      * Class contractor for the generic ball data.
