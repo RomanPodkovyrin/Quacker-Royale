@@ -71,7 +71,7 @@ public class StartCharging extends Job {
 
 
         // Can start charging
-        System.out.println("Start charging");
+        logger.debug("Start charging");
         ai.setTimeStartedCharging(session.getTicksElapsed());
         ai.setState(ObjectState.CHARGING);
 

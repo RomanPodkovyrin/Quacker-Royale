@@ -120,7 +120,7 @@ public class GameSession {
         // If someone has won, update the rankings one last time.
         if (!isRunning() && livingPlayers.size() > 0 && !gameData.getRankings().contains(livingPlayers.get(0).getObjectID())) {
             gameData.getRankings().addFirst(livingPlayers.get(0).getObjectID());
-            System.out.println(gameData.getRankings().toString());
+            logger.debug(gameData.getRankings().toString());
         }
 
 
@@ -286,7 +286,6 @@ public class GameSession {
     }    
 
     private void removeFromLiving(PlayerData player) {
-        System.out.println(player.getObjectID());
         LinkedList<PlayerData> toRemove = new LinkedList<>();
         for (PlayerData playerData : livingPlayers) {
             if (playerData.getObjectID().equals(player.getObjectID())) {
@@ -294,9 +293,7 @@ public class GameSession {
             }
         }
         for (PlayerData playerData : toRemove) {
-            System.out.println(livingPlayers.size());
             livingPlayers.remove(playerData);
-            System.out.println(livingPlayers.size());
         }
     }
 

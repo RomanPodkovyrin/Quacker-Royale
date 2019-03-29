@@ -71,7 +71,6 @@ public class MatrixMath {
      */
     public static float vectorAngle(Matrix vector) {
         float angle = (float) Math.toDegrees(Math.atan2(vector.getX(), - vector.getY()));
-        //System.out.println(angle);
         if (angle < 0) {
             angle += 360;
         }
