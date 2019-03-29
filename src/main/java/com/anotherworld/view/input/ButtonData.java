@@ -22,6 +22,7 @@ public class ButtonData implements TextDisplayData {
     private float textR;
     private float textG;
     private float textB;
+    private float textHeight = 0.1f;
     private Optional<ButtonListener> clock;
     private Optional<ButtonListener> hover;
     private Optional<ButtonListener> release;
@@ -80,6 +81,10 @@ public class ButtonData implements TextDisplayData {
         if (release.isPresent()) {
             release.get().clicked();
         }
+    }
+    
+    public void setTextHeight(float height) {
+        this.textHeight = height;
     }
     
     /**
@@ -207,7 +212,7 @@ public class ButtonData implements TextDisplayData {
 
     @Override
     public float getTextHeight() {
-        return 0.1f;
+        return textHeight;
     }
 
     public float getBackgroundAlpha() {

@@ -51,8 +51,6 @@ public class MenuSystem {
      */
     public void start() throws KeyListenerNotFoundException {
 
-        // TODO Change throw to menucouldnotbeinitialised or similar
-
         control = new Controller(view);
 
         GraphicsDisplay mainMenuDisplay = new GraphicsDisplay();
@@ -690,7 +688,7 @@ public class MenuSystem {
 
         TextListData playerList = new TextListData(4);
         
-        for (int i = 0; i < 4; i++) { //TODO let the user change this from 4
+        for (int i = 0; i < 4; i++) {
             int j = i;
             playerList.addTextSource(() -> {
                 ArrayList<String> ips = control.getPlayersIPaddresses();
@@ -753,7 +751,7 @@ public class MenuSystem {
         viewThread.start();
         logger.info("Starting menu");
         MenuSystem ms = new MenuSystem(view, new Controller(view));
-        try { //TODO Change this to logging
+        try {
             ms.start();
         } catch (KeyListenerNotFoundException e) {
             e.printStackTrace();
