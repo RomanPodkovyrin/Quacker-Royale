@@ -261,7 +261,6 @@ public class GameSettings {
      * Created the wall with the current defaults.
      */
     private void createWall() {
-        // TODO magic number
         WallData wall = new WallData(80,45);
 
         wall.setxSize(defaultWallXSize);
@@ -274,7 +273,6 @@ public class GameSettings {
      * Generates the platform with a given defaults.
      */
     private void createPlatform() {
-        // TODO magic number
         PlatformData platform = new PlatformData(80,45);
 
         platform.setxSize(defaultPlatformXSize);
@@ -298,7 +296,6 @@ public class GameSettings {
         float playerRadius = defaultPlayerRadius;
         float playerSpeed = defaultPlayerSpeed;
         float distanceFromBoarder = 5;
-        // TODO magic number
 
         for (int i = 0; i < numberOfPlayers; i++) {
 
@@ -332,7 +329,6 @@ public class GameSettings {
      * Creates the game session and gives it game time.
      */
     private void createGameSessionData() {
-        // TODO magic number
         this.gameSessionData = new GameSessionData(60);
         gameSessionData.setPowerUpSchedule(
             PowerUpManager.generatePowerUpSchedule(gameSessionData.getTimeLeft(), platforms.get(0))
@@ -344,7 +340,6 @@ public class GameSettings {
      * @return created game session
      */
     public GameSession createSession() {
-        // TODO give the gameSessionData into gameSessionData
         return new GameSession(currentPlayer, players, ai, balls, platforms.get(0), walls.get(0), gameSessionData);
     }
 
