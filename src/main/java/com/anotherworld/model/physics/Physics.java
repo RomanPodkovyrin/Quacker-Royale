@@ -247,7 +247,7 @@ public class Physics {
      * @param objectB
      *            An object which is collided.
      */
-    public static ArrayList<Matrix> calculateCollisionWOLookAhead(MovableData objectA,
+    public static ArrayList<Matrix> calculateCollisionWoLookAhead(MovableData objectA,
             MovableData objectB) {
         Matrix pointA = new Matrix(objectA.getXCoordinate(),
                 objectA.getYCoordinate());
@@ -364,7 +364,7 @@ public class Physics {
             safe = newCoordinate.get(SECOND);
             objectB.setCoordinates(safe.getX(), safe.getY());
         } else {
-            newCoordinate = calculateCollisionWOLookAhead(objectA, objectB);
+            newCoordinate = calculateCollisionWoLookAhead(objectA, objectB);
             safe = newCoordinate.get(SECOND);
             objectB.setCoordinates(safe.getX(), safe.getY());
         }
