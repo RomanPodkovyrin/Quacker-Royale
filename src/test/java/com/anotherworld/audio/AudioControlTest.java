@@ -30,20 +30,19 @@ public class AudioControlTest {
 
         AudioControl.setMusicOn(expectedMusicState);
         AudioControl.setEffectsOn(expectedEfFectsState);
-        //Todo finish the tests
-//        AudioControl.setUp();
-//        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println("hello");
-//        AudioControl.playerCollidedWithBall();
-//        AudioControl.ballCollidedWithWall();
-//        AudioControl.stopSoundEffects();
-//        System.out.println("m");
-//        AudioControl.stopBackgroundMusic();
-//        System.out.println("d");
+        AudioControl.setUp();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("hello");
+        AudioControl.playerCollidedWithBall();
+        AudioControl.ballCollidedWithWall();
+        AudioControl.stopSoundEffects();
+        System.out.println("m");
+        AudioControl.stopBackgroundMusic();
+        System.out.println("d");
 
     }
 }

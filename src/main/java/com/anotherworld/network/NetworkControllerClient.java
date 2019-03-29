@@ -68,7 +68,6 @@ public class NetworkControllerClient extends AbstractNetworkController {
 
 
         // update balls
-        // TODO need ball ids
         for (BallData data: ballUpdate) {
             for (BallData ball: balls) {
                 if (data.getObjectID().equals(ball.getObjectID())) {
