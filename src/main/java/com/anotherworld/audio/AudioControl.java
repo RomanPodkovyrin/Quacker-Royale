@@ -119,7 +119,9 @@ public class AudioControl {
         }
     }
 
-    //TODO: JAVADOCS
+    /**
+     * Plays button click sound.
+     */
     public static void playButtonClick() {
         if (effectsOn) {
             if (soundEffects == null) {

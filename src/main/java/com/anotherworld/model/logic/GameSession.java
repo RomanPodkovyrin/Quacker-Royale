@@ -284,6 +284,7 @@ public class GameSession {
             }
         }
     }    
+
     private void removeFromLiving(PlayerData player) {
         System.out.println(player.getObjectID());
         LinkedList<PlayerData> toRemove = new LinkedList<>();
