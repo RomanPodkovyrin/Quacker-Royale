@@ -1,6 +1,7 @@
 package com.anotherworld.control;
 
 import com.anotherworld.audio.AudioControl;
+import com.anotherworld.network.NetworkTools;
 import com.anotherworld.settings.Difficulty;
 import com.anotherworld.settings.DisplayType;
 import com.anotherworld.settings.GameSettings;
@@ -684,7 +685,7 @@ public class MenuSystem {
         
         LobbyLayout layout = new LobbyLayout(0.2f);
         
-        ButtonData host = new ButtonData("Hosting...");
+        ButtonData host = new ButtonData("Host at " + NetworkTools.getMyIP());
         layout.addButton(host);
 
         TextListData playerList = new TextListData(4);
