@@ -20,9 +20,14 @@ platform then they instantly die.
 
 On the map, there are a number of balls where each of them starts out as safe (meaning that the player can get
 hit by the ball without losing health). They are indicated as the basketball.
+
+![Alt Text](/markdownImages/basketball.gif)
+
 When a player makes contact with such basketball, this ball turns into red and bounce around the platform with
 rather fast speed within limited time and when any player touches such flamming ball, he will lose some of his
 health.
+
+![Alt Text](/markdownImages/DangerBall.gif)
 
 The balls are moving around on the straight line in their own with constant speed and bounced off from any other
 objects. There are 3 stages of the game:
