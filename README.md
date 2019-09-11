@@ -5,7 +5,7 @@ You play as an outlaw duck which has been captured by a higher entity. Captured 
 basketball to the death. You have control of a duck. All the ducks are placed on the platform on which they must
 stay to survive.
 
-![Alt Text](/markdownImages/Mini duck.gif)
+![Alt Text](/markdownImages/Mini\ duck.gif)
 
 As this is an inter-dimensional basketball whenever the basketball is dribbled it becomes a flaming menace for the
 limited amount of time. When this ball touches the character that character loses health.
