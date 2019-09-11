@@ -11,6 +11,7 @@ Because those inter-dimensional beings don’t like a fair game they tend to thr
 players to win by using those power-ups to get an upper hand in this game.
 ## Game rules
 ![Alt Text](/markdownImages/gameplay.gif)
+
 The point of the game is to survive as long as possible and outlive your opponents.
 All the players are positioned on the platform which is shrinking over time. If any of the players walk off the
 platform then they instantly die.
@@ -36,12 +37,12 @@ very hard for the player to not to get hit by the ball at that point of time. An
 In addition, to increases the survivability of the player in the game, there are 3 power-up items provided on the
 platform:
 
-**Health recovery** When the player picks it up, he gets full health recovery.
+![Alt Text](/markdownImages/health.gif)**Health recovery** When the player picks it up, he gets full health recovery.
 
-**Time stop** When the player picks it up, the whole world freezes around him within limited time and he can move
+![Alt Text](/markdownImages/time.gif)**Time stop** When the player picks it up, the whole world freezes around him within limited time and he can move
 around the platform without making contact with the balls.
 
-**Shield** When the player picks it up, he gains a barrier which can prevent him from getting hit by the flaming ball.
+![Alt Text](/markdownImages/shield.gif)**Shield** When the player picks it up, he gains a barrier which can prevent him from getting hit by the flaming ball.
 The condition to win the game is when only one out of the four players are still standing on the platform.
 
 ## Settings
