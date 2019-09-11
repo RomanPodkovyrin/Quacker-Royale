@@ -1,5 +1,4 @@
 ![Alt Text](/res/images/Quacker-Royale.png)
-## Technologies used
 ## Game
 You play as an outlaw duck which has been captured by a higher entity. Captured to play an inter-dimensional
 basketball to the death. You have control of a duck. All the ducks are placed on the platform on which they must
