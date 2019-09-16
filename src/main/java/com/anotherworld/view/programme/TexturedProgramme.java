@@ -168,17 +168,15 @@ public class TexturedProgramme extends Programme {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        if (displayObject.getSpriteSheet().isTextured()) {
-            bufferObject.setTextureId(glGenBuffers());
-            glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getTextureId().get());
-            glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
+        bufferObject.setTextureId(glGenBuffers());
+        glBindBuffer(GL_ARRAY_BUFFER, bufferObject.getTextureId().get());
+        glBufferData(GL_ARRAY_BUFFER, displayObject.getTextureBuffer(), GL_STATIC_DRAW);
 
-            glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
+        glVertexAttribPointer(2, 2, GL_FLOAT, false, 0, 0);
 
-            glEnableVertexAttribArray(2);
+        glEnableVertexAttribArray(2);
 
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-        }
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glBindVertexArray(0);
 
